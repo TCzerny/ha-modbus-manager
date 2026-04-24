@@ -1092,8 +1092,13 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     register["device_info"] = device_info
                     register["device_prefix"] = prefix
                     register["config_subentry_id"] = config_subentry_id
-                    # Replace placeholders in calculated entity templates (state, availability)
-                    for field in ["state", "availability", "template"]:
+                    # Replace placeholders in calculated entity templates (state, availability, icon, …)
+                    for field in [
+                        "state",
+                        "availability",
+                        "template",
+                        "icon_template",
+                    ]:
                         if field in register and isinstance(register[field], str):
                             register[field] = replace_template_placeholders(
                                 register[field],
@@ -1112,8 +1117,13 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     register["device_info"] = device_info
                     register["device_prefix"] = prefix
                     register["config_subentry_id"] = config_subentry_id
-                    # Replace placeholders in binary sensor templates (state, availability)
-                    for field in ["state", "availability", "template"]:
+                    # Replace placeholders in binary sensor templates (state, availability, icon, …)
+                    for field in [
+                        "state",
+                        "availability",
+                        "template",
+                        "icon_template",
+                    ]:
                         if field in register and isinstance(register[field], str):
                             register[field] = replace_template_placeholders(
                                 register[field],

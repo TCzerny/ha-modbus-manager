@@ -6,7 +6,7 @@ display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters. Supports all 36 SHx models: SHxK6, SHxK-20/V13, SHxK-30, SHx.0RS, SHx.0RT/RT-20/RT-V112/RT-V122, SHxT, MGxRL"
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.2.14
+version: 1.2.13
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -3164,9 +3164,10 @@ controls:
     condition: "wallbox_connected == 'yes'"
 
 # Calculated Sensors
-# Cross-references use [[mm:<domain>:{UNIQUE_ID_PREFIX}_<suffix>]] so entity_id resolves from the
-# registry (works with ha_generated). {UNIQUE_ID_PREFIX} = device prefix as in unique_id (e.g. SG).
-# Monthly/yearly "current" sensors use states('sensor.{UNIQUE_ID_PREFIX}_' ~ …) because the suffix is built at runtime in Jinja.
+# Cross-references use [[mm:<domain>:{PREFIX}_<suffix>]]; placeholders expand to the
+# normalized registry unique_id (prefix.lower(), same as generate_unique_id).
+# For legacy_unprefixed, [[mm:…]] markers are expanded before {PREFIX} is cleared.
+# Month/year "current" sensors use states('sensor.{PREFIX}_' ~ …) (Jinja appends the suffix at runtime).
 calculated:
   # Net Grid Power
   - name: "Net Grid Power"
@@ -3174,10 +3175,10 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_active_power_raw]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_meter_active_power_raw]]', 'unavailable')
       }}
     state: >-
-      {{ states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_active_power_raw]]') | float(0) }}
+      {{ states('[[mm:sensor:{PREFIX}_meter_active_power_raw]]') | float(0) }}
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3188,9 +3189,9 @@ calculated:
   - name: "Import Power"
     unique_id: "import_power"
     type: "sensor"
-    availability: "{{ not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]', 'unavailable') }}"
+    availability: "{{ not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable') }}"
     state: >-
-      {% set export_power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]') %}
+      {% set export_power = states('[[mm:sensor:{PREFIX}_export_power_raw]]') %}
       {% if export_power in ['unknown', 'unavailable', 'none'] or export_power is none %}
         0
       {% elif (export_power|int) < 0 %}
@@ -3207,10 +3208,10 @@ calculated:
   - name: "Export Power"
     unique_id: "export_power"
     type: "sensor"
-    availability: "{{states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]')|is_number }}"
+    availability: "{{states('[[mm:sensor:{PREFIX}_export_power_raw]]')|is_number }}"
     state: >-
-      {% if states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]')|int > 0 %}
-        {{ states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]') }}
+      {% if states('[[mm:sensor:{PREFIX}_export_power_raw]]')|int > 0 %}
+        {{ states('[[mm:sensor:{PREFIX}_export_power_raw]]') }}
       {% else %}
         0
       {% endif %}
@@ -3224,8 +3225,8 @@ calculated:
     unique_id: "total_load_power"
     type: "sensor"
     availability: >-
-      {{ not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]', 'unavailable') }}
-    state: "{{ states('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]') | float(0) }}"
+      {{ not is_state('[[mm:sensor:{PREFIX}_load_power]]', 'unavailable') }}
+    state: "{{ states('[[mm:sensor:{PREFIX}_load_power]]') | float(0) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3238,17 +3239,17 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_import_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_import_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_export_power]]', 'unavailable')
       }}
     state: >-
       {{
-        (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0))
-        + (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_import_power]]') | float(0))
-        + (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_discharging_power]]') | float(0))
-        - (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power]]') | float(0))
-        - (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_charging_power]]') | float(0))
+        (states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0))
+        + (states('[[mm:sensor:{PREFIX}_import_power]]') | float(0))
+        + (states('[[mm:sensor:{PREFIX}_battery_discharging_power]]') | float(0))
+        - (states('[[mm:sensor:{PREFIX}_export_power]]') | float(0))
+        - (states('[[mm:sensor:{PREFIX}_battery_charging_power]]') | float(0))
       }}
     unit_of_measurement: "W"
     device_class: "power"
@@ -3262,12 +3263,12 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_active_power_raw]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_meter_active_power_raw]]', 'unavailable')
       }}
     state: >-
-      {% set pv = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0) %}
-      {% set grid = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_active_power_raw]]') | float(0) %}
+      {% set pv = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
+      {% set grid = states('[[mm:sensor:{PREFIX}_meter_active_power_raw]]') | float(0) %}
       {% if pv > 0 and grid < 0 %}{{ (grid | abs / pv * 100) | round(1) }}{% else %}0{% endif %}
     unit_of_measurement: "%"
     device_class: "power_factor"
@@ -3281,12 +3282,12 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_discharging_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_battery_discharging_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_load_power]]', 'unavailable')
       }}
     state: >-
-      {% set load = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]') | float(0) %}
-      {% set battery_discharge = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_discharging_power]]') | float(0) %}
+      {% set load = states('[[mm:sensor:{PREFIX}_load_power]]') | float(0) %}
+      {% set battery_discharge = states('[[mm:sensor:{PREFIX}_battery_discharging_power]]') | float(0) %}
       {% if load <= 0 %}
         0
       {% else %}
@@ -3313,14 +3314,14 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_active_power_raw]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_meter_active_power_raw]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_load_power]]', 'unavailable')
       }}
     state: >-
-      {% set grid = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_active_power_raw]]') | float(0) %}
-      {{ (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0)) + (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]') | float(0)) + grid - (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]') | float(0)) }}
+      {% set grid = states('[[mm:sensor:{PREFIX}_meter_active_power_raw]]') | float(0) %}
+      {{ (states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0)) + (states('[[mm:sensor:{PREFIX}_battery_power]]') | float(0)) + grid - (states('[[mm:sensor:{PREFIX}_load_power]]') | float(0)) }}
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3334,11 +3335,11 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_phase_a_active_power_raw]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_phase_b_active_power_raw]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_phase_c_active_power_raw]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_meter_phase_a_active_power_raw]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_meter_phase_b_active_power_raw]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_meter_phase_c_active_power_raw]]', 'unavailable')
       }}
-    state: "{{ (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_phase_a_active_power_raw]]') | float(0)) + (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_phase_b_active_power_raw]]') | float(0)) + (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_phase_c_active_power_raw]]') | float(0)) }}"
+    state: "{{ (states('[[mm:sensor:{PREFIX}_meter_phase_a_active_power_raw]]') | float(0)) + (states('[[mm:sensor:{PREFIX}_meter_phase_b_active_power_raw]]') | float(0)) + (states('[[mm:sensor:{PREFIX}_meter_phase_c_active_power_raw]]') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3352,10 +3353,10 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_a_voltage]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_a_current]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_phase_a_voltage]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_phase_a_current]]', 'unavailable')
       }}
-    state: "{{ (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_a_voltage]]') | float(0)) * (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_a_current]]') | float(0)) }}"
+    state: "{{ (states('[[mm:sensor:{PREFIX}_phase_a_voltage]]') | float(0)) * (states('[[mm:sensor:{PREFIX}_phase_a_current]]') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3367,10 +3368,10 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_b_voltage]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_b_current]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_phase_b_voltage]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_phase_b_current]]', 'unavailable')
       }}
-    state: "{{ (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_b_voltage]]') | float(0)) * (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_b_current]]') | float(0)) }}"
+    state: "{{ (states('[[mm:sensor:{PREFIX}_phase_b_voltage]]') | float(0)) * (states('[[mm:sensor:{PREFIX}_phase_b_current]]') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3383,10 +3384,10 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_c_voltage]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_c_current]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_phase_c_voltage]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_phase_c_current]]', 'unavailable')
       }}
-    state: "{{ (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_c_voltage]]') | float(0)) * (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_c_current]]') | float(0)) }}"
+    state: "{{ (states('[[mm:sensor:{PREFIX}_phase_c_voltage]]') | float(0)) * (states('[[mm:sensor:{PREFIX}_phase_c_current]]') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3402,10 +3403,10 @@ calculated:
     condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
     availability: >-
           {{
-          not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_active_power_raw]]', 'unavailable')
-          and states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_active_power_raw]]')|int(0) != 0x7FFFFFFF
+          not is_state('[[mm:sensor:{PREFIX}_meter_active_power_raw]]', 'unavailable')
+          and states('[[mm:sensor:{PREFIX}_meter_active_power_raw]]')|int(0) != 0x7FFFFFFF
           }}
-    state: "{{ states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_active_power_raw]]') }}"
+    state: "{{ states('[[mm:sensor:{PREFIX}_meter_active_power_raw]]') }}"
     unit_of_measurement: "W"
     precision: 0
     device_class: "power"
@@ -3418,11 +3419,11 @@ calculated:
     condition: "(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_phase_a_active_power_raw]]', 'unavailable')
-      and states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_phase_a_active_power_raw]]')|int(0) != 0x7FFFFFFF
+      not is_state('[[mm:sensor:{PREFIX}_meter_phase_a_active_power_raw]]', 'unavailable')
+      and states('[[mm:sensor:{PREFIX}_meter_phase_a_active_power_raw]]')|int(0) != 0x7FFFFFFF
       }}
     state: >-
-      {% set phase_a_power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_phase_a_active_power_raw]]') | float(0) %}
+      {% set phase_a_power = states('[[mm:sensor:{PREFIX}_meter_phase_a_active_power_raw]]') | float(0) %}
       {% if phase_a_power != 0x7FFFFFFF and phase_a_power != 2147483647 %}
         {{ phase_a_power }}
       {% else %}
@@ -3440,11 +3441,11 @@ calculated:
     condition: "(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_phase_b_active_power_raw]]', 'unavailable')
-      and states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_phase_b_active_power_raw]]')|int(0) != 0x7FFFFFFF
+      not is_state('[[mm:sensor:{PREFIX}_meter_phase_b_active_power_raw]]', 'unavailable')
+      and states('[[mm:sensor:{PREFIX}_meter_phase_b_active_power_raw]]')|int(0) != 0x7FFFFFFF
       }}
     state: >-
-      {% set phase_b_power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_phase_b_active_power_raw]]') | float(0) %}
+      {% set phase_b_power = states('[[mm:sensor:{PREFIX}_meter_phase_b_active_power_raw]]') | float(0) %}
       {% if phase_b_power != 0x7FFFFFFF and phase_b_power != 2147483647 %}
         {{ phase_b_power }}
       {% else %}
@@ -3462,11 +3463,11 @@ calculated:
     condition: "(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_phase_c_active_power_raw]]', 'unavailable')
-      and states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_phase_c_active_power_raw]]')|int(0) != 0x7FFFFFFF
+      not is_state('[[mm:sensor:{PREFIX}_meter_phase_c_active_power_raw]]', 'unavailable')
+      and states('[[mm:sensor:{PREFIX}_meter_phase_c_active_power_raw]]')|int(0) != 0x7FFFFFFF
       }}
     state: >-
-      {% set phase_c_power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_phase_c_active_power_raw]]') | float(0) %}
+      {% set phase_c_power = states('[[mm:sensor:{PREFIX}_meter_phase_c_active_power_raw]]') | float(0) %}
       {% if phase_c_power != 0x7FFFFFFF and phase_c_power != 2147483647 %}
         {{ phase_c_power }}
       {% else %}
@@ -3486,11 +3487,11 @@ calculated:
     condition: "meter_type == 'DTSU666-20'"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_channel_2_total_active_power_raw]]', 'unavailable')
-      and states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_channel_2_total_active_power_raw]]')|int(0) != 0x7FFFFFFF
+      not is_state('[[mm:sensor:{PREFIX}_meter_channel_2_total_active_power_raw]]', 'unavailable')
+      and states('[[mm:sensor:{PREFIX}_meter_channel_2_total_active_power_raw]]')|int(0) != 0x7FFFFFFF
       }}
     state: >-
-      {% set channel_2_total_power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_channel_2_total_active_power_raw]]') | float(0) %}
+      {% set channel_2_total_power = states('[[mm:sensor:{PREFIX}_meter_channel_2_total_active_power_raw]]') | float(0) %}
       {% if channel_2_total_power != 0x7FFFFFFF and channel_2_total_power != 2147483647 %}
         {{ channel_2_total_power }}
       {% else %}
@@ -3508,11 +3509,11 @@ calculated:
     condition: "meter_type == 'DTSU666-20'"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_channel_2_phase_a_active_power_raw]]', 'unavailable')
-      and states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_channel_2_phase_a_active_power_raw]]')|int(0) != 0x7FFFFFFF
+      not is_state('[[mm:sensor:{PREFIX}_meter_channel_2_phase_a_active_power_raw]]', 'unavailable')
+      and states('[[mm:sensor:{PREFIX}_meter_channel_2_phase_a_active_power_raw]]')|int(0) != 0x7FFFFFFF
       }}
     state: >-
-      {% set channel_2_phase_a_power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_channel_2_phase_a_active_power_raw]]') | float(0) %}
+      {% set channel_2_phase_a_power = states('[[mm:sensor:{PREFIX}_meter_channel_2_phase_a_active_power_raw]]') | float(0) %}
       {% if channel_2_phase_a_power != 0x7FFFFFFF and channel_2_phase_a_power != 2147483647 %}
         {{ channel_2_phase_a_power }}
       {% else %}
@@ -3530,11 +3531,11 @@ calculated:
     condition: "meter_type == 'DTSU666-20'"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_channel_2_phase_b_active_power_raw]]', 'unavailable')
-      and states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_channel_2_phase_b_active_power_raw]]')|int(0) != 0x7FFFFFFF
+      not is_state('[[mm:sensor:{PREFIX}_meter_channel_2_phase_b_active_power_raw]]', 'unavailable')
+      and states('[[mm:sensor:{PREFIX}_meter_channel_2_phase_b_active_power_raw]]')|int(0) != 0x7FFFFFFF
       }}
     state: >-
-      {% set channel_2_phase_b_power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_channel_2_phase_b_active_power_raw]]') | float(0) %}
+      {% set channel_2_phase_b_power = states('[[mm:sensor:{PREFIX}_meter_channel_2_phase_b_active_power_raw]]') | float(0) %}
       {% if channel_2_phase_b_power != 0x7FFFFFFF and channel_2_phase_b_power != 2147483647 %}
         {{ channel_2_phase_b_power }}
       {% else %}
@@ -3552,11 +3553,11 @@ calculated:
     condition: "meter_type == 'DTSU666-20'"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_channel_2_phase_c_active_power_raw]]', 'unavailable')
-      and states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_channel_2_phase_c_active_power_raw]]')|int(0) != 0x7FFFFFFF
+      not is_state('[[mm:sensor:{PREFIX}_meter_channel_2_phase_c_active_power_raw]]', 'unavailable')
+      and states('[[mm:sensor:{PREFIX}_meter_channel_2_phase_c_active_power_raw]]')|int(0) != 0x7FFFFFFF
       }}
     state: >-
-      {% set channel_2_phase_c_power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_channel_2_phase_c_active_power_raw]]') | float(0) %}
+      {% set channel_2_phase_c_power = states('[[mm:sensor:{PREFIX}_meter_channel_2_phase_c_active_power_raw]]') | float(0) %}
       {% if channel_2_phase_c_power != 0x7FFFFFFF and channel_2_phase_c_power != 2147483647 %}
         {{ channel_2_phase_c_power }}
       {% else %}
@@ -3574,10 +3575,10 @@ calculated:
     type: "sensor"
     availability: >-
       {% set currMonth = 'monthly_pv_generation_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
-      {{ states('sensor.{UNIQUE_ID_PREFIX}_' ~ currMonth)|is_number }}
+      {{ states('sensor.{PREFIX}_' ~ currMonth)|is_number }}
     state: >
       {% set currMonth = 'monthly_pv_generation_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
-      {{ states('sensor.{UNIQUE_ID_PREFIX}_' ~ currMonth) }}
+      {{ states('sensor.{PREFIX}_' ~ currMonth) }}
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"
@@ -3590,10 +3591,10 @@ calculated:
     type: "sensor"
     availability: >-
       {% set currYear = 'yearly_pv_generation_' ~ now().year %}
-      {{ states('sensor.{UNIQUE_ID_PREFIX}_' ~ currYear)|is_number }}
+      {{ states('sensor.{PREFIX}_' ~ currYear)|is_number }}
     state: >
       {% set currYear = 'yearly_pv_generation_' ~ now().year %}
-      {{ states('sensor.{UNIQUE_ID_PREFIX}_' ~ currYear) }}
+      {{ states('sensor.{PREFIX}_' ~ currYear) }}
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"
@@ -3606,10 +3607,10 @@ calculated:
     type: "sensor"
     availability: >-
       {% set currMonth = 'monthly_export_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
-      {{ states('sensor.{UNIQUE_ID_PREFIX}_' ~ currMonth)|is_number }}
+      {{ states('sensor.{PREFIX}_' ~ currMonth)|is_number }}
     state: >
       {% set currMonth = 'monthly_export_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
-      {{ states('sensor.{UNIQUE_ID_PREFIX}_' ~ currMonth) }}
+      {{ states('sensor.{PREFIX}_' ~ currMonth) }}
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"
@@ -3622,10 +3623,10 @@ calculated:
     type: "sensor"
     availability: >-
       {% set currYear = 'yearly_export_' ~ now().year %}
-      {{ states('sensor.{UNIQUE_ID_PREFIX}_' ~ currYear)|is_number }}
+      {{ states('sensor.{PREFIX}_' ~ currYear)|is_number }}
     state: >
       {% set currYear = 'yearly_export_' ~ now().year %}
-      {{ states('sensor.{UNIQUE_ID_PREFIX}_' ~ currYear) }}
+      {{ states('sensor.{PREFIX}_' ~ currYear) }}
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"
@@ -3639,17 +3640,17 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_level]]', 'unavailable')
-      and not is_state('[[mm:number:{UNIQUE_ID_PREFIX}_min_soc]]', 'unavailable')
-      and not is_state('[[mm:number:{UNIQUE_ID_PREFIX}_max_soc]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_level]]', 'unknown')
-      and not is_state('[[mm:number:{UNIQUE_ID_PREFIX}_min_soc]]', 'unknown')
-      and not is_state('[[mm:number:{UNIQUE_ID_PREFIX}_max_soc]]', 'unknown')
+      not is_state('[[mm:sensor:{PREFIX}_battery_level]]', 'unavailable')
+      and not is_state('[[mm:number:{PREFIX}_min_soc]]', 'unavailable')
+      and not is_state('[[mm:number:{PREFIX}_max_soc]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_level]]', 'unknown')
+      and not is_state('[[mm:number:{PREFIX}_min_soc]]', 'unknown')
+      and not is_state('[[mm:number:{PREFIX}_max_soc]]', 'unknown')
       }}
     state: >-
-      {% set soc_min = states('[[mm:number:{UNIQUE_ID_PREFIX}_min_soc]]') | float %}
-      {% set soc_max = states('[[mm:number:{UNIQUE_ID_PREFIX}_max_soc]]') | float %}
-      {% set soc_cur = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_level]]') | float %}
+      {% set soc_min = states('[[mm:number:{PREFIX}_min_soc]]') | float %}
+      {% set soc_max = states('[[mm:number:{PREFIX}_max_soc]]') | float %}
+      {% set soc_cur = states('[[mm:sensor:{PREFIX}_battery_level]]') | float %}
       {{
         (soc_min + ((soc_max - soc_min) * (soc_cur / 100))) | round(1)
       }}
@@ -3665,15 +3666,15 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_capacity]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_level_nom]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_capacity]]', 'unknown')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_level_nom]]', 'unknown')
+      not is_state('[[mm:sensor:{PREFIX}_battery_capacity]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_level_nom]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_capacity]]', 'unknown')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_level_nom]]', 'unknown')
       }}
     state: >-
       {{
-        ( states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_capacity]]') | float *
-        states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_level_nom]]') | float / 100 )| round(1)
+        ( states('[[mm:sensor:{PREFIX}_battery_capacity]]') | float *
+        states('[[mm:sensor:{PREFIX}_battery_level_nom]]') | float / 100 )| round(1)
       }}
     unit_of_measurement: "kWh"
     device_class: "energy_storage"
@@ -3691,16 +3692,16 @@ calculated:
     precision: 2
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_capacity]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_level]]', 'unavailable')
-      and not is_state('[[mm:number:{UNIQUE_ID_PREFIX}_min_soc]]', 'unavailable')
-      and not is_state('[[mm:number:{UNIQUE_ID_PREFIX}_max_soc]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_battery_capacity]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_level]]', 'unavailable')
+      and not is_state('[[mm:number:{PREFIX}_min_soc]]', 'unavailable')
+      and not is_state('[[mm:number:{PREFIX}_max_soc]]', 'unavailable')
       }}
     state: >-
       {{
-        ( states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_capacity]]')|float
-        * ( states('[[mm:number:{UNIQUE_ID_PREFIX}_max_soc]]')|float - states('[[mm:number:{UNIQUE_ID_PREFIX}_min_soc]]')|float ) /100
-        * states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_level]]')|float /100
+        ( states('[[mm:sensor:{PREFIX}_battery_capacity]]')|float
+        * ( states('[[mm:number:{PREFIX}_max_soc]]')|float - states('[[mm:number:{PREFIX}_min_soc]]')|float ) /100
+        * states('[[mm:sensor:{PREFIX}_battery_level]]')|float /100
         ) |round(2)
       }}
     mm_group: "battery_charge"
@@ -3712,15 +3713,15 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_charge]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_state_of_health]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_charge]]', 'unknown')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_state_of_health]]', 'unknown')
+      not is_state('[[mm:sensor:{PREFIX}_battery_charge]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_state_of_health]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_charge]]', 'unknown')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_state_of_health]]', 'unknown')
       }}
     state: >-
       {{
-        ( states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_charge]]')|float
-        * states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_state_of_health]]')|float / 100
+        ( states('[[mm:sensor:{PREFIX}_battery_charge]]')|float
+        * states('[[mm:sensor:{PREFIX}_battery_state_of_health]]')|float / 100
         ) |round(2)
       }}
     unit_of_measurement: "kWh"
@@ -3736,20 +3737,20 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_pv_generation]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_exported_energy]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_imported_energy]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_battery_charge]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_battery_discharge]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_daily_pv_generation]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_daily_exported_energy]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_daily_imported_energy]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_daily_battery_charge]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_daily_battery_discharge]]', 'unavailable')
       }}
     state: >-
       {{
         (
-          states('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_pv_generation]]')|float(0)
-          - states('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_exported_energy]]')|float(0)
-          + states('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_imported_energy]]')|float(0)
-          - states('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_battery_charge]]')|float(0)
-          + states('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_battery_discharge]]')|float(0)
+          states('[[mm:sensor:{PREFIX}_daily_pv_generation]]')|float(0)
+          - states('[[mm:sensor:{PREFIX}_daily_exported_energy]]')|float(0)
+          + states('[[mm:sensor:{PREFIX}_daily_imported_energy]]')|float(0)
+          - states('[[mm:sensor:{PREFIX}_daily_battery_charge]]')|float(0)
+          + states('[[mm:sensor:{PREFIX}_daily_battery_discharge]]')|float(0)
         )
       }}
     unit_of_measurement: "kWh"
@@ -3763,20 +3764,20 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_pv_generation]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_exported_energy]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_imported_energy]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_battery_charge]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_battery_discharge]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_total_pv_generation]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_total_exported_energy]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_total_imported_energy]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_total_battery_charge]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_total_battery_discharge]]', 'unavailable')
       }}
     state: >-
       {{
         (
-          states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_pv_generation]]')|float(0)
-          - states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_exported_energy]]')|float(0)
-          + states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_imported_energy]]')|float(0)
-          - states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_battery_charge]]')|float(0)
-          + states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_battery_discharge]]')|float(0)
+          states('[[mm:sensor:{PREFIX}_total_pv_generation]]')|float(0)
+          - states('[[mm:sensor:{PREFIX}_total_exported_energy]]')|float(0)
+          + states('[[mm:sensor:{PREFIX}_total_imported_energy]]')|float(0)
+          - states('[[mm:sensor:{PREFIX}_total_battery_charge]]')|float(0)
+          + states('[[mm:sensor:{PREFIX}_total_battery_discharge]]')|float(0)
         )
       }}
     unit_of_measurement: "kWh"
@@ -3791,15 +3792,15 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:binary_sensor:{UNIQUE_ID_PREFIX}_battery_charging]]', 'unavailable')
-      and not is_state('[[mm:binary_sensor:{UNIQUE_ID_PREFIX}_battery_discharging]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]', 'unavailable')
+      not is_state('[[mm:binary_sensor:{PREFIX}_battery_charging]]', 'unavailable')
+      and not is_state('[[mm:binary_sensor:{PREFIX}_battery_discharging]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
       }}
     state: >-
-      {% if is_state('[[mm:binary_sensor:{UNIQUE_ID_PREFIX}_battery_charging]]', 'on') %}
-        {{ (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]') |float |abs)}}
-      {% elif is_state('[[mm:binary_sensor:{UNIQUE_ID_PREFIX}_battery_discharging]]', 'on') %}
-        {{ (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]') |float |abs * -1)}}
+      {% if is_state('[[mm:binary_sensor:{PREFIX}_battery_charging]]', 'on') %}
+        {{ (states('[[mm:sensor:{PREFIX}_battery_power]]') |float |abs)}}
+      {% elif is_state('[[mm:binary_sensor:{PREFIX}_battery_discharging]]', 'on') %}
+        {{ (states('[[mm:sensor:{PREFIX}_battery_power]]') |float |abs * -1)}}
       {% else %}
         0
       {% endif %}
@@ -3814,12 +3815,12 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:binary_sensor:{UNIQUE_ID_PREFIX}_battery_charging]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]', 'unavailable')
+      not is_state('[[mm:binary_sensor:{PREFIX}_battery_charging]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
       }}
     state: >-
-      {% if is_state('[[mm:binary_sensor:{UNIQUE_ID_PREFIX}_battery_charging]]', 'on') %}
-        {{ states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]')|int |abs }}
+      {% if is_state('[[mm:binary_sensor:{PREFIX}_battery_charging]]', 'on') %}
+        {{ states('[[mm:sensor:{PREFIX}_battery_power]]')|int |abs }}
       {% else %}
         0
       {% endif %}
@@ -3835,12 +3836,12 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:binary_sensor:{UNIQUE_ID_PREFIX}_battery_discharging]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]', 'unavailable')
+      not is_state('[[mm:binary_sensor:{PREFIX}_battery_discharging]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
       }}
     state: >-
-      {% if is_state('[[mm:binary_sensor:{UNIQUE_ID_PREFIX}_battery_discharging]]', 'on') %}
-        {{ states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]')|int |abs }}
+      {% if is_state('[[mm:binary_sensor:{PREFIX}_battery_discharging]]', 'on') %}
+        {{ states('[[mm:sensor:{PREFIX}_battery_power]]')|int |abs }}
       {% else %}
         0
       {% endif %}
@@ -3864,8 +3865,8 @@ calculated:
   - name: "Battery charging power signed"
     unique_id: "battery_charging_power_signed"
     type: "sensor"
-    availability: "{{ states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]') not in ['unknown','unavailable'] }}"
-    state: "{{ states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]')|int * -1 }}"
+    availability: "{{ states('[[mm:sensor:{PREFIX}_battery_power]]') not in ['unknown','unavailable'] }}"
+    state: "{{ states('[[mm:sensor:{PREFIX}_battery_power]]')|int * -1 }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3878,8 +3879,8 @@ calculated:
   - name: "Battery discharging power signed"
     unique_id: "battery_discharging_power_signed"
     type: "sensor"
-    availability: "{{ states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]') not in ['unknown','unavailable'] }}"
-    state: "{{ states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]')|int }}"
+    availability: "{{ states('[[mm:sensor:{PREFIX}_battery_power]]') not in ['unknown','unavailable'] }}"
+    state: "{{ states('[[mm:sensor:{PREFIX}_battery_power]]')|int }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3891,7 +3892,7 @@ calculated:
     # HA Energy Dashboard configuration description:
     # "Pick a sensor which measures the electricity flowing into and out of the battery in either of GW, kW, MW, mW, TW, W.
     # Positive values indicate discharging the battery, negative values indicate charging the battery."
-    # IMPORTANT: For HA Energy Dashboard, use [[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]] directly (it already has the correct sign)
+    # IMPORTANT: For HA Energy Dashboard, use [[mm:sensor:{PREFIX}_battery_power]] directly (it already has the correct sign)
 
   # Grid Power Sensors for HA Energy Dashboard
   # Note: export_power_raw format:
@@ -3905,8 +3906,8 @@ calculated:
   - name: "Grid power signed"
     unique_id: "grid_power_signed"
     type: "sensor"
-    availability: "{{ states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]') not in ['unknown','unavailable'] }}"
-    state: "{{ states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]')|int * -1 }}"
+    availability: "{{ states('[[mm:sensor:{PREFIX}_export_power_raw]]') not in ['unknown','unavailable'] }}"
+    state: "{{ states('[[mm:sensor:{PREFIX}_export_power_raw]]')|int * -1 }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3920,9 +3921,9 @@ calculated:
   - name: "Grid export power signed"
     unique_id: "grid_export_power_signed"
     type: "sensor"
-    availability: "{{ states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]') not in ['unknown','unavailable'] }}"
+    availability: "{{ states('[[mm:sensor:{PREFIX}_export_power_raw]]') not in ['unknown','unavailable'] }}"
     state: >-
-      {% set export_power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]')|int %}
+      {% set export_power = states('[[mm:sensor:{PREFIX}_export_power_raw]]')|int %}
       {% if export_power > 0 %}
         {{ export_power * -1 }}
       {% else %}
@@ -3940,9 +3941,9 @@ calculated:
   - name: "Grid import power signed"
     unique_id: "grid_import_power_signed"
     type: "sensor"
-    availability: "{{ states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]') not in ['unknown','unavailable'] }}"
+    availability: "{{ states('[[mm:sensor:{PREFIX}_export_power_raw]]') not in ['unknown','unavailable'] }}"
     state: >-
-      {% set export_power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]')|int %}
+      {% set export_power = states('[[mm:sensor:{PREFIX}_export_power_raw]]')|int %}
       {% if export_power < 0 %}
         {{ export_power * -1 }}
       {% else %}
@@ -3964,14 +3965,14 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_discharging_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_discharging_power]]', 'unavailable')
       }}
     state: >-
-      {% set pv = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0) %}
-      {% set export_raw = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]') | float(0) %}
-      {% set battery_discharge = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_discharging_power]]') | float(0) %}
+      {% set pv = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
+      {% set export_raw = states('[[mm:sensor:{PREFIX}_export_power_raw]]') | float(0) %}
+      {% set battery_discharge = states('[[mm:sensor:{PREFIX}_battery_discharging_power]]') | float(0) %}
       {% if pv <= 0 %}
         {# No PV generation #}
         0
@@ -4006,16 +4007,16 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_discharging_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_load_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_discharging_power]]', 'unavailable')
       }}
     state: >-
-      {% set load = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]') | float(0) %}
-      {% set pv = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0) %}
-      {% set export_raw = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]') | float(0) %}
-      {% set battery_discharge = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_discharging_power]]') | float(0) %}
+      {% set load = states('[[mm:sensor:{PREFIX}_load_power]]') | float(0) %}
+      {% set pv = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
+      {% set export_raw = states('[[mm:sensor:{PREFIX}_export_power_raw]]') | float(0) %}
+      {% set battery_discharge = states('[[mm:sensor:{PREFIX}_battery_discharging_power]]') | float(0) %}
       {% if load <= 0 %}
         {# No load or negative load - 100% autarky #}
         100
@@ -4053,13 +4054,13 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_direct_energy_consumption]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_pv_generation]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_daily_direct_energy_consumption]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_daily_pv_generation]]', 'unavailable')
       }}
     state: >-
-      {% set direct = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_direct_energy_consumption]]') | float(0) %}
-      {% set pv_to_battery = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_battery_charge_from_pv]]') | float(0) %}
-      {% set pv_gen = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_pv_generation]]') | float(0) %}
+      {% set direct = states('[[mm:sensor:{PREFIX}_daily_direct_energy_consumption]]') | float(0) %}
+      {% set pv_to_battery = states('[[mm:sensor:{PREFIX}_daily_battery_charge_from_pv]]') | float(0) %}
+      {% set pv_gen = states('[[mm:sensor:{PREFIX}_daily_pv_generation]]') | float(0) %}
       {% if pv_gen <= 0 %}
         0
       {% else %}
@@ -4082,13 +4083,13 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_direct_energy_consumption]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_consumed_energy]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_daily_direct_energy_consumption]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_daily_consumed_energy]]', 'unavailable')
       }}
     state: >-
-      {% set direct = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_direct_energy_consumption]]') | float(0) %}
-      {% set battery_discharge = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_battery_discharge]]') | float(0) %}
-      {% set consumed = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_consumed_energy]]') | float(0) %}
+      {% set direct = states('[[mm:sensor:{PREFIX}_daily_direct_energy_consumption]]') | float(0) %}
+      {% set battery_discharge = states('[[mm:sensor:{PREFIX}_daily_battery_discharge]]') | float(0) %}
+      {% set consumed = states('[[mm:sensor:{PREFIX}_daily_consumed_energy]]') | float(0) %}
       {% if consumed <= 0 %}
         100
       {% else %}
@@ -4109,14 +4110,14 @@ calculated:
 #    type: "sensor"
 #    availability: >-
 #      {{
-#      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]', 'unavailable')
-#      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_a_power]]', 'unavailable')
-#      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_b_power]]', 'unavailable')
-#      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_c_power]]', 'unavailable')
+#      not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
+#      and not is_state('[[mm:sensor:{PREFIX}_phase_a_power]]', 'unavailable')
+#      and not is_state('[[mm:sensor:{PREFIX}_phase_b_power]]', 'unavailable')
+#      and not is_state('[[mm:sensor:{PREFIX}_phase_c_power]]', 'unavailable')
 #      }}
 #    state: >-
-#      {% set dc_power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0) %}
-#      {% set ac_power = (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_a_power]]') | float(0)) + (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_b_power]]') | float(0)) + (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_phase_c_power]]') | float(0)) %}
+#      {% set dc_power = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
+#      {% set ac_power = (states('[[mm:sensor:{PREFIX}_phase_a_power]]') | float(0)) + (states('[[mm:sensor:{PREFIX}_phase_b_power]]') | float(0)) + (states('[[mm:sensor:{PREFIX}_phase_c_power]]') | float(0)) %}
 #      {% if dc_power > 0 %}
 #        {{ ((ac_power / dc_power) * 100) | round(2) }}
 #      {% else %}
@@ -4134,12 +4135,12 @@ calculated:
     state: >-
       {# Ignore low DC: pv_ac/dc explodes with register noise or async samples #}
       {% set dc_min_w = 300 %}
-      {% set dc = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0) %}
-      {% set total_ac = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_active_power]]') | float(0) %}
-      {% set batt = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]') | float(0) %}
-      {% set meter = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_active_power]]') | float(0) %}
+      {% set dc = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
+      {% set total_ac = states('[[mm:sensor:{PREFIX}_total_active_power]]') | float(0) %}
+      {% set batt = states('[[mm:sensor:{PREFIX}_battery_power]]') | float(0) %}
+      {% set meter = states('[[mm:sensor:{PREFIX}_meter_active_power]]') | float(0) %}
 
-      {% set grid_import = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_import_power]]') | float(0) %}
+      {% set grid_import = states('[[mm:sensor:{PREFIX}_import_power]]') | float(0) %}
       {% set pv_ac = total_ac - batt - grid_import %}
       {% if dc >= dc_min_w and pv_ac > 0 %}
         {% set eff = (pv_ac / dc) * 100 %}
@@ -4159,10 +4160,10 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt1_voltage]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt1_current]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_mppt1_voltage]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt1_current]]', 'unavailable')
       }}
-    state: "{{ (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt1_voltage]]') | float(0)) * (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt1_current]]') | float(0)) }}"
+    state: "{{ (states('[[mm:sensor:{PREFIX}_mppt1_voltage]]') | float(0)) * (states('[[mm:sensor:{PREFIX}_mppt1_current]]') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -4175,10 +4176,10 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt2_voltage]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt2_current]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_mppt2_voltage]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt2_current]]', 'unavailable')
       }}
-    state: "{{ (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt2_voltage]]') | float(0)) * (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt2_current]]') | float(0)) }}"
+    state: "{{ (states('[[mm:sensor:{PREFIX}_mppt2_voltage]]') | float(0)) * (states('[[mm:sensor:{PREFIX}_mppt2_current]]') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -4191,10 +4192,10 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt3_voltage]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt3_current]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_mppt3_voltage]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt3_current]]', 'unavailable')
       }}
-    state: "{{ (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt3_voltage]]') | float(0)) * (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt3_current]]') | float(0)) }}"
+    state: "{{ (states('[[mm:sensor:{PREFIX}_mppt3_voltage]]') | float(0)) * (states('[[mm:sensor:{PREFIX}_mppt3_current]]') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -4207,31 +4208,76 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt4_voltage]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt4_current]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_mppt4_voltage]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt4_current]]', 'unavailable')
       }}
-    state: "{{ (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt4_voltage]]') | float(0)) * (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt4_current]]') | float(0)) }}"
+    state: "{{ (states('[[mm:sensor:{PREFIX}_mppt4_voltage]]') | float(0)) * (states('[[mm:sensor:{PREFIX}_mppt4_current]]') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
     precision: 0
     mm_group: "PV_mppt_power"
 
-  # Total MPPT Power (sum of all MPPT trackers)
+  # Total MPPT Power — split by mppt_count so [[mm:…_mppt3/4…]] is not present when those registers are filtered out
   - name: "Total MPPT Power"
     unique_id: "total_mppt_power"
+    condition: "mppt_count == 2"
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt1_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt2_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_mppt1_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt2_power]]', 'unavailable')
       }}
     state: >-
       {{
-        (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt1_power]]') | float(0) ) +
-        (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt2_power]]') | float(0) ) +
-        (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt3_power]]') | float(0) ) +
-        (states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt4_power]]') | float(0) )
+        (states('[[mm:sensor:{PREFIX}_mppt1_power]]') | float(0) )
+        + (states('[[mm:sensor:{PREFIX}_mppt2_power]]') | float(0) )
+      }}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    precision: 0
+    mm_group: "PV_mppt_power"
+
+  - name: "Total MPPT Power"
+    unique_id: "total_mppt_power"
+    condition: "mppt_count == 3"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('[[mm:sensor:{PREFIX}_mppt1_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt2_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt3_power]]', 'unavailable')
+      }}
+    state: >-
+      {{
+        (states('[[mm:sensor:{PREFIX}_mppt1_power]]') | float(0) )
+        + (states('[[mm:sensor:{PREFIX}_mppt2_power]]') | float(0) )
+        + (states('[[mm:sensor:{PREFIX}_mppt3_power]]') | float(0) )
+      }}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    precision: 0
+    mm_group: "PV_mppt_power"
+
+  - name: "Total MPPT Power"
+    unique_id: "total_mppt_power"
+    condition: "mppt_count >= 4"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('[[mm:sensor:{PREFIX}_mppt1_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt2_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt3_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt4_power]]', 'unavailable')
+      }}
+    state: >-
+      {{
+        (states('[[mm:sensor:{PREFIX}_mppt1_power]]') | float(0) )
+        + (states('[[mm:sensor:{PREFIX}_mppt2_power]]') | float(0) )
+        + (states('[[mm:sensor:{PREFIX}_mppt3_power]]') | float(0) )
+        + (states('[[mm:sensor:{PREFIX}_mppt4_power]]') | float(0) )
       }}
     unit_of_measurement: "W"
     device_class: "power"
@@ -4246,16 +4292,16 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_load_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
       }}
     state: >-
-      {% set pv = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0) %}
-      {% set load = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]') | float(0) %}
-      {% set export = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]') | float(0) %}
-      {% set battery = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]') | float(0) %}
+      {% set pv = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
+      {% set load = states('[[mm:sensor:{PREFIX}_load_power]]') | float(0) %}
+      {% set export = states('[[mm:sensor:{PREFIX}_export_power_raw]]') | float(0) %}
+      {% set battery = states('[[mm:sensor:{PREFIX}_battery_power]]') | float(0) %}
       {% set exported = export if export > 0 else 0 %}
       {% set charging = (battery | abs) if battery < 0 else 0 %}
       {% set discharging = battery if battery > 0 else 0 %}
@@ -4282,16 +4328,16 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_load_power]]', 'unavailable')
       }}
     state: >-
-      {% set battery = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]') | float(0) %}
-      {% set grid_raw = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]') | float(0) %}
-      {% set pv = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0) %}
-      {% set load = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]') | float(0) %}
+      {% set battery = states('[[mm:sensor:{PREFIX}_battery_power]]') | float(0) %}
+      {% set grid_raw = states('[[mm:sensor:{PREFIX}_export_power_raw]]') | float(0) %}
+      {% set pv = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
+      {% set load = states('[[mm:sensor:{PREFIX}_load_power]]') | float(0) %}
       {% set charging = (battery | abs) if battery < 0 else 0 %}
       {% set discharging = battery if battery > 0 else 0 %}
       {% set grid_import = (grid_raw | abs) if grid_raw < 0 else 0 %}
@@ -4315,16 +4361,16 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_load_power]]', 'unavailable')
       }}
     state: >-
-      {% set battery = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]') | float(0) %}
-      {% set grid_raw = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]') | float(0) %}
-      {% set pv = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0) %}
-      {% set load = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]') | float(0) %}
+      {% set battery = states('[[mm:sensor:{PREFIX}_battery_power]]') | float(0) %}
+      {% set grid_raw = states('[[mm:sensor:{PREFIX}_export_power_raw]]') | float(0) %}
+      {% set pv = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
+      {% set load = states('[[mm:sensor:{PREFIX}_load_power]]') | float(0) %}
       {% set charging = (battery | abs) if battery < 0 else 0 %}
       {% set discharging = battery if battery > 0 else 0 %}
       {% set grid_import = (grid_raw | abs) if grid_raw < 0 else 0 %}
@@ -4348,12 +4394,12 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
       }}
     state: >-
-      {% set battery = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]') | float(0) %}
-      {% set export = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]') | float(0) %}
+      {% set battery = states('[[mm:sensor:{PREFIX}_battery_power]]') | float(0) %}
+      {% set export = states('[[mm:sensor:{PREFIX}_export_power_raw]]') | float(0) %}
       {% set discharging = battery if battery > 0 else 0 %}
       {% set grid_export = export if export > 0 else 0 %}
       {% if discharging > 0 %}
@@ -4374,12 +4420,12 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
       }}
     state: >-
-      {% set export = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]') | float(0) %}
-      {% set battery = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]') | float(0) %}
+      {% set export = states('[[mm:sensor:{PREFIX}_export_power_raw]]') | float(0) %}
+      {% set battery = states('[[mm:sensor:{PREFIX}_battery_power]]') | float(0) %}
       {% set discharging = battery if battery > 0 else 0 %}
       {% if export > 0 %}
         {% set battery_to_grid = [export, discharging] | min %}
@@ -4399,12 +4445,12 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
       }}
     state: >-
-      {% set export = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]') | float(0) %}
-      {% set battery = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]') | float(0) %}
+      {% set export = states('[[mm:sensor:{PREFIX}_export_power_raw]]') | float(0) %}
+      {% set battery = states('[[mm:sensor:{PREFIX}_battery_power]]') | float(0) %}
       {% set discharging = battery if battery > 0 else 0 %}
       {% if export > 0 and discharging > 0 %}
         {{ [export, discharging] | min }}
@@ -4423,16 +4469,16 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_load_power]]', 'unavailable')
       }}
     state: >-
-      {% set grid_raw = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]') | float(0) %}
-      {% set battery = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]') | float(0) %}
-      {% set pv = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0) %}
-      {% set load = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]') | float(0) %}
+      {% set grid_raw = states('[[mm:sensor:{PREFIX}_export_power_raw]]') | float(0) %}
+      {% set battery = states('[[mm:sensor:{PREFIX}_battery_power]]') | float(0) %}
+      {% set pv = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
+      {% set load = states('[[mm:sensor:{PREFIX}_load_power]]') | float(0) %}
       {% set grid_import = (grid_raw | abs) if grid_raw < 0 else 0 %}
       {% set discharging = battery if battery > 0 else 0 %}
       {% if grid_import > 0 %}
@@ -4454,14 +4500,14 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_load_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
       }}
     state: >-
-      {% set load = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]') | float(0) %}
-      {% set pv = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0) %}
-      {% set battery = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_power]]') | float(0) %}
+      {% set load = states('[[mm:sensor:{PREFIX}_load_power]]') | float(0) %}
+      {% set pv = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
+      {% set battery = states('[[mm:sensor:{PREFIX}_battery_power]]') | float(0) %}
       {% set battery_supply = battery if battery > 0 else 0 %}
       {% set net = load - pv - battery_supply %}
       {{ net if net > 0 else 0 }}
@@ -4477,16 +4523,16 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_discharging_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_load_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_discharging_power]]', 'unavailable')
       }}
     state: >-
-      {% set load = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_load_power]]') | float(0) %}
-      {% set pv = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0) %}
-      {% set export_raw = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_export_power_raw]]') | float(0) %}
-      {% set battery_discharge = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_discharging_power]]') | float(0) %}
+      {% set load = states('[[mm:sensor:{PREFIX}_load_power]]') | float(0) %}
+      {% set pv = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
+      {% set export_raw = states('[[mm:sensor:{PREFIX}_export_power_raw]]') | float(0) %}
+      {% set battery_discharge = states('[[mm:sensor:{PREFIX}_battery_discharging_power]]') | float(0) %}
       {% if load <= 0 %}
         {# No load or negative load - 0% grid dependency #}
         0
@@ -4518,20 +4564,89 @@ calculated:
     mm_group: "PV_analysis"
     # Percentage of load that depends on grid (inverse of autarky)
 
-  # MPPT Performance Analysis
+  # MPPT Performance Analysis — split by mppt_count so [[mm:…_mppt3/4…]] is absent when not on device
   - name: "MPPT Deviation from Average"
     unique_id: "mppt_power_deviation"
+    condition: "mppt_count == 2"
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt1_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt2_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_mppt1_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt2_power]]', 'unavailable')
       }}
     state: >-
-      {% set m1 = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt1_power]]') | float(0) %}
-      {% set m2 = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt2_power]]') | float(0) %}
-      {% set m3 = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt3_power]]') | float(0) %}
-      {% set m4 = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt4_power]]') | float(0) %}
+      {% set m1 = states('[[mm:sensor:{PREFIX}_mppt1_power]]') | float(0) %}
+      {% set m2 = states('[[mm:sensor:{PREFIX}_mppt2_power]]') | float(0) %}
+      {% set powers = [m1, m2] | select('>', 0) | list %}
+      {% if powers | length > 0 %}
+        {% set avg = (powers | sum) / (powers | length) %}
+        {% set ns = namespace(max_dev=0) %}
+        {% for p in powers %}
+          {% set dev = (p - avg) | abs %}
+          {% if dev > ns.max_dev %}
+            {% set ns.max_dev = dev %}
+          {% endif %}
+        {% endfor %}
+        {{ ns.max_dev | round(1) }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    precision: 1
+    mm_group: "PV_mppt_analysis"
+    # Maximum deviation from average MPPT power (W); indicates string imbalance
+
+  - name: "MPPT Deviation from Average"
+    unique_id: "mppt_power_deviation"
+    condition: "mppt_count == 3"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('[[mm:sensor:{PREFIX}_mppt1_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt2_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt3_power]]', 'unavailable')
+      }}
+    state: >-
+      {% set m1 = states('[[mm:sensor:{PREFIX}_mppt1_power]]') | float(0) %}
+      {% set m2 = states('[[mm:sensor:{PREFIX}_mppt2_power]]') | float(0) %}
+      {% set m3 = states('[[mm:sensor:{PREFIX}_mppt3_power]]') | float(0) %}
+      {% set powers = [m1, m2, m3] | select('>', 0) | list %}
+      {% if powers | length > 0 %}
+        {% set avg = (powers | sum) / (powers | length) %}
+        {% set ns = namespace(max_dev=0) %}
+        {% for p in powers %}
+          {% set dev = (p - avg) | abs %}
+          {% if dev > ns.max_dev %}
+            {% set ns.max_dev = dev %}
+          {% endif %}
+        {% endfor %}
+        {{ ns.max_dev | round(1) }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    precision: 1
+    mm_group: "PV_mppt_analysis"
+    # Maximum deviation from average MPPT power (W); indicates string imbalance
+
+  - name: "MPPT Deviation from Average"
+    unique_id: "mppt_power_deviation"
+    condition: "mppt_count >= 4"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('[[mm:sensor:{PREFIX}_mppt1_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt2_power]]', 'unavailable')
+      }}
+    state: >-
+      {% set m1 = states('[[mm:sensor:{PREFIX}_mppt1_power]]') | float(0) %}
+      {% set m2 = states('[[mm:sensor:{PREFIX}_mppt2_power]]') | float(0) %}
+      {% set m3 = states('[[mm:sensor:{PREFIX}_mppt3_power]]') | float(0) %}
+      {% set m4 = states('[[mm:sensor:{PREFIX}_mppt4_power]]') | float(0) %}
       {% set powers = [m1, m2, m3, m4] | select('>', 0) | list %}
       {% if powers | length > 0 %}
         {% set avg = (powers | sum) / (powers | length) %}
@@ -4558,12 +4673,12 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt_power_deviation]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_mppt_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_mppt_power_deviation]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_total_mppt_power]]', 'unavailable')
       }}
     state: >-
-      {% set deviation = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt_power_deviation]]') | float(0) %}
-      {% set total = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_mppt_power]]') | float(0) %}
+      {% set deviation = states('[[mm:sensor:{PREFIX}_mppt_power_deviation]]') | float(0) %}
+      {% set total = states('[[mm:sensor:{PREFIX}_total_mppt_power]]') | float(0) %}
       {% if total > 0 %}
         {{ [100 - (deviation / total * 100), 0] | max | round(1) }}
       {% else %}
@@ -4578,17 +4693,58 @@ calculated:
 
   - name: "Active MPPT Count"
     unique_id: "active_mppt_count"
+    condition: "mppt_count == 2"
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt1_power]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt2_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_mppt1_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt2_power]]', 'unavailable')
       }}
     state: >-
-      {% set m1 = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt1_power]]') | float(0) %}
-      {% set m2 = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt2_power]]') | float(0) %}
-      {% set m3 = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt3_power]]') | float(0) %}
-      {% set m4 = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_mppt4_power]]') | float(0) %}
+      {% set m1 = states('[[mm:sensor:{PREFIX}_mppt1_power]]') | float(0) %}
+      {% set m2 = states('[[mm:sensor:{PREFIX}_mppt2_power]]') | float(0) %}
+      {{ ([m1, m2] | select('>', 10) | list | length) }}
+    unit_of_measurement: ""
+    state_class: "measurement"
+    precision: 0
+    mm_group: "PV_mppt_analysis"
+    # Number of MPPT channels with power > 10 W (avoids noise); useful for 4-MPPT inverters with fewer strings
+
+  - name: "Active MPPT Count"
+    unique_id: "active_mppt_count"
+    condition: "mppt_count == 3"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('[[mm:sensor:{PREFIX}_mppt1_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt2_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt3_power]]', 'unavailable')
+      }}
+    state: >-
+      {% set m1 = states('[[mm:sensor:{PREFIX}_mppt1_power]]') | float(0) %}
+      {% set m2 = states('[[mm:sensor:{PREFIX}_mppt2_power]]') | float(0) %}
+      {% set m3 = states('[[mm:sensor:{PREFIX}_mppt3_power]]') | float(0) %}
+      {{ ([m1, m2, m3] | select('>', 10) | list | length) }}
+    unit_of_measurement: ""
+    state_class: "measurement"
+    precision: 0
+    mm_group: "PV_mppt_analysis"
+    # Number of MPPT channels with power > 10 W (avoids noise); useful for 4-MPPT inverters with fewer strings
+
+  - name: "Active MPPT Count"
+    unique_id: "active_mppt_count"
+    condition: "mppt_count >= 4"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('[[mm:sensor:{PREFIX}_mppt1_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_mppt2_power]]', 'unavailable')
+      }}
+    state: >-
+      {% set m1 = states('[[mm:sensor:{PREFIX}_mppt1_power]]') | float(0) %}
+      {% set m2 = states('[[mm:sensor:{PREFIX}_mppt2_power]]') | float(0) %}
+      {% set m3 = states('[[mm:sensor:{PREFIX}_mppt3_power]]') | float(0) %}
+      {% set m4 = states('[[mm:sensor:{PREFIX}_mppt4_power]]') | float(0) %}
       {{ ([m1, m2, m3, m4] | select('>', 10) | list | length) }}
     unit_of_measurement: ""
     state_class: "measurement"
@@ -4602,12 +4758,12 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
       }}
     state: >-
-      {% set current_power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0) %}
+      {% set current_power = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
       {# Prefer BDC rated power (reg 5628, W); else max AC nameplate from selected model (valid_models) #}
-      {% set rated_bdc = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_bdc_rated_power]]') | float(0) %}
+      {% set rated_bdc = states('[[mm:sensor:{PREFIX}_bdc_rated_power]]') | float(0) %}
       {% set max_power = rated_bdc if rated_bdc > 100 else 0 %}
       {% if max_power <= 0 %}
         {% set max_power = {MAX_AC_OUTPUT_POWER} | int(0) %}
@@ -4629,12 +4785,12 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_pv_generation]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_daily_pv_generation]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
       }}
     state: >-
-      {% set daily_gen = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_daily_pv_generation]]') | float(0) %}
-      {% set current_power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0) %}
+      {% set daily_gen = states('[[mm:sensor:{PREFIX}_daily_pv_generation]]') | float(0) %}
+      {% set current_power = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
       {% set avg_power = current_power %}
       {% if avg_power > 0 %}
         {{ (daily_gen / avg_power) | round(2) }}
@@ -4653,9 +4809,9 @@ calculated:
   - name: "Protocol Version"
     unique_id: "protocol_version"
     type: "sensor"
-    availability: "{{ not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_protocol_version_raw]]', 'unavailable') }}"
+    availability: "{{ not is_state('[[mm:sensor:{PREFIX}_protocol_version_raw]]', 'unavailable') }}"
     state: >-
-      {% set raw_value = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_protocol_version_raw]]') %}
+      {% set raw_value = states('[[mm:sensor:{PREFIX}_protocol_version_raw]]') %}
       {% if raw_value in ['unavailable', 'unknown', 'None', ''] %}
         unknown
       {% else %}
@@ -4677,9 +4833,9 @@ calculated:
     unique_id: "inverter_status_display"
     type: "sensor"
     state: >-
-      {% set power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0) %}
-      {% set temp = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_inverter_temperature]]') | float(0) %}
-      {% set device_type = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_sungrow_device_type_code]]') %}
+      {% set power = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
+      {% set temp = states('[[mm:sensor:{PREFIX}_inverter_temperature]]') | float(0) %}
+      {% set device_type = states('[[mm:sensor:{PREFIX}_sungrow_device_type_code]]') %}
 
       {# Extract power rating from device type code #}
       {% set inverter_power = 5000 %}  {# Default fallback #}
@@ -4730,9 +4886,9 @@ calculated:
         Standby
       {% endif %}
     icon_template: >-
-      {% set power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_total_dc_power]]') | float(0) %}
-      {% set temp = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_inverter_temperature]]') | float(0) %}
-      {% set device_type = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_sungrow_device_type_code]]') %}
+      {% set power = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
+      {% set temp = states('[[mm:sensor:{PREFIX}_inverter_temperature]]') | float(0) %}
+      {% set device_type = states('[[mm:sensor:{PREFIX}_sungrow_device_type_code]]') %}
 
       {# Extract power rating from device type code #}
       {% set inverter_power = 5000 %}  {# Default fallback #}
@@ -4790,7 +4946,7 @@ calculated:
     unique_id: "grid_status"
     type: "sensor"
     state: >-
-      {% set import_power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_active_power]]') | float(0) %}
+      {% set import_power = states('[[mm:sensor:{PREFIX}_meter_active_power]]') | float(0) %}
       {% if import_power > 100 %}
         Importing
       {% elif import_power < -100 %}
@@ -4799,7 +4955,7 @@ calculated:
         Balanced
       {% endif %}
     icon_template: >-
-      {% set import_power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_meter_active_power]]') | float(0) %}
+      {% set import_power = states('[[mm:sensor:{PREFIX}_meter_active_power]]') | float(0) %}
       {% if import_power > 500 %}
         mdi:transmission-tower-import
       {% elif import_power > 100 %}
@@ -4818,8 +4974,8 @@ calculated:
     condition: "battery_enabled == true"
     type: "sensor"
     state: >-
-      {% set soc = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_level]]') | float(0) %}
-      {% set power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_signed_battery_power]]') | float(0) %}
+      {% set soc = states('[[mm:sensor:{PREFIX}_battery_level]]') | float(0) %}
+      {% set power = states('[[mm:sensor:{PREFIX}_signed_battery_power]]') | float(0) %}
       {% if power > 100 %}
         Charging
       {% elif power < -100 %}
@@ -4828,8 +4984,8 @@ calculated:
         Idle
       {% endif %}
     icon_template: >-
-      {% set soc = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_level]]') | float(0) %}
-      {% set power = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_signed_battery_power]]') | float(0) %}
+      {% set soc = states('[[mm:sensor:{PREFIX}_battery_level]]') | float(0) %}
+      {% set power = states('[[mm:sensor:{PREFIX}_signed_battery_power]]') | float(0) %}
       {% if power > 100 %}
         {% if soc > 90 %}
           mdi:battery-charging
@@ -4876,11 +5032,11 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_state_of_health]]', 'unavailable')
-      and not is_state('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_state_of_health]]', 'unknown')
+      not is_state('[[mm:sensor:{PREFIX}_battery_state_of_health]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_state_of_health]]', 'unknown')
       }}
     state: >-
-      {% set soh = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_state_of_health]]') | float(0) %}
+      {% set soh = states('[[mm:sensor:{PREFIX}_battery_state_of_health]]') | float(0) %}
       {% if soh >= 90 %}
         Excellent
       {% elif soh >= 80 %}
@@ -4893,7 +5049,7 @@ calculated:
         Critical
       {% endif %}
     icon_template: >-
-      {% set soh = states('[[mm:sensor:{UNIQUE_ID_PREFIX}_battery_state_of_health]]') | float(0) %}
+      {% set soh = states('[[mm:sensor:{PREFIX}_battery_state_of_health]]') | float(0) %}
       {% if soh >= 90 %}
         mdi:battery
       {% elif soh >= 80 %}
@@ -4907,7 +5063,7 @@ calculated:
       {% endif %}
     mm_group: "battery_health_status"
 
-# Binary Sensors
+# Binary Sensors (state/availability: [[mm:<domain>:{PREFIX}_<unique_id>]] → registry entity_id for ha_generated)
 binary_sensors:
   # Binary Sensors for Status Monitoring
   - name: "PV generating"
@@ -4915,15 +5071,15 @@ binary_sensors:
     type: "binary_sensor"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_running_state', 'unavailable')
-      and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_running_state]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
       }}
     state: >-
-      {% if states('sensor.{PREFIX}_running_state') | is_number %}
-        {{ (states('sensor.{PREFIX}_running_state') | int | bitwise_and(0x1)) > 0 }}
+      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
+        {{ (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x1)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
-        {% set total_dc_power = states('sensor.{PREFIX}_total_dc_power') %}
+        {% set total_dc_power = states('[[mm:sensor:{PREFIX}_total_dc_power]]') %}
         {% if total_dc_power in ['unknown', 'unavailable', 'none'] or total_dc_power is none %}
           0
         {% elif (total_dc_power|int) > 0 %}
@@ -4938,10 +5094,10 @@ binary_sensors:
   - name: "PV generating (delay)"
     unique_id: "pv_generating_delay"
     type: "binary_sensor"
-    availability: "{{ not is_state('binary_sensor.{PREFIX}_pv_generating', 'unavailable') }}"
+    availability: "{{ not is_state('[[mm:binary_sensor:{PREFIX}_pv_generating]]', 'unavailable') }}"
     delay_on:
       seconds: 60
-    state: "{{ states('binary_sensor.{PREFIX}_pv_generating') }}"
+    state: "{{ states('[[mm:binary_sensor:{PREFIX}_pv_generating]]') }}"
     device_class: "power"
     mm_group: "PV_binary_status"
 
@@ -4951,19 +5107,19 @@ binary_sensors:
     type: "binary_sensor"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_running_state', 'unavailable')
-      or not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_running_state]]', 'unavailable')
+      or not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
       }}
     state: >-
-      {% if states('sensor.{PREFIX}_running_state') | is_number %}
-        {% if (states('sensor.{PREFIX}_running_state') | int | bitwise_and(0x2)) > 0 %}
+      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
+        {% if (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x2)) > 0 %}
           on
         {% else %}
           off
         {% endif %}
       {% else %}
         {# running_state not usable (e.g. SH*RS): register 5213 — negative = charging #}
-        {% set bp = states('sensor.{PREFIX}_battery_power') %}
+        {% set bp = states('[[mm:sensor:{PREFIX}_battery_power]]') %}
         {% if bp in ['unknown', 'unavailable', 'none'] or bp is none %}
           off
         {% elif (bp | float(0)) < 0 %}
@@ -4979,10 +5135,10 @@ binary_sensors:
     unique_id: "battery_charging_delay"
     condition: "battery_enabled == true"
     type: "binary_sensor"
-    availability: "{{ not is_state('binary_sensor.{PREFIX}_battery_charging', 'unavailable') }}"
+    availability: "{{ not is_state('[[mm:binary_sensor:{PREFIX}_battery_charging]]', 'unavailable') }}"
     delay_on:
       seconds: 60
-    state: "{{ states('binary_sensor.{PREFIX}_battery_charging') }}"
+    state: "{{ states('[[mm:binary_sensor:{PREFIX}_battery_charging]]') }}"
     device_class: "battery_charging"
     mm_group: "PV_binary_status"
 
@@ -4992,19 +5148,19 @@ binary_sensors:
     type: "binary_sensor"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_running_state', 'unavailable')
-      or not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_running_state]]', 'unavailable')
+      or not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
       }}
     state: >-
-      {% if states('sensor.{PREFIX}_running_state') | is_number %}
-        {% if (states('sensor.{PREFIX}_running_state') | int | bitwise_and(0x4)) > 0 %}
+      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
+        {% if (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x4)) > 0 %}
           on
         {% else %}
           off
         {% endif %}
       {% else %}
         {# running_state not usable: register 5213 — positive = discharging #}
-        {% set bp = states('sensor.{PREFIX}_battery_power') %}
+        {% set bp = states('[[mm:sensor:{PREFIX}_battery_power]]') %}
         {% if bp in ['unknown', 'unavailable', 'none'] or bp is none %}
           off
         {% elif (bp | float(0)) > 0 %}
@@ -5019,10 +5175,10 @@ binary_sensors:
     unique_id: "battery_discharging_delay"
     condition: "battery_enabled == true"
     type: "binary_sensor"
-    availability: "{{ not is_state('binary_sensor.{PREFIX}_battery_discharging', 'unavailable') }}"
+    availability: "{{ not is_state('[[mm:binary_sensor:{PREFIX}_battery_discharging]]', 'unavailable') }}"
     delay_on:
       seconds: 60
-    state: "{{ states('binary_sensor.{PREFIX}_battery_discharging') }}"
+    state: "{{ states('[[mm:binary_sensor:{PREFIX}_battery_discharging]]') }}"
     mm_group: "PV_binary_status"
 
   - name: "Exporting power"
@@ -5030,15 +5186,15 @@ binary_sensors:
     type: "binary_sensor"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_running_state', 'unavailable')
-      and not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_running_state]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
       }}
     state: >-
-      {% if states('sensor.{PREFIX}_running_state') | is_number %}
-        {{ (states('sensor.{PREFIX}_running_state') | int | bitwise_and(0x10)) > 0 }}
+      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
+        {{ (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x10)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
-        {% set export_power = states('sensor.{PREFIX}_export_power_raw') %}
+        {% set export_power = states('[[mm:sensor:{PREFIX}_export_power_raw]]') %}
         {% if export_power in ['unknown', 'unavailable', 'none'] or export_power is none %}
           0
         {% elif (export_power|int) > 0 %}
@@ -5053,10 +5209,10 @@ binary_sensors:
   - name: "Exporting power (delay)"
     unique_id: "exporting_power_delay"
     type: "binary_sensor"
-    availability: "{{ not is_state('binary_sensor.{PREFIX}_exporting_power', 'unavailable') }}"
+    availability: "{{ not is_state('[[mm:binary_sensor:{PREFIX}_exporting_power]]', 'unavailable') }}"
     delay_on:
       seconds: 60
-    state: "{{ states('binary_sensor.{PREFIX}_exporting_power') }}"
+    state: "{{ states('[[mm:binary_sensor:{PREFIX}_exporting_power]]') }}"
     device_class: "power"
     mm_group: "PV_binary_status"
 
@@ -5065,15 +5221,15 @@ binary_sensors:
     type: "binary_sensor"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_running_state', 'unavailable')
-      and not is_state('sensor.{PREFIX}_running_state', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_running_state]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
       }}
     state: >-
-      {% if states('sensor.{PREFIX}_running_state') | is_number %}
-        {{ (states('sensor.{PREFIX}_running_state') | int | bitwise_and(0x20)) > 0 }}
+      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
+        {{ (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x20)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
-        {% set export_power = states('sensor.{PREFIX}_export_power_raw') %}
+        {% set export_power = states('[[mm:sensor:{PREFIX}_export_power_raw]]') %}
         {% if export_power in ['unknown', 'unavailable', 'none'] or export_power is none %}
           0
         {% elif (export_power|int) < 0 %}
@@ -5088,10 +5244,10 @@ binary_sensors:
   - name: "Importing power (delay)"
     unique_id: "importing_power_delay"
     type: "binary_sensor"
-    availability: "{{ not is_state('binary_sensor.{PREFIX}_importing_power', 'unavailable') }}"
+    availability: "{{ not is_state('[[mm:binary_sensor:{PREFIX}_importing_power]]', 'unavailable') }}"
     delay_on:
       seconds: 60
-    state: "{{ states('binary_sensor.{PREFIX}_importing_power') }}"
+    state: "{{ states('[[mm:binary_sensor:{PREFIX}_importing_power]]') }}"
     device_class: "power"
     mm_group: "PV_binary_status"
 
@@ -5100,14 +5256,14 @@ binary_sensors:
     type: "binary_sensor"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_running_state', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_running_state]]', 'unavailable')
       }}
     state: >-
-      {% if states('sensor.{PREFIX}_running_state') | is_number %}
-        {{ (states('sensor.{PREFIX}_running_state') | int | bitwise_and(0x8)) > 0 }}
+      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
+        {{ (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x8)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
-        {% set load_power = states('sensor.{PREFIX}_load_power') %}
+        {% set load_power = states('[[mm:sensor:{PREFIX}_load_power]]') %}
         {% if load_power in ['unknown', 'unavailable', 'none'] or load_power is none %}
           0
         {% elif (load_power|int) > 0 %}
@@ -5124,14 +5280,14 @@ binary_sensors:
     type: "binary_sensor"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_running_state', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_running_state]]', 'unavailable')
       }}
     state: >-
-      {% if states('sensor.{PREFIX}_running_state') | is_number %}
-        {{ (states('sensor.{PREFIX}_running_state') | int | bitwise_and(0x80)) > 0 }}
+      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
+        {{ (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x80)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
-        {% set load_power = states('sensor.{PREFIX}_load_power') %}
+        {% set load_power = states('[[mm:sensor:{PREFIX}_load_power]]') %}
         {% if load_power in ['unknown', 'unavailable', 'none'] or load_power is none %}
           0
         {% elif (load_power|int) < 0 %}

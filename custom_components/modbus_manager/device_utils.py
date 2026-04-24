@@ -13,6 +13,8 @@ _LOGGER = logging.getLogger(__name__)
 
 # [[mm:domain:unique_id]] — resolved in entity init (registry may not be ready at coordinator build)
 _MM_REGISTRY_MARKER = re.compile(r"\[\[mm:([a-zA-Z0-9_]+):([^\]]+)\]\]")
+# Log at most one DEBUG line per (domain, unique_id) while missing; clear when it appears again.
+_MM_MISS_LOGGED: set[tuple[str, str]] = set()
 
 
 def resolve_entity_id_strategy(dynamic_config: Optional[dict[str, Any]]) -> str:
@@ -54,33 +56,69 @@ def ensure_entity_id_strategy_on_device(device: dict[str, Any]) -> None:
     device["entity_id_strategy"] = resolve_entity_id_strategy(device)
 
 
-def resolve_mm_registry_markers(hass: HomeAssistant, text: str | None) -> str:
-    """Replace [[mm:domain:unique_id]] with registry entity_id (modbus_manager platform).
+def _resolve_mm_registry_markers(
+    hass: HomeAssistant, text: str | None, *, log_missing: bool = True
+) -> tuple[Optional[str], bool]:
+    """Replace [[mm:domain:unique_id]] with registry entity_id.
 
-    If no registry entry exists yet, logs at debug and substitutes ``domain.unknown``
-    (templates should tolerate unavailable refs until the next reload).
+    Returns (resolved_string, all_markers_matched). If there are no ``[[mm:…]]`` markers,
+    returns ``(text, True)`` so callers can treat the template as non-pending. If *text* is
+    empty, returns ``(text, True)``.
+
+    If a marker has no registry entry yet, uses ``{domain}.unknown`` and
+    *all_markers_matched* is False.
     """
-    if not text or "[[mm:" not in text:
-        return text
+    if not text:
+        return text, True
+    if "[[mm:" not in text:
+        return text, True
     reg = er.async_get(hass)
+    all_matched = True
     out: list[str] = []
     pos = 0
     for m in _MM_REGISTRY_MARKER.finditer(text):
         out.append(text[pos : m.start()])
         dom, uid = m.group(1), m.group(2).strip()
         eid = reg.async_get_entity_id(dom, DOMAIN, uid)
-        if eid is None:
-            _LOGGER.debug(
-                "No registry entity for [[mm:%s:%s]] (platform %s) yet; using placeholder",
-                dom,
-                uid,
-                DOMAIN,
-            )
+        key = (dom, uid)
+        if eid is not None:
+            _MM_MISS_LOGGED.discard(key)
+        elif eid is None:
+            all_matched = False
+            if log_missing and key not in _MM_MISS_LOGGED:
+                _MM_MISS_LOGGED.add(key)
+                _LOGGER.debug(
+                    "No registry entity for [[mm:%s:%s]] (platform %s) yet; using placeholder",
+                    dom,
+                    uid,
+                    DOMAIN,
+                )
         repl = eid if eid is not None else f"{dom}.unknown"
         out.append(repl)
         pos = m.end()
     out.append(text[pos:])
-    return "".join(out)
+    return "".join(out), all_matched
+
+
+def resolve_mm_registry_markers(hass: HomeAssistant, text: str | None) -> str:
+    """Replace [[mm:domain:unique_id]] with registry entity_id (modbus_manager platform).
+
+    If no registry entry exists yet, logs at debug and substitutes ``domain.unknown``
+    (templates should tolerate unavailable refs until the next reload).
+    """
+    result, _ = _resolve_mm_registry_markers(hass, text, log_missing=True)
+    return result if result is not None else (text or "")
+
+
+def resolve_mm_registry_markers_ex(
+    hass: HomeAssistant, text: str | None, *, log_missing: bool = True
+) -> tuple[str, bool]:
+    """Like :func:`resolve_mm_registry_markers` but also returns whether every marker had a match.
+
+    Used to stop repeated registry work once all ``[[mm:…]]`` references resolve.
+    """
+    s, ok = _resolve_mm_registry_markers(hass, text, log_missing=log_missing)
+    return (s if s is not None else (text or ""), ok)
 
 
 def get_entity_mm_group(entity_def: Dict[str, Any]) -> Any:
@@ -164,33 +202,36 @@ def generate_unique_id(
 ) -> str:
     """Generate consistent unique_id across all platforms.
 
+    The device prefix is always normalized to lowercase so it matches ``{PREFIX}`` in
+    templates and ``[[mm:domain:{PREFIX}_…]]`` registry lookups.
+
     Args:
-        prefix: Device prefix (e.g., "SG", "SBR")
+        prefix: Device prefix (e.g., "SG", "SBR") — stored lower in the entity registry
         template_unique_id: unique_id from template (optional)
         name: Fallback name if no template_unique_id (optional)
 
     Returns:
-        Generated unique_id with prefix
+        Generated unique_id with normalized prefix
     """
+    p = str(prefix or "").strip().lower() or "unknown"
     if template_unique_id:
-        # Check if template_unique_id already has prefix
-        if template_unique_id.startswith(f"{prefix}_"):
-            return template_unique_id
-        else:
-            return f"{prefix}_{template_unique_id}"
-    else:
-        # Fallback: Clean the name for unique_id
-        if name:
-            clean_name = (
-                name.lower()
-                .replace(" ", "_")
-                .replace("-", "_")
-                .replace("(", "")
-                .replace(")", "")
-            )
-            return f"{prefix}_{clean_name}"
-        else:
-            return f"{prefix}_unknown"
+        t = str(template_unique_id).strip()
+        t_lower = t.lower()
+        pfx = f"{p}_"
+        if t_lower.startswith(pfx):
+            return t_lower
+        return f"{p}_{t_lower}"
+    # Fallback: Clean the name for unique_id
+    if name:
+        clean_name = (
+            name.lower()
+            .replace(" ", "_")
+            .replace("-", "_")
+            .replace("(", "")
+            .replace(")", "")
+        )
+        return f"{p}_{clean_name}"
+    return f"{p}_unknown"
 
 
 def process_template_entities_with_prefix(
@@ -211,22 +252,12 @@ def process_template_entities_with_prefix(
     for entity in entities:
         processed_entity = entity.copy()
 
-        # Process unique_id
+        # Process unique_id (same rules as coordinator / :func:`generate_unique_id`)
         template_unique_id = entity.get("unique_id")
-        if template_unique_id:
-            if not template_unique_id.startswith(f"{prefix}_"):
-                processed_entity["unique_id"] = f"{prefix}_{template_unique_id}"
-        else:
-            # Generate unique_id from name if not present
-            name = entity.get("name", "unknown")
-            clean_name = (
-                name.lower()
-                .replace(" ", "_")
-                .replace("-", "_")
-                .replace("(", "")
-                .replace(")", "")
-            )
-            processed_entity["unique_id"] = f"{prefix}_{clean_name}"
+        name = entity.get("name", "unknown")
+        processed_entity["unique_id"] = generate_unique_id(
+            prefix, template_unique_id, name
+        )
 
         # Ensure default_entity_id is set (used to force entity_id)
         if "default_entity_id" not in processed_entity:
@@ -252,6 +283,18 @@ def process_template_entities_with_prefix(
     return processed_entities
 
 
+def _expand_mm_registry_prefix_markers(result: str, p_norm: str) -> str:
+    """Turn [[mm:domain:{PREFIX}_suffix]] into [[mm:domain:pn_suffix]] before {PREFIX} clearing.
+
+    Registry ``unique_id`` always uses ``p_norm`` (see :func:`generate_unique_id`).
+    """
+    return re.sub(
+        r"\[\[mm:([a-zA-Z0-9_]+):\{PREFIX\}_([a-zA-Z0-9_]+)\]\]",
+        lambda m: f"[[mm:{m.group(1)}:{p_norm}_{m.group(2)}]]",
+        result,
+    )
+
+
 def replace_template_placeholders(
     template_string: str,
     prefix: str,
@@ -271,8 +314,9 @@ def replace_template_placeholders(
             ``{PREFIX}_`` become empty (entity_id-style references). For :attr:`EntityIdStrategy.HA_GENERATED`
             and :attr:`EntityIdStrategy.LEGACY_PREFIXED`, ``{PREFIX}`` is the lowercased device prefix
             (templates that must follow HA-generated entity names should use ``[[mm:…]]`` after substitution).
-        ``{UNIQUE_ID_PREFIX}``: verbatim device ``prefix`` string for ``[[mm:domain:…]]`` / registry
-            ``unique_id`` (same casing as in :func:`generate_unique_id`).
+        Markers ``[[mm:domain:{PREFIX}_suffix]]`` are expanded **first** to the normalized registry
+        id (``prefix.lower()``), so they still work when ``{PREFIX}`` is cleared for legacy unprefixed
+        entity_id text.
         model_config: If set, numeric fields from valid_models are substituted as {KEY_UPPER},
             e.g. max_ac_output_power -> {MAX_AC_OUTPUT_POWER}. Used in calculated/binary templates.
             Remaining {MAX_AC_OUTPUT_POWER}, {MAX_CHARGE_POWER}, {MAX_DISCHARGE_POWER} default to 0.
@@ -287,29 +331,30 @@ def replace_template_placeholders(
     if not isinstance(template_string, str):
         return template_string
 
-    # Replace common placeholders
-    # Note: {PREFIX} is still actively used, {SLAVE_ID} and {BATTERY_SLAVE_ID} are legacy
-    # PREFIX is replaced lowercase for consistency with entity_id / object_id text
-    # UNIQUE_ID_PREFIX: device prefix as stored in config (e.g. "SG") for registry unique_id
-    # fragments inside ``[[mm:domain:…]]`` — must match generate_unique_id(prefix, …).
+    p_norm = str(prefix or "").strip().lower() or "unknown"
+
+    # 1) [[mm:…:{PREFIX}_…]] must use normalized prefix (registry unique_id) even when
+    #    later {PREFIX} is stripped for legacy_unprefixed.
+    result = _expand_mm_registry_prefix_markers(template_string, p_norm)
+    # 2) Jinja dynamic month/year: states('sensor.{PREFIX}_' ~ …) — same prefix as unique_id
+    result = result.replace("sensor.{PREFIX}_' ~", f"sensor.{p_norm}_' ~")
+
+    # 3) Remaining placeholders: {PREFIX} for legacy entity_id text, {SLAVE_ID}, model keys
     # LEGACY_UNPREFIXED: entity_ids have no prefix, so {PREFIX}_ and {PREFIX} become ""
     if entity_id_strategy == EntityIdStrategy.LEGACY_UNPREFIXED:
         replacements = {
             "{PREFIX}_": "",
             "{PREFIX}": "",
-            "{UNIQUE_ID_PREFIX}": str(prefix) if prefix is not None else "",
             "{SLAVE_ID}": str(slave_id),
             "{BATTERY_SLAVE_ID}": str(battery_slave_id),
         }
     else:
         replacements = {
-            "{PREFIX}": prefix.lower(),
-            "{UNIQUE_ID_PREFIX}": str(prefix) if prefix is not None else "",
+            "{PREFIX}": p_norm,
             "{SLAVE_ID}": str(slave_id),
             "{BATTERY_SLAVE_ID}": str(battery_slave_id),
         }
 
-    result = template_string
     for placeholder, value in replacements.items():
         result = result.replace(placeholder, value)
 
