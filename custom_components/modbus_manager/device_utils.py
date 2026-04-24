@@ -271,6 +271,8 @@ def replace_template_placeholders(
             ``{PREFIX}_`` become empty (entity_id-style references). For :attr:`EntityIdStrategy.HA_GENERATED`
             and :attr:`EntityIdStrategy.LEGACY_PREFIXED`, ``{PREFIX}`` is the lowercased device prefix
             (templates that must follow HA-generated entity names should use ``[[mm:…]]`` after substitution).
+        ``{UNIQUE_ID_PREFIX}``: verbatim device ``prefix`` string for ``[[mm:domain:…]]`` / registry
+            ``unique_id`` (same casing as in :func:`generate_unique_id`).
         model_config: If set, numeric fields from valid_models are substituted as {KEY_UPPER},
             e.g. max_ac_output_power -> {MAX_AC_OUTPUT_POWER}. Used in calculated/binary templates.
             Remaining {MAX_AC_OUTPUT_POWER}, {MAX_CHARGE_POWER}, {MAX_DISCHARGE_POWER} default to 0.
@@ -287,18 +289,22 @@ def replace_template_placeholders(
 
     # Replace common placeholders
     # Note: {PREFIX} is still actively used, {SLAVE_ID} and {BATTERY_SLAVE_ID} are legacy
-    # PREFIX is replaced lowercase for consistency with entity_id format
+    # PREFIX is replaced lowercase for consistency with entity_id / object_id text
+    # UNIQUE_ID_PREFIX: device prefix as stored in config (e.g. "SG") for registry unique_id
+    # fragments inside ``[[mm:domain:…]]`` — must match generate_unique_id(prefix, …).
     # LEGACY_UNPREFIXED: entity_ids have no prefix, so {PREFIX}_ and {PREFIX} become ""
     if entity_id_strategy == EntityIdStrategy.LEGACY_UNPREFIXED:
         replacements = {
             "{PREFIX}_": "",
             "{PREFIX}": "",
+            "{UNIQUE_ID_PREFIX}": str(prefix) if prefix is not None else "",
             "{SLAVE_ID}": str(slave_id),
             "{BATTERY_SLAVE_ID}": str(battery_slave_id),
         }
     else:
         replacements = {
             "{PREFIX}": prefix.lower(),
+            "{UNIQUE_ID_PREFIX}": str(prefix) if prefix is not None else "",
             "{SLAVE_ID}": str(slave_id),
             "{BATTERY_SLAVE_ID}": str(battery_slave_id),
         }
