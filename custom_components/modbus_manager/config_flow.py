@@ -27,6 +27,7 @@ from .const import (
     MIN_TIMEOUT,
 )
 from .device_utils import (
+    ensure_entity_id_strategy_on_device,
     generate_unique_id,
     get_entity_mm_group,
     resolve_firmware_profile_version,
@@ -125,7 +126,7 @@ def _is_prefix_unique_across_hubs(
 class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Modbus Manager."""
 
-    VERSION = 3
+    VERSION = 4
 
     def __init__(self):
         """Initialize the config flow."""
@@ -148,6 +149,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         normalized["device_entry_id"] = normalized.get(
             "device_entry_id", self._build_device_entry_id(normalized)
         )
+        ensure_entity_id_strategy_on_device(normalized)
         return normalized
 
     async def async_migrate_entry(
@@ -2520,6 +2522,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 )
                 if entity_ids_opt is not None:
                     config_data["entity_ids_without_prefix"] = entity_ids_opt
+                entity_strategy_opt = config_values.get("dynamic_config", {}).get(
+                    "entity_id_strategy"
+                )
+                if entity_strategy_opt is not None:
+                    config_data["entity_id_strategy"] = entity_strategy_opt
 
             # Create title based on host:port for grouping (like Philips Hue)
             host = config_data.get("host", "unknown")

@@ -1,13 +1,86 @@
 """Device utilities for consistent device creation across all platforms."""
 
 import logging
+import re
 from typing import Any, Dict, Optional
 
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import entity_registry as er
 
-from .const import CONF_MM_GROUP, DOMAIN
+from .const import CONF_MM_GROUP, DOMAIN, EntityIdStrategy
 
 _LOGGER = logging.getLogger(__name__)
+
+# [[mm:domain:unique_id]] — resolved in entity init (registry may not be ready at coordinator build)
+_MM_REGISTRY_MARKER = re.compile(r"\[\[mm:([a-zA-Z0-9_]+):([^\]]+)\]\]")
+
+
+def resolve_entity_id_strategy(dynamic_config: Optional[dict[str, Any]]) -> str:
+    """Resolve per-device entity id strategy; prefer entity_id_strategy, else legacy flag.
+
+    Maps legacy ``entity_ids_without_prefix`` (yes/no) to :class:`EntityIdStrategy`.
+    """
+    if not isinstance(dynamic_config, dict):
+        dynamic_config = {}
+    raw = dynamic_config.get("entity_id_strategy")
+    if raw in (
+        EntityIdStrategy.HA_GENERATED,
+        EntityIdStrategy.LEGACY_UNPREFIXED,
+        EntityIdStrategy.LEGACY_PREFIXED,
+    ):
+        return raw
+    if raw is not None and str(raw).strip() != "":
+        _LOGGER.warning(
+            "Unknown entity_id_strategy %r; using legacy_prefixed. Valid: %s",
+            raw,
+            ", ".join(x.value for x in EntityIdStrategy),
+        )
+    ewp = str(dynamic_config.get("entity_ids_without_prefix", "no")).strip().lower()
+    if ewp == "yes":
+        return EntityIdStrategy.LEGACY_UNPREFIXED
+    return EntityIdStrategy.LEGACY_PREFIXED
+
+
+def ensure_entity_id_strategy_on_device(device: dict[str, Any]) -> None:
+    """Set ``entity_id_strategy`` on a device dict when missing (migration / defaults)."""
+    if not isinstance(device, dict):
+        return
+    if device.get("entity_id_strategy") in (
+        EntityIdStrategy.HA_GENERATED,
+        EntityIdStrategy.LEGACY_UNPREFIXED,
+        EntityIdStrategy.LEGACY_PREFIXED,
+    ):
+        return
+    device["entity_id_strategy"] = resolve_entity_id_strategy(device)
+
+
+def resolve_mm_registry_markers(hass: HomeAssistant, text: str | None) -> str:
+    """Replace [[mm:domain:unique_id]] with registry entity_id (modbus_manager platform).
+
+    If no registry entry exists yet, logs at debug and substitutes ``domain.unknown``
+    (templates should tolerate unavailable refs until the next reload).
+    """
+    if not text or "[[mm:" not in text:
+        return text
+    reg = er.async_get(hass)
+    out: list[str] = []
+    pos = 0
+    for m in _MM_REGISTRY_MARKER.finditer(text):
+        out.append(text[pos : m.start()])
+        dom, uid = m.group(1), m.group(2).strip()
+        eid = reg.async_get_entity_id(dom, DOMAIN, uid)
+        if eid is None:
+            _LOGGER.debug(
+                "No registry entity for [[mm:%s:%s]] (platform %s) yet; using placeholder",
+                dom,
+                uid,
+                DOMAIN,
+            )
+        repl = eid if eid is not None else f"{dom}.unknown"
+        out.append(repl)
+        pos = m.end()
+    out.append(text[pos:])
+    return "".join(out)
 
 
 def get_entity_mm_group(entity_def: Dict[str, Any]) -> Any:
@@ -184,7 +257,7 @@ def replace_template_placeholders(
     prefix: str,
     slave_id: int = 1,
     battery_slave_id: int = 200,
-    entity_ids_without_prefix: bool = False,
+    entity_id_strategy: str = EntityIdStrategy.LEGACY_PREFIXED,
     model_config: Optional[Dict[str, Any]] = None,
 ) -> str:
     """Replace template placeholders in strings with actual values.
@@ -194,7 +267,10 @@ def replace_template_placeholders(
         prefix: Device prefix to replace {PREFIX}
         slave_id: Slave ID to replace {SLAVE_ID} (legacy, no longer used in register definitions)
         battery_slave_id: Battery slave ID to replace {BATTERY_SLAVE_ID} (legacy, no longer used)
-        entity_ids_without_prefix: When True, {PREFIX} and {PREFIX}_ become empty for entity_id refs
+        entity_id_strategy: When :attr:`EntityIdStrategy.LEGACY_UNPREFIXED`, ``{PREFIX}`` and
+            ``{PREFIX}_`` become empty (entity_id-style references). For :attr:`EntityIdStrategy.HA_GENERATED`
+            and :attr:`EntityIdStrategy.LEGACY_PREFIXED`, ``{PREFIX}`` is the lowercased device prefix
+            (templates that must follow HA-generated entity names should use ``[[mm:…]]`` after substitution).
         model_config: If set, numeric fields from valid_models are substituted as {KEY_UPPER},
             e.g. max_ac_output_power -> {MAX_AC_OUTPUT_POWER}. Used in calculated/binary templates.
             Remaining {MAX_AC_OUTPUT_POWER}, {MAX_CHARGE_POWER}, {MAX_DISCHARGE_POWER} default to 0.
@@ -212,8 +288,8 @@ def replace_template_placeholders(
     # Replace common placeholders
     # Note: {PREFIX} is still actively used, {SLAVE_ID} and {BATTERY_SLAVE_ID} are legacy
     # PREFIX is replaced lowercase for consistency with entity_id format
-    # When entity_ids_without_prefix: entity_ids have no prefix, so {PREFIX}_ and {PREFIX} become ""
-    if entity_ids_without_prefix:
+    # LEGACY_UNPREFIXED: entity_ids have no prefix, so {PREFIX}_ and {PREFIX} become ""
+    if entity_id_strategy == EntityIdStrategy.LEGACY_UNPREFIXED:
         replacements = {
             "{PREFIX}_": "",
             "{PREFIX}": "",

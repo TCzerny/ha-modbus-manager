@@ -6,7 +6,7 @@ display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters. Supports all 36 SHx models: SHxK6, SHxK-20/V13, SHxK-30, SHx.0RS, SHx.0RT/RT-20/RT-V112/RT-V122, SHxT, MGxRL"
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.2.12
+version: 1.2.13
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -140,12 +140,13 @@ dynamic_config:
     options: ["no", "yes"]
     default: "no"
 
-  entity_ids_without_prefix:
-    description: "Entity IDs without prefix (for migration/history retention from integrations using unprefixed entity_ids)"
-    options: ["no", "yes"]
-    default: "no"
-    # When yes: entity_id = template unique_id (e.g. sensor.battery_level), unique_id keeps prefix
-    # Use add_entity_prefix service after migration to add prefix and migrate history
+  entity_id_strategy:
+    description: "How Home Assistant builds entity_id for this device (unique_id always includes the device prefix)"
+    options:
+      legacy_prefixed: "Prefixed entity_id (default, e.g. sensor.sg_export_power)"
+      legacy_unprefixed: "Unprefixed entity_id (mkaiser-style migration; use add_entity_prefix service when done)"
+      ha_generated: "Let Home Assistant assign entity_id (use [[mm:domain:unique_id]] in templates for cross-refs)"
+    default: "legacy_prefixed"
 
   battery_config:
     description: "Battery configuration"

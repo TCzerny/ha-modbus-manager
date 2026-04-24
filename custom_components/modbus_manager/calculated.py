@@ -17,6 +17,7 @@ from .device_utils import (
     generate_entity_name,
     get_entity_mm_group,
     is_coordinator_connected,
+    resolve_mm_registry_markers,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -96,6 +97,9 @@ class ModbusCalculatedSensor(SensorEntity):
                 f"Calculated entity {self._attr_name} has no template or state defined"
             )
 
+        # Step B: [[mm:domain:unique_id]] -> registry entity_id (after coordinator Step A)
+        template_str = resolve_mm_registry_markers(hass, template_str)
+
         # Template is already processed by coordinator - use directly
         try:
             self._template = Template(template_str, hass)
@@ -107,15 +111,12 @@ class ModbusCalculatedSensor(SensorEntity):
         # Template is already processed by coordinator (PREFIX already replaced)
         availability_template = config.get("availability")
         if availability_template:
+            availability_template = resolve_mm_registry_markers(
+                hass, availability_template
+            )
             self._availability_template = Template(availability_template, hass)
         else:
             self._availability_template = None
-        self._dependency_entity_ids = _extract_template_entity_ids(
-            template_str,
-            availability_template,
-            config.get("icon_template"),
-        )
-        self._unsubscribe_dependency_listener = None
 
         # Entity attributes
         self._attr_native_unit_of_measurement = config.get("unit_of_measurement")
@@ -140,7 +141,16 @@ class ModbusCalculatedSensor(SensorEntity):
 
         # Icon support
         self._static_icon = config.get("icon")
-        self._icon_template = config.get("icon_template")
+        _icon_t = config.get("icon_template")
+        self._icon_template = (
+            resolve_mm_registry_markers(hass, _icon_t) if _icon_t else None
+        )
+        self._dependency_entity_ids = _extract_template_entity_ids(
+            template_str,
+            availability_template,
+            self._icon_template,
+        )
+        self._unsubscribe_dependency_listener = None
         if self._static_icon:
             self._attr_icon = self._static_icon
             _LOGGER.debug(
@@ -500,6 +510,8 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
                 f"Calculated binary sensor {self._attr_name} has no state template defined"
             )
 
+        template_str = resolve_mm_registry_markers(hass, template_str)
+
         # Template is already processed by coordinator (PREFIX already replaced)
         try:
             self._template = Template(template_str, hass)
@@ -511,6 +523,9 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         # Template is already processed by coordinator (PREFIX already replaced)
         availability_template = config.get("availability")
         if availability_template:
+            availability_template = resolve_mm_registry_markers(
+                hass, availability_template
+            )
             self._availability_template = Template(availability_template, hass)
         else:
             self._availability_template = None

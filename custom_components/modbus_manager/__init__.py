@@ -14,9 +14,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 
-from .const import DOMAIN, PLATFORMS
+from .const import DOMAIN, PLATFORMS, EntityIdStrategy
 from .coordinator import ModbusCoordinator
-from .device_utils import get_entity_mm_group
+from .device_utils import get_entity_mm_group, resolve_entity_id_strategy
 from .logger import ModbusManagerLogger
 from .performance_monitor import PerformanceMonitor
 from .register_optimizer import RegisterOptimizer
@@ -529,7 +529,7 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
 
 
 def _get_unprefixed_subentry_ids(entry: ConfigEntry) -> set:
-    """Return config_subentry_ids for devices with entity_ids_without_prefix=yes."""
+    """Return config_subentry_ids for devices using legacy_unprefixed entity_id strategy."""
     unprefixed_ids = set()
     devices = entry.data.get("devices", [])
     if not isinstance(devices, list):
@@ -537,7 +537,7 @@ def _get_unprefixed_subentry_ids(entry: ConfigEntry) -> set:
     for device in devices:
         if not isinstance(device, dict):
             continue
-        if device.get("entity_ids_without_prefix") != "yes":
+        if resolve_entity_id_strategy(device) != EntityIdStrategy.LEGACY_UNPREFIXED:
             continue
         device_entry_id = device.get("device_entry_id")
         if not device_entry_id:
@@ -557,7 +557,7 @@ async def _normalize_binary_sensor_entity_ids(
 ) -> None:
     """Ensure binary_sensor entity_ids include the device prefix.
 
-    Skips entities from devices with entity_ids_without_prefix=yes (entity_ids stay unprefixed).
+    Skips entities from devices with entity_id_strategy=legacy_unprefixed (entity_ids stay unprefixed).
     """
     try:
         entity_registry = er.async_get(hass)
@@ -1037,7 +1037,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
     async def add_entity_prefix_service(call):
         """Add prefix to entity_ids (after migration from unprefixed entity_ids).
 
-        Use after running with entity_ids_without_prefix=yes to add prefix to entity_ids.
+        Use after running with entity_id_strategy=legacy_unprefixed to add prefix to entity_ids.
         entity_id: sensor.battery_level -> sensor.sg_battery_level)
         Home Assistant migrates history when entity_id is renamed.
 
@@ -1074,7 +1074,10 @@ async def async_setup_services(hass: HomeAssistant) -> None:
             for device in devices:
                 if not isinstance(device, dict):
                     continue
-                if device.get("entity_ids_without_prefix") != "yes":
+                if (
+                    resolve_entity_id_strategy(device)
+                    != EntityIdStrategy.LEGACY_UNPREFIXED
+                ):
                     continue
                 dev_id = device.get("device_entry_id")
                 prefix = device.get("prefix")
@@ -1095,7 +1098,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
 
             if not targets:
                 _LOGGER.warning(
-                    "No devices with entity_ids_without_prefix=yes found for entry %s",
+                    "No devices with entity_id_strategy=legacy_unprefixed found for entry %s",
                     entry_id,
                 )
                 return
