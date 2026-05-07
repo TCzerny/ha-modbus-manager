@@ -1061,6 +1061,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                                 slave_id,
                                 0,
                                 entity_id_strategy,
+                                for_registry_unique_id=True,
                             )
                         elif ref_config and isinstance(ref_config, dict):
                             reg_uid = ref_config.get("register_unique_id")
@@ -1078,6 +1079,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                                     slave_id,
                                     0,
                                     entity_id_strategy,
+                                    for_registry_unique_id=True,
                                 )
                                 register[ref_field] = ref_config
 
@@ -1382,6 +1384,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     0,
                     0,
                     EntityIdStrategy.LEGACY_PREFIXED,
+                    for_registry_unique_id=True,
                 )
                 processed_entity["unique_id"] = generate_unique_id(
                     prefix, resolved_for_unique_id or template_unique_id, name

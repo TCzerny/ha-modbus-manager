@@ -202,26 +202,47 @@ def generate_unique_id(
 ) -> str:
     """Generate consistent unique_id across all platforms.
 
-    The device prefix is always normalized to lowercase so it matches ``{PREFIX}`` in
-    templates and ``[[mm:domain:{PREFIX}_…]]`` registry lookups.
+    Matches **v0.1.9** coordinator logic so existing entity registry rows keep the same
+    ``unique_id`` after upgrades (avoids duplicate ``*_2`` entity_ids when
+    ``entity_id`` stays the same). Non-empty prefix keeps **configured casing**
+    (e.g. ``SG_`` not ``sg_``). ``default_entity_id`` / ``entity_id`` are still
+    lowercased elsewhere from this string.
+
+    For an **empty** device prefix: ``f"{prefix}_{id}"`` → ``_id`` (leading underscore),
+    not ``unknown_id`` (discussion #54).
 
     Args:
-        prefix: Device prefix (e.g., "SG", "SBR") — stored lower in the entity registry
-        template_unique_id: unique_id from template (optional)
-        name: Fallback name if no template_unique_id (optional)
+        prefix: Device prefix (e.g. ``"SG"``) as in config
+        template_unique_id: ``unique_id`` fragment from template (optional)
+        name: Fallback if no template ``unique_id`` (optional)
 
     Returns:
-        Generated unique_id with normalized prefix
+        Registry ``unique_id`` string (legacy-compatible)
     """
-    p = str(prefix or "").strip().lower() or "unknown"
+    p = str(prefix or "").strip()
+    if not p:
+        if template_unique_id:
+            t = str(template_unique_id).strip()
+            t_lower = t.lower()
+            if t_lower.startswith("_"):
+                return t_lower
+            return f"_{t_lower}"
+        if name:
+            clean_name = (
+                name.lower()
+                .replace(" ", "_")
+                .replace("-", "_")
+                .replace("(", "")
+                .replace(")", "")
+            )
+            return f"_{clean_name}"
+        return "_unknown"
+
     if template_unique_id:
         t = str(template_unique_id).strip()
-        t_lower = t.lower()
-        pfx = f"{p}_"
-        if t_lower.startswith(pfx):
-            return t_lower
-        return f"{p}_{t_lower}"
-    # Fallback: Clean the name for unique_id
+        if t.startswith(f"{p}_"):
+            return t
+        return f"{p}_{t}"
     if name:
         clean_name = (
             name.lower()
@@ -283,14 +304,17 @@ def process_template_entities_with_prefix(
     return processed_entities
 
 
-def _expand_mm_registry_prefix_markers(result: str, p_norm: str) -> str:
-    """Turn [[mm:domain:{PREFIX}_suffix]] into [[mm:domain:pn_suffix]] before {PREFIX} clearing.
+def _expand_mm_registry_prefix_markers(result: str, p_reg: str) -> str:
+    """Turn [[mm:domain:{PREFIX}_suffix]] into [[mm:domain:prefix_suffix]] before {PREFIX} clearing.
 
-    Registry ``unique_id`` always uses ``p_norm`` (see :func:`generate_unique_id`).
+    *p_reg* is the **registry** device prefix (strip only; may be empty or e.g. ``"SG"``)
+    and must match :func:`generate_unique_id` (v0.1.9-compatible).
     """
     return re.sub(
         r"\[\[mm:([a-zA-Z0-9_]+):\{PREFIX\}_([a-zA-Z0-9_]+)\]\]",
-        lambda m: f"[[mm:{m.group(1)}:{p_norm}_{m.group(2)}]]",
+        lambda m: f"[[mm:{m.group(1)}:{p_reg}_{m.group(2)}]]"
+        if p_reg
+        else f"[[mm:{m.group(1)}:_{m.group(2)}]]",
         result,
     )
 
@@ -302,6 +326,8 @@ def replace_template_placeholders(
     battery_slave_id: int = 200,
     entity_id_strategy: str = EntityIdStrategy.LEGACY_PREFIXED,
     model_config: Optional[Dict[str, Any]] = None,
+    *,
+    for_registry_unique_id: bool = False,
 ) -> str:
     """Replace template placeholders in strings with actual values.
 
@@ -312,14 +338,15 @@ def replace_template_placeholders(
         battery_slave_id: Battery slave ID to replace {BATTERY_SLAVE_ID} (legacy, no longer used)
         entity_id_strategy: When :attr:`EntityIdStrategy.LEGACY_UNPREFIXED`, ``{PREFIX}`` and
             ``{PREFIX}_`` become empty (entity_id-style references). For :attr:`EntityIdStrategy.HA_GENERATED`
-            and :attr:`EntityIdStrategy.LEGACY_PREFIXED`, ``{PREFIX}`` is the lowercased device prefix
-            (templates that must follow HA-generated entity names should use ``[[mm:…]]`` after substitution).
-        Markers ``[[mm:domain:{PREFIX}_suffix]]`` are expanded **first** to the normalized registry
-        id (``prefix.lower()``), so they still work when ``{PREFIX}`` is cleared for legacy unprefixed
-        entity_id text.
+            and :attr:`EntityIdStrategy.LEGACY_PREFIXED`, ``{PREFIX}`` is usually the **lowercased** device
+            prefix (``entity_id`` / ``states('sensor.…')``). Use ``for_registry_unique_id`` when
+            building values that must match the raw registry ``unique_id`` (v0.1.9 style).
         model_config: If set, numeric fields from valid_models are substituted as {KEY_UPPER},
             e.g. max_ac_output_power -> {MAX_AC_OUTPUT_POWER}. Used in calculated/binary templates.
             Remaining {MAX_AC_OUTPUT_POWER}, {MAX_CHARGE_POWER}, {MAX_DISCHARGE_POWER} default to 0.
+        for_registry_unique_id: If True, ``{PREFIX}`` is the **raw** strip-only prefix (same casing
+            as in config) so the string matches :func:`generate_unique_id` / ``[[mm:…]]`` resolution.
+            Jinja / ``states(…)`` should keep using the default (lowercased) ``{PREFIX}``.
 
     Returns:
         String with placeholders replaced
@@ -331,15 +358,15 @@ def replace_template_placeholders(
     if not isinstance(template_string, str):
         return template_string
 
-    p_norm = str(prefix or "").strip().lower() or "unknown"
+    p_reg = str(prefix or "").strip()
+    p_norm = p_reg.lower()
 
-    # 1) [[mm:…:{PREFIX}_…]] must use normalized prefix (registry unique_id) even when
-    #    later {PREFIX} is stripped for legacy_unprefixed.
-    result = _expand_mm_registry_prefix_markers(template_string, p_norm)
-    # 2) Jinja dynamic month/year: states('sensor.{PREFIX}_' ~ …) — same prefix as unique_id
+    # 1) [[mm:…:{PREFIX}_…]] — registry id must follow generate_unique_id (p_reg, not p_norm)
+    result = _expand_mm_registry_prefix_markers(template_string, p_reg)
+    # 2) Jinja: entity_id in HA is lowercased — always use p_norm for states('sensor…')
     result = result.replace("sensor.{PREFIX}_' ~", f"sensor.{p_norm}_' ~")
 
-    # 3) Remaining placeholders: {PREFIX} for legacy entity_id text, {SLAVE_ID}, model keys
+    # 3) Remaining placeholders: {PREFIX} for entity_id / registry text, {SLAVE_ID}, model keys
     # LEGACY_UNPREFIXED: entity_ids have no prefix, so {PREFIX}_ and {PREFIX} become ""
     if entity_id_strategy == EntityIdStrategy.LEGACY_UNPREFIXED:
         replacements = {
@@ -349,8 +376,9 @@ def replace_template_placeholders(
             "{BATTERY_SLAVE_ID}": str(battery_slave_id),
         }
     else:
+        ph_prefix = p_reg if for_registry_unique_id else p_norm
         replacements = {
-            "{PREFIX}": p_norm,
+            "{PREFIX}": ph_prefix,
             "{SLAVE_ID}": str(slave_id),
             "{BATTERY_SLAVE_ID}": str(battery_slave_id),
         }

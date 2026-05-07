@@ -17,10 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🐛 Fixed
 
 - **Flag sensors (255-character state limit)**: Sensors with template `flags` now always publish the numeric bitmask as state; human-readable flag labels are in the `formatted_value` attribute (truncated when needed). Fixes Home Assistant core errors for registers such as BMS alarm/protection/fault raw ([#58](https://github.com/TCzerny/ha-modbus-manager/issues/58)).
+- **Registry `unique_id` compatibility (v0.1.9)** ([Discussion #54](https://github.com/TCzerny/ha-modbus-manager/discussions/54)): Restored **legacy** `unique_id` rules — non-empty device prefix uses **configured casing** (e.g. `SG_…` not `sg_…`); empty prefix uses `_suffix` (not `unknown_…`). Stops upgrade duplicates / `entity_id` `*_2` when `entity_id` is lowercased from the same logical id. `replace_template_placeholders` now supports **`for_registry_unique_id`** (raw prefix for registry and `[[mm:…]]`) while Jinja/entity text keeps **lowercased** `{PREFIX}` by default. **`entity_id_strategy`** and related features unchanged.
 
 ### 🔧 Changed
 
-- **`generate_unique_id`**: Normalizes prefix **lowercase** for registry consistency with `[[mm:…]]` expansion.
+- **`generate_unique_id` / placeholders**: v0.1.9–compatible `unique_id` strings; see [docs/ENTITY_ID_STRATEGY.md](docs/ENTITY_ID_STRATEGY.md).
 - **`device_utils`**: `resolve_mm_registry_markers` / `replace_template_placeholders` aligned with `EntityIdStrategy`; missing registry keys logged at DEBUG at most once until resolved.
 - **Calculated / binary calculated:** `icon_template` and registry marker freeze when all `[[mm:…]]` resolve; reduced repeated registry I/O.
 - **`DEFAULT_MAX_REGISTER_READ`**: Increased from 8 to 64 (Modbus max 125); register merge width uses consistent per-field width (e.g. uint32).

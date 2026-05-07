@@ -25,11 +25,13 @@ from .const import (
     MIN_DELAY,
     MIN_MESSAGE_WAIT_MS,
     MIN_TIMEOUT,
+    EntityIdStrategy,
 )
 from .device_utils import (
     ensure_entity_id_strategy_on_device,
     generate_unique_id,
     get_entity_mm_group,
+    replace_template_placeholders,
     resolve_firmware_profile_version,
 )
 from .logger import ModbusManagerLogger
@@ -3382,10 +3384,19 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
                     )
                     device_prefix = str(updated_device.get("prefix", "")).strip()
                     for entity_def in all_entities:
+                        template_uid = entity_def.get("unique_id")
+                        resolved_uid = replace_template_placeholders(
+                            template_uid or "",
+                            device_prefix,
+                            0,
+                            0,
+                            EntityIdStrategy.LEGACY_PREFIXED,
+                            for_registry_unique_id=True,
+                        )
                         expected_unique_ids.add(
                             generate_unique_id(
                                 device_prefix,
-                                entity_def.get("unique_id"),
+                                resolved_uid or template_uid,
                                 entity_def.get("name"),
                             )
                         )
