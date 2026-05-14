@@ -224,7 +224,6 @@ sensors:
     swap: word
     scale: 1
     unit_of_measurement: "Wh"
-    device_class: "energy"
     state_class: "measurement"
     scan_interval: 60
     mm_group: "EV_charging_status"
@@ -401,7 +400,6 @@ calculated:
          (states('sensor.{PREFIX}_charging_start_time_raw') | int) > 0 }}
     state: >-
       {{ (states('sensor.{PREFIX}_charging_start_time_raw') | int) | timestamp_custom('%d.%m.%Y %H:%M') }}
-    unit_of_measurement: ""
     mm_group: "EV_charging_status"
     icon: "mdi:clock-start"
 
@@ -413,7 +411,6 @@ calculated:
          (states('sensor.{PREFIX}_charging_end_time_raw') | int) > 0 }}
     state: >-
       {{ (states('sensor.{PREFIX}_charging_end_time_raw') | int) | timestamp_custom('%d.%m.%Y %H:%M') }}
-    unit_of_measurement: ""
     mm_group: "EV_charging_status"
     icon: "mdi:clock-end"
 
@@ -428,7 +425,6 @@ calculated:
     state: >-
       {% set sec = (states('sensor.{PREFIX}_charging_end_time_raw') | int) - (states('sensor.{PREFIX}_charging_start_time_raw') | int) %}
       {{ '%d:%02d' | format(sec // 3600, (sec % 3600) // 60) }}
-    unit_of_measurement: ""
     mm_group: "EV_charging_status"
     icon: "mdi:clock-outline"
 
