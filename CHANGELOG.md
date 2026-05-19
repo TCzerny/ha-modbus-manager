@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### 🐛 Fixed
+
+- **Flag sensors (255-character state limit)**: Sensors with template `flags` now always publish the numeric bitmask as state; human-readable flag labels are in the `formatted_value` attribute (truncated when needed). Fixes Home Assistant core errors for registers such as BMS alarm/protection/fault raw ([#58](https://github.com/TCzerny/ha-modbus-manager/issues/58)).
+
 ## [1.0.9] - 2026-04-24
 
 ### 🐛 Fixed

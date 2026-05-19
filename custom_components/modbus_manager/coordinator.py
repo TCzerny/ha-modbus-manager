@@ -1929,19 +1929,22 @@ class ModbusCoordinator(DataUpdateCoordinator):
                         or register.get("flags")
                     )
                     numeric_value = None
-                    if has_mapping and isinstance(processed_value, (int, float)):
-                        # Calculate numeric value before mapping (with scale/offset/precision but without mapping)
-                        # Use process_register_value but stop before mapping
-                        from .value_processor import process_register_value
-
-                        # Create a copy of register config without mapping
-                        numeric_config = register.copy()
-                        numeric_config.pop("map", None)
-                        numeric_config.pop("flags", None)
-                        numeric_config.pop("options", None)
-                        numeric_value = process_register_value(
-                            processed_value, numeric_config, apply_precision=True
+                    if has_mapping:
+                        from .value_processor import (
+                            coerce_numeric_register_value,
+                            process_register_value,
                         )
+
+                        raw_numeric = coerce_numeric_register_value(processed_value)
+                        if raw_numeric is not None:
+                            # Numeric value before map/flags/options (scale/offset/precision only)
+                            numeric_config = register.copy()
+                            numeric_config.pop("map", None)
+                            numeric_config.pop("flags", None)
+                            numeric_config.pop("options", None)
+                            numeric_value = process_register_value(
+                                raw_numeric, numeric_config, apply_precision=True
+                            )
 
                     # Store processed data
                     register_data = {
