@@ -21,6 +21,7 @@ from .device_utils import (
 )
 from .logger import ModbusManagerLogger
 from .template_loader import load_templates
+from .value_processor import resolve_flags_sensor_values
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -125,7 +126,8 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
             or register_config.get("flags")
         )
         # Distinguish between flags (bitwise operations) and map/options (string mapping)
-        self._has_flags = bool(register_config.get("flags"))
+        self._flags = register_config.get("flags") or {}
+        self._has_flags = bool(self._flags)
         self._has_map_or_options = bool(
             register_config.get("map") or register_config.get("options")
         )
@@ -177,26 +179,21 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
                 processed_value = register_data.get("processed_value")
                 numeric_value = register_data.get("numeric_value")
 
-                if processed_value is not None:
-                    # Distinguish between flags (bitwise operations) and map/options (string mapping)
-                    # - Flags (e.g., running_state): Use numeric value for template compatibility
-                    # - Map/Options (e.g., cable_status): Use mapped string value for display
-                    if self._has_flags and numeric_value is not None:
-                        # For flags: Use numeric value as state (for bitwise operations in templates)
-                        # Store formatted string (from flags) in attributes for display
-                        self._attr_native_value = numeric_value
-                        formatted_string = (
-                            str(processed_value)
-                            if isinstance(processed_value, str)
-                            else processed_value
-                        )
-                        self._attr_extra_state_attributes = {
-                            **self._attr_extra_state_attributes,
-                            "raw_value": raw_value if raw_value is not None else "N/A",
-                            "processed_value": processed_value,
-                            "formatted_value": formatted_string,
-                        }
-                    elif self._has_map_or_options:
+                if self._has_flags:
+                    # Numeric state (bitmask) — never the joined flag labels (HA 255-char limit)
+                    flag_state, formatted_string = resolve_flags_sensor_values(
+                        register_data, self._flags
+                    )
+                    self._attr_native_value = flag_state
+                    self._attr_extra_state_attributes = {
+                        **self._attr_extra_state_attributes,
+                        "raw_value": raw_value if raw_value is not None else "N/A",
+                        "processed_value": processed_value,
+                        "formatted_value": formatted_string,
+                    }
+                elif processed_value is not None:
+                    # Map/Options (e.g., cable_status): Use mapped string value for display
+                    if self._has_map_or_options:
                         # For map/options: Use mapped string value as state
                         # This allows templates to check for string values like "no cable"
                         self._attr_native_value = (

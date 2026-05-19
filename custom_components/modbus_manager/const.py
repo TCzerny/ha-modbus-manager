@@ -57,6 +57,9 @@ DEFAULT_PRECISION = 2  # Standard-Präzision
 DEFAULT_MIN_VALUE = 0.0  # Standard-Minimum
 DEFAULT_MAX_VALUE = 100.0  # Standard-Maximum
 
+# Home Assistant rejects entity states longer than this (see homeassistant.core)
+MAX_ENTITY_STATE_LENGTH: Final = 255
+
 DEFAULT_SLAVE = 1
 DEFAULT_PORT = 502
 

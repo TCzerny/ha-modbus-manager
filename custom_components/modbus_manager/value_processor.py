@@ -4,8 +4,9 @@ This module provides centralized value processing functions that can be used
 by both legacy sensors and coordinator-based entities.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
+from .const import MAX_ENTITY_STATE_LENGTH
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -102,6 +103,74 @@ def apply_bit_operations(value: Any, config: Dict[str, Any]) -> Optional[int]:
         return value
 
 
+def coerce_numeric_register_value(value: Any) -> int | float | None:
+    """Coerce a raw register value to a number for flag/bitwise processing."""
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, (int, float)):
+        return value
+    if isinstance(value, str):
+        stripped = value.strip()
+        if stripped.isdigit() or (stripped.startswith("-") and stripped[1:].isdigit()):
+            return int(stripped)
+    return None
+
+
+def format_active_flags(value: int | float, flags: Dict[Any, Any]) -> str:
+    """Return comma-separated active flag labels, or 'None' when no bits are set."""
+    int_value = int(value)
+    active_flags: list[str] = []
+    for bit_pos, flag_name in flags.items():
+        try:
+            bit = int(bit_pos)
+            if 0 <= bit <= 31 and (int_value >> bit) & 1:
+                active_flags.append(str(flag_name))
+        except (ValueError, TypeError):
+            _LOGGER.warning("Invalid flag bit position: %s", bit_pos)
+    if active_flags:
+        return ", ".join(active_flags)
+    return "None"
+
+
+def truncate_entity_state_string(
+    text: str, max_length: int = MAX_ENTITY_STATE_LENGTH
+) -> str:
+    """Truncate text so it fits Home Assistant's entity state length limit."""
+    if len(text) <= max_length:
+        return text
+    if max_length <= 3:
+        return text[:max_length]
+    return text[: max_length - 3] + "..."
+
+
+def resolve_flags_sensor_values(
+    register_data: Dict[str, Any], flags: Dict[Any, Any]
+) -> tuple[Union[int, float, None], str]:
+    """Resolve numeric entity state and display string for flag-based sensors.
+
+    Entity state must stay numeric (bitmask) to avoid HA's 255-character state limit.
+    The human-readable flag list is returned for use in attributes only.
+    """
+    raw_value = register_data.get("raw_value")
+    numeric_value = register_data.get("numeric_value")
+    processed_value = register_data.get("processed_value")
+
+    state = numeric_value
+    if state is None:
+        state = coerce_numeric_register_value(raw_value)
+    if state is None:
+        state = coerce_numeric_register_value(processed_value)
+
+    if state is not None:
+        formatted = format_active_flags(state, flags)
+    elif isinstance(processed_value, str):
+        formatted = processed_value
+    else:
+        formatted = "None"
+
+    return state, truncate_entity_state_string(formatted)
+
+
 def apply_value_mapping(value: Any, config: Dict[str, Any]) -> Any:
     """Apply value mapping (map, flags, options) to a value.
 
@@ -143,20 +212,10 @@ def apply_value_mapping(value: Any, config: Dict[str, Any]) -> Any:
 
         # 2. Apply flags (bit flags to list)
         flags = config.get("flags")
-        if flags and isinstance(value, (int, float)):
-            int_value = int(value)
-            active_flags = []
-            for bit_pos, flag_name in flags.items():
-                try:
-                    bit = int(bit_pos)
-                    if 0 <= bit <= 31:
-                        if (int_value >> bit) & 1:
-                            active_flags.append(flag_name)
-                except (ValueError, TypeError):
-                    _LOGGER.warning("Invalid flag bit position: %s", bit_pos)
-            if active_flags:
-                return ", ".join(active_flags)
-            return "None"
+        if flags:
+            numeric = coerce_numeric_register_value(value)
+            if numeric is not None:
+                return format_active_flags(numeric, flags)
 
         # 3. Apply options (similar to map but for specific use case)
         options = config.get("options")
