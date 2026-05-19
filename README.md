@@ -85,6 +85,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 - **[Growatt MIN/MOD/MAX](docs/README_growatt_min_mod_max_dynamic.md)** – Inverter template
 - **[SMA Sunny Tripower/Boy](docs/README_sma_dynamic.md)** – SMA inverter template
 - **[SolaX Inverter](docs/README_solax_dynamic.md)** – GEN2–GEN6 dynamic template
+- **[Sandi Solar SD-Pro](docs/README_sandisolar_sd_pro.md)** – Off-grid / hybrid (Modbus RTU V2.14); **BETA** template, needs hardware testing ([#60](https://github.com/TCzerny/ha-modbus-manager/issues/60))
 
 ### 🔮 Future Support
 - **Kostal** (Piko, Plenticore)
