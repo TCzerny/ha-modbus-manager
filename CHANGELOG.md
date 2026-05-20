@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`entity_id_strategy`** (per device): Replaces the old `entity_ids_without_prefix` boolean with one of `ha_generated`, `legacy_prefixed`, or `legacy_unprefixed`. **`ha_generated`** lets Home Assistant assign `entity_id` (better fit for 2025.6+ “recreate entity IDs” / device rename flows; see [#52](https://github.com/TCzerny/ha-modbus-manager/issues/52)). Legacy values map from existing config on load.
 - **Template markers `[[mm:<domain>:{PREFIX}_<suffix>]]`**: Calculated and template **binary_sensor** resolve cross-entity references via the entity registry (`unique_id` → `entity_id`), so templates work when `entity_id` is not forced. Applied across built-in device templates; coordinator runs Step A (`{PREFIX}` etc.), entities run Step B (registry).
 - **Config flow** `VERSION` **4**: Normalizes devices with `ensure_entity_id_strategy_on_device`.
-- **Documentation:** [docs/ENTITY_ID_STRATEGY.md](docs/ENTITY_ID_STRATEGY.md) explains strategies and `[[mm:…]]`.
+- **Documentation:** [docs/ENTITY_ID_STRATEGY.md](docs/ENTITY_ID_STRATEGY.md) explains strategies, `[[mm:…]]`, **history preservation**, strategy changes on existing installs, and the [mkaiser migration](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser) checklist.
 
 ### 🐛 Fixed
 
@@ -26,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Calculated / binary calculated:** `icon_template` and registry marker freeze when all `[[mm:…]]` resolve; reduced repeated registry I/O.
 - **`DEFAULT_MAX_REGISTER_READ`**: Increased from 8 to 64 (Modbus max 125); register merge width uses consistent per-field width (e.g. uint32).
 - **`add_entity_prefix` service**: Resolves devices via `entity_id_strategy` / `legacy_unprefixed` (same intent as `entity_ids_without_prefix: yes`).
+
+### 📖 Documentation
+
+- **`entity_id_strategy` / history:** Documented that recorder history follows **`entity_id`**. Upgrades and mkaiser-style migration aim for **minimal `entity_id` churn** when `unique_id` and names stay stable. Changing strategy on an **existing** install does **not** automatically rewrite registry `entity_id` values (match is via `unique_id`; restart alone does not help). Controlled unprefixed → prefixed migration: **`add_entity_prefix`** (HA migrates history on rename). See [ENTITY_ID_STRATEGY.md](docs/ENTITY_ID_STRATEGY.md).
 
 ## [1.0.9] - 2026-04-24
 
