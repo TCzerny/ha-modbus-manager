@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.10] - 2026-05-27
+
 ### ✨ Added
 
 - **`entity_id_strategy`** (per device): Replaces the old `entity_ids_without_prefix` boolean with one of `ha_generated`, `legacy_prefixed`, or `legacy_unprefixed`. **`ha_generated`** lets Home Assistant assign `entity_id` (better fit for 2025.6+ “recreate entity IDs” / device rename flows; see [#52](https://github.com/TCzerny/ha-modbus-manager/issues/52)). Legacy values map from existing config on load.
