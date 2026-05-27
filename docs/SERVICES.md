@@ -87,11 +87,11 @@ service: modbus_manager.performance_reset
 
 ### 3. `modbus_manager.add_entity_prefix`
 
-**Description:** Renames **entity IDs** so they include the device prefix, for devices that were added with **Entity IDs without prefix** set to **yes** (`entity_ids_without_prefix`). This is the follow-up step after a migration where you matched another integration’s unprefixed `entity_id` values (see [Migration from mkaiser (Wiki)](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser)).
+**Description:** Renames **entity IDs** so they include the device prefix, for devices that were added with **Entity IDs without prefix** set to **yes** (`entity_ids_without_prefix`), or with **`entity_id_strategy: legacy_unprefixed`** (same intent). This is the follow-up step after a migration where you matched another integration’s unprefixed `entity_id` values (see [Migration from mkaiser (Wiki)](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser)).
 
 **Behavior:**
 
-- Only affects entities belonging to the given Modbus Manager **config entry** that are tied to a **device** still configured with `entity_ids_without_prefix: yes`.
+- Only affects entities belonging to the given Modbus Manager **config entry** that are tied to a **device** still configured with `entity_ids_without_prefix: yes` / **`legacy_unprefixed`** (see [Entity ID strategy](ENTITY_ID_STRATEGY.md)).
 - For each matching entity, if the `entity_id` **does not** already start with `{prefix}_`, it is renamed from `domain.object_id` to `domain.{prefix}_object_id` (prefix lowercased), e.g. `sensor.battery_level` → `sensor.sg_battery_level`.
 - **`unique_id` in the registry is unchanged**; only **`entity_id`** is updated. Home Assistant **migrates history** when an `entity_id` is renamed.
 - Entities that **already** have the prefix in `entity_id` are skipped.
@@ -113,12 +113,20 @@ data:
 | `entry_id` | **Yes** | Modbus Manager integration config entry ID. In **Developer tools → Services**, pick `modbus_manager.add_entity_prefix` and use the **config entry** selector. |
 | `device_entry_id` | No | Device **subentry** `unique_id` (logical device id). Use when the hub has **multiple** devices and you only want to rename entities for **one** of them. Omit to process every device on that entry that still has `entity_ids_without_prefix: yes`. |
 
+**History:** Renaming via this service updates only **`entity_id`** in the registry; **`unique_id` is unchanged**. Home Assistant **migrates recorder history** to the new `entity_id` when the rename succeeds. This is the recommended way to move from **unprefixed** (mkaiser-style) to **prefixed** ids without losing history. See [Entity ID strategy](ENTITY_ID_STRATEGY.md) (history preservation).
+
 **After running the service:**
 
-1. Set **Entity IDs without prefix** to **no** for that device (**Configure** on the device in **Settings → Devices & services**) so future reloads keep prefixed `entity_id` values.
-2. Update automations, dashboards, and scripts to use the **new** `entity_id` values if anything still pointed at the old unprefixed names.
+1. Set **Entity IDs without prefix** to **no** (or **`entity_id_strategy`** to **`legacy_prefixed`**) for that device (**Configure** on the device in **Settings → Devices & services**).
+2. **Important:** Future reloads/reconfigures only **keep** prefixed `entity_id` values if the registry **already** has those prefixed names (or you run this service first). Changing strategy to **`legacy_prefixed`** alone on an install that still has unprefixed registry rows does **not** rename them automatically.
+3. Update automations, dashboards, and scripts to use the **new** `entity_id` values if anything still pointed at the old unprefixed names.
 
-**If nothing is renamed:** Check the logs. Common causes: no device on that entry has `entity_ids_without_prefix: yes`, or wrong `entry_id` / `device_entry_id`.
+**If nothing is renamed:** Check the logs. Common causes:
+
+- No device on that entry has `entity_ids_without_prefix: yes` / **`legacy_unprefixed`**.
+- Wrong `entry_id` or `device_entry_id`.
+- `entity_id` **already** includes the prefix (skipped).
+- Target `entity_id` **already exists** (conflict — rename skipped; resolve duplicate registry row first).
 
 ---
 
@@ -126,7 +134,7 @@ data:
 
 There is **no** `modbus_manager.remove_entity_prefix` (or similar) service. To work with **unprefixed** `entity_id` values again:
 
-- Prefer **device reconfiguration**: set **Entity IDs without prefix** to **yes** where the template supports it, then reload the integration or follow the flow described in the [migration / SHx Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser) for your case.
+- Prefer **device reconfiguration**: set **`entity_id_strategy`** to **`legacy_unprefixed`** (or legacy **Entity IDs without prefix: yes**) where the template supports it, then reload — **only affects new registry rows**; existing prefixed `entity_id` values are not auto-stripped. For a clean mkaiser-style setup, follow [Migration from mkaiser](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser) (remove old YAML → restart → add device unprefixed).
 - Or **manually** rename entities under **Settings → Devices & services → Entities** (be aware of history and automation references per Home Assistant behavior).
 
 ---

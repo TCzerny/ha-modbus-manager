@@ -396,10 +396,10 @@ calculated:
     unique_id: "charging_start_time"
     type: "sensor"
     availability: >-
-      {{ states('sensor.{PREFIX}_charging_start_time_raw') | is_number and
-         (states('sensor.{PREFIX}_charging_start_time_raw') | int) > 0 }}
+      {{ states('[[mm:sensor:{PREFIX}_charging_start_time_raw]]') | is_number and
+         (states('[[mm:sensor:{PREFIX}_charging_start_time_raw]]') | int) > 0 }}
     state: >-
-      {{ (states('sensor.{PREFIX}_charging_start_time_raw') | int) | timestamp_custom('%d.%m.%Y %H:%M') }}
+      {{ (states('[[mm:sensor:{PREFIX}_charging_start_time_raw]]') | int) | timestamp_custom('%d.%m.%Y %H:%M') }}
     mm_group: "EV_charging_status"
     icon: "mdi:clock-start"
 
@@ -407,10 +407,10 @@ calculated:
     unique_id: "charging_end_time"
     type: "sensor"
     availability: >-
-      {{ states('sensor.{PREFIX}_charging_end_time_raw') | is_number and
-         (states('sensor.{PREFIX}_charging_end_time_raw') | int) > 0 }}
+      {{ states('[[mm:sensor:{PREFIX}_charging_end_time_raw]]') | is_number and
+         (states('[[mm:sensor:{PREFIX}_charging_end_time_raw]]') | int) > 0 }}
     state: >-
-      {{ (states('sensor.{PREFIX}_charging_end_time_raw') | int) | timestamp_custom('%d.%m.%Y %H:%M') }}
+      {{ (states('[[mm:sensor:{PREFIX}_charging_end_time_raw]]') | int) | timestamp_custom('%d.%m.%Y %H:%M') }}
     mm_group: "EV_charging_status"
     icon: "mdi:clock-end"
 
@@ -418,12 +418,12 @@ calculated:
     unique_id: "charging_duration"
     type: "sensor"
     availability: >-
-      {{ states('sensor.{PREFIX}_charging_start_time_raw') | is_number and
-         states('sensor.{PREFIX}_charging_end_time_raw') | is_number and
-         (states('sensor.{PREFIX}_charging_start_time_raw') | int) > 0 and
-         (states('sensor.{PREFIX}_charging_end_time_raw') | int) > 0 }}
+      {{ states('[[mm:sensor:{PREFIX}_charging_start_time_raw]]') | is_number and
+         states('[[mm:sensor:{PREFIX}_charging_end_time_raw]]') | is_number and
+         (states('[[mm:sensor:{PREFIX}_charging_start_time_raw]]') | int) > 0 and
+         (states('[[mm:sensor:{PREFIX}_charging_end_time_raw]]') | int) > 0 }}
     state: >-
-      {% set sec = (states('sensor.{PREFIX}_charging_end_time_raw') | int) - (states('sensor.{PREFIX}_charging_start_time_raw') | int) %}
+      {% set sec = (states('[[mm:sensor:{PREFIX}_charging_end_time_raw]]') | int) - (states('[[mm:sensor:{PREFIX}_charging_start_time_raw]]') | int) %}
       {{ '%d:%02d' | format(sec // 3600, (sec % 3600) // 60) }}
     mm_group: "EV_charging_status"
     icon: "mdi:clock-outline"
@@ -432,10 +432,10 @@ calculated:
     unique_id: "charged_range"
     type: "sensor"
     availability: >-
-      {{ states('sensor.{PREFIX}_charging_energy') | is_number and
-         states('number.{PREFIX}_mileage_per_kwh_set') | is_number }}
+      {{ states('[[mm:sensor:{PREFIX}_charging_energy]]') | is_number and
+         states('[[mm:number:{PREFIX}_mileage_per_kwh_set]]') | is_number }}
     state: >-
-      {{ ((states('sensor.{PREFIX}_charging_energy') | float(0) * states('number.{PREFIX}_mileage_per_kwh_set') | float(0)) / 1000) | round(1) }}
+      {{ ((states('[[mm:sensor:{PREFIX}_charging_energy]]') | float(0) * states('[[mm:number:{PREFIX}_mileage_per_kwh_set]]') | float(0)) / 1000) | round(1) }}
     unit_of_measurement: "km"
     device_class: "distance"
     state_class: "measurement"
@@ -449,9 +449,9 @@ binary_sensors:
     unique_id: "charging_active"
     type: "binary_sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_charging_status_raw', 'unavailable') }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_charging_status_raw]]', 'unavailable') }}
     state: >-
-      {{ states('sensor.{PREFIX}_charging_status_raw') == 'Charging' }}
+      {{ states('[[mm:sensor:{PREFIX}_charging_status_raw]]') == 'Charging' }}
     device_class: "power"
     mm_group: "EV_charging_status"
     icon: "mdi:ev-station"

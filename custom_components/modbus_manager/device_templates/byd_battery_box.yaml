@@ -248,7 +248,7 @@ calculated:
     scan_interval: 10
     icon: "mdi:lightning-bolt"
     mm_group: "battery_status"
-    state: "{{ (states('sensor.{PREFIX}_battery_current') | default(0) | float * states('sensor.{PREFIX}_battery_output_voltage') | default(0) | float) | round(1) }}"
+    state: "{{ (states('[[mm:sensor:{PREFIX}_battery_current]]') | default(0) | float * states('[[mm:sensor:{PREFIX}_battery_output_voltage]]') | default(0) | float) | round(1) }}"
 
   - name: "Battery Energy Capacity"
     unique_id: battery_energy_capacity
@@ -258,7 +258,7 @@ calculated:
     scan_interval: 60
     icon: "mdi:battery-high"
     mm_group: "battery_status"
-    state: "{{ (states('sensor.{PREFIX}_battery_voltage') | default(0) | float * states('sensor.{PREFIX}_battery_module_count') | default(1) | float * 0.1) | round(2) }}"
+    state: "{{ (states('[[mm:sensor:{PREFIX}_battery_voltage]]') | default(0) | float * states('[[mm:sensor:{PREFIX}_battery_module_count]]') | default(1) | float * 0.1) | round(2) }}"
 
 binary_sensors:
   # Register-based: 0 = off, non-zero = on (value_processor not needed; coordinator treats != 0 as True)

@@ -513,10 +513,10 @@ calculated:
     mm_group: "EV_device_info"
     icon: "mdi:chip"
     availability: >-
-      {{ states('sensor.{PREFIX}_firmware_version_raw') | is_number and
-        (states('sensor.{PREFIX}_firmware_version_raw') | int) >= 0 }}
+      {{ states('[[mm:sensor:{PREFIX}_firmware_version_raw]]') | is_number and
+        (states('[[mm:sensor:{PREFIX}_firmware_version_raw]]') | int) >= 0 }}
     state: |
-      {% set ver_hex = "%06X" | format(states("sensor.{PREFIX}_firmware_version_raw") | int) | list %}
+      {% set ver_hex = "%06X" | format(states("[[mm:sensor:{PREFIX}_firmware_version_raw]]") | int) | list %}
       {% set major_ver = ("%s%s" | format(ver_hex[0], ver_hex[1]) | int(base=16)) %}
       {% set minor_ver = ("%s%s" | format(ver_hex[2], ver_hex[3]) | int(base=16)) %}
       {% set build_num = ("%s%s" | format(ver_hex[4], ver_hex[5]) | int(base=16)) %}
@@ -530,10 +530,10 @@ binary_sensors:
     mm_group: "EV_charging_status"
     device_class: "plug"
     availability: >-
-      {{ states('sensor.{PREFIX}_status_raw') | is_number and
-        (states('sensor.{PREFIX}_status_raw') | int) >= 0 }}
+      {{ states('[[mm:sensor:{PREFIX}_status_raw]]') | is_number and
+        (states('[[mm:sensor:{PREFIX}_status_raw]]') | int) >= 0 }}
     state: >-
-      {{ (states('sensor.{PREFIX}_status_raw') | int) > 0 }}
+      {{ (states('[[mm:sensor:{PREFIX}_status_raw]]') | int) > 0 }}
 
   - name: "Error"
     unique_id: "error_detected"
@@ -541,8 +541,8 @@ binary_sensors:
     mm_group: "EV_charging_status"
     device_class: "problem"
     availability: >-
-      {{ states('sensor.{PREFIX}_status_raw') | is_number and
-        (states('sensor.{PREFIX}_status_raw') | int) >= 0 }}
+      {{ states('[[mm:sensor:{PREFIX}_status_raw]]') | is_number and
+        (states('[[mm:sensor:{PREFIX}_status_raw]]') | int) >= 0 }}
     state: >-
-      {{ (states('sensor.{PREFIX}_status_raw') | int) >= 8 and
-         (states('sensor.{PREFIX}_status_raw') | int) <= 14 }}
+      {{ (states('[[mm:sensor:{PREFIX}_status_raw]]') | int) >= 8 and
+         (states('[[mm:sensor:{PREFIX}_status_raw]]') | int) <= 14 }}

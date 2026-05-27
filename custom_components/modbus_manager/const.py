@@ -1,12 +1,22 @@
 """Constants for the Modbus Manager integration."""
 
-from enum import Enum
+from enum import Enum, StrEnum
 from typing import Final
 
 from homeassistant.const import Platform
 
 DOMAIN: Final = "modbus_manager"
 CONF_DEVICE_TYPE: Final = "device_type"
+CONF_ENTITY_ID_STRATEGY: Final = "entity_id_strategy"
+
+
+class EntityIdStrategy(StrEnum):
+    """How entity_id is assigned for a device (per-device setting)."""
+
+    HA_GENERATED = "ha_generated"
+    LEGACY_UNPREFIXED = "legacy_unprefixed"
+    LEGACY_PREFIXED = "legacy_prefixed"
+
 
 # Configuration keys
 CONF_SERVICES: Final = "services"
@@ -52,7 +62,9 @@ DEFAULT_RETRY_DELAY: Final = 0.1
 
 # Standard-Werte
 DEFAULT_UPDATE_INTERVAL = 10  # Sekunden - Reduced for better control responsiveness
-DEFAULT_MAX_REGISTER_READ = 8  # Maximale Register pro Read
+# Registers merged into one Modbus read (uint16 count). Modbus allows up to 125 per FC3/4;
+# 8 was very conservative; 64 batch typical Sungrow/RS485-TCP well while keeping frames reasonable.
+DEFAULT_MAX_REGISTER_READ = 64
 DEFAULT_PRECISION = 2  # Standard-Präzision
 DEFAULT_MIN_VALUE = 0.0  # Standard-Minimum
 DEFAULT_MAX_VALUE = 100.0  # Standard-Maximum

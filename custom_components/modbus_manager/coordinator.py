@@ -18,11 +18,12 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import DOMAIN
+from .const import DOMAIN, EntityIdStrategy
 from .device_utils import (
     create_device_info_dict,
     generate_unique_id,
     replace_template_placeholders,
+    resolve_entity_id_strategy,
     resolve_firmware_profile_version,
 )
 from .logger import ModbusManagerLogger
@@ -174,6 +175,11 @@ class ModbusCoordinator(DataUpdateCoordinator):
             "entity_ids_without_prefix": self.entry.data.get(
                 "entity_ids_without_prefix"
             ),
+            "entity_id_strategy_by_device": [
+                (d.get("device_entry_id"), d.get("entity_id_strategy"))
+                for d in (devices if isinstance(devices, list) else [])
+                if isinstance(d, dict)
+            ],
         }
         return json.dumps(signature_payload, sort_keys=True, default=str)
 
@@ -589,9 +595,11 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     dynamic_config_source["selected_model"] = (
                         "device"
                         if "selected_model" in device
-                        else "entry"
-                        if selected_model == self.entry.data.get("selected_model")
-                        else "model"
+                        else (
+                            "entry"
+                            if selected_model == self.entry.data.get("selected_model")
+                            else "model"
+                        )
                     )
 
                 # Add explicitly handled fields that might not be in template's dynamic_config
@@ -600,6 +608,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     "connection_type",
                     "firmware_version",
                     "entity_ids_without_prefix",
+                    "entity_id_strategy",
                 ]:
                     value, source = self._resolve_device_or_entry_value(
                         device, key, None
@@ -804,32 +813,24 @@ class ModbusCoordinator(DataUpdateCoordinator):
                                     )
 
                 # Process entities with device-specific prefix
-                entity_ids_without_prefix_val = (
-                    str(dynamic_config.get("entity_ids_without_prefix", "no"))
-                    .strip()
-                    .lower()
-                )
-                entity_ids_without_prefix = entity_ids_without_prefix_val == "yes"
+                entity_id_strategy = resolve_entity_id_strategy(dynamic_config)
                 _LOGGER.info(
-                    "Device %s: entity_ids_without_prefix=%s (raw=%s) -> %s",
+                    "Device %s: entity_id_strategy=%s (entity_ids_without_prefix raw=%s)",
                     template_name,
-                    entity_ids_without_prefix,
+                    entity_id_strategy,
                     dynamic_config.get("entity_ids_without_prefix"),
-                    "unprefixed entity_ids"
-                    if entity_ids_without_prefix
-                    else "prefixed",
                 )
                 processed_registers = self._process_entities_with_prefix(
-                    registers, prefix, template_name, entity_ids_without_prefix
+                    registers, prefix, template_name, entity_id_strategy
                 )
                 processed_controls = self._process_entities_with_prefix(
-                    controls, prefix, template_name, entity_ids_without_prefix
+                    controls, prefix, template_name, entity_id_strategy
                 )
                 processed_calculated = self._process_entities_with_prefix(
-                    calculated, prefix, template_name, entity_ids_without_prefix
+                    calculated, prefix, template_name, entity_id_strategy
                 )
                 processed_binary_sensors = self._process_entities_with_prefix(
-                    binary_sensors, prefix, template_name, entity_ids_without_prefix
+                    binary_sensors, prefix, template_name, entity_id_strategy
                 )
 
                 # Create device info dict for this device
@@ -1059,7 +1060,8 @@ class ModbusCoordinator(DataUpdateCoordinator):
                                 prefix,
                                 slave_id,
                                 0,
-                                entity_ids_without_prefix,
+                                entity_id_strategy,
+                                for_registry_unique_id=True,
                             )
                         elif ref_config and isinstance(ref_config, dict):
                             reg_uid = ref_config.get("register_unique_id")
@@ -1076,7 +1078,8 @@ class ModbusCoordinator(DataUpdateCoordinator):
                                     prefix,
                                     slave_id,
                                     0,
-                                    entity_ids_without_prefix,
+                                    entity_id_strategy,
+                                    for_registry_unique_id=True,
                                 )
                                 register[ref_field] = ref_config
 
@@ -1091,15 +1094,20 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     register["device_info"] = device_info
                     register["device_prefix"] = prefix
                     register["config_subentry_id"] = config_subentry_id
-                    # Replace placeholders in calculated entity templates (state, availability)
-                    for field in ["state", "availability", "template"]:
+                    # Replace placeholders in calculated entity templates (state, availability, icon, …)
+                    for field in [
+                        "state",
+                        "availability",
+                        "template",
+                        "icon_template",
+                    ]:
                         if field in register and isinstance(register[field], str):
                             register[field] = replace_template_placeholders(
                                 register[field],
                                 prefix,
                                 slave_id,
                                 0,
-                                entity_ids_without_prefix,
+                                entity_id_strategy,
                                 model_config,
                             )
                     all_calculated.append(register)
@@ -1111,15 +1119,20 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     register["device_info"] = device_info
                     register["device_prefix"] = prefix
                     register["config_subentry_id"] = config_subentry_id
-                    # Replace placeholders in binary sensor templates (state, availability)
-                    for field in ["state", "availability", "template"]:
+                    # Replace placeholders in binary sensor templates (state, availability, icon, …)
+                    for field in [
+                        "state",
+                        "availability",
+                        "template",
+                        "icon_template",
+                    ]:
                         if field in register and isinstance(register[field], str):
                             register[field] = replace_template_placeholders(
                                 register[field],
                                 prefix,
                                 slave_id,
                                 0,
-                                entity_ids_without_prefix,
+                                entity_id_strategy,
                                 model_config,
                             )
                     all_binary_sensors.append(register)
@@ -1191,6 +1204,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     "dual_channel_meter",
                     "battery_config",
                     "entity_ids_without_prefix",
+                    "entity_id_strategy",
                     "meter_type",
                     "wallbox_connected",
                 ]:
@@ -1343,12 +1357,14 @@ class ModbusCoordinator(DataUpdateCoordinator):
         entities: List[Dict[str, Any]],
         prefix: str,
         template_name: str,
-        entity_ids_without_prefix: bool = False,
+        entity_id_strategy: str = EntityIdStrategy.LEGACY_PREFIXED,
     ) -> List[Dict[str, Any]]:
         """Process entities with a single prefix (for devices array structure).
 
-        When entity_ids_without_prefix is True, default_entity_id uses the template
-        value without prefix while unique_id keeps the prefix for entity registry.
+        When strategy is :attr:`EntityIdStrategy.LEGACY_UNPREFIXED`, ``default_entity_id`` uses
+        the template value without prefix while unique_id keeps the prefix. When
+        :attr:`EntityIdStrategy.HA_GENERATED`, ``default_entity_id`` is not auto-injected so
+        Home Assistant can assign entity_id from the UI while registry matching stays on unique_id.
         """
         try:
             processed_entities = []
@@ -1363,29 +1379,44 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 name = entity.get("name", "unknown")
                 # unique_id always keeps prefix for entity registry
                 resolved_for_unique_id = replace_template_placeholders(
-                    template_unique_id or "", prefix, 0, 0, False
+                    template_unique_id or "",
+                    prefix,
+                    0,
+                    0,
+                    EntityIdStrategy.LEGACY_PREFIXED,
+                    for_registry_unique_id=True,
                 )
                 processed_entity["unique_id"] = generate_unique_id(
                     prefix, resolved_for_unique_id or template_unique_id, name
                 )
 
-                # Ensure default_entity_id is set (used to force entity_id)
-                # When entity_ids_without_prefix: use resolved without prefix
+                # Ensure default_entity_id is set (used to force entity_id), unless HA-generated
                 if "default_entity_id" not in processed_entity:
-                    if entity_ids_without_prefix:
+                    if entity_id_strategy == EntityIdStrategy.HA_GENERATED:
+                        pass
+                    elif entity_id_strategy == EntityIdStrategy.LEGACY_UNPREFIXED:
                         resolved_for_entity_id = replace_template_placeholders(
-                            template_unique_id or "", prefix, 0, 0, True
+                            template_unique_id or "",
+                            prefix,
+                            0,
+                            0,
+                            EntityIdStrategy.LEGACY_UNPREFIXED,
                         )
                         default_entity_id = (
                             resolved_for_entity_id or processed_entity["unique_id"]
                         )
+                        processed_entity["default_entity_id"] = (
+                            default_entity_id.lower()
+                            if isinstance(default_entity_id, str)
+                            else default_entity_id
+                        )
                     else:
                         default_entity_id = processed_entity.get("unique_id")
-                    processed_entity["default_entity_id"] = (
-                        default_entity_id.lower()
-                        if isinstance(default_entity_id, str)
-                        else default_entity_id
-                    )
+                        processed_entity["default_entity_id"] = (
+                            default_entity_id.lower()
+                            if isinstance(default_entity_id, str)
+                            else default_entity_id
+                        )
 
                 # Process name
                 # With has_entity_name=True, entity.name should not include the prefix

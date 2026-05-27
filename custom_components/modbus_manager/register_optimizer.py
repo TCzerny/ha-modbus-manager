@@ -5,10 +5,29 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict, List, Tuple
 
+from .const import DEFAULT_MAX_REGISTER_READ
 from .logger import ModbusManagerLogger
 from .modbus_utils import is_valid_modbus_address
 
 _LOGGER = ModbusManagerLogger(__name__)
+
+# Do not exceed Modbus specification for read register count
+_MAX_MODBUS_READ_REGISTERS = 125
+
+
+def _register_width_for_merge(reg: Dict[str, Any]) -> int:
+    """How many 16-bit registers this entity needs (aligns with RegisterRange.register_count)."""
+    data_type = reg.get("data_type", "uint16")
+    count = reg.get("count", 1)
+    if count is None:
+        count = 1
+    if data_type in ("uint32", "int32", "float", "float32"):
+        return 2
+    if data_type == "float64":
+        return 4
+    if data_type == "string":
+        return int(count) if count else 1
+    return int(count) if count else 1
 
 
 @dataclass
@@ -52,13 +71,19 @@ class RegisterRange:
 class RegisterOptimizer:
     """Optimizes register reading by grouping consecutive registers."""
 
-    def __init__(self, max_read_size: int = 8):
+    def __init__(self, max_read_size: int | None = None):
         """Initialize the optimizer."""
-        # Ensure max_read_size is an integer
-        if isinstance(max_read_size, list):
-            self.max_read_size = max_read_size[0] if max_read_size else 8
+        if max_read_size is None:
+            raw = DEFAULT_MAX_REGISTER_READ
+        elif isinstance(max_read_size, list):
+            raw = max_read_size[0] if max_read_size else DEFAULT_MAX_REGISTER_READ
         else:
-            self.max_read_size = max_read_size
+            raw = max_read_size
+        try:
+            n = int(raw)
+        except (TypeError, ValueError):
+            n = DEFAULT_MAX_REGISTER_READ
+        self.max_read_size = max(1, min(n, _MAX_MODBUS_READ_REGISTERS))
         _LOGGER.debug(
             "Register optimizer initialized with max_read_size: %d", self.max_read_size
         )
@@ -120,10 +145,10 @@ class RegisterOptimizer:
                         current_read_fc is None and reg_read_fc is None
                     )
 
+                    add_w = _register_width_for_merge(reg)
                     if (
                         address <= current_range.end_address + 1
-                        and current_range.register_count + (count or 1)
-                        <= self.max_read_size
+                        and current_range.register_count + add_w <= self.max_read_size
                         and current_input_type
                         == reg_input_type  # Same input_type required
                         and slave_ids_match  # Same slave_id required

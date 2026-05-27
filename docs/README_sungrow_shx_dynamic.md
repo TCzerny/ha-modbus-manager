@@ -2,7 +2,7 @@
 
 > **General documentation (Wiki):** [User Guide](https://github.com/TCzerny/ha-modbus-manager/wiki/User-Guide) · [Template reference](https://github.com/TCzerny/ha-modbus-manager/wiki/Template-Reference) · [Capabilities and limits](https://github.com/TCzerny/ha-modbus-manager/wiki/Capabilities-and-Limits) · [Local customization](https://github.com/TCzerny/ha-modbus-manager/wiki/Local-Customization)
 
-> **Migrating from mkaiser?** See [Migration from mkaiser](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser) and [unique_id comparison](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-mkaiser-unique-id-comparison). The [mkaiser YAML-based integration](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant) is the usual source install.
+> **Migrating from mkaiser?** See [Migration from mkaiser](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser) and [unique_id comparison](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-mkaiser-unique-id-comparison). Use **`entity_id_strategy: legacy_unprefixed`** on add device to keep unprefixed `entity_id` values and recorder history. Details: [Entity ID strategy](ENTITY_ID_STRATEGY.md) (history preservation, safe checklist). The [mkaiser YAML-based integration](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant) is the usual source install.
 
 ## 📋 Overview
 

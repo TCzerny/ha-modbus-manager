@@ -553,13 +553,13 @@ calculated:
     unique_id: "total_current"
     type: "sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_current_phase_1', 'unavailable') and
-         not is_state('sensor.{PREFIX}_current_phase_2', 'unavailable') and
-         not is_state('sensor.{PREFIX}_current_phase_3', 'unavailable') }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_current_phase_1]]', 'unavailable') and
+         not is_state('[[mm:sensor:{PREFIX}_current_phase_2]]', 'unavailable') and
+         not is_state('[[mm:sensor:{PREFIX}_current_phase_3]]', 'unavailable') }}
     state: >-
-      {{ (states('sensor.{PREFIX}_current_phase_1') | float(0) +
-          states('sensor.{PREFIX}_current_phase_2') | float(0) +
-          states('sensor.{PREFIX}_current_phase_3') | float(0)) | round(2) }}
+      {{ (states('[[mm:sensor:{PREFIX}_current_phase_1]]') | float(0) +
+          states('[[mm:sensor:{PREFIX}_current_phase_2]]') | float(0) +
+          states('[[mm:sensor:{PREFIX}_current_phase_3]]') | float(0)) | round(2) }}
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -571,15 +571,15 @@ calculated:
     unique_id: "charging_power"
     type: "sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_current_phase_1', 'unavailable') and
-         not is_state('sensor.{PREFIX}_current_phase_2', 'unavailable') and
-         not is_state('sensor.{PREFIX}_current_phase_3', 'unavailable') and
-         not is_state('sensor.{PREFIX}_average_voltage', 'unavailable') }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_current_phase_1]]', 'unavailable') and
+         not is_state('[[mm:sensor:{PREFIX}_current_phase_2]]', 'unavailable') and
+         not is_state('[[mm:sensor:{PREFIX}_current_phase_3]]', 'unavailable') and
+         not is_state('[[mm:sensor:{PREFIX}_average_voltage]]', 'unavailable') }}
     state: >-
-      {% set current1 = states('sensor.{PREFIX}_current_phase_1') | float(0) %}
-      {% set current2 = states('sensor.{PREFIX}_current_phase_2') | float(0) %}
-      {% set current3 = states('sensor.{PREFIX}_current_phase_3') | float(0) %}
-      {% set average_voltage = states('sensor.{PREFIX}_average_voltage') | float(0) %}
+      {% set current1 = states('[[mm:sensor:{PREFIX}_current_phase_1]]') | float(0) %}
+      {% set current2 = states('[[mm:sensor:{PREFIX}_current_phase_2]]') | float(0) %}
+      {% set current3 = states('[[mm:sensor:{PREFIX}_current_phase_3]]') | float(0) %}
+      {% set average_voltage = states('[[mm:sensor:{PREFIX}_average_voltage]]') | float(0) %}
       {% if current1 > 0.11 or current2 > 0.11 or current3 > 0.11 and average_voltage > 0 %}
         {{ ((current1 + current2 + current3) - 0.27) * average_voltage | round(0) }}
       {% else %}
@@ -596,13 +596,13 @@ calculated:
     unique_id: "max_total_current"
     type: "sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_max_current_phase_1', 'unavailable') and
-         not is_state('sensor.{PREFIX}_max_current_phase_2', 'unavailable') and
-         not is_state('sensor.{PREFIX}_max_current_phase_3', 'unavailable') }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_max_current_phase_1]]', 'unavailable') and
+         not is_state('[[mm:sensor:{PREFIX}_max_current_phase_2]]', 'unavailable') and
+         not is_state('[[mm:sensor:{PREFIX}_max_current_phase_3]]', 'unavailable') }}
     state: >-
-      {{ (states('sensor.{PREFIX}_max_current_phase_1') | float(0) +
-          states('sensor.{PREFIX}_max_current_phase_2') | float(0) +
-          states('sensor.{PREFIX}_max_current_phase_3') | float(0)) | round(2) }}
+      {{ (states('[[mm:sensor:{PREFIX}_max_current_phase_1]]') | float(0) +
+          states('[[mm:sensor:{PREFIX}_max_current_phase_2]]') | float(0) +
+          states('[[mm:sensor:{PREFIX}_max_current_phase_3]]') | float(0)) | round(2) }}
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -614,13 +614,13 @@ calculated:
     unique_id: "max_charging_power"
     type: "sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_actual_max_current_phase_1', 'unavailable') and
-          not is_state('sensor.{PREFIX}_actual_max_current_phase_2', 'unavailable') and
-          not is_state('sensor.{PREFIX}_actual_max_current_phase_3', 'unavailable') }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_actual_max_current_phase_1]]', 'unavailable') and
+          not is_state('[[mm:sensor:{PREFIX}_actual_max_current_phase_2]]', 'unavailable') and
+          not is_state('[[mm:sensor:{PREFIX}_actual_max_current_phase_3]]', 'unavailable') }}
     state: >-
-      {{ (states('sensor.{PREFIX}_actual_max_current_phase_1') | float(0) +
-          states('sensor.{PREFIX}_actual_max_current_phase_2') | float(0) +
-          states('sensor.{PREFIX}_actual_max_current_phase_3') | float(0)) * 230 | round(0) }}
+      {{ (states('[[mm:sensor:{PREFIX}_actual_max_current_phase_1]]') | float(0) +
+          states('[[mm:sensor:{PREFIX}_actual_max_current_phase_2]]') | float(0) +
+          states('[[mm:sensor:{PREFIX}_actual_max_current_phase_3]]') | float(0)) * 230 | round(0) }}
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -632,12 +632,12 @@ calculated:
     unique_id: "charging_efficiency"
     type: "sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_charging_power', 'unavailable') and
-         not is_state('sensor.{PREFIX}_max_charging_power', 'unavailable') and
-         states('sensor.{PREFIX}_max_charging_power') |  float(0) > 0 }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_charging_power]]', 'unavailable') and
+         not is_state('[[mm:sensor:{PREFIX}_max_charging_power]]', 'unavailable') and
+         states('[[mm:sensor:{PREFIX}_max_charging_power]]') |  float(0) > 0 }}
     state: >-
-      {{ (states('sensor.{PREFIX}_charging_power') | float(0) /
-          states('sensor.{PREFIX}_max_charging_power') | float(1) * 100) | round(1) }}
+      {{ (states('[[mm:sensor:{PREFIX}_charging_power]]') | float(0) /
+          states('[[mm:sensor:{PREFIX}_max_charging_power]]') | float(1) * 100) | round(1) }}
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
@@ -651,13 +651,13 @@ calculated:
     type: "sensor"
     firmware_min_version: "2.0.35"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_voltage_phase_1', 'unavailable') and
-         not is_state('sensor.{PREFIX}_voltage_phase_2', 'unavailable') and
-         not is_state('sensor.{PREFIX}_voltage_phase_3', 'unavailable') }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_voltage_phase_1]]', 'unavailable') and
+         not is_state('[[mm:sensor:{PREFIX}_voltage_phase_2]]', 'unavailable') and
+         not is_state('[[mm:sensor:{PREFIX}_voltage_phase_3]]', 'unavailable') }}
     state: >-
-      {{ ((states('sensor.{PREFIX}_voltage_phase_1') | float(0) +
-          states('sensor.{PREFIX}_voltage_phase_2') | float(0) +
-          states('sensor.{PREFIX}_voltage_phase_3') | float(0)) / 3) | round(1) }}
+      {{ ((states('[[mm:sensor:{PREFIX}_voltage_phase_1]]') | float(0) +
+          states('[[mm:sensor:{PREFIX}_voltage_phase_2]]') | float(0) +
+          states('[[mm:sensor:{PREFIX}_voltage_phase_3]]') | float(0)) / 3) | round(1) }}
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
@@ -670,13 +670,13 @@ calculated:
     type: "sensor"
     firmware_min_version: "2.0.35"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_voltage_phase_1', 'unavailable') and
-         not is_state('sensor.{PREFIX}_voltage_phase_2', 'unavailable') and
-         not is_state('sensor.{PREFIX}_voltage_phase_3', 'unavailable') }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_voltage_phase_1]]', 'unavailable') and
+         not is_state('[[mm:sensor:{PREFIX}_voltage_phase_2]]', 'unavailable') and
+         not is_state('[[mm:sensor:{PREFIX}_voltage_phase_3]]', 'unavailable') }}
     state: >-
-      {% set v1 = states('sensor.{PREFIX}_voltage_phase_1') | float(0) %}
-      {% set v2 = states('sensor.{PREFIX}_voltage_phase_2') | float(0) %}
-      {% set v3 = states('sensor.{PREFIX}_voltage_phase_3') | float(0) %}
+      {% set v1 = states('[[mm:sensor:{PREFIX}_voltage_phase_1]]') | float(0) %}
+      {% set v2 = states('[[mm:sensor:{PREFIX}_voltage_phase_2]]') | float(0) %}
+      {% set v3 = states('[[mm:sensor:{PREFIX}_voltage_phase_3]]') | float(0) %}
       {% set avg = (v1 + v2 + v3) / 3 %}
       {% if avg > 0 %}
         {{ ((max([v1, v2, v3]) - min([v1, v2, v3])) / avg * 100) | round(1) }}
@@ -695,9 +695,9 @@ binary_sensors:
     unique_id: "charging_active"
     type: "binary_sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_charging_power', 'unavailable') }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_charging_power]]', 'unavailable') }}
     state: >-
-      {{ states('sensor.{PREFIX}_charging_power') | float(0) > 0 }}
+      {{ states('[[mm:sensor:{PREFIX}_charging_power]]') | float(0) > 0 }}
     device_class: "power"
     mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
@@ -706,12 +706,12 @@ binary_sensors:
     unique_id: "cable_connected"
     type: "binary_sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_cable_status', 'unavailable') }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_cable_status]]', 'unavailable') }}
     state: >-
-      {% if is_state('sensor.{PREFIX}_cable_status', 'unavailable') or is_state('sensor.{PREFIX}_cable_status', 'unknown') %}
+      {% if is_state('[[mm:sensor:{PREFIX}_cable_status]]', 'unavailable') or is_state('[[mm:sensor:{PREFIX}_cable_status]]', 'unknown') %}
         false
       {% else %}
-        {% set raw_val = state_attr('sensor.{PREFIX}_cable_status', 'raw_value') | int(0) %}
+        {% set raw_val = state_attr('[[mm:sensor:{PREFIX}_cable_status]]', 'raw_value') | int(0) %}
         {{ raw_val > 0 }}
       {% endif %}
     device_class: "connectivity"

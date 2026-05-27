@@ -17,6 +17,7 @@ from .device_utils import (
     generate_entity_name,
     get_entity_mm_group,
     is_coordinator_connected,
+    resolve_mm_registry_markers_ex,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -41,6 +42,17 @@ def _extract_template_entity_ids(*template_strings: str | None) -> set[str]:
             entity_ids.add(f"{domain.lower()}.{object_id.lower()}")
 
     return entity_ids
+
+
+def _filter_placeholder_entity_deps(entity_ids: set[str]) -> set[str]:
+    """Drop registry placeholders like ``sensor.unknown`` from dependency tracking."""
+    return {e for e in entity_ids if e and not e.endswith(".unknown")}
+
+
+def _mm_template_fields_have_markers(
+    *parts: str | None,
+) -> bool:
+    return any(p and "[[mm:" in p for p in parts if p is not None)
 
 
 class ModbusCalculatedSensor(SensorEntity):
@@ -96,26 +108,36 @@ class ModbusCalculatedSensor(SensorEntity):
                 f"Calculated entity {self._attr_name} has no template or state defined"
             )
 
-        # Template is already processed by coordinator - use directly
-        try:
-            self._template = Template(template_str, hass)
-        except Exception as e:
-            _LOGGER.error("Error creating template for %s: %s", self._attr_name, str(e))
-            raise
-
-        # Availability template processing
-        # Template is already processed by coordinator (PREFIX already replaced)
-        availability_template = config.get("availability")
-        if availability_template:
-            self._availability_template = Template(availability_template, hass)
-        else:
-            self._availability_template = None
-        self._dependency_entity_ids = _extract_template_entity_ids(
-            template_str,
-            availability_template,
-            config.get("icon_template"),
-        )
+        # Raw strings (coordinator has applied Step A: [[mm:domain:sg_*]]; Step B in entity)
+        self._raw_state = template_str
+        self._raw_availability = config.get("availability")
+        self._raw_icon = config.get("icon_template")
+        # Required before _mm_rebuild_registry_templates (uses _static_icon / _raw_icon)
+        self._static_icon = config.get("icon")
         self._unsubscribe_dependency_listener = None
+        if self._static_icon:
+            self._attr_icon = self._static_icon
+            _LOGGER.debug(
+                "Static icon set for calculated sensor %s: %s",
+                self._attr_name,
+                self._static_icon,
+            )
+        elif self._raw_icon:
+            _LOGGER.debug(
+                "Dynamic icon template set for calculated sensor %s", self._attr_name
+            )
+
+        self._mm_registry_frozen = False
+        self._mm_any_markers = _mm_template_fields_have_markers(
+            self._raw_state, self._raw_availability, self._raw_icon
+        )
+        self._mm_hass_add_done = False
+        self._mm_state_res = None
+        self._mm_avail_res = None
+        self._mm_icon_res = None
+        self._mm_icon_jinja: Template | None = None
+        # Step B + build Jinja: repeat until all [[mm:…]] match, then freeze (no more registry I/O)
+        self._mm_rebuild_registry_templates()
 
         # Entity attributes
         self._attr_native_unit_of_measurement = config.get("unit_of_measurement")
@@ -137,22 +159,6 @@ class ModbusCalculatedSensor(SensorEntity):
             self._attr_entity_category = EntityCategory.CONFIG
         else:
             self._attr_entity_category = None
-
-        # Icon support
-        self._static_icon = config.get("icon")
-        self._icon_template = config.get("icon_template")
-        if self._static_icon:
-            self._attr_icon = self._static_icon
-            _LOGGER.debug(
-                "Static icon set for calculated sensor %s: %s",
-                self._attr_name,
-                self._static_icon,
-            )
-        elif self._icon_template:
-            # Icon template will be processed during updates
-            _LOGGER.debug(
-                "Dynamic icon template set for calculated sensor %s", self._attr_name
-            )
 
         # Template organization tag (exposed as extra_state_attributes mm_group only;
         # do not use Entity.group — reserved for HA core Group instances.)
@@ -240,6 +246,103 @@ class ModbusCalculatedSensor(SensorEntity):
             return False
         return bool(getattr(coordinator, "last_update_success", True))
 
+    def _mm_rebuild_registry_templates(self) -> None:
+        """Resolve [[mm:…]] to entity_id; once all markers match, freeze (no more registry I/O)."""
+        if self._mm_registry_frozen:
+            return
+
+        def resolve_one(raw: str | None) -> tuple[str, bool]:
+            if not raw:
+                return "", True
+            out, ok = resolve_mm_registry_markers_ex(self.hass, raw)
+            return out, ok
+
+        def field_ok(raw: str | None, ok: bool) -> bool:
+            if not raw or "[[mm:" not in raw:
+                return True
+            return ok
+
+        state_s, s_ok = resolve_one(self._raw_state)
+        if self._raw_availability:
+            avail_s, a_ok = resolve_one(self._raw_availability)
+        else:
+            avail_s, a_ok = "", True
+        if self._raw_icon:
+            icon_s, i_ok = resolve_one(self._raw_icon)
+        else:
+            icon_s, i_ok = "", True
+
+        try:
+            self._template = Template(state_s, self.hass)
+        except Exception as e:
+            _LOGGER.error("Error creating template for %s: %s", self._attr_name, str(e))
+            raise
+
+        if self._raw_availability:
+            try:
+                self._availability_template = Template(avail_s, self.hass)
+            except Exception as e:
+                _LOGGER.error(
+                    "Error creating availability template for %s: %s",
+                    self._attr_name,
+                    str(e),
+                )
+                raise
+        else:
+            self._availability_template = None
+
+        self._mm_icon_jinja = None
+        if not self._static_icon and self._raw_icon:
+            try:
+                self._mm_icon_jinja = Template(icon_s, self.hass)
+            except Exception as e:
+                _LOGGER.error(
+                    "Error creating icon template for %s: %s", self._attr_name, str(e)
+                )
+                raise
+
+        self._mm_state_res = state_s
+        self._mm_avail_res = avail_s if self._raw_availability else None
+        self._mm_icon_res = icon_s if self._raw_icon else None
+
+        fully = (
+            field_ok(self._raw_state, s_ok)
+            and field_ok(self._raw_availability, a_ok)
+            and field_ok(self._raw_icon, i_ok)
+        )
+        if fully:
+            self._mm_registry_frozen = True
+            _LOGGER.debug(
+                "MM registry markers frozen for %s (no further registry lookups)",
+                self._attr_name,
+            )
+
+        self._dependency_entity_ids = _filter_placeholder_entity_deps(
+            _extract_template_entity_ids(
+                state_s,
+                avail_s if self._raw_availability else None,
+                icon_s if self._raw_icon else None,
+            )
+        )
+
+    def _mm_sync_dependency_listeners(self) -> None:
+        """(Re)subscribe when dependency entity_ids change (e.g. after MM resolution)."""
+        if not self._mm_hass_add_done:
+            return
+        new_ids = frozenset(self._dependency_entity_ids)
+        if new_ids == getattr(self, "_mm_listener_ids", None):
+            return
+        self._mm_listener_ids = new_ids
+        if self._unsubscribe_dependency_listener is not None:
+            self._unsubscribe_dependency_listener()
+            self._unsubscribe_dependency_listener = None
+        if new_ids:
+            self._unsubscribe_dependency_listener = async_track_state_change_event(
+                self.hass,
+                list(new_ids),
+                self._handle_dependency_state_change,
+            )
+
     @property
     def extra_state_attributes(self) -> Dict[str, Any]:
         """Return entity specific state attributes."""
@@ -273,19 +376,17 @@ class ModbusCalculatedSensor(SensorEntity):
     @property
     def should_poll(self) -> bool:
         """Use event-driven updates when dependencies are known, fallback to polling."""
+        if (not self._mm_registry_frozen) and self._mm_any_markers:
+            return True
         return not bool(self._dependency_entity_ids)
 
     async def async_added_to_hass(self) -> None:
         """Register dependency listener for targeted recalculation."""
         await super().async_added_to_hass()
-        if self._dependency_entity_ids:
-            self._unsubscribe_dependency_listener = async_track_state_change_event(
-                self.hass,
-                list(self._dependency_entity_ids),
-                self._handle_dependency_state_change,
-            )
-            # Prime state once after listener registration.
-            self.async_schedule_update_ha_state(True)
+        self._mm_hass_add_done = True
+        self._mm_rebuild_registry_templates()
+        self._mm_sync_dependency_listeners()
+        self.async_schedule_update_ha_state(True)
 
     async def async_will_remove_from_hass(self) -> None:
         """Remove dependency listener when entity is unloaded."""
@@ -304,6 +405,10 @@ class ModbusCalculatedSensor(SensorEntity):
         if not self._is_data_available():
             self._attr_native_value = None
             return
+
+        if not self._mm_registry_frozen:
+            self._mm_rebuild_registry_templates()
+            self._mm_sync_dependency_listeners()
 
         # Update availability first if template exists
         if self._availability_template is not None:
@@ -392,12 +497,10 @@ class ModbusCalculatedSensor(SensorEntity):
                         self._attr_suggested_display_precision = 5
 
             # Update dynamic icon if template is configured
-            # Icon template is already processed by coordinator (PREFIX already replaced)
-            if self._icon_template and self._attr_native_value is not None:
+            if self._mm_icon_jinja and self._attr_native_value is not None:
                 try:
-                    icon_template = Template(self._icon_template, self.hass)
                     rendered_icon = await self.hass.async_add_executor_job(
-                        icon_template.render
+                        self._mm_icon_jinja.render
                     )
                     if rendered_icon and isinstance(rendered_icon, str):
                         self._attr_icon = rendered_icon.strip()
@@ -500,24 +603,15 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
                 f"Calculated binary sensor {self._attr_name} has no state template defined"
             )
 
-        # Template is already processed by coordinator (PREFIX already replaced)
-        try:
-            self._template = Template(template_str, hass)
-        except Exception as e:
-            _LOGGER.error("Error creating template for %s: %s", self._attr_name, str(e))
-            raise
-
-        # Availability template processing
-        # Template is already processed by coordinator (PREFIX already replaced)
-        availability_template = config.get("availability")
-        if availability_template:
-            self._availability_template = Template(availability_template, hass)
-        else:
-            self._availability_template = None
-        self._dependency_entity_ids = _extract_template_entity_ids(
-            template_str,
-            availability_template,
+        self._raw_state = template_str
+        self._raw_availability = config.get("availability")
+        self._mm_registry_frozen = False
+        self._mm_any_markers = _mm_template_fields_have_markers(
+            self._raw_state, self._raw_availability
         )
+        self._mm_hass_add_done = False
+        self._mm_rebuild_registry_templates_binary()
+
         self._unsubscribe_dependency_listener = None
 
         # Entity attributes
@@ -589,6 +683,82 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
             return False
         return bool(getattr(coordinator, "last_update_success", True))
 
+    def _mm_rebuild_registry_templates_binary(self) -> None:
+        """Resolve [[mm:…]] for binary calculated; freeze when all markers match."""
+        if self._mm_registry_frozen:
+            return
+
+        def resolve_one(raw: str | None) -> tuple[str, bool]:
+            if not raw:
+                return "", True
+            out, ok = resolve_mm_registry_markers_ex(self.hass, raw)
+            return out, ok
+
+        def field_ok(raw: str | None, ok: bool) -> bool:
+            if not raw or "[[mm:" not in raw:
+                return True
+            return ok
+
+        state_s, s_ok = resolve_one(self._raw_state)
+        if self._raw_availability:
+            avail_s, a_ok = resolve_one(self._raw_availability)
+        else:
+            avail_s, a_ok = "", True
+
+        try:
+            self._template = Template(state_s, self.hass)
+        except Exception as e:
+            _LOGGER.error("Error creating template for %s: %s", self._attr_name, str(e))
+            raise
+
+        if self._raw_availability:
+            try:
+                self._availability_template = Template(avail_s, self.hass)
+            except Exception as e:
+                _LOGGER.error(
+                    "Error creating availability template for %s: %s",
+                    self._attr_name,
+                    str(e),
+                )
+                raise
+        else:
+            self._availability_template = None
+
+        fully = field_ok(self._raw_state, s_ok) and field_ok(
+            self._raw_availability, a_ok
+        )
+        if fully:
+            self._mm_registry_frozen = True
+            _LOGGER.debug(
+                "MM registry markers frozen for %s (no further registry lookups)",
+                self._attr_name,
+            )
+
+        self._dependency_entity_ids = _filter_placeholder_entity_deps(
+            _extract_template_entity_ids(
+                state_s,
+                avail_s if self._raw_availability else None,
+            )
+        )
+
+    def _mm_sync_dependency_listeners_binary(self) -> None:
+        """(Re)subscribe when dependency entity_ids change."""
+        if not self._mm_hass_add_done:
+            return
+        new_ids = frozenset(self._dependency_entity_ids)
+        if new_ids == getattr(self, "_mm_listener_ids", None):
+            return
+        self._mm_listener_ids = new_ids
+        if self._unsubscribe_dependency_listener is not None:
+            self._unsubscribe_dependency_listener()
+            self._unsubscribe_dependency_listener = None
+        if new_ids:
+            self._unsubscribe_dependency_listener = async_track_state_change_event(
+                self.hass,
+                list(new_ids),
+                self._handle_dependency_state_change,
+            )
+
     @property
     def extra_state_attributes(self) -> Dict[str, Any]:
         """Return entity specific state attributes."""
@@ -622,18 +792,17 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
     @property
     def should_poll(self) -> bool:
         """Use event-driven updates when dependencies are known, fallback to polling."""
+        if (not self._mm_registry_frozen) and self._mm_any_markers:
+            return True
         return not bool(self._dependency_entity_ids)
 
     async def async_added_to_hass(self) -> None:
         """Register dependency listener for targeted recalculation."""
         await super().async_added_to_hass()
-        if self._dependency_entity_ids:
-            self._unsubscribe_dependency_listener = async_track_state_change_event(
-                self.hass,
-                list(self._dependency_entity_ids),
-                self._handle_dependency_state_change,
-            )
-            self.async_schedule_update_ha_state(True)
+        self._mm_hass_add_done = True
+        self._mm_rebuild_registry_templates_binary()
+        self._mm_sync_dependency_listeners_binary()
+        self.async_schedule_update_ha_state(True)
 
     async def async_will_remove_from_hass(self) -> None:
         """Remove dependency listener when entity is unloaded."""
@@ -652,6 +821,10 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         if not self._is_data_available():
             self._attr_is_on = None
             return
+
+        if not self._mm_registry_frozen:
+            self._mm_rebuild_registry_templates_binary()
+            self._mm_sync_dependency_listeners_binary()
 
         # Update availability first if template exists
         if self._availability_template is not None:
