@@ -12,6 +12,17 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .combined_coordinator import CombinedDeviceCoordinator
 from .const import DOMAIN
+from .device_utils import generate_unique_id
+
+
+def _combined_prefix(entry: ConfigEntry) -> str:
+    """Return configured combined prefix (legacy-compatible casing)."""
+    return str(entry.data.get("combined_prefix", "")).strip() or entry.entry_id
+
+
+def _combined_unique_id(entry: ConfigEntry, metric_key: str) -> str:
+    """Build registry unique_id like hub devices: ``{prefix}_{metric_key}``."""
+    return generate_unique_id(_combined_prefix(entry), metric_key)
 
 
 def _combined_device_info(entry: ConfigEntry) -> DeviceInfo:
@@ -43,15 +54,13 @@ class CombinedAvailabilityBinarySensor(
         name: str,
     ) -> None:
         super().__init__(coordinator)
-        combined_prefix = str(entry.data.get("combined_prefix", "combined")).lower()
         self._key = key
         self._attr_has_entity_name = True
         self._attr_name = name
         self._attr_translation_key = key
-        self._attr_unique_id = f"{entry.entry_id}_{key}"
+        self._attr_unique_id = _combined_unique_id(entry, key)
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
         self._attr_device_info = _combined_device_info(entry)
-        self.entity_id = f"binary_sensor.{combined_prefix}_{key}"
 
     @property
     def is_on(self) -> bool | None:
@@ -87,15 +96,13 @@ class CombinedComputedBinarySensor(
         name: str,
     ) -> None:
         super().__init__(coordinator)
-        combined_prefix = str(entry.data.get("combined_prefix", "combined")).lower()
         self._key = key
         self._attr_has_entity_name = True
         self._attr_name = name
         self._attr_translation_key = key
-        self._attr_unique_id = f"{entry.entry_id}_{key}"
+        self._attr_unique_id = _combined_unique_id(entry, key)
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
         self._attr_device_info = _combined_device_info(entry)
-        self.entity_id = f"binary_sensor.{combined_prefix}_{key}"
 
     @property
     def is_on(self) -> bool | None:
@@ -120,14 +127,12 @@ class CombinedPairTypeSensor(
         name: str = "Combination Type",
     ) -> None:
         super().__init__(coordinator)
-        combined_prefix = str(entry.data.get("combined_prefix", "combined")).lower()
         self._attr_has_entity_name = True
         self._attr_name = name
         self._attr_translation_key = "combined_pair_type"
-        self._attr_unique_id = f"{entry.entry_id}_combined_pair_type"
+        self._attr_unique_id = _combined_unique_id(entry, "combined_pair_type")
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
         self._attr_device_info = _combined_device_info(entry)
-        self.entity_id = f"sensor.{combined_prefix}_combined_pair_type"
 
     @property
     def native_value(self) -> str | None:
@@ -151,16 +156,14 @@ class CombinedSumSensor(CoordinatorEntity[CombinedDeviceCoordinator], SensorEnti
         unit: str = "W",
     ) -> None:
         super().__init__(coordinator)
-        combined_prefix = str(entry.data.get("combined_prefix", "combined")).lower()
         self._key = key
         self._attr_has_entity_name = True
         self._attr_name = name
         self._attr_translation_key = key
-        self._attr_unique_id = f"{entry.entry_id}_{key}"
+        self._attr_unique_id = _combined_unique_id(entry, key)
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
         self._attr_device_info = _combined_device_info(entry)
         self._attr_native_unit_of_measurement = unit
-        self.entity_id = f"sensor.{combined_prefix}_{key}"
 
     def _metric_meta(self) -> dict[str, Any]:
         """Return metadata extracted from source template registers."""

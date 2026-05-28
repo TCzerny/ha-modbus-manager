@@ -2,8 +2,6 @@
 
 The **Combined Device** is an opt-in virtual Modbus Manager config entry that aggregates data from **two existing hub entries** without additional Modbus I/O. It is intended for setups where physically separate devices (e.g. Sungrow inverter + iHomeManager) should be viewed as one logical unit in Home Assistant.
 
-Related design notes: [`CROSS_HUB_COMBINED_DEVICE_STEP1.md`](CROSS_HUB_COMBINED_DEVICE_STEP1.md)
-
 ---
 
 ## Supported combinations
@@ -23,7 +21,7 @@ Sources can be on **different Modbus hubs** (different `host:port`). The combine
 2. **Settings → Devices & services → Modbus Manager → Add integration**.
 3. On the template selection step, choose **Combined Device (cross-hub)**.
 4. Select **Source A** and **Source B** (order does not matter for metrics; roles are resolved by device type).
-5. Set a unique **Combined prefix** (used in `entity_id`s, e.g. `sensor.<prefix>_combined_total_active_power`).
+5. Set a unique **Combined prefix** (device name and registry identity; see [Entity IDs and naming](#entity-ids-and-naming)).
 6. Finish the flow.
 
 ### Eligibility
@@ -189,10 +187,15 @@ After source hubs recover, combined entities recover automatically; no manual re
 
 ## Entity IDs and naming
 
-- Device name: `Combined <combined_prefix>`
-- Entity IDs: `sensor.<combined_prefix>_<metric_key>` (lowercase prefix)
-- Translations: `entity.sensor.<metric_key>.name` in `en.json` / `de.json`
-- Entities use `has_entity_name: true` with explicit names for correct UI labels
+Combined entities follow the same approach as hub devices with **`entity_id_strategy: ha_generated`** (see [ENTITY_ID_STRATEGY.md](ENTITY_ID_STRATEGY.md)):
+
+- **`entity_id`**: Assigned by **Home Assistant** from the combined device name and entity name (not forced to `sensor.<prefix>_<metric>`). This supports device rename and “recreate entity IDs” flows on current HA versions.
+- **`unique_id`**: Prefixed style like hub Modbus entities — `{combined_prefix}_{metric_key}` with **configured prefix casing** (e.g. `SG_IHM_combined_total_consumed_energy`), via the same `generate_unique_id()` rules as `legacy_prefixed` / `ha_generated` hubs. Re-adding a combined entry with the same prefix reuses registry rows when `unique_id` matches.
+- **Device name**: `Combined <combined_prefix>` — the prefix is for identification in the UI, not a guaranteed `entity_id` slug.
+- **Source hubs**: Their `entity_id_strategy` (`ha_generated`, `legacy_prefixed`, …) applies only to Modbus template entities on those hubs; it does **not** change combined-entity IDs.
+- **Translations**: `entity.sensor.<metric_key>.name` in `en.json` / `de.json`; entities use `has_entity_name: true` with explicit names for correct UI labels.
+
+**Note:** Combined entries created before `ha_generated` behaviour may still show old forced `entity_id` values in the registry until the combined entry is removed and re-added (or entities are renamed in HA).
 
 ---
 
