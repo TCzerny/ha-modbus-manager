@@ -10,7 +10,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_MM_GROUP, DOMAIN
+from .combined_entities import CombinedAvailabilityBinarySensor
+from .const import CONF_ENTRY_TYPE, CONF_MM_GROUP, DOMAIN, ENTRY_TYPE_COMBINED_DEVICE
 from .coordinator import ModbusCoordinator
 from .device_utils import (
     create_base_extra_state_attributes,
@@ -38,6 +39,31 @@ async def async_setup_entry(
 
         if not coordinator:
             _LOGGER.error("No coordinator found for entry %s", entry.entry_id)
+            return
+
+        if entry.data.get(CONF_ENTRY_TYPE) == ENTRY_TYPE_COMBINED_DEVICE:
+            async_add_entities(
+                [
+                    CombinedAvailabilityBinarySensor(
+                        coordinator,
+                        entry,
+                        "combined_source_a_available",
+                        "Source A Available",
+                    ),
+                    CombinedAvailabilityBinarySensor(
+                        coordinator,
+                        entry,
+                        "combined_source_b_available",
+                        "Source B Available",
+                    ),
+                    CombinedAvailabilityBinarySensor(
+                        coordinator,
+                        entry,
+                        "combined_any_source_available",
+                        "Any Source Available",
+                    ),
+                ]
+            )
             return
 
         # Get binary sensors from coordinator (structured dict)

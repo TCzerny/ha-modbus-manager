@@ -14,6 +14,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 
+from .combined_coordinator import CombinedDeviceCoordinator
 from .const import (
     CONF_ENTRY_TYPE,
     DOMAIN,
@@ -640,13 +641,30 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         entry_type = entry.data.get(CONF_ENTRY_TYPE, ENTRY_TYPE_HUB)
         if entry_type == ENTRY_TYPE_COMBINED_DEVICE:
             hass.data.setdefault(DOMAIN, {})
+            coordinator = CombinedDeviceCoordinator(hass=hass, entry=entry)
             hass.data[DOMAIN][entry.entry_id] = {
                 "entry_type": ENTRY_TYPE_COMBINED_DEVICE,
                 "combined_prefix": entry.data.get("combined_prefix"),
                 "source_entry_id_a": entry.data.get("source_entry_id_a"),
                 "source_entry_id_b": entry.data.get("source_entry_id_b"),
                 "combination_type": entry.data.get("combination_type"),
+                "coordinator": coordinator,
             }
+            initial_refresh_task = asyncio.create_task(
+                coordinator.async_config_entry_first_refresh()
+            )
+
+            def _log_combined_initial_refresh(task: asyncio.Task) -> None:
+                try:
+                    task.result()
+                except Exception as err:
+                    _LOGGER.debug(
+                        "Combined coordinator initial refresh ended with error: %s",
+                        str(err),
+                    )
+
+            initial_refresh_task.add_done_callback(_log_combined_initial_refresh)
+            await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
             _LOGGER.info(
                 "Set up combined device placeholder for %s",
                 entry.data.get("combined_prefix", entry.entry_id),
@@ -705,7 +723,16 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     try:
         entry_type = entry.data.get(CONF_ENTRY_TYPE, ENTRY_TYPE_HUB)
         if entry_type == ENTRY_TYPE_COMBINED_DEVICE:
+            await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
             if DOMAIN in hass.data and entry.entry_id in hass.data[DOMAIN]:
+                combined_data = hass.data[DOMAIN][entry.entry_id]
+                coordinator = (
+                    combined_data.get("coordinator")
+                    if isinstance(combined_data, dict)
+                    else None
+                )
+                if coordinator and hasattr(coordinator, "mark_as_unloading"):
+                    coordinator.mark_as_unloading()
                 del hass.data[DOMAIN][entry.entry_id]
             _LOGGER.debug(
                 "Unloaded combined device placeholder for %s",

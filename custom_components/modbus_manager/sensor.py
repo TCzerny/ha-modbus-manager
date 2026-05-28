@@ -12,7 +12,8 @@ from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
+from .combined_entities import CombinedPairTypeSensor
+from .const import CONF_ENTRY_TYPE, DOMAIN, ENTRY_TYPE_COMBINED_DEVICE
 from .coordinator import ModbusCoordinator
 from .device_utils import (
     create_base_extra_state_attributes,
@@ -281,6 +282,10 @@ async def async_setup_entry(
 
         if not coordinator:
             _LOGGER.error("No coordinator found for entry %s", entry.entry_id)
+            return
+
+        if entry.data.get(CONF_ENTRY_TYPE) == ENTRY_TYPE_COMBINED_DEVICE:
+            async_add_entities([CombinedPairTypeSensor(coordinator, entry)])
             return
 
         # Get all entities from coordinator (structured dict)
