@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
@@ -120,6 +122,15 @@ class CombinedSumSensor(CoordinatorEntity[CombinedDeviceCoordinator], SensorEnti
         self._attr_native_unit_of_measurement = unit
         self.entity_id = f"sensor.{combined_prefix}_{key}"
 
+    def _metric_meta(self) -> dict[str, Any]:
+        """Return metadata extracted from source template registers."""
+        data = self.coordinator.data or {}
+        metric_meta = data.get("metric_meta", {})
+        if not isinstance(metric_meta, dict):
+            return {}
+        meta = metric_meta.get(self._key, {})
+        return meta if isinstance(meta, dict) else {}
+
     @property
     def native_value(self) -> float | None:
         """Return summed metric value."""
@@ -132,3 +143,40 @@ class CombinedSumSensor(CoordinatorEntity[CombinedDeviceCoordinator], SensorEnti
             return float(value)
         except (TypeError, ValueError):
             return None
+
+    @property
+    def native_unit_of_measurement(self) -> str | None:
+        """Use unit from source template metadata when available."""
+        return (
+            self._metric_meta().get("unit_of_measurement")
+            or self._attr_native_unit_of_measurement
+        )
+
+    @property
+    def device_class(self) -> str | None:
+        """Use device class from source template metadata."""
+        return self._metric_meta().get("device_class")
+
+    @property
+    def state_class(self) -> str | None:
+        """Use state class from source template metadata."""
+        return self._metric_meta().get("state_class")
+
+    @property
+    def suggested_display_precision(self) -> int | None:
+        """Use precision from source template metadata."""
+        precision = self._metric_meta().get("precision")
+        return precision if isinstance(precision, int) else None
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any] | None:
+        """Expose metric source metadata for transparency/debugging."""
+        meta = self._metric_meta()
+        if not meta:
+            return None
+        return {
+            "source_a_unique_id": meta.get("source_a_unique_id"),
+            "source_b_unique_id": meta.get("source_b_unique_id"),
+            "source_a_unit": meta.get("source_a_unit"),
+            "source_b_unit": meta.get("source_b_unit"),
+        }

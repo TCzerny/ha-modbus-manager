@@ -47,6 +47,7 @@ from .template_loader import (
 
 _LOGGER = ModbusManagerLogger(__name__)
 COMBINED_TEMPLATE_SENTINEL = "__combined_device__"
+CONF_TEST_ALLOW_SAME_ENDPOINT_NEW_HUB = "test_allow_same_endpoint_new_hub"
 
 
 def _first_dynamic_option_value(options: Any) -> Any:
@@ -634,6 +635,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Optional(
                         "message_wait_milliseconds", default=DEFAULT_MESSAGE_WAIT_MS
                     ): int,
+                    vol.Optional(
+                        CONF_TEST_ALLOW_SAME_ENDPOINT_NEW_HUB, default=False
+                    ): bool,
                 }
             ),
             description_placeholders={
@@ -842,6 +846,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Optional(
                     "message_wait_milliseconds", default=DEFAULT_MESSAGE_WAIT_MS
                 ): int,
+                vol.Optional(
+                    CONF_TEST_ALLOW_SAME_ENDPOINT_NEW_HUB, default=False
+                ): bool,
             }
 
             return self.async_show_form(
@@ -2695,6 +2702,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             host = config_data.get("host", "unknown")
             port = config_data.get("port", 502)
             title = f"Modbus Hub ({host}:{port})"
+            allow_same_endpoint_new_hub = bool(
+                user_input.get(CONF_TEST_ALLOW_SAME_ENDPOINT_NEW_HUB, False)
+            )
 
             # Check if there's already a config entry with the same host:port
             # If so, we need to extend it instead of creating a new one
@@ -2707,7 +2717,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     existing_entry = entry
                     break
 
-            if existing_entry:
+            if existing_entry and not allow_same_endpoint_new_hub:
                 # Extend existing entry with new device
                 _LOGGER.debug(
                     "Extending existing hub %s:%s with new device (slave_id: %s)",
@@ -2796,6 +2806,14 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
                 return self.async_abort(reason="device_added_to_existing_hub")
             else:
+                if existing_entry and allow_same_endpoint_new_hub:
+                    _LOGGER.warning(
+                        "TEST-ONLY MODE active: creating separate hub for duplicate endpoint %s:%s. "
+                        "Remove '%s' usage after local combined testing.",
+                        host,
+                        port,
+                        CONF_TEST_ALLOW_SAME_ENDPOINT_NEW_HUB,
+                    )
                 # Only create legacy devices array if one doesn't already exist
                 # (Battery workflow creates devices array with 2 devices)
                 if "devices" not in config_data or not config_data["devices"]:
