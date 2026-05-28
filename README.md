@@ -63,6 +63,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 - **Modular Architecture**: Easily extensible for new device types
 - **Home Assistant Integration**: Fully integrated into the HA UI
 - **Entity ID strategy**: Per-device choice of HA–generated or legacy forced `entity_id`s; calculated templates can use **`[[mm:…]]`** registry references (see [Entity ID strategy & `[[mm:…]]`](docs/ENTITY_ID_STRATEGY.md))
+- **Cross-hub Combined Device** (since **1.0.11**): Optional virtual entry linking two hubs (e.g. Sungrow inverter + iHomeManager) for aggregated metrics and house-level consumed energy — see [Combined Device](docs/README_Combined_Device.md)
 
 ## 🔌 Supported Devices
 
@@ -168,6 +169,7 @@ The repo file [`CONTRIBUTING.md`](CONTRIBUTING.md) is a short entry point with t
 - **[Sungrow SHx Dynamic](docs/README_sungrow_shx_dynamic.md)** - Complete dynamic template documentation
 - **[Sungrow SG Dynamic](docs/README_sungrow_sg_dynamic.md)** - Dynamic SG template documentation
 - **[Sungrow iHomeManager](docs/README_iHomeManager.md)** - iHomeManager register documentation
+- **[Cross-hub Combined Device](docs/README_Combined_Device.md)** - Inverter + iHomeManager / dual-inverter aggregation (1.0.11+)
 - **[Sungrow SBR Battery](docs/README_sungrow_sbr_battery.md)** - SBR battery template
 - **[Solvis SC3](docs/README_solvis_sc3.md)** - Solvis SC2/SC3 template
 - **[Compleo eBox Professional](docs/README_compleo_ebox_professional.md)** - EV charger template

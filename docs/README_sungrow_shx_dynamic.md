@@ -550,6 +550,8 @@ This section contains all entities that will be created by this template, includ
 | - | Monthly export (current) | monthly_export_current |
 | - | Yearly export (current) | yearly_export_current |
 
+> **With iHomeManager:** `daily_consumed_energy` and `total_consumed_energy` use **this inverter’s** registers only. For house-level balance with iHM GRID.CT, use the [Cross-hub Combined Device](README_Combined_Device.md) (1.0.11+) or the manual approach in [#50](https://github.com/TCzerny/ha-modbus-manager/issues/50).
+
 #### Device Information
 | Address | Name | Unique ID | Description |
 |---------|------|-----------|-------------|

@@ -1,5 +1,7 @@
 # Combined Device (Cross-Hub)
 
+> **Integration version:** 1.0.11+
+
 The **Combined Device** is an opt-in virtual Modbus Manager config entry that aggregates data from **two existing hub entries** without additional Modbus I/O. It is intended for setups where physically separate devices (e.g. Sungrow inverter + iHomeManager) should be viewed as one logical unit in Home Assistant.
 
 ---
@@ -218,6 +220,7 @@ This flag is intended for **development only** and should not be used in product
 | `invalid_pair` | Pair must be inverter+inverter or inverter+energy_manager |
 | Many entities `unavailable` | Verify both source hubs are loaded; check diagnostic availability sensors |
 | `combined_daily_consumed_energy` unavailable | Requires iHM grid totals + inverter daily PV/battery; SG without `daily_battery_*` may block the formula |
+| `combined_pv_generating_any` always unknown | Source `pv_generating` is a **template** binary sensor (not Modbus cache). From 1.0.11+ the combined device reads it from the HA entity registry; ensure `binary_sensor.<prefix>_pv_generating` exists and is not `unavailable` on each source hub |
 | Daily grid stuck at 0 | Confirm `combined_ihm_grid_import_energy` / `_export_energy` update on the iHM hub |
 | Wrong consumed energy vs. iSolarCloud | Confirm GRID.CT is on iHM; compare `combined_total_consumed_energy` with cloud; WR-only template sensors are expected to differ |
 | Stale entity names after changes | Reload combined integration or recreate the combined entry |

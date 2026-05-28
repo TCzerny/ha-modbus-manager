@@ -16,7 +16,19 @@ template: `sungrow_ihomemanager.yaml`.
 ### Dynamic Configuration
 
 - `battery_enabled` (true/false): Enables battery-related registers.
-- `channel_2_enabled` (true/false): Enables meter channel 2 registers.
+- `channel_2_enabled` (true/false): Enables PROD.CT channel 2 registers.
+- `charger_enabled` (true/false): Enables charger-related registers.
+
+Config-flow labels are translated in `en.json` / `de.json` under `config.step.dynamic_config.data`.
+
+### Combined Device with a Sungrow inverter
+
+From **integration 1.0.11**, you can add a **[Cross-hub Combined Device](README_Combined_Device.md)** that links an inverter hub and an iHomeManager hub. It provides:
+
+- iHM grid sensors (`grid_import_energy`, `grid_export_energy`, import/export power) at the **GRID.CT**
+- **`combined_daily_consumed_energy`** / **`combined_total_consumed_energy`** using WR PV/battery and iHM grid data (see [#50](https://github.com/TCzerny/ha-modbus-manager/issues/50))
+
+Single-template **`daily_consumed_energy`** on the inverter alone does **not** include iHM grid data.
 
 ### Sensor Registers
 

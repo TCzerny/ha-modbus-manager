@@ -7,6 +7,7 @@ from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.util import dt as dt_util
 
@@ -284,6 +285,23 @@ class CombinedDeviceCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 role_data[SOURCE_ROLE_IHM] = source_data
         return role_data
 
+    def _entry_id_for_role(
+        self,
+        source_a_id: str | None,
+        source_b_id: str | None,
+        role: str,
+    ) -> str | None:
+        """Return config entry id for a resolved role (inverter or ihm)."""
+        for entry_id in (source_a_id, source_b_id):
+            if not entry_id:
+                continue
+            entry = self.hass.config_entries.async_get_entry(entry_id)
+            if entry is None:
+                continue
+            if role in entry_device_type_set(entry):
+                return entry_id
+        return None
+
     def _single_metric(
         self,
         role_data: dict[str, dict[str, Any]],
@@ -511,6 +529,59 @@ class CombinedDeviceCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     return False
         return None
 
+    @staticmethod
+    def _parse_boolean_state(state: str | None) -> bool | None:
+        """Parse HA state string into a boolean."""
+        if state is None:
+            return None
+        normalized = str(state).strip().lower()
+        if normalized in {"on", "true", "1", "yes"}:
+            return True
+        if normalized in {"off", "false", "0", "no"}:
+            return False
+        return None
+
+    def _extract_boolean_from_entity_registry(
+        self,
+        source_entry_id: str,
+        metric_candidates: list[str],
+    ) -> bool | None:
+        """Read template/calculated binary sensors from the HA entity registry."""
+        registry = er.async_get(self.hass)
+        for entity_entry in registry.entities.values():
+            if entity_entry.config_entry_id != source_entry_id:
+                continue
+            unique_id = str(entity_entry.unique_id or "").strip().lower()
+            if not unique_id:
+                continue
+            if not any(
+                unique_id.endswith(f"_{candidate}") for candidate in metric_candidates
+            ):
+                continue
+            state = self.hass.states.get(entity_entry.entity_id)
+            if state is None:
+                continue
+            parsed = self._parse_boolean_state(state.state)
+            if parsed is not None:
+                return parsed
+        return None
+
+    def _extract_boolean_for_source(
+        self,
+        source_data: dict[str, Any],
+        source_entry_id: str | None,
+        metric_candidates: list[str],
+    ) -> bool | None:
+        """Read boolean metric from Modbus cache or HA entity state."""
+        value = self._extract_boolean_value(source_data, metric_candidates)
+        if value is not None:
+            return value
+        if not source_entry_id:
+            return None
+        return self._extract_boolean_from_entity_registry(
+            source_entry_id, metric_candidates
+        )
+
     async def _async_update_data(self) -> dict[str, Any]:
         """Aggregate source coordinator snapshots without additional Modbus I/O."""
         if self._is_unloading:
@@ -628,20 +699,28 @@ class CombinedDeviceCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 if not isinstance(candidates, list) or operation not in {"any", "all"}:
                     continue
 
+                candidate_list = [str(candidate) for candidate in candidates]
                 source_role = metric_spec.get("source")
-                if source_role:
-                    role_payload = role_data.get(str(source_role), {})
-                    source_a_value = self._extract_boolean_value(
-                        role_payload if isinstance(role_payload, dict) else {},
-                        [str(candidate) for candidate in candidates],
+                if source_role == SOURCE_ROLE_INVERTER:
+                    inverter_entry_id = self._entry_id_for_role(
+                        source_a_id, source_b_id, SOURCE_ROLE_INVERTER
+                    )
+                    inverter_data = role_data.get(SOURCE_ROLE_INVERTER, {})
+                    source_a_value = self._extract_boolean_for_source(
+                        inverter_data if isinstance(inverter_data, dict) else {},
+                        inverter_entry_id,
+                        candidate_list,
                     )
                     source_b_value = None
+                elif source_role == SOURCE_ROLE_IHM:
+                    source_a_value = None
+                    source_b_value = None
                 else:
-                    source_a_value = self._extract_boolean_value(
-                        source_a_data, [str(candidate) for candidate in candidates]
+                    source_a_value = self._extract_boolean_for_source(
+                        source_a_data, source_a_id, candidate_list
                     )
-                    source_b_value = self._extract_boolean_value(
-                        source_b_data, [str(candidate) for candidate in candidates]
+                    source_b_value = self._extract_boolean_for_source(
+                        source_b_data, source_b_id, candidate_list
                     )
                 values = [
                     value
@@ -663,7 +742,7 @@ class CombinedDeviceCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
         return {
             "combined_prefix": self.entry.data.get("combined_prefix"),
-            "combination_type": self.entry.data.get("combination_type"),
+            "combination_type": combination_type,
             "metrics": metrics,
             "metric_meta": metric_meta,
             "binary_metrics": binary_metrics,

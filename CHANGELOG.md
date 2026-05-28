@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.11] - 2026-05-28
+
+### ✨ Added
+
+- **Cross-hub Combined Device** (opt-in config entry): Aggregates two existing Modbus Manager hubs **without extra Modbus I/O** — **Inverter + Inverter** or **Inverter + iHomeManager** (see [docs/README_Combined_Device.md](docs/README_Combined_Device.md)).
+- **`inverter_ihm` metrics**: Passthrough sensors from WR and iHM (GRID.CT grid power/energy), **`combined_daily_consumed_energy`** / **`combined_total_consumed_energy`** using the house-balance formula from [#50](https://github.com/TCzerny/ha-modbus-manager/issues/50) (PV/battery from inverter; grid from iHM totals / persistent daily meters).
+- **Persistent iHM daily grid counters**: Internal daily import/export from `grid_import_energy` / `grid_export_energy` (`.storage/modbus_manager.combined_daily_meters`) — no HA `utility_meter` helper required.
+- **`inverter_inverter` aggregates**: Summed/max/avg metrics across two inverter hubs (power, PV, import/export energy, temperature, frequency).
+- **Config flow**: Template **Combined Device (cross-hub)**; diagnostic availability sensors; **`combination_type`** auto-corrected from source hub device roles.
+
+### 🐛 Fixed
+
+- **iHomeManager device role**: Dynamic-config setup no longer forces `type: inverter` for all templates; **`sungrow_ihomemanager`** is recognized as **`energy_manager`** (including existing entries via template name).
+- **Combined `combination_type`**: SG + iHM pairs resolve to **`inverter_ihm`** at setup and runtime (fixes wrong **Inverter + Inverter** label and wrong sensor set).
+- **iHM dynamic config UI**: Translations for `battery_enabled`, `channel_2_enabled`, `charger_enabled` in the dynamic configuration step.
+- **`combined_pv_generating_any`**: Reads template binary `pv_generating` from the HA entity registry (not Modbus cache).
+
+### 🔧 Changed
+
+- **Combined entity registry**: `unique_id` uses prefixed style (`{combined_prefix}_{metric}`) via `generate_unique_id()`; **`entity_id`** is HA-generated (`ha_generated` behaviour). See [ENTITY_ID_STRATEGY.md](docs/ENTITY_ID_STRATEGY.md).
+
+### 📖 Documentation
+
+- **[docs/README_Combined_Device.md](docs/README_Combined_Device.md)** — Setup, metrics, daily meters, entity naming, troubleshooting.
+- **[docs/README_iHomeManager.md](docs/README_iHomeManager.md)** — Link to Combined Device and consumed-energy context ([#50](https://github.com/TCzerny/ha-modbus-manager/issues/50)).
+- **README.md** — Combined Device listed under features and documentation.
+
 ## [1.0.10] - 2026-05-27
 
 ### ✨ Added
