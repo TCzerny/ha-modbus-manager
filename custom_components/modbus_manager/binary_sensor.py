@@ -10,7 +10,11 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .combined_entities import CombinedAvailabilityBinarySensor
+from .combined_entities import (
+    CombinedAvailabilityBinarySensor,
+    CombinedComputedBinarySensor,
+)
+from .combined_specs import COMBINED_BINARY_METRIC_SPECS
 from .const import CONF_ENTRY_TYPE, CONF_MM_GROUP, DOMAIN, ENTRY_TYPE_COMBINED_DEVICE
 from .coordinator import ModbusCoordinator
 from .device_utils import (
@@ -42,28 +46,38 @@ async def async_setup_entry(
             return
 
         if entry.data.get(CONF_ENTRY_TYPE) == ENTRY_TYPE_COMBINED_DEVICE:
-            async_add_entities(
-                [
-                    CombinedAvailabilityBinarySensor(
+            combined_binary_entities = [
+                CombinedAvailabilityBinarySensor(
+                    coordinator,
+                    entry,
+                    "combined_source_a_available",
+                    "Source A Available",
+                ),
+                CombinedAvailabilityBinarySensor(
+                    coordinator,
+                    entry,
+                    "combined_source_b_available",
+                    "Source B Available",
+                ),
+                CombinedAvailabilityBinarySensor(
+                    coordinator,
+                    entry,
+                    "combined_any_source_available",
+                    "Any Source Available",
+                ),
+            ]
+            combination_type = entry.data.get("combination_type")
+            binary_specs = COMBINED_BINARY_METRIC_SPECS.get(combination_type, {})
+            for metric_key, metric_spec in binary_specs.items():
+                combined_binary_entities.append(
+                    CombinedComputedBinarySensor(
                         coordinator,
                         entry,
-                        "combined_source_a_available",
-                        "Source A Available",
-                    ),
-                    CombinedAvailabilityBinarySensor(
-                        coordinator,
-                        entry,
-                        "combined_source_b_available",
-                        "Source B Available",
-                    ),
-                    CombinedAvailabilityBinarySensor(
-                        coordinator,
-                        entry,
-                        "combined_any_source_available",
-                        "Any Source Available",
-                    ),
-                ]
-            )
+                        metric_key,
+                        str(metric_spec.get("name", metric_key)),
+                    )
+                )
+            async_add_entities(combined_binary_entities)
             return
 
         # Get binary sensors from coordinator (structured dict)

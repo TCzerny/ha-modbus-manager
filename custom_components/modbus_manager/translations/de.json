@@ -33,6 +33,7 @@
                     "timeout": "Timeout in Sekunden",
                     "delay": "Verzögerung nach Verbindung (Sekunden)",
                     "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
+                    "test_allow_same_endpoint_new_hub": "NUR TEST: Separaten Hub bei gleichem Host/Port erlauben",
                     "use_coordinator": "Coordinator-Modus verwenden (experimentell)",
                     "baudrate": "Baudrate",
                     "data_bits": "Datenbits",
@@ -97,6 +98,7 @@
                     "timeout": "Timeout in Sekunden",
                     "delay": "Verzögerung nach Verbindung (Sekunden)",
                     "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
+                    "test_allow_same_endpoint_new_hub": "NUR TEST: Separaten Hub bei gleichem Host/Port erlauben",
                     "baudrate": "Baudrate (nur RTU)",
                     "data_bits": "Datenbits (nur RTU)",
                     "stop_bits": "Stoppbits (nur RTU)",
@@ -117,6 +119,15 @@
                     "storage_model_address": "Storage Model Register-Adresse (optional)",
                     "meter_model_address": "Meter Model Register-Adresse (optional)",
                     "use_coordinator": "Coordinator-Modus verwenden (experimentell)"
+                }
+            },
+            "combined_device": {
+                "title": "Kombiniertes Gerät",
+                "description": "Erstelle ein virtuelles hub-übergreifendes kombiniertes Gerät aus zwei bestehenden Quellen.",
+                "data": {
+                    "source_entry_id_a": "Quell-Entry A",
+                    "source_entry_id_b": "Quell-Entry B",
+                    "combined_prefix": "Kombiniertes Präfix"
                 }
             },
             "battery_detection": {
@@ -182,7 +193,10 @@
             "firmware_not_detected": "Firmware-Version konnte nicht erkannt werden",
             "invalid_firmware": "Ungültige Firmware-Version",
             "device_exists": "Ein Gerät mit diesem Namen existiert bereits",
-            "no_device_definitions": "Keine Gerätedefinitionen gefunden"
+            "no_device_definitions": "Keine Gerätedefinitionen gefunden",
+            "same_source_selected": "Quelle A und Quelle B müssen unterschiedlich sein",
+            "source_not_found": "Ausgewählter Quell-Entry existiert nicht mehr",
+            "invalid_pair": "Diese Quellen-Kombination wird nicht unterstützt"
         },
         "abort": {
             "no_device_definitions": "Es wurden keine Gerätedefinitionen gefunden. Bitte stellen Sie sicher, dass mindestens eine YAML-Datei im device_definitions Verzeichnis existiert.",
@@ -194,7 +208,8 @@
             "no_registers": "Template {template_name} hat keine Entitäten definiert.",
             "update_error": "Fehler beim Aktualisieren des Templates: {error}",
             "no_template_selected": "Kein Template ausgewählt",
-            "device_added_to_existing_hub": "Gerät erfolgreich zum bestehenden Hub hinzugefügt. Ein Neustart ist erforderlich, um das neue Gerät zu aktivieren."
+            "device_added_to_existing_hub": "Gerät erfolgreich zum bestehenden Hub hinzugefügt. Ein Neustart ist erforderlich, um das neue Gerät zu aktivieren.",
+            "no_eligible_sources": "Keine geeigneten Quellen für ein kombiniertes Gerät gefunden."
         },
         "progress": {
             "firmware_detect": "Versuche Firmware-Version zu erkennen..."
@@ -330,6 +345,118 @@
     },
     "entity": {
         "sensor": {
+            "combined_pair_type": {
+                "name": "Kombinationstyp",
+                "state": {
+                    "inverter_inverter": "Wechselrichter + Wechselrichter",
+                    "inverter_ihm": "Wechselrichter + iHomeManager"
+                }
+            },
+            "combined_total_active_power": {
+                "name": "Kombinierte Gesamtwirkleistung"
+            },
+            "combined_total_dc_power": {
+                "name": "Kombinierte DC-Gesamtleistung"
+            },
+            "combined_daily_pv_generation": {
+                "name": "Kombinierte tägliche PV-Erzeugung"
+            },
+            "combined_total_pv_generation": {
+                "name": "Kombinierte PV-Gesamterzeugung"
+            },
+            "combined_daily_exported_energy": {
+                "name": "Kombinierte täglich eingespeiste Energie"
+            },
+            "combined_total_exported_energy": {
+                "name": "Kombinierte gesamte eingespeiste Energie"
+            },
+            "combined_daily_imported_energy": {
+                "name": "Kombinierte täglich bezogene Energie"
+            },
+            "combined_total_imported_energy": {
+                "name": "Kombinierte gesamte bezogene Energie"
+            },
+            "combined_daily_direct_energy_consumption": {
+                "name": "Kombinierter täglicher Direktverbrauch"
+            },
+            "combined_inverter_temperature_max": {
+                "name": "Kombinierte maximale Wechselrichtertemperatur"
+            },
+            "combined_grid_frequency_avg": {
+                "name": "Kombinierte mittlere Netzfrequenz"
+            },
+            "combined_inverter_total_active_power": {
+                "name": "Wechselrichter Gesamtwirkleistung"
+            },
+            "combined_inverter_total_dc_power": {
+                "name": "Wechselrichter DC-Gesamtleistung"
+            },
+            "combined_inverter_daily_pv_generation": {
+                "name": "Wechselrichter tägliche PV-Erzeugung"
+            },
+            "combined_inverter_total_pv_generation": {
+                "name": "Wechselrichter PV-Gesamterzeugung"
+            },
+            "combined_inverter_daily_battery_charge": {
+                "name": "Wechselrichter tägliche Batterieladung"
+            },
+            "combined_inverter_daily_battery_discharge": {
+                "name": "Wechselrichter tägliche Batterieentladung"
+            },
+            "combined_inverter_total_battery_charge": {
+                "name": "Wechselrichter Batterieladung gesamt"
+            },
+            "combined_inverter_total_battery_discharge": {
+                "name": "Wechselrichter Batterieentladung gesamt"
+            },
+            "combined_inverter_battery_power": {
+                "name": "Wechselrichter Batterieleistung"
+            },
+            "combined_inverter_battery_level": {
+                "name": "Wechselrichter Batteriestand"
+            },
+            "combined_inverter_load_power": {
+                "name": "Wechselrichter Lastleistung"
+            },
+            "combined_ihm_meter_active_power": {
+                "name": "iHM Netz-Wirkleistung"
+            },
+            "combined_ihm_import_power": {
+                "name": "iHM Bezugsleistung"
+            },
+            "combined_ihm_export_power": {
+                "name": "iHM Einspeiseleistung"
+            },
+            "combined_ihm_load_power": {
+                "name": "iHM Lastleistung"
+            },
+            "combined_ihm_grid_import_energy": {
+                "name": "iHM Netzbezug Energie"
+            },
+            "combined_ihm_grid_export_energy": {
+                "name": "iHM Netzeinspeisung Energie"
+            },
+            "combined_ihm_grid_import_daily": {
+                "name": "iHM Netzbezug Tagesenergie"
+            },
+            "combined_ihm_grid_export_daily": {
+                "name": "iHM Netzeinspeisung Tagesenergie"
+            },
+            "combined_ihm_battery_power": {
+                "name": "iHM Batterieleistung"
+            },
+            "combined_ihm_battery_level": {
+                "name": "iHM Batteriestand"
+            },
+            "combined_ihm_total_active_power": {
+                "name": "iHM Gesamtwirkleistung"
+            },
+            "combined_daily_consumed_energy": {
+                "name": "Kombinierter Tagesverbrauch"
+            },
+            "combined_total_consumed_energy": {
+                "name": "Kombinierter Gesamtverbrauch"
+            },
             "firmware": {
                 "name": "Firmware-Version",
                 "state": {
@@ -439,6 +566,20 @@
             "charging_current_limit": "Ladestrom Limit",
             "start_stop_charging": "Laden Start/Stop",
             "reset_error": "Fehler zurücksetzen"
+        },
+        "binary_sensor": {
+            "combined_source_a_available": {
+                "name": "Quelle A verfügbar"
+            },
+            "combined_source_b_available": {
+                "name": "Quelle B verfügbar"
+            },
+            "combined_any_source_available": {
+                "name": "Mindestens eine Quelle verfügbar"
+            },
+            "combined_pv_generating_any": {
+                "name": "PV-Erzeugung bei mindestens einer Quelle"
+            }
         },
         "input_boolean": {
             "allow_battery_car_charging": {

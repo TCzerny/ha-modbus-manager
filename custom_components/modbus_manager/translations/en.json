@@ -33,6 +33,7 @@
                     "timeout": "Timeout in seconds",
                     "delay": "Delay after Connection (seconds)",
                     "message_wait_milliseconds": "Wait between Requests (milliseconds)",
+                    "test_allow_same_endpoint_new_hub": "TEST ONLY: Allow separate hub on same Host/Port",
                     "use_coordinator": "Use Coordinator Mode (experimental)",
                     "baudrate": "Baudrate",
                     "data_bits": "Data Bits",
@@ -83,6 +84,7 @@
                     "timeout": "Timeout in seconds",
                     "delay": "Delay after Connection (seconds)",
                     "message_wait_milliseconds": "Wait between Requests (milliseconds)",
+                    "test_allow_same_endpoint_new_hub": "TEST ONLY: Allow separate hub on same Host/Port",
                     "phases": "Number of phases (1 or 3)",
                     "mppt_count": "Number of MPPT trackers",
                     "battery_config": "Battery Configuration",
@@ -97,6 +99,15 @@
                     "storage_model_address": "Storage Model register address (optional)",
                     "meter_model_address": "Meter Model register address (optional)",
                     "use_coordinator": "Use Coordinator Mode (experimental)"
+                }
+            },
+            "combined_device": {
+                "title": "Combined Device",
+                "description": "Create a virtual cross-hub combined device from two existing sources.",
+                "data": {
+                    "source_entry_id_a": "Source Entry A",
+                    "source_entry_id_b": "Source Entry B",
+                    "combined_prefix": "Combined Prefix"
                 }
             },
             "battery_detection": {
@@ -173,7 +184,10 @@
             "firmware_not_detected": "Could not detect firmware version",
             "invalid_firmware": "Invalid firmware version",
             "device_exists": "A device with this name already exists",
-            "no_device_definitions": "No device definitions found"
+            "no_device_definitions": "No device definitions found",
+            "same_source_selected": "Source A and Source B must be different",
+            "source_not_found": "Selected source entry no longer exists",
+            "invalid_pair": "This source pair type is not supported"
         },
         "abort": {
             "no_device_definitions": "No device definitions found. Please make sure at least one YAML file exists in the device_definitions directory.",
@@ -185,7 +199,8 @@
             "no_registers": "Template {template_name} has no entities defined.",
             "update_error": "Error updating template: {error}",
             "no_template_selected": "No template selected",
-            "device_added_to_existing_hub": "Device successfully added to existing hub. A restart is required to activate the new device."
+            "device_added_to_existing_hub": "Device successfully added to existing hub. A restart is required to activate the new device.",
+            "no_eligible_sources": "No eligible sources available for a combined device."
         },
         "progress": {
             "firmware_detect": "Attempting to detect firmware version..."
@@ -321,6 +336,118 @@
     },
     "entity": {
         "sensor": {
+            "combined_pair_type": {
+                "name": "Combination Type",
+                "state": {
+                    "inverter_inverter": "Inverter + Inverter",
+                    "inverter_ihm": "Inverter + iHomeManager"
+                }
+            },
+            "combined_total_active_power": {
+                "name": "Combined Total Active Power"
+            },
+            "combined_total_dc_power": {
+                "name": "Combined Total DC Power"
+            },
+            "combined_daily_pv_generation": {
+                "name": "Combined Daily PV Generation"
+            },
+            "combined_total_pv_generation": {
+                "name": "Combined Total PV Generation"
+            },
+            "combined_daily_exported_energy": {
+                "name": "Combined Daily Exported Energy"
+            },
+            "combined_total_exported_energy": {
+                "name": "Combined Total Exported Energy"
+            },
+            "combined_daily_imported_energy": {
+                "name": "Combined Daily Imported Energy"
+            },
+            "combined_total_imported_energy": {
+                "name": "Combined Total Imported Energy"
+            },
+            "combined_daily_direct_energy_consumption": {
+                "name": "Combined Daily Direct Energy Consumption"
+            },
+            "combined_inverter_temperature_max": {
+                "name": "Combined Inverter Temperature Max"
+            },
+            "combined_grid_frequency_avg": {
+                "name": "Combined Grid Frequency Avg"
+            },
+            "combined_inverter_total_active_power": {
+                "name": "Inverter Total Active Power"
+            },
+            "combined_inverter_total_dc_power": {
+                "name": "Inverter Total DC Power"
+            },
+            "combined_inverter_daily_pv_generation": {
+                "name": "Inverter Daily PV Generation"
+            },
+            "combined_inverter_total_pv_generation": {
+                "name": "Inverter Total PV Generation"
+            },
+            "combined_inverter_daily_battery_charge": {
+                "name": "Inverter Daily Battery Charge"
+            },
+            "combined_inverter_daily_battery_discharge": {
+                "name": "Inverter Daily Battery Discharge"
+            },
+            "combined_inverter_total_battery_charge": {
+                "name": "Inverter Total Battery Charge"
+            },
+            "combined_inverter_total_battery_discharge": {
+                "name": "Inverter Total Battery Discharge"
+            },
+            "combined_inverter_battery_power": {
+                "name": "Inverter Battery Power"
+            },
+            "combined_inverter_battery_level": {
+                "name": "Inverter Battery Level"
+            },
+            "combined_inverter_load_power": {
+                "name": "Inverter Load Power"
+            },
+            "combined_ihm_meter_active_power": {
+                "name": "iHM Grid Active Power"
+            },
+            "combined_ihm_import_power": {
+                "name": "iHM Import Power"
+            },
+            "combined_ihm_export_power": {
+                "name": "iHM Export Power"
+            },
+            "combined_ihm_load_power": {
+                "name": "iHM Load Power"
+            },
+            "combined_ihm_grid_import_energy": {
+                "name": "iHM Grid Import Energy"
+            },
+            "combined_ihm_grid_export_energy": {
+                "name": "iHM Grid Export Energy"
+            },
+            "combined_ihm_grid_import_daily": {
+                "name": "iHM Grid Import Daily"
+            },
+            "combined_ihm_grid_export_daily": {
+                "name": "iHM Grid Export Daily"
+            },
+            "combined_ihm_battery_power": {
+                "name": "iHM Battery Power"
+            },
+            "combined_ihm_battery_level": {
+                "name": "iHM Battery Level"
+            },
+            "combined_ihm_total_active_power": {
+                "name": "iHM Total Active Power"
+            },
+            "combined_daily_consumed_energy": {
+                "name": "Combined Daily Consumed Energy"
+            },
+            "combined_total_consumed_energy": {
+                "name": "Combined Total Consumed Energy"
+            },
             "firmware": {
                 "name": "Firmware Version",
                 "state": {
@@ -329,6 +456,20 @@
                     "not_supported": "Not Supported",
                     "error": "Detection Error"
                 }
+            }
+        },
+        "binary_sensor": {
+            "combined_source_a_available": {
+                "name": "Source A Available"
+            },
+            "combined_source_b_available": {
+                "name": "Source B Available"
+            },
+            "combined_any_source_available": {
+                "name": "Any Source Available"
+            },
+            "combined_pv_generating_any": {
+                "name": "PV Generating Any"
             }
         }
     },

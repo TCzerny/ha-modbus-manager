@@ -642,6 +642,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         if entry_type == ENTRY_TYPE_COMBINED_DEVICE:
             hass.data.setdefault(DOMAIN, {})
             coordinator = CombinedDeviceCoordinator(hass=hass, entry=entry)
+            await coordinator.async_load_daily_meters()
             hass.data[DOMAIN][entry.entry_id] = {
                 "entry_type": ENTRY_TYPE_COMBINED_DEVICE,
                 "combined_prefix": entry.data.get("combined_prefix"),
@@ -733,6 +734,8 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 )
                 if coordinator and hasattr(coordinator, "mark_as_unloading"):
                     coordinator.mark_as_unloading()
+                if coordinator and hasattr(coordinator, "async_remove_daily_meters"):
+                    await coordinator.async_remove_daily_meters()
                 del hass.data[DOMAIN][entry.entry_id]
             _LOGGER.debug(
                 "Unloaded combined device placeholder for %s",

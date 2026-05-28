@@ -13,6 +13,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .combined_entities import CombinedPairTypeSensor, CombinedSumSensor
+from .combined_specs import COMBINED_SENSOR_METRIC_SPECS
 from .const import CONF_ENTRY_TYPE, DOMAIN, ENTRY_TYPE_COMBINED_DEVICE
 from .coordinator import ModbusCoordinator
 from .device_utils import (
@@ -285,23 +286,32 @@ async def async_setup_entry(
             return
 
         if entry.data.get(CONF_ENTRY_TYPE) == ENTRY_TYPE_COMBINED_DEVICE:
-            combined_entities = [CombinedPairTypeSensor(coordinator, entry)]
-            if entry.data.get("combination_type") == "inverter_inverter":
-                combined_entities.extend(
-                    [
-                        CombinedSumSensor(
-                            coordinator,
-                            entry,
-                            "combined_total_active_power",
-                            "Combined Total Active Power",
-                        ),
-                        CombinedSumSensor(
-                            coordinator,
-                            entry,
-                            "combined_total_pv_generation",
-                            "Combined Total PV Generation",
-                        ),
-                    ]
+            combined_entities = [
+                CombinedPairTypeSensor(coordinator, entry, "Combination Type")
+            ]
+            combination_type = entry.data.get("combination_type")
+            metric_specs = COMBINED_SENSOR_METRIC_SPECS.get(combination_type, {})
+            supported_aggregations = {
+                "sum",
+                "avg",
+                "max",
+                "min",
+                "single",
+                "formula",
+                "daily_meter",
+            }
+            for metric_key, metric_spec in metric_specs.items():
+                if metric_spec.get("aggregation") not in supported_aggregations:
+                    continue
+                default_unit = str(metric_spec.get("unit_of_measurement", "W"))
+                combined_entities.append(
+                    CombinedSumSensor(
+                        coordinator,
+                        entry,
+                        metric_key,
+                        str(metric_spec.get("name", metric_key)),
+                        unit=default_unit,
+                    )
                 )
             async_add_entities(combined_entities)
             return

@@ -15,6 +15,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 
+from .combined_specs import COMBINATION_TYPE_SPECS
 from .const import (
     CONF_ENTRY_TYPE,
     DEFAULT_DELAY,
@@ -201,14 +202,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Return supported combination type for two source entries."""
         types_a = _entry_device_type_set(source_a)
         types_b = _entry_device_type_set(source_b)
-
-        if "inverter" in types_a and "inverter" in types_b:
-            return "inverter_inverter"
-        if ("inverter" in types_a and "energy_manager" in types_b) or (
-            "energy_manager" in types_a and "inverter" in types_b
-        ):
-            return "inverter_ihm"
-        return None
+        pair_key = frozenset(types_a | types_b)
+        return COMBINATION_TYPE_SPECS.get(pair_key)
 
     def _build_device_entry_id(self, device: dict[str, Any]) -> str:
         """Build a stable logical device id inside one hub entry."""

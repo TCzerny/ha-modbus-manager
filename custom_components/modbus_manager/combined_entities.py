@@ -47,6 +47,7 @@ class CombinedAvailabilityBinarySensor(
         self._key = key
         self._attr_has_entity_name = True
         self._attr_name = name
+        self._attr_translation_key = key
         self._attr_unique_id = f"{entry.entry_id}_{key}"
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
         self._attr_device_info = _combined_device_info(entry)
@@ -73,18 +74,56 @@ class CombinedAvailabilityBinarySensor(
         return super().available
 
 
+class CombinedComputedBinarySensor(
+    CoordinatorEntity[CombinedDeviceCoordinator], BinarySensorEntity
+):
+    """Binary sensor computed by combined coordinator binary metrics."""
+
+    def __init__(
+        self,
+        coordinator: CombinedDeviceCoordinator,
+        entry: ConfigEntry,
+        key: str,
+        name: str,
+    ) -> None:
+        super().__init__(coordinator)
+        combined_prefix = str(entry.data.get("combined_prefix", "combined")).lower()
+        self._key = key
+        self._attr_has_entity_name = True
+        self._attr_name = name
+        self._attr_translation_key = key
+        self._attr_unique_id = f"{entry.entry_id}_{key}"
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
+        self._attr_device_info = _combined_device_info(entry)
+        self.entity_id = f"binary_sensor.{combined_prefix}_{key}"
+
+    @property
+    def is_on(self) -> bool | None:
+        """Return computed binary metric state."""
+        data = self.coordinator.data or {}
+        metrics = data.get("binary_metrics", {})
+        value = metrics.get(self._key)
+        if value is None:
+            return None
+        return bool(value)
+
+
 class CombinedPairTypeSensor(
     CoordinatorEntity[CombinedDeviceCoordinator], SensorEntity
 ):
     """Sensor exposing selected combination type."""
 
     def __init__(
-        self, coordinator: CombinedDeviceCoordinator, entry: ConfigEntry
+        self,
+        coordinator: CombinedDeviceCoordinator,
+        entry: ConfigEntry,
+        name: str = "Combination Type",
     ) -> None:
         super().__init__(coordinator)
         combined_prefix = str(entry.data.get("combined_prefix", "combined")).lower()
         self._attr_has_entity_name = True
-        self._attr_name = "Combination Type"
+        self._attr_name = name
+        self._attr_translation_key = "combined_pair_type"
         self._attr_unique_id = f"{entry.entry_id}_combined_pair_type"
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
         self._attr_device_info = _combined_device_info(entry)
@@ -116,6 +155,7 @@ class CombinedSumSensor(CoordinatorEntity[CombinedDeviceCoordinator], SensorEnti
         self._key = key
         self._attr_has_entity_name = True
         self._attr_name = name
+        self._attr_translation_key = key
         self._attr_unique_id = f"{entry.entry_id}_{key}"
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
         self._attr_device_info = _combined_device_info(entry)
@@ -174,9 +214,21 @@ class CombinedSumSensor(CoordinatorEntity[CombinedDeviceCoordinator], SensorEnti
         meta = self._metric_meta()
         if not meta:
             return None
-        return {
-            "source_a_unique_id": meta.get("source_a_unique_id"),
-            "source_b_unique_id": meta.get("source_b_unique_id"),
-            "source_a_unit": meta.get("source_a_unit"),
-            "source_b_unit": meta.get("source_b_unit"),
-        }
+        attributes: dict[str, Any] = {}
+        if meta.get("aggregation") == "formula":
+            attributes["formula"] = meta.get("formula")
+            attributes["operands"] = meta.get("operands")
+            if meta.get("notes"):
+                attributes["notes"] = meta.get("notes")
+        elif meta.get("aggregation") == "daily_meter":
+            attributes["source_unique_id"] = meta.get("source_unique_id")
+            attributes["meter_day"] = meta.get("meter_day")
+        elif meta.get("aggregation") == "single":
+            attributes["source_role"] = meta.get("source_role")
+            attributes["source_unique_id"] = meta.get("source_unique_id")
+        else:
+            attributes["source_a_unique_id"] = meta.get("source_a_unique_id")
+            attributes["source_b_unique_id"] = meta.get("source_b_unique_id")
+            attributes["source_a_unit"] = meta.get("source_a_unit")
+            attributes["source_b_unit"] = meta.get("source_b_unit")
+        return attributes or None
