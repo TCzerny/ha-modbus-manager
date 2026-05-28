@@ -14,7 +14,14 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 
-from .const import DOMAIN, PLATFORMS, EntityIdStrategy
+from .const import (
+    CONF_ENTRY_TYPE,
+    DOMAIN,
+    ENTRY_TYPE_COMBINED_DEVICE,
+    ENTRY_TYPE_HUB,
+    PLATFORMS,
+    EntityIdStrategy,
+)
 from .coordinator import ModbusCoordinator
 from .device_utils import get_entity_mm_group, resolve_entity_id_strategy
 from .logger import ModbusManagerLogger
@@ -630,6 +637,22 @@ async def _normalize_binary_sensor_entity_ids(
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Modbus Manager from a config entry - Coordinator-Only."""
     try:
+        entry_type = entry.data.get(CONF_ENTRY_TYPE, ENTRY_TYPE_HUB)
+        if entry_type == ENTRY_TYPE_COMBINED_DEVICE:
+            hass.data.setdefault(DOMAIN, {})
+            hass.data[DOMAIN][entry.entry_id] = {
+                "entry_type": ENTRY_TYPE_COMBINED_DEVICE,
+                "combined_prefix": entry.data.get("combined_prefix"),
+                "source_entry_id_a": entry.data.get("source_entry_id_a"),
+                "source_entry_id_b": entry.data.get("source_entry_id_b"),
+                "combination_type": entry.data.get("combination_type"),
+            }
+            _LOGGER.info(
+                "Set up combined device placeholder for %s",
+                entry.data.get("combined_prefix", entry.entry_id),
+            )
+            return True
+
         _LOGGER.info(
             "🚀 Setting up Modbus Manager (Coordinator-Only) for %s",
             entry.data.get("prefix", "unknown"),
@@ -680,6 +703,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     try:
+        entry_type = entry.data.get(CONF_ENTRY_TYPE, ENTRY_TYPE_HUB)
+        if entry_type == ENTRY_TYPE_COMBINED_DEVICE:
+            if DOMAIN in hass.data and entry.entry_id in hass.data[DOMAIN]:
+                del hass.data[DOMAIN][entry.entry_id]
+            _LOGGER.debug(
+                "Unloaded combined device placeholder for %s",
+                entry.data.get("combined_prefix", entry.entry_id),
+            )
+            return True
+
         _LOGGER.debug(
             "Unloading Modbus Manager for %s", entry.data.get("prefix", "unknown")
         )

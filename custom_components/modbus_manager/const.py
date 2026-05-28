@@ -8,6 +8,9 @@ from homeassistant.const import Platform
 DOMAIN: Final = "modbus_manager"
 CONF_DEVICE_TYPE: Final = "device_type"
 CONF_ENTITY_ID_STRATEGY: Final = "entity_id_strategy"
+CONF_ENTRY_TYPE: Final = "entry_type"
+ENTRY_TYPE_HUB: Final = "hub"
+ENTRY_TYPE_COMBINED_DEVICE: Final = "combined_device"
 
 
 class EntityIdStrategy(StrEnum):

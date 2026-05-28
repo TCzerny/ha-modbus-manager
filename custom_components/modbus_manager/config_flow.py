@@ -16,12 +16,15 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 
 from .const import (
+    CONF_ENTRY_TYPE,
     DEFAULT_DELAY,
     DEFAULT_MESSAGE_WAIT_MS,
     DEFAULT_PORT,
     DEFAULT_SLAVE,
     DEFAULT_TIMEOUT,
     DOMAIN,
+    ENTRY_TYPE_COMBINED_DEVICE,
+    ENTRY_TYPE_HUB,
     MIN_DELAY,
     MIN_MESSAGE_WAIT_MS,
     MIN_TIMEOUT,
@@ -43,6 +46,7 @@ from .template_loader import (
 )
 
 _LOGGER = ModbusManagerLogger(__name__)
+COMBINED_TEMPLATE_SENTINEL = "__combined_device__"
 
 
 def _first_dynamic_option_value(options: Any) -> Any:
@@ -100,6 +104,13 @@ def _is_prefix_unique_across_hubs(
         return False
 
     for entry in hass.config_entries.async_entries(DOMAIN):
+        entry_type = entry.data.get(CONF_ENTRY_TYPE, ENTRY_TYPE_HUB)
+        if entry_type == ENTRY_TYPE_COMBINED_DEVICE:
+            combined_prefix = str(entry.data.get("combined_prefix", "")).strip().lower()
+            if combined_prefix and combined_prefix == normalized:
+                return False
+            continue
+
         # New structure: check all devices
         devices = entry.data.get("devices", [])
         if isinstance(devices, list) and devices:
@@ -125,6 +136,20 @@ def _is_prefix_unique_across_hubs(
     return True
 
 
+def _entry_device_type_set(entry: config_entries.ConfigEntry) -> set[str]:
+    """Return normalized device types from entry devices list."""
+    types: set[str] = set()
+    devices = entry.data.get("devices", [])
+    if isinstance(devices, list):
+        for device in devices:
+            if not isinstance(device, dict):
+                continue
+            device_type = str(device.get("type", "")).strip().lower()
+            if device_type:
+                types.add(device_type)
+    return types
+
+
 class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Modbus Manager."""
 
@@ -135,6 +160,54 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         super().__init__()
         self._templates = {}
         self._selected_template = None
+
+    def _combined_source_candidates(self) -> dict[str, str]:
+        """Return selectable source entries for combined device flow."""
+        candidates: dict[str, str] = {}
+        for entry in self.hass.config_entries.async_entries(DOMAIN):
+            if (
+                entry.data.get(CONF_ENTRY_TYPE, ENTRY_TYPE_HUB)
+                == ENTRY_TYPE_COMBINED_DEVICE
+            ):
+                continue
+            type_set = _entry_device_type_set(entry)
+            if not ({"inverter", "energy_manager"} & type_set):
+                continue
+
+            devices = entry.data.get("devices", [])
+            if isinstance(devices, list) and devices:
+                prefixes = sorted(
+                    {
+                        str(device.get("prefix", "")).strip()
+                        for device in devices
+                        if isinstance(device, dict)
+                        and str(device.get("prefix", "")).strip()
+                    }
+                )
+                label = (
+                    ", ".join(prefixes) if prefixes else entry.title or entry.entry_id
+                )
+            else:
+                label = entry.title or entry.entry_id
+
+            candidates[entry.entry_id] = f"{label} ({entry.entry_id[:8]})"
+
+        return candidates
+
+    def _resolve_combination_type(
+        self, source_a: config_entries.ConfigEntry, source_b: config_entries.ConfigEntry
+    ) -> str | None:
+        """Return supported combination type for two source entries."""
+        types_a = _entry_device_type_set(source_a)
+        types_b = _entry_device_type_set(source_b)
+
+        if "inverter" in types_a and "inverter" in types_b:
+            return "inverter_inverter"
+        if ("inverter" in types_a and "energy_manager" in types_b) or (
+            "energy_manager" in types_a and "inverter" in types_b
+        ):
+            return "inverter_ihm"
+        return None
 
     def _build_device_entry_id(self, device: dict[str, Any]) -> str:
         """Build a stable logical device id inside one hub entry."""
@@ -320,6 +393,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 # Select template
                 if "template" in user_input:
                     self._selected_template = user_input["template"]
+                    if self._selected_template == COMBINED_TEMPLATE_SENTINEL:
+                        return await self.async_step_combined_device()
                     _LOGGER.debug("=== TEMPLATE SELECTION DEBUG ===")
                     _LOGGER.debug("Selected template: %s", self._selected_template)
 
@@ -356,6 +431,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 )
                 for name in template_names
             }
+            template_choices[COMBINED_TEMPLATE_SENTINEL] = "Combined Device (cross-hub)"
             return self.async_show_form(
                 step_id="user",
                 data_schema=vol.Schema(
@@ -375,6 +451,91 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_abort(
                 reason="unknown_error", description_placeholders={"error": str(e)}
             )
+
+    async def async_step_combined_device(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Create a virtual cross-hub combined-device entry."""
+        source_choices = self._combined_source_candidates()
+        if len(source_choices) < 2:
+            return self.async_abort(reason="no_eligible_sources")
+
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            source_a_id = user_input.get("source_entry_id_a")
+            source_b_id = user_input.get("source_entry_id_b")
+            combined_prefix = str(user_input.get("combined_prefix", "")).strip()
+
+            if source_a_id == source_b_id:
+                errors["base"] = "same_source_selected"
+            else:
+                source_a = next(
+                    (
+                        entry
+                        for entry in self.hass.config_entries.async_entries(DOMAIN)
+                        if entry.entry_id == source_a_id
+                    ),
+                    None,
+                )
+                source_b = next(
+                    (
+                        entry
+                        for entry in self.hass.config_entries.async_entries(DOMAIN)
+                        if entry.entry_id == source_b_id
+                    ),
+                    None,
+                )
+                if not source_a or not source_b:
+                    errors["base"] = "source_not_found"
+                else:
+                    combination_type = self._resolve_combination_type(
+                        source_a, source_b
+                    )
+                    if not combination_type:
+                        errors["base"] = "invalid_pair"
+                    elif not _is_prefix_unique_across_hubs(self.hass, combined_prefix):
+                        errors["combined_prefix"] = "already_configured"
+                    else:
+                        source_ids_sorted = sorted([source_a_id, source_b_id])
+                        await self.async_set_unique_id(
+                            f"combined_{source_ids_sorted[0]}_{source_ids_sorted[1]}"
+                        )
+                        self._abort_if_unique_id_configured()
+
+                        title = f"Combined {combined_prefix}"
+                        data = {
+                            CONF_ENTRY_TYPE: ENTRY_TYPE_COMBINED_DEVICE,
+                            "source_entry_id_a": source_a_id,
+                            "source_entry_id_b": source_b_id,
+                            "combination_type": combination_type,
+                            "combined_prefix": combined_prefix,
+                        }
+                        return self.async_create_entry(title=title, data=data)
+
+        defaults = list(source_choices.keys())
+        default_a = defaults[0]
+        default_b = defaults[1]
+        default_prefix = "combined"
+        if default_a in source_choices and default_b in source_choices:
+            label_a = source_choices[default_a].split(" (", 1)[0]
+            label_b = source_choices[default_b].split(" (", 1)[0]
+            default_prefix = f"{label_a}_{label_b}".strip().lower().replace(" ", "_")
+
+        return self.async_show_form(
+            step_id="combined_device",
+            data_schema=vol.Schema(
+                {
+                    vol.Required("source_entry_id_a", default=default_a): vol.In(
+                        source_choices
+                    ),
+                    vol.Required("source_entry_id_b", default=default_b): vol.In(
+                        source_choices
+                    ),
+                    vol.Required("combined_prefix", default=default_prefix): str,
+                }
+            ),
+            errors=errors,
+        )
 
     async def async_step_reconfigure(
         self, user_input: dict | None = None
