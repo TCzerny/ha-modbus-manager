@@ -12,7 +12,7 @@ from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .combined_entities import CombinedPairTypeSensor
+from .combined_entities import CombinedPairTypeSensor, CombinedSumSensor
 from .const import CONF_ENTRY_TYPE, DOMAIN, ENTRY_TYPE_COMBINED_DEVICE
 from .coordinator import ModbusCoordinator
 from .device_utils import (
@@ -285,7 +285,25 @@ async def async_setup_entry(
             return
 
         if entry.data.get(CONF_ENTRY_TYPE) == ENTRY_TYPE_COMBINED_DEVICE:
-            async_add_entities([CombinedPairTypeSensor(coordinator, entry)])
+            combined_entities = [CombinedPairTypeSensor(coordinator, entry)]
+            if entry.data.get("combination_type") == "inverter_inverter":
+                combined_entities.extend(
+                    [
+                        CombinedSumSensor(
+                            coordinator,
+                            entry,
+                            "combined_total_active_power",
+                            "Combined Total Active Power",
+                        ),
+                        CombinedSumSensor(
+                            coordinator,
+                            entry,
+                            "combined_total_pv_generation",
+                            "Combined Total PV Generation",
+                        ),
+                    ]
+                )
+            async_add_entities(combined_entities)
             return
 
         # Get all entities from coordinator (structured dict)

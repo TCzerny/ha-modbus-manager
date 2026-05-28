@@ -54,6 +54,37 @@ class CombinedDeviceCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             "data": coordinator_data,
         }
 
+    @staticmethod
+    def _extract_metric_value(
+        source_data: dict[str, Any], metric_candidates: list[str]
+    ) -> float | None:
+        """Extract first matching numeric metric from one source payload."""
+        for register_data in source_data.values():
+            if not isinstance(register_data, dict):
+                continue
+            register_config = register_data.get("register_config", {})
+            if not isinstance(register_config, dict):
+                continue
+            register_unique_id = (
+                str(register_config.get("unique_id", "")).strip().lower()
+            )
+            if not register_unique_id:
+                continue
+            if not any(
+                register_unique_id.endswith(f"_{candidate}")
+                for candidate in metric_candidates
+            ):
+                continue
+
+            value = register_data.get(
+                "numeric_value", register_data.get("processed_value")
+            )
+            try:
+                return float(value)
+            except (TypeError, ValueError):
+                continue
+        return None
+
     async def _async_update_data(self) -> dict[str, Any]:
         """Aggregate source coordinator snapshots without additional Modbus I/O."""
         if self._is_unloading:
@@ -63,10 +94,53 @@ class CombinedDeviceCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         source_b_id = self.entry.data.get("source_entry_id_b")
         source_a = self._source_payload(source_a_id)
         source_b = self._source_payload(source_b_id)
+        metrics: dict[str, Any] = {}
+
+        if self.entry.data.get("combination_type") == "inverter_inverter":
+            source_a_data = (
+                source_a.get("data", {})
+                if isinstance(source_a.get("data"), dict)
+                else {}
+            )
+            source_b_data = (
+                source_b.get("data", {})
+                if isinstance(source_b.get("data"), dict)
+                else {}
+            )
+
+            active_power_candidates = [
+                "total_active_power",
+                "active_power",
+                "meter_active_power",
+            ]
+            pv_power_candidates = [
+                "total_pv_generation",
+                "pv_power_total",
+                "pv_total_power",
+            ]
+
+            source_a_active = self._extract_metric_value(
+                source_a_data, active_power_candidates
+            )
+            source_b_active = self._extract_metric_value(
+                source_b_data, active_power_candidates
+            )
+            source_a_pv = self._extract_metric_value(source_a_data, pv_power_candidates)
+            source_b_pv = self._extract_metric_value(source_b_data, pv_power_candidates)
+
+            if source_a_active is not None and source_b_active is not None:
+                metrics["combined_total_active_power"] = round(
+                    source_a_active + source_b_active, 3
+                )
+            if source_a_pv is not None and source_b_pv is not None:
+                metrics["combined_total_pv_generation"] = round(
+                    source_a_pv + source_b_pv, 3
+                )
 
         return {
             "combined_prefix": self.entry.data.get("combined_prefix"),
             "combination_type": self.entry.data.get("combination_type"),
+            "metrics": metrics,
             "sources": {
                 "a": source_a,
                 "b": source_b,

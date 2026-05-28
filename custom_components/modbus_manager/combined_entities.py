@@ -96,3 +96,39 @@ class CombinedPairTypeSensor(
         if combination_type is None:
             combination_type = self.coordinator.entry.data.get("combination_type")
         return str(combination_type) if combination_type else None
+
+
+class CombinedSumSensor(CoordinatorEntity[CombinedDeviceCoordinator], SensorEntity):
+    """Numeric sensor for combined power sums."""
+
+    def __init__(
+        self,
+        coordinator: CombinedDeviceCoordinator,
+        entry: ConfigEntry,
+        key: str,
+        name: str,
+        unit: str = "W",
+    ) -> None:
+        super().__init__(coordinator)
+        combined_prefix = str(entry.data.get("combined_prefix", "combined")).lower()
+        self._key = key
+        self._attr_has_entity_name = True
+        self._attr_name = name
+        self._attr_unique_id = f"{entry.entry_id}_{key}"
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
+        self._attr_device_info = _combined_device_info(entry)
+        self._attr_native_unit_of_measurement = unit
+        self.entity_id = f"sensor.{combined_prefix}_{key}"
+
+    @property
+    def native_value(self) -> float | None:
+        """Return summed metric value."""
+        data = self.coordinator.data or {}
+        metrics = data.get("metrics", {})
+        value = metrics.get(self._key)
+        if value is None:
+            return None
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return None
