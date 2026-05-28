@@ -14,7 +14,7 @@ from .combined_entities import (
     CombinedAvailabilityBinarySensor,
     CombinedComputedBinarySensor,
 )
-from .combined_specs import COMBINED_BINARY_METRIC_SPECS
+from .combined_specs import COMBINED_BINARY_METRIC_SPECS, combination_type_for_entry
 from .const import CONF_ENTRY_TYPE, CONF_MM_GROUP, DOMAIN, ENTRY_TYPE_COMBINED_DEVICE
 from .coordinator import ModbusCoordinator
 from .device_utils import (
@@ -66,7 +66,7 @@ async def async_setup_entry(
                     "Any Source Available",
                 ),
             ]
-            combination_type = entry.data.get("combination_type")
+            combination_type = combination_type_for_entry(hass, entry)
             binary_specs = COMBINED_BINARY_METRIC_SPECS.get(combination_type, {})
             for metric_key, metric_spec in binary_specs.items():
                 combined_binary_entities.append(

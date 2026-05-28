@@ -4,12 +4,47 @@ from __future__ import annotations
 
 from typing import Any
 
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+
+from .device_utils import entry_device_type_set
+
 # Supported source type combinations
 # Normalized source type set -> combination type id
 COMBINATION_TYPE_SPECS: dict[frozenset[str], str] = {
     frozenset({"inverter"}): "inverter_inverter",
     frozenset({"inverter", "energy_manager"}): "inverter_ihm",
 }
+
+
+def resolve_combination_type(
+    source_a: ConfigEntry | None,
+    source_b: ConfigEntry | None,
+) -> str | None:
+    """Resolve supported combination type from two hub entries."""
+    if source_a is None or source_b is None:
+        return None
+    pair_key = entry_device_type_set(source_a) | entry_device_type_set(source_b)
+    return COMBINATION_TYPE_SPECS.get(frozenset(pair_key))
+
+
+def combination_type_for_entry(
+    hass: HomeAssistant, combined_entry: ConfigEntry
+) -> str | None:
+    """Resolve combination type from source hubs; sync config entry when corrected."""
+    source_a_id = combined_entry.data.get("source_entry_id_a")
+    source_b_id = combined_entry.data.get("source_entry_id_b")
+    source_a = hass.config_entries.async_get_entry(source_a_id) if source_a_id else None
+    source_b = hass.config_entries.async_get_entry(source_b_id) if source_b_id else None
+    resolved = resolve_combination_type(source_a, source_b)
+    stored = combined_entry.data.get("combination_type")
+    if resolved and resolved != stored:
+        hass.config_entries.async_update_entry(
+            combined_entry,
+            data={**combined_entry.data, "combination_type": resolved},
+        )
+    return resolved or stored
+
 
 # Role names used in metric specs (resolved from config entry device types).
 SOURCE_ROLE_INVERTER = "inverter"

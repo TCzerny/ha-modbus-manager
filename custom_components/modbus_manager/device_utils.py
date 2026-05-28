@@ -4,12 +4,42 @@ import logging
 import re
 from typing import Any, Dict, Optional
 
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 
 from .const import CONF_MM_GROUP, DOMAIN, EntityIdStrategy
 
 _LOGGER = logging.getLogger(__name__)
+
+# Template file stem -> device role for combined-device pairing and filtering.
+KNOWN_TEMPLATE_DEVICE_TYPES: dict[str, str] = {
+    "sungrow_ihomemanager": "energy_manager",
+}
+
+
+def resolve_device_role_type(device: dict[str, Any]) -> str:
+    """Return effective device role; template name overrides mis-stored type."""
+    template = str(device.get("template", "")).strip().lower()
+    mapped = KNOWN_TEMPLATE_DEVICE_TYPES.get(template)
+    if not mapped and "ihomemanager" in template:
+        mapped = "energy_manager"
+    if mapped:
+        return mapped
+    device_type = str(device.get("type", "")).strip().lower()
+    return device_type or "inverter"
+
+
+def entry_device_type_set(entry: ConfigEntry) -> set[str]:
+    """Return normalized device types from one hub entry."""
+    types: set[str] = set()
+    devices = entry.data.get("devices", [])
+    if isinstance(devices, list):
+        for device in devices:
+            if isinstance(device, dict):
+                types.add(resolve_device_role_type(device))
+    return types
+
 
 # [[mm:domain:unique_id]] — resolved in entity init (registry may not be ready at coordinator build)
 _MM_REGISTRY_MARKER = re.compile(r"\[\[mm:([a-zA-Z0-9_]+):([^\]]+)\]\]")

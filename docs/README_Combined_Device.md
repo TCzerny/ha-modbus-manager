@@ -214,6 +214,7 @@ This flag is intended for **development only** and should not be used in product
 | Symptom | Checks |
 |---------|--------|
 | Combined entry missing in add flow | Need ≥2 hubs with inverter and/or iHomeManager devices |
+| Combination Type shows inverter+inverter for SG+iHM | iHM hub may have been stored as `type: inverter`; reload integration after update (template `sungrow_ihomemanager` is detected as `energy_manager`). Recreate combined entry once if old `inverter_inverter` entities remain. |
 | `invalid_pair` | Pair must be inverter+inverter or inverter+energy_manager |
 | Many entities `unavailable` | Verify both source hubs are loaded; check diagnostic availability sensors |
 | `combined_daily_consumed_energy` unavailable | Requires iHM grid totals + inverter daily PV/battery; SG without `daily_battery_*` may block the formula |

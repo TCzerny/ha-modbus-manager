@@ -13,7 +13,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .combined_entities import CombinedPairTypeSensor, CombinedSumSensor
-from .combined_specs import COMBINED_SENSOR_METRIC_SPECS
+from .combined_specs import COMBINED_SENSOR_METRIC_SPECS, combination_type_for_entry
 from .const import CONF_ENTRY_TYPE, DOMAIN, ENTRY_TYPE_COMBINED_DEVICE
 from .coordinator import ModbusCoordinator
 from .device_utils import (
@@ -289,7 +289,7 @@ async def async_setup_entry(
             combined_entities = [
                 CombinedPairTypeSensor(coordinator, entry, "Combination Type")
             ]
-            combination_type = entry.data.get("combination_type")
+            combination_type = combination_type_for_entry(hass, entry)
             metric_specs = COMBINED_SENSOR_METRIC_SPECS.get(combination_type, {})
             supported_aggregations = {
                 "sum",

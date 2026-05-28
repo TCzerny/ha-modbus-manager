@@ -15,7 +15,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 
-from .combined_specs import COMBINATION_TYPE_SPECS
+from .combined_specs import resolve_combination_type
 from .const import (
     CONF_ENTRY_TYPE,
     DEFAULT_DELAY,
@@ -33,9 +33,11 @@ from .const import (
 )
 from .device_utils import (
     ensure_entity_id_strategy_on_device,
+    entry_device_type_set,
     generate_unique_id,
     get_entity_mm_group,
     replace_template_placeholders,
+    resolve_device_role_type,
     resolve_firmware_profile_version,
 )
 from .logger import ModbusManagerLogger
@@ -138,20 +140,6 @@ def _is_prefix_unique_across_hubs(
     return True
 
 
-def _entry_device_type_set(entry: config_entries.ConfigEntry) -> set[str]:
-    """Return normalized device types from entry devices list."""
-    types: set[str] = set()
-    devices = entry.data.get("devices", [])
-    if isinstance(devices, list):
-        for device in devices:
-            if not isinstance(device, dict):
-                continue
-            device_type = str(device.get("type", "")).strip().lower()
-            if device_type:
-                types.add(device_type)
-    return types
-
-
 class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Modbus Manager."""
 
@@ -172,7 +160,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 == ENTRY_TYPE_COMBINED_DEVICE
             ):
                 continue
-            type_set = _entry_device_type_set(entry)
+            type_set = entry_device_type_set(entry)
             if not ({"inverter", "energy_manager"} & type_set):
                 continue
 
@@ -200,10 +188,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self, source_a: config_entries.ConfigEntry, source_b: config_entries.ConfigEntry
     ) -> str | None:
         """Return supported combination type for two source entries."""
-        types_a = _entry_device_type_set(source_a)
-        types_b = _entry_device_type_set(source_b)
-        pair_key = frozenset(types_a | types_b)
-        return COMBINATION_TYPE_SPECS.get(pair_key)
+        return resolve_combination_type(source_a, source_b)
 
     def _build_device_entry_id(self, device: dict[str, Any]) -> str:
         """Build a stable logical device id inside one hub entry."""
@@ -215,8 +200,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     def _normalize_device_record(self, device: dict[str, Any]) -> dict[str, Any]:
         """Normalize a device record and ensure required subentry-like fields."""
         normalized = dict(device)
-        if not normalized.get("type"):
-            normalized["type"] = "inverter"
+        normalized["type"] = resolve_device_role_type(normalized)
         normalized["device_entry_id"] = normalized.get(
             "device_entry_id", self._build_device_entry_id(normalized)
         )
@@ -2605,7 +2589,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
                 # Create single device entry
                 device = {
-                    "type": "inverter",  # Default type for regular templates
+                    "type": template_data.get("type", "inverter"),
                     "template": self._selected_template,
                     "prefix": user_input["prefix"],
                     "slave_id": user_input.get("slave_id", DEFAULT_SLAVE),
@@ -3124,8 +3108,7 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
     @classmethod
     def _normalize_device_record(cls, device: dict[str, Any]) -> dict[str, Any]:
         normalized = dict(device)
-        if not normalized.get("type"):
-            normalized["type"] = "inverter"
+        normalized["type"] = resolve_device_role_type(normalized)
         normalized["device_entry_id"] = normalized.get(
             "device_entry_id", cls._build_device_entry_id(normalized)
         )

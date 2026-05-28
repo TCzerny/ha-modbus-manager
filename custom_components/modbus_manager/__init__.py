@@ -640,6 +640,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     try:
         entry_type = entry.data.get(CONF_ENTRY_TYPE, ENTRY_TYPE_HUB)
         if entry_type == ENTRY_TYPE_COMBINED_DEVICE:
+            from .combined_specs import combination_type_for_entry
+
+            combination_type_for_entry(hass, entry)
             hass.data.setdefault(DOMAIN, {})
             coordinator = CombinedDeviceCoordinator(hass=hass, entry=entry)
             await coordinator.async_load_daily_meters()

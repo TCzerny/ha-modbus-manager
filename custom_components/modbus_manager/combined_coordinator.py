@@ -16,27 +16,15 @@ from .combined_specs import (
     COMBINED_SENSOR_METRIC_SPECS,
     SOURCE_ROLE_IHM,
     SOURCE_ROLE_INVERTER,
+    combination_type_for_entry,
 )
 from .const import DOMAIN
+from .device_utils import entry_device_type_set
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
 
 _CONSUMED_FORMULA = "pv - export + import - battery_charge + battery_discharge"
-
-
-def _entry_device_type_set(entry: ConfigEntry) -> set[str]:
-    """Return normalized device types from one hub entry."""
-    types: set[str] = set()
-    devices = entry.data.get("devices", [])
-    if isinstance(devices, list):
-        for device in devices:
-            if not isinstance(device, dict):
-                continue
-            device_type = str(device.get("type", "")).strip().lower()
-            if device_type:
-                types.add(device_type)
-    return types
 
 
 class CombinedDeviceCoordinator(DataUpdateCoordinator[dict[str, Any]]):
@@ -289,7 +277,7 @@ class CombinedDeviceCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             entry = self.hass.config_entries.async_get_entry(entry_id)
             if entry is None:
                 continue
-            type_set = _entry_device_type_set(entry)
+            type_set = entry_device_type_set(entry)
             if "inverter" in type_set:
                 role_data[SOURCE_ROLE_INVERTER] = source_data
             if "energy_manager" in type_set:
@@ -536,7 +524,7 @@ class CombinedDeviceCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         metric_meta: dict[str, Any] = {}
         binary_metrics: dict[str, Any] = {}
 
-        combination_type = self.entry.data.get("combination_type")
+        combination_type = combination_type_for_entry(self.hass, self.entry)
         metric_specs = COMBINED_SENSOR_METRIC_SPECS.get(combination_type, {})
         binary_specs = COMBINED_BINARY_METRIC_SPECS.get(combination_type, {})
         source_a_data = (
