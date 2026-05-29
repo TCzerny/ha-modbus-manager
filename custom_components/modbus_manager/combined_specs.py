@@ -9,12 +9,13 @@ from homeassistant.core import HomeAssistant
 
 from .device_utils import entry_device_type_set
 
-# Supported source type combinations
-# Normalized source type set -> combination type id
-COMBINATION_TYPE_SPECS: dict[frozenset[str], str] = {
-    frozenset({"inverter"}): "inverter_inverter",
-    frozenset({"inverter", "energy_manager"}): "inverter_ihm",
-}
+# Device roles that define a combined pair (battery etc. are ignored for pairing).
+_COMBINED_PAIRING_ROLES = frozenset({"inverter", "energy_manager"})
+
+
+def _pairing_roles(entry: ConfigEntry) -> frozenset[str]:
+    """Return inverter/energy_manager roles on a hub; ignore ancillary device types."""
+    return frozenset(entry_device_type_set(entry) & _COMBINED_PAIRING_ROLES)
 
 
 def resolve_combination_type(
@@ -24,8 +25,23 @@ def resolve_combination_type(
     """Resolve supported combination type from two hub entries."""
     if source_a is None or source_b is None:
         return None
-    pair_key = entry_device_type_set(source_a) | entry_device_type_set(source_b)
-    return COMBINATION_TYPE_SPECS.get(frozenset(pair_key))
+
+    roles_a = _pairing_roles(source_a)
+    roles_b = _pairing_roles(source_b)
+    has_inverter_a = "inverter" in roles_a
+    has_inverter_b = "inverter" in roles_b
+    has_ihm_a = "energy_manager" in roles_a
+    has_ihm_b = "energy_manager" in roles_b
+
+    if has_ihm_a and has_ihm_b:
+        return None
+    if has_ihm_a or has_ihm_b:
+        if has_inverter_a or has_inverter_b:
+            return "inverter_ihm"
+        return None
+    if has_inverter_a and has_inverter_b:
+        return "inverter_inverter"
+    return None
 
 
 def combination_type_for_entry(

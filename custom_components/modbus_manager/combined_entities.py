@@ -35,7 +35,7 @@ def _combined_device_info(entry: ConfigEntry) -> DeviceInfo:
         name=f"Combined {combined_prefix}",
         manufacturer="Modbus Manager",
         model="Cross-hub Combined Device",
-        sw_version="1.0.11",
+        sw_version="1.0.12",
         configuration_url=None,
         serial_number=f"{source_a[:8]}-{source_b[:8]}",
     )

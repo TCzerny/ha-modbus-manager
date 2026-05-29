@@ -5,6 +5,16 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.12] - 2026-05-29
+
+### 🐛 Fixed
+
+- **Combined Device config flow**: Hub entries with an additional **battery** device (or other ancillary types) no longer fail `invalid_pair` for **Inverter + iHomeManager** or **two inverters** ([#50](https://github.com/TCzerny/ha-modbus-manager/issues/50)).
+
+### 📖 Documentation
+
+- **[docs/README_Combined_Device.md](docs/README_Combined_Device.md)** — Troubleshooting for `invalid_pair` when a battery device is on the inverter hub.
+
 ## [1.0.11] - 2026-05-28
 
 ### ✨ Added

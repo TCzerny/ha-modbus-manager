@@ -1,6 +1,6 @@
 # Combined Device (Cross-Hub)
 
-> **Integration version:** 1.0.11+
+> **Integration version:** 1.0.12+
 
 The **Combined Device** is an opt-in virtual Modbus Manager config entry that aggregates data from **two existing hub entries** without additional Modbus I/O. It is intended for setups where physically separate devices (e.g. Sungrow inverter + iHomeManager) should be viewed as one logical unit in Home Assistant.
 
@@ -217,7 +217,7 @@ This flag is intended for **development only** and should not be used in product
 |---------|--------|
 | Combined entry missing in add flow | Need ≥2 hubs with inverter and/or iHomeManager devices |
 | Combination Type shows inverter+inverter for SG+iHM | iHM hub may have been stored as `type: inverter`; reload integration after update (template `sungrow_ihomemanager` is detected as `energy_manager`). Recreate combined entry once if old `inverter_inverter` entities remain. |
-| `invalid_pair` | Pair must be inverter+inverter or inverter+energy_manager |
+| `invalid_pair` | Pair must be inverter+inverter or inverter+energy_manager. A **battery** on the inverter hub is supported from **1.0.12** (ignored for pairing); on 1.0.11 remove battery was a workaround — update and reload, do not remove the battery device |
 | Many entities `unavailable` | Verify both source hubs are loaded; check diagnostic availability sensors |
 | `combined_daily_consumed_energy` unavailable | Requires iHM grid totals + inverter daily PV/battery; SG without `daily_battery_*` may block the formula |
 | `combined_pv_generating_any` always unknown | Source `pv_generating` is a **template** binary sensor (not Modbus cache). From 1.0.11+ the combined device reads it from the HA entity registry; ensure `binary_sensor.<prefix>_pv_generating` exists and is not `unavailable` on each source hub |
