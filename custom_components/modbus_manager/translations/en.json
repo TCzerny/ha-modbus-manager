@@ -211,8 +211,10 @@
         "step": {
             "init": {
                 "title": "Hub Options",
-                "description": "Update hub communication settings.",
+                "description": "Update Modbus TCP endpoint and communication settings. Dependent combined-device entries reload automatically when the endpoint changes.",
                 "data": {
+                    "host": "IP address / hostname",
+                    "port": "Modbus TCP port",
                     "timeout": "Timeout (seconds)",
                     "delay": "Delay after Connection (seconds)",
                     "message_wait_milliseconds": "Wait between Requests (milliseconds)"
@@ -239,6 +241,14 @@
                     "battery_selection": "Battery Selection"
                 }
             }
+        },
+        "error": {
+            "endpoint_in_use": "Another Modbus Manager hub already uses this host and port.",
+            "invalid_host": "Host is required.",
+            "invalid_port": "Port must be a valid number."
+        },
+        "abort": {
+            "combined_device": "Combined devices have no Modbus connection. Change IP/port on the source hub entries instead."
         }
     },
     "config_subentries": {

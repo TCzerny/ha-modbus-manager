@@ -34,8 +34,12 @@ from .const import (
 from .device_utils import (
     ensure_entity_id_strategy_on_device,
     entry_device_type_set,
+    entry_host_port,
     generate_unique_id,
     get_entity_mm_group,
+    is_hub_endpoint_taken,
+    migrate_hub_device_identifiers,
+    reload_dependent_combined_entries,
     replace_template_placeholders,
     resolve_device_role_type,
     resolve_firmware_profile_version,
@@ -3722,46 +3726,107 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
 
     async def async_step_init(self, user_input: dict = None) -> FlowResult:
         """Manage hub-level options only."""
+        if (
+            self.config_entry.data.get(CONF_ENTRY_TYPE, ENTRY_TYPE_HUB)
+            == ENTRY_TYPE_COMBINED_DEVICE
+        ):
+            return self.async_abort(reason="combined_device")
+
+        current_host, current_port = entry_host_port(self.config_entry)
+        errors: dict[str, str] = {}
+
         if user_input is not None:
-            new_data = dict(self.config_entry.data)
-            new_data["timeout"] = user_input.get(
-                "timeout", self.config_entry.data.get("timeout", DEFAULT_TIMEOUT)
-            )
-            new_data["delay"] = user_input.get(
-                "delay", self.config_entry.data.get("delay", DEFAULT_DELAY)
-            )
-            new_data["message_wait_milliseconds"] = user_input.get(
+            new_host = str(user_input.get("host", current_host)).strip()
+            try:
+                new_port = int(user_input.get("port", current_port))
+            except (TypeError, ValueError):
+                errors["port"] = "invalid_port"
+            else:
+                if not new_host:
+                    errors["host"] = "invalid_host"
+                elif is_hub_endpoint_taken(
+                    self.hass,
+                    new_host,
+                    new_port,
+                    self.config_entry.entry_id,
+                ):
+                    errors["host"] = "endpoint_in_use"
+
+            if not errors:
+                new_data = dict(self.config_entry.data)
+                new_data["timeout"] = user_input.get(
+                    "timeout",
+                    self.config_entry.data.get("timeout", DEFAULT_TIMEOUT),
+                )
+                new_data["delay"] = user_input.get(
+                    "delay", self.config_entry.data.get("delay", DEFAULT_DELAY)
+                )
+                new_data["message_wait_milliseconds"] = user_input.get(
+                    "message_wait_milliseconds",
+                    self.config_entry.data.get(
+                        "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
+                    ),
+                )
+                new_data["host"] = new_host
+                new_data["port"] = new_port
+                hub_config = new_data.get("hub")
+                if isinstance(hub_config, dict):
+                    hub_config = dict(hub_config)
+                    hub_config["host"] = new_host
+                    hub_config["port"] = new_port
+                    new_data["hub"] = hub_config
+
+                endpoint_changed = (new_host, new_port) != (
+                    current_host,
+                    current_port,
+                )
+                if endpoint_changed:
+                    migrate_hub_device_identifiers(
+                        self.hass,
+                        self.config_entry,
+                        current_host,
+                        current_port,
+                        new_host,
+                        new_port,
+                    )
+
+                entry_title = f"Modbus Hub ({new_host}:{new_port})"
+                self.hass.config_entries.async_update_entry(
+                    self.config_entry,
+                    data=new_data,
+                    title=entry_title,
+                )
+
+                await self.hass.config_entries.async_reload(self.config_entry.entry_id)
+                if endpoint_changed:
+                    await reload_dependent_combined_entries(
+                        self.hass, self.config_entry.entry_id
+                    )
+                return self.async_create_entry(title="", data={})
+
+        schema_fields: dict[Any, Any] = {
+            vol.Required("host", default=current_host): str,
+            vol.Required("port", default=current_port): int,
+            vol.Required(
+                "timeout",
+                default=self.config_entry.data.get("timeout", DEFAULT_TIMEOUT),
+            ): int,
+            vol.Required(
+                "delay",
+                default=self.config_entry.data.get("delay", DEFAULT_DELAY),
+            ): int,
+            vol.Required(
                 "message_wait_milliseconds",
-                self.config_entry.data.get(
+                default=self.config_entry.data.get(
                     "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
                 ),
-            )
-            self.hass.config_entries.async_update_entry(
-                self.config_entry, data=new_data
-            )
-            await self.hass.config_entries.async_reload(self.config_entry.entry_id)
-            return self.async_create_entry(title="", data={})
+            ): int,
+        }
 
         return self.async_show_form(
             step_id="init",
-            data_schema=vol.Schema(
-                {
-                    vol.Required(
-                        "timeout",
-                        default=self.config_entry.data.get("timeout", DEFAULT_TIMEOUT),
-                    ): int,
-                    vol.Required(
-                        "delay",
-                        default=self.config_entry.data.get("delay", DEFAULT_DELAY),
-                    ): int,
-                    vol.Required(
-                        "message_wait_milliseconds",
-                        default=self.config_entry.data.get(
-                            "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
-                        ),
-                    ): int,
-                }
-            ),
+            data_schema=vol.Schema(schema_fields),
+            errors=errors,
         )
 
     async def async_step_update_template(self, user_input: dict = None) -> FlowResult:

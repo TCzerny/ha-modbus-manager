@@ -6,9 +6,17 @@ from typing import Any, Dict, Optional
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 
-from .const import CONF_MM_GROUP, DOMAIN, EntityIdStrategy
+from .const import (
+    CONF_ENTRY_TYPE,
+    CONF_MM_GROUP,
+    DOMAIN,
+    ENTRY_TYPE_COMBINED_DEVICE,
+    ENTRY_TYPE_HUB,
+    EntityIdStrategy,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -568,3 +576,121 @@ def is_coordinator_connected(coordinator: Any) -> bool:
     if not hub:
         return False
     return bool(getattr(hub, "_is_connected", False))
+
+
+def entry_host_port(entry: ConfigEntry) -> tuple[str, int]:
+    """Return TCP host and port stored on a hub config entry."""
+    hub_config = entry.data.get("hub", {})
+    if isinstance(hub_config, dict):
+        host = hub_config.get("host") or entry.data.get("host", "")
+        port = hub_config.get("port") or entry.data.get("port", 502)
+    else:
+        host = entry.data.get("host", "")
+        port = entry.data.get("port", 502)
+    try:
+        port_int = int(port)
+    except (TypeError, ValueError):
+        port_int = 502
+    return str(host or "").strip(), port_int
+
+
+def hub_device_identifier(host: str, port: int, slave_id: int | str) -> str:
+    """Build the device registry identifier for one Modbus device."""
+    return f"modbus_manager_{host}_{port}_slave_{slave_id}"
+
+
+def is_hub_endpoint_taken(
+    hass: HomeAssistant,
+    host: str,
+    port: int,
+    exclude_entry_id: str,
+) -> bool:
+    """Return True if another hub entry already uses host:port."""
+    normalized_host = str(host).strip()
+    for entry in hass.config_entries.async_entries(DOMAIN):
+        if entry.entry_id == exclude_entry_id:
+            continue
+        if (
+            entry.data.get(CONF_ENTRY_TYPE, ENTRY_TYPE_HUB)
+            == ENTRY_TYPE_COMBINED_DEVICE
+        ):
+            continue
+        entry_host, entry_port = entry_host_port(entry)
+        if entry_host == normalized_host and entry_port == port:
+            return True
+    return False
+
+
+def migrate_hub_device_identifiers(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+    old_host: str,
+    old_port: int,
+    new_host: str,
+    new_port: int,
+) -> int:
+    """Update device registry identifiers after host/port change."""
+    if (old_host, old_port) == (new_host, new_port):
+        return 0
+
+    device_registry = dr.async_get(hass)
+    devices = entry.data.get("devices", [])
+    if not isinstance(devices, list):
+        return 0
+
+    migrated = 0
+    for device in devices:
+        if not isinstance(device, dict):
+            continue
+        slave_id = device.get("slave_id", 1)
+        old_identifier = hub_device_identifier(old_host, old_port, slave_id)
+        new_identifier = hub_device_identifier(new_host, new_port, slave_id)
+        device_entry = device_registry.async_get_device(
+            identifiers={(DOMAIN, old_identifier)}
+        )
+        if device_entry is None:
+            _LOGGER.warning(
+                "Device registry entry not found for %s while migrating host/port",
+                old_identifier,
+            )
+            continue
+        device_registry.async_update_device(
+            device_entry.id,
+            new_identifiers={(DOMAIN, new_identifier)},
+        )
+        migrated += 1
+        _LOGGER.info(
+            "Migrated device identifier %s -> %s",
+            old_identifier,
+            new_identifier,
+        )
+    return migrated
+
+
+def combined_entries_for_source(
+    hass: HomeAssistant, source_entry_id: str
+) -> list[ConfigEntry]:
+    """Return combined-device entries that reference a hub entry."""
+    matches: list[ConfigEntry] = []
+    for entry in hass.config_entries.async_entries(DOMAIN):
+        if entry.data.get(CONF_ENTRY_TYPE) != ENTRY_TYPE_COMBINED_DEVICE:
+            continue
+        if source_entry_id in (
+            entry.data.get("source_entry_id_a"),
+            entry.data.get("source_entry_id_b"),
+        ):
+            matches.append(entry)
+    return matches
+
+
+async def reload_dependent_combined_entries(
+    hass: HomeAssistant, source_entry_id: str
+) -> None:
+    """Reload combined entries that aggregate the given source hub."""
+    for combined_entry in combined_entries_for_source(hass, source_entry_id):
+        _LOGGER.info(
+            "Reloading combined entry %s after source hub %s endpoint change",
+            combined_entry.entry_id,
+            source_entry_id,
+        )
+        await hass.config_entries.async_reload(combined_entry.entry_id)

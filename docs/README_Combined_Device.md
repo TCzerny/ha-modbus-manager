@@ -201,6 +201,23 @@ Combined entities follow the same approach as hub devices with **`entity_id_stra
 
 ---
 
+## Changing source hub IP or port
+
+Combined entries store **source hub config entry IDs only** (`source_entry_id_a` / `source_entry_id_b`), not `host`/`port`.
+
+When you change the Modbus endpoint of a source hub:
+
+1. Open **Settings → Devices & services → Modbus Manager → Hub → Configure** (options).
+2. Update **IP address / hostname** and **port**, then save.
+3. The integration migrates device registry identifiers on that hub and reloads the hub.
+4. Any **Combined Device** that references this hub is **reloaded automatically** (metrics may be briefly `unavailable`).
+
+You do **not** need to recreate the combined entry. Daily grid counters in `.storage` are keyed by the combined entry ID and are kept.
+
+See also [Discussion #64 — change hub IP](https://github.com/TCzerny/ha-modbus-manager/discussions/64).
+
+---
+
 ## Troubleshooting
 
 | Symptom | Checks |

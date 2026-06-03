@@ -220,8 +220,10 @@
         "step": {
             "init": {
                 "title": "Hub-Optionen",
-                "description": "Kommunikationseinstellungen des Hubs aktualisieren.",
+                "description": "Modbus-TCP-Endpunkt und Kommunikationseinstellungen ändern. Abhängige Combined-Device-Einträge werden bei Endpunktänderung automatisch neu geladen.",
                 "data": {
+                    "host": "IP-Adresse / Hostname",
+                    "port": "Modbus-TCP-Port",
                     "timeout": "Timeout in Sekunden",
                     "delay": "Verzögerung nach Verbindung (Sekunden)",
                     "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)"
@@ -248,6 +250,14 @@
                     "battery_selection": "Battery Selection"
                 }
             }
+        },
+        "error": {
+            "endpoint_in_use": "Ein anderer Modbus-Manager-Hub nutzt diese IP und diesen Port bereits.",
+            "invalid_host": "Host ist erforderlich.",
+            "invalid_port": "Port muss eine gültige Zahl sein."
+        },
+        "abort": {
+            "combined_device": "Combined Devices haben keine Modbus-Verbindung. IP/Port an den Quell-Hub-Einträgen ändern."
         }
     },
     "config_subentries": {
