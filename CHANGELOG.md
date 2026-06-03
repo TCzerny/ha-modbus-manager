@@ -5,6 +5,22 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.13] - 2026-06-03
+
+### ✨ Added
+
+- **Hub options — change IP and port**: Update Modbus TCP **host** and **port** on an existing hub via **Configure** (options flow), without deleting and recreating the integration ([#64](https://github.com/TCzerny/ha-modbus-manager/discussions/64)).
+- **Device registry migration** when the endpoint changes (`modbus_manager_{host}_{port}_slave_*` identifiers updated in place).
+- **Dependent Combined Device reload**: Combined entries that reference the changed hub reload automatically after save (brief `unavailable` possible).
+
+### 🔧 Changed
+
+- **Config flow**: Dev-only `test_allow_same_endpoint_new_hub` checkbox removed from the UI (commented out in code for local testing).
+
+### 📖 Documentation
+
+- **[docs/README_Combined_Device.md](docs/README_Combined_Device.md)** — How to change source hub IP/port and impact on combined entries.
+
 ## [1.0.12] - 2026-05-29
 
 ### 🐛 Fixed

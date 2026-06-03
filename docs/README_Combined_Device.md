@@ -1,6 +1,6 @@
 # Combined Device (Cross-Hub)
 
-> **Integration version:** 1.0.12+
+> **Integration version:** 1.0.13+
 
 The **Combined Device** is an opt-in virtual Modbus Manager config entry that aggregates data from **two existing hub entries** without additional Modbus I/O. It is intended for setups where physically separate devices (e.g. Sungrow inverter + iHomeManager) should be viewed as one logical unit in Home Assistant.
 
@@ -213,8 +213,6 @@ When you change the Modbus endpoint of a source hub:
 4. Any **Combined Device** that references this hub is **reloaded automatically** (metrics may be briefly `unavailable`).
 
 You do **not** need to recreate the combined entry. Daily grid counters in `.storage` are keyed by the combined entry ID and are kept.
-
-See also [Discussion #64 — change hub IP](https://github.com/TCzerny/ha-modbus-manager/discussions/64).
 
 ---
 
