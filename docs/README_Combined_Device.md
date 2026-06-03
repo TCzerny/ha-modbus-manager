@@ -201,16 +201,6 @@ Combined entities follow the same approach as hub devices with **`entity_id_stra
 
 ---
 
-## Local testing (developers)
-
-For setups with only **one** physical Modbus endpoint, Config Flow may offer a temporary option:
-
-- `test_allow_same_endpoint_new_hub` — allows a second hub on the same `host:port` for local combined-device testing.
-
-This flag is intended for **development only** and should not be used in production. Remove related test UI when local validation is complete (see `TASK.md`).
-
----
-
 ## Troubleshooting
 
 | Symptom | Checks |
