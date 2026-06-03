@@ -379,7 +379,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Application Software Version** sensor (8318–8332 UTF-8)
 - Fix Import/Export Power logic (positive = import, negative = export)
 - **Charging Power** uses `max_value_from_register` with 3.7 kW fallback (1-phase 16A)
-- Protocol PDF: `docs/TI_20260121_Communication Protocol of iHomeManager_V1.0.2.pdf`
+- Protocol PDF: `docs/Communication Protocol of iHomeManager_V1.0.2.pdf`
 
 #### Sungrow SHx Template – Self-Consumption & Autarky
 - **Self-Consumption Rate (Today)** (`self_consumption_rate_today`) – Standard formula: (Direct + PV→Battery) / PV generation × 100
