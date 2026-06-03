@@ -17,13 +17,22 @@ from homeassistant.helpers import entity_registry as er
 from .combined_coordinator import CombinedDeviceCoordinator
 from .const import (
     CONF_ENTRY_TYPE,
+    DEFAULT_SLAVE,
     DOMAIN,
     ENTRY_TYPE_COMBINED_DEVICE,
     ENTRY_TYPE_HUB,
     PLATFORMS,
+    SERVICE_READ_DEVICE_IDENTIFICATION,
     EntityIdStrategy,
 )
 from .coordinator import ModbusCoordinator
+from .device_identification import (
+    READ_CODE_BY_NAME,
+    DeviceIdentificationError,
+    async_read_device_identification,
+    format_identification_message,
+    log_identification,
+)
 from .device_utils import get_entity_mm_group, resolve_entity_id_strategy
 from .logger import ModbusManagerLogger
 from .performance_monitor import PerformanceMonitor
@@ -1458,6 +1467,99 @@ async def async_setup_services(hass: HomeAssistant) -> None:
         else:
             _LOGGER.debug("No templates were updated")
 
+    async def read_device_identification_service(call):
+        """Read Modbus FC43 device identification from a hub slave (diagnostic)."""
+        try:
+            entry_id = call.data.get("entry_id") if call.data else None
+            if not entry_id:
+                _LOGGER.error("read_device_identification requires entry_id")
+                return {"error": "entry_id is required"}
+
+            entry = hass.config_entries.async_get_entry(entry_id)
+            if entry is None:
+                _LOGGER.error("Config entry %s not found", entry_id)
+                return {"error": f"Config entry {entry_id} not found"}
+
+            if (
+                entry.data.get(CONF_ENTRY_TYPE, ENTRY_TYPE_HUB)
+                == ENTRY_TYPE_COMBINED_DEVICE
+            ):
+                _LOGGER.error(
+                    "read_device_identification does not apply to combined entries"
+                )
+                return {"error": "Combined device entries have no Modbus connection"}
+
+            hub_data = hass.data.get(DOMAIN, {}).get(entry_id)
+            if not isinstance(hub_data, dict):
+                _LOGGER.error("Hub data not found for entry %s", entry_id)
+                return {"error": "Hub is not loaded"}
+
+            hub = hub_data.get("hub")
+            if not isinstance(hub, ModbusHub):
+                _LOGGER.error("Modbus hub not available for entry %s", entry_id)
+                return {"error": "Modbus hub is not available"}
+
+            slave_id = call.data.get("slave_id", DEFAULT_SLAVE)
+            try:
+                slave_id = int(slave_id)
+            except (TypeError, ValueError):
+                return {"error": "slave_id must be an integer"}
+
+            read_code_name = str(call.data.get("read_code", "basic")).strip().lower()
+            read_code = READ_CODE_BY_NAME.get(read_code_name)
+            if read_code is None:
+                return {
+                    "error": f"Invalid read_code '{read_code_name}' "
+                    f"(use: {', '.join(READ_CODE_BY_NAME)})"
+                }
+
+            notify = bool(call.data.get("notify", True))
+
+            objects = await async_read_device_identification(hub, slave_id, read_code)
+            entry_title = entry.title or entry_id
+            log_identification(entry_title, slave_id, read_code_name, objects)
+
+            message = format_identification_message(
+                entry_title, slave_id, read_code_name, objects
+            )
+            if notify:
+                await hass.services.async_call(
+                    "persistent_notification",
+                    "create",
+                    {
+                        "title": "Modbus Manager — Device identification",
+                        "message": message,
+                        "notification_id": f"modbus_fc43_{entry_id}_{slave_id}",
+                    },
+                )
+
+            return {
+                "entry_id": entry_id,
+                "slave_id": slave_id,
+                "read_code": read_code_name,
+                "objects": {f"0x{oid:02X}": value for oid, value in objects.items()},
+            }
+        except DeviceIdentificationError as exc:
+            _LOGGER.warning("Device identification failed: %s", exc)
+            if call.data and call.data.get("notify", True):
+                await hass.services.async_call(
+                    "persistent_notification",
+                    "create",
+                    {
+                        "title": "Modbus Manager — Device identification",
+                        "message": str(exc),
+                        "notification_id": "modbus_fc43_error",
+                    },
+                )
+            return {"error": str(exc)}
+        except Exception as exc:
+            _LOGGER.error(
+                "Error in read_device_identification service: %s",
+                exc,
+                exc_info=True,
+            )
+            return {"error": str(exc)}
+
     # Register services
     hass.services.async_register(
         DOMAIN, "performance_monitor", performance_monitor_service
@@ -1466,5 +1568,10 @@ async def async_setup_services(hass: HomeAssistant) -> None:
     # register_optimize removed - optimization is automatic
     hass.services.async_register(DOMAIN, "add_entity_prefix", add_entity_prefix_service)
     hass.services.async_register(DOMAIN, "reload_templates", reload_templates_service)
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_READ_DEVICE_IDENTIFICATION,
+        read_device_identification_service,
+    )
 
     _LOGGER.debug("Modbus Manager services registered successfully")

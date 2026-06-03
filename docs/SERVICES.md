@@ -181,7 +181,64 @@ data:
 
 ---
 
-### 5. Device removal via subentry delete
+### 5. `modbus_manager.read_device_identification`
+
+**Description:** Read **Modbus FC43** (function code **0x2B**, MEI Read Device Identification) from a slave on an existing Modbus Manager **hub** connection. Useful for diagnostics (vendor name, product code, firmware revision) without proprietary tools — see [Discussion #56](https://github.com/TCzerny/ha-modbus-manager/discussions/56).
+
+Uses the same **Home Assistant `ModbusHub`** connection and lock as normal polling (no second TCP socket). Does **not** work on **Combined Device** entries.
+
+**Service call:**
+
+```yaml
+service: modbus_manager.read_device_identification
+data:
+  entry_id: "<modbus_manager_hub_entry_id>"  # required — use hub entry, not combined
+  slave_id: 1                                # optional, default 1
+  read_code: basic                           # optional: basic | regular | extended
+  notify: true                               # optional, default true
+```
+
+**Parameters:**
+
+| Field | Required | Description |
+|--------|----------|-------------|
+| `entry_id` | **Yes** | Modbus Manager **hub** config entry ID (Developer tools → config entry selector). |
+| `slave_id` | No | Modbus slave/unit ID (1–247). Default `1`. |
+| `read_code` | No | `basic` (default), `regular`, or `extended` per Modbus device identification. |
+| `notify` | No | If `true`, creates a **persistent notification** with the result (default `true`). |
+
+**Response:**
+
+- Writes a structured line per object to the **log** (INFO).
+- Optional **persistent notification** with vendor/product/revision fields.
+- Service return value (Developer tools): `objects` map with keys like `0x00`, `0x01`, …
+
+**When to use:**
+
+- After connecting an unknown Modbus slave (e.g. Schneider BMS).
+- Troubleshooting whether a device supports FC43.
+- One-off check; not polled automatically (Phase 1).
+
+**Limitations:**
+
+- Not every device implements FC43; some only support FC17 Report Slave ID.
+- Uses HA Modbus hub internals (`hub._client` under `hub._lock`) — tied to Home Assistant Modbus component version.
+- Does not add persistent entities (future phase if needed).
+
+**Example (automation, manual trigger):**
+
+```yaml
+service: modbus_manager.read_device_identification
+data:
+  entry_id: abc123def456
+  slave_id: 1
+  read_code: basic
+  notify: true
+```
+
+---
+
+### 6. Device removal via subentry delete
 
 **Description:** Per-device removal is now handled directly in Home Assistant UI by deleting the device subentry.
 

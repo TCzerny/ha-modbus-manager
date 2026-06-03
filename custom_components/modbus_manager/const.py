@@ -86,6 +86,10 @@ MODBUS_FC_READ_HOLDING_REGISTERS = 3  # Read Holding Registers
 MODBUS_FC_READ_INPUT_REGISTERS = 4  # Read Input Registers
 MODBUS_FC_PRESET_SINGLE_REGISTER = 6  # Preset Single Register (Write Single)
 MODBUS_FC_PRESET_MULTIPLE_REGISTERS = 16  # Preset Multiple Registers (Write Multiple)
+MODBUS_FC_READ_DEVICE_IDENTIFICATION = 0x2B  # MEI Read Device Identification
+
+# Home Assistant services (modbus_manager.*)
+SERVICE_READ_DEVICE_IDENTIFICATION = "read_device_identification"
 SERVICE_SET_INVERTER_MODE = "set_inverter_mode"
 SERVICE_SET_EXPORT_POWER_LIMIT = "set_export_power_limit"
 

@@ -52,3 +52,42 @@ reload_templates:
       required: false
       selector:
         text:
+
+read_device_identification:
+  name: "Read Device Identification (FC43)"
+  description: "Read Modbus FC43 (0x2B) vendor/product/version strings from a slave via the hub connection"
+  fields:
+    entry_id:
+      name: "Config Entry ID"
+      description: "Modbus Manager hub config entry (not a combined device entry)"
+      required: true
+      selector:
+        config_entry:
+          integration: modbus_manager
+    slave_id:
+      name: "Slave ID"
+      description: "Modbus slave/unit ID to query (default 1)"
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 247
+          mode: box
+    read_code:
+      name: "Read code"
+      description: "Identification category (basic, regular, or extended)"
+      required: false
+      default: basic
+      selector:
+        select:
+          options:
+            - basic
+            - regular
+            - extended
+    notify:
+      name: "Show notification"
+      description: "Create a persistent notification with the result"
+      required: false
+      default: true
+      selector:
+        boolean:

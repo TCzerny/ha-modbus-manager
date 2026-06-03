@@ -508,6 +508,28 @@
                     "description": "The new firmware version of the device."
                 }
             }
+        },
+        "read_device_identification": {
+            "name": "Read Device Identification (FC43)",
+            "description": "Read Modbus FC43 vendor/product/version from a slave (diagnostic)",
+            "fields": {
+                "entry_id": {
+                    "name": "Config Entry ID",
+                    "description": "Modbus Manager hub entry (not combined device)"
+                },
+                "slave_id": {
+                    "name": "Slave ID",
+                    "description": "Modbus slave ID (default 1)"
+                },
+                "read_code": {
+                    "name": "Read code",
+                    "description": "basic, regular, or extended identification"
+                },
+                "notify": {
+                    "name": "Show notification",
+                    "description": "Show result in a persistent notification"
+                }
+            }
         }
     },
     "issues": {

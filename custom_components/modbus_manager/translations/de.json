@@ -646,6 +646,28 @@
                     "description": "Die neue Firmware-Version des Geräts."
                 }
             }
+        },
+        "read_device_identification": {
+            "name": "Geräte-Identifikation lesen (FC43)",
+            "description": "Modbus FC43 Hersteller/Produkt/Version vom Slave lesen (Diagnose)",
+            "fields": {
+                "entry_id": {
+                    "name": "Config-Eintrag-ID",
+                    "description": "Modbus-Manager-Hub (kein Combined Device)"
+                },
+                "slave_id": {
+                    "name": "Slave-ID",
+                    "description": "Modbus-Slave-ID (Standard 1)"
+                },
+                "read_code": {
+                    "name": "Read-Code",
+                    "description": "basic, regular oder extended"
+                },
+                "notify": {
+                    "name": "Benachrichtigung",
+                    "description": "Ergebnis als persistente Benachrichtigung anzeigen"
+                }
+            }
         }
     },
     "issues": {
