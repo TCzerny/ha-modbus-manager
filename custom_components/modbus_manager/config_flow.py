@@ -635,9 +635,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Store connection parameters
             self._connection_params = user_input
 
-            # Proceed directly to dynamic config
-            _LOGGER.info("Connection parameters stored, proceeding to dynamic config")
-            return await self.async_step_dynamic_config()
+            # Proceed to model selection or dynamic config
+            _LOGGER.info(
+                "Connection parameters stored, proceeding to dynamic configuration"
+            )
+            return await self._route_after_connection_setup()
 
         # Get template defaults for prefilling
         template_data = self._templates.get(self._selected_template, {})
@@ -682,7 +684,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             # Merge RTU parameters with connection parameters
             self._connection_params.update(user_input)
-            return await self.async_step_dynamic_config()
+            return await self._route_after_connection_setup()
 
         # Show RTU parameters form
         return self.async_show_form(
@@ -743,8 +745,18 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Handle dynamic configuration step for templates with dynamic config."""
 
         if user_input is not None:
+            selected_model = getattr(self, "_selected_model", None) or self.context.get(
+                "selected_model"
+            )
+            dynamic_partial: dict[str, Any] = {}
+            if selected_model:
+                dynamic_partial["selected_model"] = selected_model
             # Combine connection params with dynamic config
-            combined_input = {**self._connection_params, **user_input}
+            combined_input = {
+                **self._connection_params,
+                **dynamic_partial,
+                **user_input,
+            }
 
             # Check if this is a PV inverter template - if so, ask about battery
             template_data = self._templates.get(self._selected_template, {})
@@ -809,15 +821,27 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         template_data = self._templates.get(self._selected_template, {})
 
         # Generate schema for dynamic config using the helper function
-        # Get current user_input for dynamic schema updates (e.g., when model changes)
-        schema_fields = self._get_dynamic_config_schema(template_data, user_input)
+        include_model_selection = not self._template_has_model_selection(template_data)
+        schema_fields = self._get_dynamic_config_schema(
+            template_data,
+            user_input,
+            include_model_selection=include_model_selection,
+        )
+
+        description_placeholders = {
+            "template_name": self._selected_template,
+            "model_note": "",
+        }
+        selected_model = getattr(self, "_selected_model", None) or self.context.get(
+            "selected_model"
+        )
+        if selected_model:
+            description_placeholders["model_note"] = f" ({selected_model})"
 
         return self.async_show_form(
             step_id="dynamic_config",
             data_schema=vol.Schema(schema_fields),
-            description_placeholders={
-                "template_name": self._selected_template,
-            },
+            description_placeholders=description_placeholders,
         )
 
     # Step 3b: User selected a template without dynamic config
@@ -911,74 +935,128 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
         return has_battery_config
 
+    @staticmethod
+    def _get_valid_models(template_data: dict) -> dict[str, Any] | None:
+        """Return valid_models mapping from template dynamic_config or root."""
+        dynamic_config = template_data.get("dynamic_config", {})
+        valid_models = dynamic_config.get("valid_models") or template_data.get(
+            "valid_models"
+        )
+        if valid_models and isinstance(valid_models, dict):
+            return valid_models
+        return None
+
+    def _template_has_model_selection(self, template_data: dict) -> bool:
+        """Return True when template exposes a valid_models model picker."""
+        return self._get_valid_models(template_data) is not None
+
+    @staticmethod
+    def _build_model_option_labels(valid_models: dict[str, Any]) -> dict[str, str]:
+        """Build display labels for valid_models dropdown options."""
+        model_options: dict[str, str] = {}
+        for model_name, config in valid_models.items():
+            field_parts = []
+            for field_name, field_value in config.items():
+                if field_name == "phases":
+                    field_parts.append(f"{field_value}Φ")
+                elif field_name == "mppt_count":
+                    field_parts.append(f"{field_value} MPPT")
+                elif field_name == "string_count":
+                    field_parts.append(f"{field_value} Strings")
+                elif field_name == "modules":
+                    field_parts.append(f"{field_value} Modules")
+                elif field_name == "type_code":
+                    continue
+                else:
+                    field_parts.append(f"{field_name}: {field_value}")
+            model_options[model_name] = f"{model_name} ({', '.join(field_parts)})"
+        return model_options
+
+    def _get_model_selection_schema(
+        self, template_data: dict, selected_model: str | None = None
+    ) -> dict[Any, Any]:
+        """Generate schema for the dedicated model-selection step."""
+        valid_models = self._get_valid_models(template_data)
+        if not valid_models:
+            return {}
+
+        model_options = self._build_model_option_labels(valid_models)
+        default_model = next(iter(model_options))
+        current_model = (
+            selected_model
+            if selected_model and selected_model in model_options
+            else default_model
+        )
+        return {
+            vol.Required("selected_model", default=current_model): vol.In(model_options)
+        }
+
+    async def _route_after_connection_setup(self) -> FlowResult:
+        """Proceed to model selection or dynamic params after connection step."""
+        template_data = self._templates.get(self._selected_template, {})
+        if self._template_has_model_selection(template_data):
+            return await self.async_step_model_selection()
+        return await self.async_step_dynamic_config()
+
+    async def async_step_model_selection(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Handle dedicated model selection step before other dynamic parameters."""
+        template_data = self._templates.get(self._selected_template, {})
+        if not self._template_has_model_selection(template_data):
+            return await self.async_step_dynamic_config()
+
+        if user_input is not None:
+            self._selected_model = user_input["selected_model"]
+            self.context["selected_model"] = user_input["selected_model"]
+            return await self.async_step_dynamic_config()
+
+        stored_model = getattr(self, "_selected_model", None) or self.context.get(
+            "selected_model"
+        )
+        schema_fields = self._get_model_selection_schema(template_data, stored_model)
+        return self.async_show_form(
+            step_id="model_selection",
+            data_schema=vol.Schema(schema_fields),
+            description_placeholders={"template_name": self._selected_template},
+        )
+
     def _get_dynamic_config_schema(
-        self, template_data: dict, user_input: dict = None
+        self,
+        template_data: dict,
+        user_input: dict = None,
+        *,
+        include_model_selection: bool = True,
     ) -> dict:
         """Generate dynamic configuration schema based on template."""
         dynamic_config = template_data.get("dynamic_config", {})
         schema_fields = {}
 
-        # Check if template has valid_models (model selection)
-        # Look for valid_models in dynamic_config first, then at template root level
-        valid_models = dynamic_config.get("valid_models") or template_data.get(
-            "valid_models"
-        )
+        valid_models = self._get_valid_models(template_data)
 
         # Get selected_model from user_input if available (for dynamic updates)
         selected_model = None
         if user_input:
             selected_model = user_input.get("selected_model")
 
-        # Get model config if selected_model is available
-        model_config = {}
-        if selected_model and valid_models and isinstance(valid_models, dict):
-            model_config = valid_models.get(selected_model, {})
-
-        if valid_models:
-            # Create model options with generic display names
-            model_options = {}
-            if valid_models and isinstance(valid_models, dict):
-                for model_name, config in valid_models.items():
-                    # Dynamically build display name from all fields in config
-                    field_parts = []
-                    for field_name, field_value in config.items():
-                        # Format field names for display
-                        if field_name == "phases":
-                            field_parts.append(f"{field_value}Φ")
-                        elif field_name == "mppt_count":
-                            field_parts.append(f"{field_value} MPPT")
-                        elif field_name == "string_count":
-                            field_parts.append(f"{field_value} Strings")
-                        elif field_name == "modules":
-                            field_parts.append(f"{field_value} Modules")
-                        elif field_name == "type_code":
-                            # Skip type_code from display
-                            continue
-                        else:
-                            # Generic formatting for other fields
-                            field_parts.append(f"{field_name}: {field_value}")
-
-                    display_name = f"{model_name} ({', '.join(field_parts)})"
-                    model_options[model_name] = display_name
-
-            default_model = next(iter(model_options)) if model_options else None
-            if default_model is not None:
-                # Use selected_model from user_input if available, otherwise use default
-                current_model = (
-                    selected_model
-                    if selected_model and selected_model in model_options
-                    else default_model
-                )
-                schema_fields[
-                    vol.Required("selected_model", default=current_model)
-                ] = vol.In(model_options)
+        if include_model_selection and valid_models:
+            model_options = self._build_model_option_labels(valid_models)
+            default_model = next(iter(model_options))
+            current_model = (
+                selected_model
+                if selected_model and selected_model in model_options
+                else default_model
+            )
+            schema_fields[
+                vol.Required("selected_model", default=current_model)
+            ] = vol.In(model_options)
 
         # Fields that should be hidden when template has valid_models (they're defined by the model)
         model_defined_fields = ["phases", "mppt_count", "string_count"]
 
         # If template has valid_models, these fields should NEVER be shown
         # because they are always defined by the selected model
-        should_hide_model_fields = bool(valid_models and isinstance(valid_models, dict))
+        should_hide_model_fields = bool(valid_models)
 
         # Process ALL configurable fields from dynamic_config (works for both valid_models and individual fields)
         # This ensures that fields like dual_channel_meter are always available
