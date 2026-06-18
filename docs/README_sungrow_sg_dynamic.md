@@ -129,7 +129,7 @@ models listed in `valid_models`).
 ### 🔄 Grid Power Calculations
 - **Grid Import Power** - Grid import (positive, uses `export_power_raw` or `meter_active_power_raw`)
 - **Grid Export Power** - Grid export (negative, uses `export_power_raw`)
-- **Meter Active Power** - Grid power with fallback to `power_meter_raw` if `meter_active_power_raw` unavailable
+- **Meter Active Power** - Grid power with fallback to `meter_power_raw` if `meter_active_power_raw` unavailable
 
 ### 📊 Efficiency Calculations
 - **Solar to Grid Efficiency** - PV to grid efficiency
@@ -175,8 +175,8 @@ This section contains all entities that will be created by this template, includ
 | 5037 | Work state | work_state |
 | 5080 | Running State | running_state |
 | 5082 | Meter active power raw | meter_active_power_raw |
-| 5216 | Export power raw | export_power_raw |
-| 5218 | Meter Power raw | meter_power_raw |
+| 5215 | Export power raw | export_power_raw |
+| 5217 | Meter Power raw | meter_power_raw |
 | 5090 | Load Power | load_power |
 | 5092 | Daily exported energy | daily_exported_energy |
 | 5094 | Total exported energy | total_exported_energy |
@@ -230,8 +230,9 @@ This section contains all entities that will be created by this template, includ
 - **Heart beat (5142)** is commented out: register not working as documented; documented as input register but returns error—may be holding register with inconsistent values; no current need for HA integration
 - **Present country (5113)** is commented out in template (reserved for future use)
 - MPPT and phase sensors are automatically filtered based on model configuration
-- `export_power_raw` (5216) and `meter_power_raw` (5218) are alternative meter registers that can be used as fallback if `meter_active_power_raw` is unavailable
-- Calculated sensors automatically use `meter_power_raw` as fallback when `meter_active_power_raw` is unavailable
+- **`export_power_raw`** (5215, reg 5216) and **`meter_power_raw`** (5217, reg 5218) are **int16** grid/meter power registers ([#63](https://github.com/TCzerny/ha-modbus-manager/issues/63)); used for import/export power and as **`meter_power_raw`** fallback in calculated sensors
+- **RS models**: Modbus **`load_power`** (5090) is unavailable; **`load_power`** is a calculated sensor from **`meter_power_raw`**. **`meter_active_power_raw`** and import/export energy registers (5082–5098) are enabled for RS where supported
+- Calculated **`meter_active_power`** uses **`meter_active_power_raw`**, falling back to **`meter_power_raw`** when the former returns `0x7FFFFFFF` (meter offline)
 
 ### Controls (Read/Write)
 
@@ -290,6 +291,7 @@ This section contains all entities that will be created by this template, includ
 | - | Total MPPT Power | total_mppt_power |
 | - | Import Power | import_power |
 | - | Export Power | export_power |
+| - | Grid power signed | grid_power_signed |
 | - | Total Load Power | total_load_power |
 | - | Solar to Grid Efficiency | solar_to_grid_efficiency |
 | - | Battery to Load Efficiency | battery_to_load_efficiency |
@@ -318,6 +320,8 @@ This section contains all entities that will be created by this template, includ
 | - | Negative load power | negative_load_power |
 
 **Note:** Address "-" indicates that the entity is calculated or derived from other entities and does not have a direct Modbus register address.
+
+For the Home Assistant **Energy Dashboard** grid consumption/return, use **`grid_power_signed`** (positive = import, negative = export), same convention as the SH template.
 
 ## 🚀 Example Configurations
 

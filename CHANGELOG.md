@@ -5,6 +5,28 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.16] - 2026-06-18
+
+### ✨ Added
+
+- **Sungrow SG — Energy Dashboard grid power**: **`grid_power_signed`** calculated sensor (inverted `export_power_raw` sign for HA Energy Dashboard convention).
+- **Sungrow iHomeManager — feed-in limit (kW)**: **`feed_in_power_limit_value`** control at register **8028** (reg 8029), max from `total_nominal_active_power`.
+- **Sungrow iHomeManager — PROD.CT Ch2 voltages**: Phase A/B/C voltage sensors at **8564–8566** when `channel_2_enabled`.
+- **Sungrow iHomeManager — EMS modes**: **AI Mode (0)** and **Time plan (2)** added to **EMS Mode Selection**.
+- **Sungrow iHomeManager — regional EV charger modes**: Setup option **`charger_region`** (`EU` / `AU`); separate **Charger Charging Modes** selects for EU (160–163) and AU (164–167) on register 8047.
+
+### 🐛 Fixed
+
+- **Sungrow SG — meter raw registers ([#63](https://github.com/TCzerny/ha-modbus-manager/issues/63))**: **`export_power_raw`** and **`meter_power_raw`** corrected to **int16** at **5215** / **5217** (reg 5216 / 5218); previous int32 @ 5216/5218 was incorrect.
+- **Sungrow SG — RS load & energy ([#63](https://github.com/TCzerny/ha-modbus-manager/issues/63))**: RS models use calculated **`load_power`** from **`meter_power_raw`** (reg 5091–5092 unavailable); **`meter_active_power_raw`**, **`total_imported_energy`**, and **`total_exported_energy`** enabled for RS; **`total_imported_energy`** scale set to **0.1** kWh.
+- **Sungrow SG — calculated sensors**: Fixed **`meter_power_raw`** entity references (was **`power_meter_raw`**) in Solar-to-Grid Efficiency, Power Balance, and Meter Active Power fallback.
+- **Sungrow iHomeManager — README / control naming**: Documentation aligned with template (`feed_in_power_limitation`, **`active_power_limitation`**, not legacy `charger_power_limitation_*` names).
+
+### 📖 Documentation
+
+- **[docs/README_sungrow_sg_dynamic.md](docs/README_sungrow_sg_dynamic.md)** — Updated raw register addresses, RS notes, **`grid_power_signed`**.
+- **[docs/README_iHomeManager.md](docs/README_iHomeManager.md)** — Full register table sync (v1.0.7 template), calculated sensors, feed-in vs active power limit notes.
+
 ## [1.0.15] - 2026-06-18
 
 ### 🐛 Fixed
