@@ -1,0 +1,33 @@
+name: Close inactive issues
+
+on:
+  schedule:
+    # Daily at 01:30 UTC (avoids top-of-hour Actions load spikes)
+    - cron: "30 1 * * *"
+  workflow_dispatch:
+
+jobs:
+  close-issues:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: read
+
+    steps:
+      - uses: actions/stale@v10
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          days-before-issue-stale: 30
+          days-before-issue-close: 7
+          stale-issue-label: "stale"
+          stale-issue-message: >
+            This issue has been marked as stale because there has been no
+            activity for 30 days. It will be closed in 7 days if there is
+            still no activity. Please comment or update the issue if it is
+            still relevant.
+          close-issue-message: >
+            This issue was closed because it has been inactive for 7 days
+            since being marked as stale. If this is still relevant, please
+            reopen or open a new issue with updated details.
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
