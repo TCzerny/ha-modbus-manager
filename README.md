@@ -192,6 +192,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Device Manufacturers** for Modbus documentation
 - **Community Contributors** for device testing
 - **[Sean Lano](https://github.com/seanlano)** ([@seanlano](https://github.com/seanlano)) for the **Victron EV Charging Station** template ([PR #45](https://github.com/TCzerny/ha-modbus-manager/pull/45))
+- **[Jam3s97](https://github.com/Jam3s97)** ([@Jam3s97](https://github.com/Jam3s97)) for **Sungrow SH*RS register mapping** fixes ([PR #68](https://github.com/TCzerny/ha-modbus-manager/pull/68))
 - **[mkaiser](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant)** for the outstanding Sungrow SHx Modbus implementation
 - **photovoltaikforum.com** and **forum.iobroker.net** communities for reverse-engineering efforts
 
