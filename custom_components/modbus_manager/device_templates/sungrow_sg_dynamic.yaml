@@ -643,7 +643,7 @@ sensors:
       17: "Run"
       18: "Total fault"
 
-  # Registers 5082-5104 valid for KTL series only (Country set to Europe Area)
+  # Registers 5082-5104 valid for KTL series only (added *RS models even not documented)
   - name: Meter active power raw
     unique_id: meter_active_power_raw
     address: 5082 # reg 5083-5084
@@ -655,7 +655,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 5
-    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT]"
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT, SG3.0RS, SG3.6RS, SG4.0RS, SG5.0RS, SG6.0RS, SG8.0RS, SG10RS]"
 
   - name: Meter Phase A power
     unique_id: meter_phase_a_power
@@ -698,6 +698,7 @@ sensors:
 
 
 
+  # Reg 5091-5092: KTL/RT only; RS series uses calculated load_power from meter_power_raw (reg 5218)
   - name: "Load Power"
     unique_id: "load_power"
     mm_group: "PV_load_power"
@@ -737,7 +738,7 @@ sensors:
     state_class: "total"
     scale: 0.1
     scan_interval: 300
-    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT]"
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT, SG3.0RS, SG3.6RS, SG4.0RS, SG5.0RS, SG6.0RS, SG8.0RS, SG10RS]"
 
   - name: "Daily Imported Energy"
     unique_id: "daily_imported_energy"
@@ -764,10 +765,10 @@ sensors:
     unit_of_measurement: "kWh"
     device_class: energy
     state_class: total
-    scale: 1
+    scale: 0.1
     scan_interval: 600
     mm_group: "PV_energy_import"
-    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT]"
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT, SG3.0RS, SG3.6RS, SG4.0RS, SG5.0RS, SG6.0RS, SG8.0RS, SG10RS]"
 
   - name: "Daily Direct Energy Consumption"
     unique_id: "daily_direct_energy_consumption"
@@ -1198,14 +1199,13 @@ sensors:
       434: "PID overvoltage/overcurrent protection"
 
 
-  # Following 2 registers are not in the documentation, but other projects are using them
+  # Following registers are not in the documentation, but other projects are using them.
+  # int16 at reg 5216/5218 (Issue #63); previous int32 @ 5217-5218 / 5219-5220 was incorrect.
   - name: Export power raw
     unique_id: export_power_raw
-    address: 5216 # reg 5217-5218
+    address: 5215 # reg 5216
     input_type: input
-    data_type: int32
-    swap: word
-    precision: 0
+    data_type: int16
     unit_of_measurement: "W"
     device_class: "power"
     state_class: measurement
@@ -1214,11 +1214,9 @@ sensors:
 
   - name: Meter Power raw
     unique_id: meter_power_raw
-    address: 5218 # reg 5219-5220
+    address: 5217 # reg 5218
     input_type: input
-    data_type: int32
-    swap: word
-    precision: 0
+    data_type: int16
     unit_of_measurement: "W"
     device_class: "power"
     state_class: measurement
@@ -1909,6 +1907,18 @@ calculated:
     state_class: "measurement"
     mm_group: "PV_total_power"
 
+  # RS series: documented load power (reg 5091-5092) is unavailable; mirror meter_power_raw (reg 5218)
+  - name: "Load Power"
+    unique_id: "load_power"
+    type: "sensor"
+    condition: "selected_model in [SG3.0RS, SG3.6RS, SG4.0RS, SG5.0RS, SG6.0RS, SG8.0RS, SG10RS]"
+    availability: "{{ not is_state('[[mm:sensor:{PREFIX}_meter_power_raw]]', 'unavailable') }}"
+    state: "{{ states('[[mm:sensor:{PREFIX}_meter_power_raw]]') | float(0) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    mm_group: "PV_load_power"
+
   - name: "Import Power"
     unique_id: "import_power"
     type: "sensor"
@@ -1942,6 +1952,29 @@ calculated:
     state_class: "measurement"
     mm_group: "PV_grid_power"
 
+  # Grid Power Sensors for HA Energy Dashboard
+  # Note: export_power_raw format:
+  # - Positive when exporting to grid (generation)
+  # - Negative when importing from grid (consumption)
+  # For HA Energy Dashboard, we need:
+  # - Negative when exporting (generation)
+  # - Positive when importing (consumption)
+  # So we need to invert the sign of export_power_raw
+
+  - name: "Grid power signed"
+    unique_id: "grid_power_signed"
+    type: "sensor"
+    availability: "{{ states('[[mm:sensor:{PREFIX}_export_power_raw]]') not in ['unknown','unavailable'] }}"
+    state: "{{ states('[[mm:sensor:{PREFIX}_export_power_raw]]')|int * -1 }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    mm_group: "grid_power_energy_dashboard"
+    # Note: export_power_raw is positive when exporting, so we multiply by -1
+    # Result: Negative when exporting (generation), Positive when importing (consumption)
+    # IMPORTANT: Use this sensor for HA Energy Dashboard grid power
+    # HA Energy Dashboard: Positive = consumption (import), Negative = generation (export)
+
   - name: "Total Load Power"
     unique_id: "total_load_power"
     type: "sensor"
@@ -1961,14 +1994,14 @@ calculated:
       {{
       not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
       and (not is_state('[[mm:sensor:{PREFIX}_meter_active_power_raw]]', 'unavailable')
-           or not is_state('[[mm:sensor:{PREFIX}_power_meter_raw]]', 'unavailable'))
+           or not is_state('[[mm:sensor:{PREFIX}_meter_power_raw]]', 'unavailable'))
       }}
     state: >-
       {% set pv = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
       {% if not is_state('[[mm:sensor:{PREFIX}_meter_active_power_raw]]', 'unavailable') %}
         {% set grid = states('[[mm:sensor:{PREFIX}_meter_active_power_raw]]') | float(0) %}
-      {% elif not is_state('[[mm:sensor:{PREFIX}_power_meter_raw]]', 'unavailable') %}
-        {% set grid = states('[[mm:sensor:{PREFIX}_power_meter_raw]]') | float(0) %}
+      {% elif not is_state('[[mm:sensor:{PREFIX}_meter_power_raw]]', 'unavailable') %}
+        {% set grid = states('[[mm:sensor:{PREFIX}_meter_power_raw]]') | float(0) %}
       {% else %}
         {% set grid = 0 %}
       {% endif %}
@@ -2000,15 +2033,15 @@ calculated:
       {{
       not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
       and (not is_state('[[mm:sensor:{PREFIX}_meter_active_power_raw]]', 'unavailable')
-           or not is_state('[[mm:sensor:{PREFIX}_power_meter_raw]]', 'unavailable'))
+           or not is_state('[[mm:sensor:{PREFIX}_meter_power_raw]]', 'unavailable'))
       and not is_state('[[mm:sensor:{PREFIX}_load_power]]', 'unavailable')
       }}
     state: >-
       {% set dc_power = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
       {% if not is_state('[[mm:sensor:{PREFIX}_meter_active_power_raw]]', 'unavailable') %}
         {% set grid_power = states('[[mm:sensor:{PREFIX}_meter_active_power_raw]]') | float(0) %}
-      {% elif not is_state('[[mm:sensor:{PREFIX}_power_meter_raw]]', 'unavailable') %}
-        {% set grid_power = states('[[mm:sensor:{PREFIX}_power_meter_raw]]') | float(0) %}
+      {% elif not is_state('[[mm:sensor:{PREFIX}_meter_power_raw]]', 'unavailable') %}
+        {% set grid_power = states('[[mm:sensor:{PREFIX}_meter_power_raw]]') | float(0) %}
       {% else %}
         {% set grid_power = 0 %}
       {% endif %}
@@ -2075,16 +2108,16 @@ calculated:
       {{
       (not is_state('[[mm:sensor:{PREFIX}_meter_active_power_raw]]', 'unavailable')
        and states('[[mm:sensor:{PREFIX}_meter_active_power_raw]]')|int(0) != 0x7FFFFFFF)
-      or (not is_state('[[mm:sensor:{PREFIX}_power_meter_raw]]', 'unavailable')
-          and states('[[mm:sensor:{PREFIX}_power_meter_raw]]')|int(0) != 0x7FFFFFFF)
+      or (not is_state('[[mm:sensor:{PREFIX}_meter_power_raw]]', 'unavailable')
+          and states('[[mm:sensor:{PREFIX}_meter_power_raw]]')|int(0) != 0x7FFFFFFF)
       }}
     state: >-
       {% if not is_state('[[mm:sensor:{PREFIX}_meter_active_power_raw]]', 'unavailable')
             and states('[[mm:sensor:{PREFIX}_meter_active_power_raw]]')|int(0) != 0x7FFFFFFF %}
         {{ states('[[mm:sensor:{PREFIX}_meter_active_power_raw]]') }}
-      {% elif not is_state('[[mm:sensor:{PREFIX}_power_meter_raw]]', 'unavailable')
-            and states('[[mm:sensor:{PREFIX}_power_meter_raw]]')|int(0) != 0x7FFFFFFF %}
-        {{ states('[[mm:sensor:{PREFIX}_power_meter_raw]]') }}
+      {% elif not is_state('[[mm:sensor:{PREFIX}_meter_power_raw]]', 'unavailable')
+            and states('[[mm:sensor:{PREFIX}_meter_power_raw]]')|int(0) != 0x7FFFFFFF %}
+        {{ states('[[mm:sensor:{PREFIX}_meter_power_raw]]') }}
       {% else %}
         0
       {% endif %}
