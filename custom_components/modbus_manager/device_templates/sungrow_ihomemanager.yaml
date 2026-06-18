@@ -6,7 +6,7 @@ display_name: "Sungrow iHomeManager"
 description: "Template for Sungrow iHomeManager EMS device (Modbus TCP). Includes iHomeManager meter, EMS, and charger registers."
 manufacturer: "Sungrow"
 model: "iHomeManager"
-version: 1.0.3
+version: 1.0.7
 default_prefix: "IHM"
 default_slave_id: 247
 type: "energy_manager"
@@ -31,6 +31,12 @@ dynamic_config:
     description: "Enable charger-related registers"
     options: [true, false]
     default: false
+  charger_region:
+    description: "EV charger regional mode map (EU/DE vs Australia)"
+    options:
+      EU: "Europe (modes 160-163)"
+      AU: "Australia (modes 164-167)"
+    default: "EU"
 
 sensors:
   # Device Information
@@ -441,6 +447,48 @@ sensors:
 
   # Grid Meter Channel 2 - Voltage and Frequency
   # Note 2：This data is obtained through the PROD.CT sampling port of iHM;
+  - name: Phase A Voltage Ch2
+    unique_id: phase_a_voltage_ch2
+    address: 8564 # reg 8565
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 60
+    mm_group: "PV_meter_ihm_ch2"
+    condition: "channel_2_enabled == true"
+
+  - name: Phase B Voltage Ch2
+    unique_id: phase_b_voltage_ch2
+    address: 8565 # reg 8566
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 60
+    mm_group: "PV_meter_ihm_ch2"
+    condition: "channel_2_enabled == true"
+
+  - name: Phase C Voltage Ch2
+    unique_id: phase_c_voltage_ch2
+    address: 8566 # reg 8567
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 60
+    mm_group: "PV_meter_ihm_ch2"
+    condition: "channel_2_enabled == true"
+
   - name: Grid Frequency Ch2
     unique_id: grid_frequency_ch2
     address: 8567 # reg 8568
@@ -509,7 +557,9 @@ controls:
     data_type: "uint16"
     scan_interval: 30
     options:
+      0: "AI Mode"
       1: "Self-consumption"
+      2: "Time plan"
       4: "VPP"
       5: "Compulsory mode"
     mm_group: "PV_control_ihm"
@@ -558,6 +608,25 @@ controls:
     options:
       0: "Off"
       1: "On"
+    mm_group: "PV_control_ihm"
+
+  - type: "number"
+    name: "Feed-in Power Limit Value"
+    unique_id: "feed_in_power_limit_value"
+    address: 8028 # reg 8029
+    input_type: "holding"
+    data_type: "uint32"
+    swap: word
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: kW
+    device_class: "power"
+    min_value: 0
+    max_value: 50  # fallback when total_nominal_active_power unavailable
+    max_value_from_register: "{PREFIX}_total_nominal_active_power"
+    step: 0.1
+    mode: "box"
+    scan_interval: 30
     mm_group: "PV_control_ihm"
 
   - type: "number"
@@ -612,10 +681,27 @@ controls:
     data_type: "uint16"
     scan_interval: 30
     options:
-      0xA0: "Fast charging mode"
-      0xA1: "Eco charging mode"
+      160: "Fast charging"
+      161: "ECO mode charging"
+      162: "Scheduled charging"
+      163: "Customized charging"
     mm_group: "PV_control_ihm"
-    condition: "charger_enabled == true"
+    condition: "charger_enabled == true and charger_region == 'EU'"
+
+  - type: "select"
+    name: "Charger Charging Modes"
+    unique_id: "charger_charging_modes_au"
+    address: 8047 # reg 8048
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      164: "Fast charging"
+      165: "Eco & fast charging"
+      166: "Eco & economic charging"
+      167: "Time plan charging"
+    mm_group: "PV_control_ihm"
+    condition: "charger_enabled == true and charger_region == 'AU'"
 
   - type: "switch"
     name: "Charger Enable"
