@@ -98,6 +98,49 @@ def _vol_in_from_dynamic_options(
     return default, vol.In(options)
 
 
+# Hub-level keys copied onto per-device records when missing (legacy setups).
+_ENTRY_LEVEL_DEVICE_FIELD_FALLBACKS = (
+    "connection_type",
+    "meter_type",
+    "battery_config",
+    "firmware_version",
+    "selected_model",
+    "phases",
+    "mppt_count",
+    "string_count",
+    "modules",
+    "entity_id_strategy",
+    "wallbox_connected",
+)
+
+
+def _apply_entry_data_fallbacks_to_device(
+    device: dict[str, Any], entry_data: dict[str, Any]
+) -> dict[str, Any]:
+    """Merge hub-level dynamic fields into a device record when missing per-device."""
+    merged = dict(device)
+    for key in _ENTRY_LEVEL_DEVICE_FIELD_FALLBACKS:
+        if key not in merged and key in entry_data:
+            merged[key] = entry_data[key]
+    return merged
+
+
+def _backfill_devices_from_entry_data(
+    devices: list[dict[str, Any]],
+    entry_data: dict[str, Any],
+    normalize_fn,
+) -> list[dict[str, Any]]:
+    """Backfill missing per-device dynamic fields from legacy hub-level entry.data."""
+    backfilled: list[dict[str, Any]] = []
+    for device in devices:
+        if not isinstance(device, dict):
+            continue
+        backfilled.append(
+            normalize_fn(_apply_entry_data_fallbacks_to_device(device, entry_data))
+        )
+    return backfilled
+
+
 def _is_prefix_unique_across_hubs(
     hass: HomeAssistant,
     prefix: str,
@@ -148,7 +191,7 @@ def _is_prefix_unique_across_hubs(
 class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Modbus Manager."""
 
-    VERSION = 4
+    VERSION = 5
 
     def __init__(self):
         """Initialize the config flow."""
@@ -248,7 +291,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                             idx,
                             config_entry.entry_id,
                         )
-                new_data["devices"] = normalized_devices
+                new_data["devices"] = _backfill_devices_from_entry_data(
+                    normalized_devices,
+                    new_data,
+                    self._normalize_device_record,
+                )
             else:
                 # Legacy path: build devices list from top-level keys
                 prefix = new_data.get("prefix", "unknown")
@@ -2616,6 +2663,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                             "battery_slave_id",
                         ]:
                             device[key] = value
+                    device["connection_type"] = connection_type
 
                 devices.append(self._normalize_device_record(device))
                 _LOGGER.debug("Created new devices array with single device")
@@ -3124,23 +3172,28 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
 
     @classmethod
     def _get_devices(cls, entry: config_entries.ConfigEntry) -> list[dict[str, Any]]:
-        devices = entry.data.get("devices", [])
+        entry_data = entry.data
+        devices = entry_data.get("devices", [])
         if isinstance(devices, list) and devices:
             return [
-                cls._normalize_device_record(device)
+                cls._normalize_device_record(
+                    _apply_entry_data_fallbacks_to_device(device, entry_data)
+                )
                 for device in devices
                 if isinstance(device, dict)
             ]
-        template = entry.data.get("template")
+        template = entry_data.get("template")
         if not template:
             return []
-        legacy_device = {
-            "type": "inverter",
-            "template": template,
-            "prefix": entry.data.get("prefix", "unknown"),
-            "slave_id": entry.data.get("slave_id", 1),
-            "selected_model": entry.data.get("selected_model"),
-        }
+        legacy_device = _apply_entry_data_fallbacks_to_device(
+            {
+                "type": "inverter",
+                "template": template,
+                "prefix": entry_data.get("prefix", "unknown"),
+                "slave_id": entry_data.get("slave_id", 1),
+            },
+            entry_data,
+        )
         return [cls._normalize_device_record(legacy_device)]
 
     @staticmethod
