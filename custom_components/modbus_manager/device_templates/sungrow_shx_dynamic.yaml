@@ -2930,6 +2930,8 @@ controls:
     mode: "box"  # Explicitly set to box for consistent UI display
     scan_interval: 30
     mm_group: "PV_control"
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
+    # Confirmed non-functional at this address on SH10RS/SH6.0RS
 
   - type: "select"
     name: "Active Power Limitation"
@@ -2942,6 +2944,22 @@ controls:
       0x55: "Disabled"
       0xAA: "Enabled"
     mm_group: "PV_control"
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
+    # Confirmed non-functional at this address on SH10RS/SH6.0RS
+
+  - type: "select"
+    name: "Active Power Limitation"
+    unique_id: "active_power_limitation"
+    address: 31203 # reg 31204
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0x55: "Disabled"
+      0xAA: "Enabled"
+    mm_group: "PV_control"
+    condition: "selected_model in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
+    # Confirmed functional at this address on SH10RS
 
   - type: "number"
     name: "Active Power Limit Ratio"
@@ -2957,6 +2975,25 @@ controls:
     step: 1
     scan_interval: 30
     mm_group: "PV_control"
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
+    # Confirmed non-functional at this address on SH10RS/SH6.0RS
+
+  - type: "number"
+    name: "Active Power Limit Ratio"
+    unique_id: "active_power_limit_ratio"
+    address: 31204 # reg 31205
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 1
+    unit_of_measurement: "%"
+    scale: 0.1
+    min_value: 0
+    max_value: 1000
+    step: 1
+    scan_interval: 30
+    mm_group: "PV_control"
+    condition: "selected_model in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
+    # Confirmed functional at this address on SH10RS/SH6.0RS
 
   - type: "number"
     name: "Reserved SoC for Backup"
@@ -3055,9 +3092,10 @@ controls:
     scale: 10
     scan_interval: 10
     mm_group: "PV_battery_control"
-    condition: "battery_enabled == true"
+    condition: "battery_enabled == true and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
     # Placeholder will be replaced with 50% of model-specific max_charge_power
     # For SH10RT: 10600 * 0.5 = 5300 W
+    # Confirmed non-functional on SH6.0RS and SH10RS
 
   - type: "number"
     name: "Battery Discharging Start Power"
@@ -3075,9 +3113,10 @@ controls:
     scale: 10
     scan_interval: 10
     mm_group: "PV_battery_control"
-    condition: "battery_enabled == true"
+    condition: "battery_enabled == true and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
     # Placeholder will be replaced with 50% of model-specific max_discharge_power
     # For SH10RT: 10600 * 0.5 = 5300 W
+    # Confirmed non-functional on SH6.0RS and SH10RS
 
   - type: "select"
     name: "Forced Startup Under Low SoC Standby"
