@@ -9,12 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🐛 Fixed
 
-- **Sungrow SH*RS — active power limits**: **Active Power Limitation** and **Active Power Limit Ratio** use model-specific holding registers on RS inverters (**31203** / **31204**) instead of **13088** / **13089** (tested SH10RS, SH6.0RS). Controls are filtered via `selected_model` conditions — entities are hidden, not removed from the template ([#68](https://github.com/TCzerny/ha-modbus-manager/pull/68)).
+- **Sungrow SH*RS — active power limits**: **Active Power Limitation** and **Active Power Limit Ratio** use model-specific holding registers on RS inverters (**31203** / **31204**) instead of **13088** / **13089** (tested SH10RS, SH6.0RS). Controls are filtered via `selected_model` conditions ([#68](https://github.com/TCzerny/ha-modbus-manager/pull/68)).
 - **Sungrow SH*RS — unsupported controls hidden**: **Export Power Limit Ratio**, **Battery Charging Start Power**, and **Battery Discharging Start Power** are excluded on SH*RS models where the registers are non-functional at the RT/T addresses ([#68](https://github.com/TCzerny/ha-modbus-manager/pull/68)).
 
 ### 📖 Documentation
 
-- **README**: Added [@Jam3s97](https://github.com/Jam3s97) to Acknowledgments for the SH*RS register mapping contribution.
+- Thanks to [@Jam3s97](https://github.com/Jam3s97) for contributing **Sungrow SH*RS** register mapping fixes ([#68](https://github.com/TCzerny/ha-modbus-manager/pull/68)).
 
 ## [1.0.14] - 2026-06-18
 
