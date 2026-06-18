@@ -5,6 +5,20 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.14] - 2026-06-18
+
+### ✨ Added
+
+- **Config flow — dedicated model selection step**: Initial integration setup for templates with `valid_models` (e.g. Sungrow SH Series) now uses a separate **Select device model** step before connection/options, so long model lists are no longer scrolled off-screen ([#67](https://github.com/TCzerny/ha-modbus-manager/issues/67)).
+
+### 🐛 Fixed
+
+- **Subentry reconfigure — connection type**: `connection_type` (LAN / WiNet-S) is persisted on per-device records during setup; migration **v5** backfills legacy hub-level values so **Reconfigure Device** shows the correct connection type ([#67](https://github.com/TCzerny/ha-modbus-manager/issues/67)).
+
+### 🔧 Changed
+
+- **Config flow `VERSION` 5**: Backfills missing per-device dynamic fields (`connection_type`, `meter_type`, etc.) from legacy top-level `entry.data` on upgrade.
+
 ## [1.0.13] - 2026-06-03
 
 ### ✨ Added
