@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 📖 Documentation
 
-- **[docs/README_sungrow_shx_dynamic.md](docs/README_sungrow_shx_dynamic.md)** — WiNet-S vs LAN battery and connection filtering notes.
+- **[docs/README_sungrow_shx_dynamic.md](docs/README_sungrow_shx_dynamic.md)** — WiNet-S setup, hub communication tuning, control timing, and connection filtering notes.
 
 ## [1.0.16] - 2026-06-18
 

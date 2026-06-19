@@ -73,6 +73,58 @@ The template supports **all 36** following Sungrow SHx models:
 - Automatic sensor parameter adjustment based on firmware version
 - Support for different data formats between firmware versions
 
+### 📶 WiNet-S connection notes
+
+Use **Connection: WINET** when Modbus TCP goes through the **WiNet-S** dongle (not a LAN/Modbus TCP gateway).
+
+#### Initial setup (battery present)
+- Select **WINET** as connection type during device options.
+- If a battery is configured, initial setup offers **`standard_battery`** automatically (inverter slave **1** registers and controls).
+- The **SBR / slave 200** wizard is **skipped** on WiNet-S — SBR is **LAN-only**.
+- On **Reconfigure Device**, **`battery_config`** is limited to **`none`** or **`standard_battery`** on WiNet-S (`sbr_battery` is clamped).
+
+#### Expected entity count
+- A hybrid such as **SH10RT** with **WiNet-S** and **`standard_battery`** typically creates about **165–180** entities (template sensors/controls + calculated/binary sensors).
+- LAN-only statistics are excluded when **`connection_type`** is **WINET** — a high count is **normal**, not a misconfiguration.
+
+#### `connection_type` persistence
+- **`connection_type`** is stored on the **device record** and used for entity filtering.
+- **Reconfigure Device** falls back to the hub-level value when needed, so **WiNet-S** is not shown as **LAN** after setup.
+
+#### Known WiNet-S log noise
+- Sporadic Modbus **“extra data”** or similar transport warnings can appear on WiNet-S paths.
+- These are a **known limitation of the WiNet TCP bridge**, not something the integration can fully suppress.
+- If reads/writes still work, the messages can usually be ignored.
+
+### 🔧 Hub communication (LAN and WiNet-S)
+
+These settings apply to the **Modbus hub** (initial connection step, **Hub Options**, or hub **Reconfigure**). They affect all devices on that hub, including SHx.
+
+| Setting | Default | Range | Purpose |
+|---------|---------|-------|---------|
+| **Wait between Requests** (`message_wait_milliseconds`) | 100 ms | 10–1000 ms | Pause between Modbus read/write requests on the bus |
+| **Delay after Control Writes** (`post_write_settle_milliseconds`) | 500 ms | 0–5000 ms (`0` = off) | Pause after a control write before the next Modbus IO |
+
+**WiNet-S tuning tips:**
+- Start with defaults; increase **`post_write_settle_milliseconds`** to **1000** or higher if controls briefly flicker **`unavailable`** or reads race with writes.
+- Existing hubs **without** `post_write_settle_milliseconds` keep automatic settle (**500 ms** LAN / **1000 ms** WiNet-S) until you set the option explicitly.
+- Very low **`message_wait_milliseconds`** on WiNet-S can increase errors when many entities poll — **100 ms** is a sensible starting point.
+
+### ⏱️ Control response timing (writes)
+
+After you change a **select**, **number**, **switch**, or similar control:
+
+1. The integration **writes** the holding register (serialized with other Modbus IO).
+2. A **post-write settle** delay runs (hub setting or automatic LAN/WiNet default).
+3. The **written register is read back immediately** (does not wait for its normal `scan_interval`).
+4. Entities listening on that register update via coordinator listeners.
+
+**Typical UI update:** about **1–2 seconds** after a successful write.
+
+**If it takes longer:** the inverter may not yet reflect the new value in the register (device-side delay). The state history shows when Home Assistant **read back** the new value, not necessarily the exact moment you clicked.
+
+Examples: **EMS Mode Selection** (register 13049), export limits, battery forced charge/discharge controls.
+
 ## 📡 Available Sensors
 
 ### 🔧 Basic Inverter Data
@@ -614,6 +666,18 @@ battery_enabled: false
 firmware_version: "SAPPHIRE-H_03011.95.01"
 string_count: 6
 connection_type: "WINET"
+```
+
+### 🔋 Hybrid Inverter over WiNet-S (SH10RT + standard battery)
+```yaml
+phases: 3
+mppt_count: 2
+battery_config: standard_battery
+battery_enabled: true
+firmware_version: "SAPPHIRE-H_03011.95.01"
+string_count: 8
+connection_type: "WINET"
+# Hub (connection step / Hub Options): post_write_settle_milliseconds: 1000  # optional WiNet tuning
 ```
 
 ## 🔗 Based on
