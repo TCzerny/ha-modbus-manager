@@ -210,8 +210,22 @@ class ModbusCoordinator(DataUpdateCoordinator):
         self._is_unloading = True
         self.invalidate_cache()
 
+    def _resolve_post_write_settle_ms(self) -> int | None:
+        """Return configured post-write settle in ms, or None for legacy auto mode."""
+        entry_data = self.entry.data
+        if "post_write_settle_milliseconds" in entry_data:
+            return int(entry_data["post_write_settle_milliseconds"])
+        hub = entry_data.get("hub")
+        if isinstance(hub, dict) and "post_write_settle_milliseconds" in hub:
+            return int(hub["post_write_settle_milliseconds"])
+        return None
+
     def _post_write_settle_seconds(self) -> float:
-        """Return post-write settle delay (longer on WiNet-S)."""
+        """Return post-write settle delay in seconds."""
+        configured_ms = self._resolve_post_write_settle_ms()
+        if configured_ms is not None:
+            return max(0, configured_ms) / 1000.0
+
         connection_type = self.entry.data.get("connection_type", "LAN")
         devices = self.entry.data.get("devices", [])
         if isinstance(devices, list):
@@ -243,11 +257,78 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 call_type,
             )
             if result:
-                await asyncio.sleep(settle_s)
+                if settle_s > 0:
+                    await asyncio.sleep(settle_s)
                 success = True
+                if refresh:
+                    await self._async_read_written_register(slave_id, address)
         if success and refresh:
-            await self.async_request_refresh()
+            self.async_update_listeners()
         return success
+
+    async def _ensure_register_interval_cache(self) -> None:
+        """Build scan_interval register cache if not yet initialized."""
+        if self._cached_registers_by_interval:
+            return
+
+        entities_dict = await self._collect_all_registers()
+        sensors = entities_dict.get("sensors", [])
+        controls = entities_dict.get("controls", [])
+        binary_sensors = entities_dict.get("binary_sensors", [])
+        binary_sensors_with_address = [
+            b for b in binary_sensors if is_valid_modbus_address(b.get("address"))
+        ]
+        all_registers = sensors + controls + binary_sensors_with_address
+        if not all_registers:
+            return
+
+        self._cached_registers_by_interval = self._group_registers_by_interval(
+            all_registers
+        )
+        self._update_coordinator_interval(5)
+
+    def _find_registers_for_io(
+        self, slave_id: int, address: int
+    ) -> List[Dict[str, Any]]:
+        """Return cached register configs matching a Modbus slave/address."""
+        matches: List[Dict[str, Any]] = []
+        for registers in self._cached_registers_by_interval.values():
+            for register in registers:
+                if register.get("address") != address:
+                    continue
+                if int(register.get("slave_id", 1)) != int(slave_id):
+                    continue
+                matches.append(register)
+        return matches
+
+    async def _async_read_written_register(self, slave_id: int, address: int) -> None:
+        """Read register(s) immediately after a control write (bypass scan_interval)."""
+        if self._is_unloading or not getattr(self.hub, "_is_connected", False):
+            return
+
+        await self._ensure_register_interval_cache()
+        registers = self._find_registers_for_io(slave_id, address)
+        if not registers:
+            _LOGGER.debug(
+                "No register entities cached for slave_id=%s address=%s after write",
+                slave_id,
+                address,
+            )
+            return
+
+        optimized_ranges = self.register_optimizer.optimize_registers(registers)
+        for range_obj in optimized_ranges:
+            try:
+                data = await self._read_register_range(range_obj)
+                if data:
+                    self._distribute_data(data, range_obj)
+            except Exception as e:
+                _LOGGER.debug(
+                    "Post-write read failed for slave_id=%s address=%s: %s",
+                    slave_id,
+                    address,
+                    str(e),
+                )
 
     async def _async_update_data(self) -> Dict[str, Any]:
         """Fetch register data with respect to individual scan intervals."""
@@ -289,29 +370,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
             )
 
             # 1. Group registers by scan_interval if not cached
-            if not self._cached_registers_by_interval:
-                entities_dict = await self._collect_all_registers()
-                # Include all entity types with addresses for Modbus reading
-                sensors = entities_dict.get("sensors", [])
-                controls = entities_dict.get("controls", [])
-                binary_sensors = entities_dict.get("binary_sensors", [])
-                # Register-based binary sensors (have address) must be read from Modbus
-                binary_sensors_with_address = [
-                    b
-                    for b in binary_sensors
-                    if is_valid_modbus_address(b.get("address"))
-                ]
-                all_registers = sensors + controls + binary_sensors_with_address
-                if all_registers:
-                    # Group registers by their scan_interval
-                    self._cached_registers_by_interval = (
-                        self._group_registers_by_interval(all_registers)
-                    )
-
-                    # Update coordinator to use the minimum interval
-                    # Set coordinator to update every 1 second to catch all intervals
-                    coordinator_interval = 5
-                    self._update_coordinator_interval(coordinator_interval)
+            await self._ensure_register_interval_cache()
 
             # 2. Determine which registers need to be read based on their scan_interval
             registers_to_read = self._get_registers_due_for_update()

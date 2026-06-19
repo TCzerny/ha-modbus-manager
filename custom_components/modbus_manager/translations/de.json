@@ -33,11 +33,15 @@
                     "timeout": "Timeout in Sekunden",
                     "delay": "Verzögerung nach Verbindung (Sekunden)",
                     "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
+                    "post_write_settle_milliseconds": "Pause nach Schreibbefehlen (Millisekunden, 0 = aus)",
                     "use_coordinator": "Coordinator-Modus verwenden (experimentell)",
                     "baudrate": "Baudrate",
                     "data_bits": "Datenbits",
                     "stop_bits": "Stoppbits",
                     "parity": "Parität"
+                },
+                "data_description": {
+                    "post_write_settle_milliseconds": "Pause nach Schreibbefehl, bevor wieder gelesen wird. 0 = aus. Bei WiNet-S ggf. 1000 oder höher."
                 }
             },
             "dynamic_config": {
@@ -108,6 +112,7 @@
                     "timeout": "Timeout in Sekunden",
                     "delay": "Verzögerung nach Verbindung (Sekunden)",
                     "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
+                    "post_write_settle_milliseconds": "Pause nach Schreibbefehlen (Millisekunden, 0 = aus)",
                     "baudrate": "Baudrate (nur RTU)",
                     "data_bits": "Datenbits (nur RTU)",
                     "stop_bits": "Stoppbits (nur RTU)",
@@ -191,7 +196,8 @@
                     "battery_slave_id": "Batterie Slave ID",
                     "timeout": "Timeout in Sekunden",
                     "delay": "Verzögerung nach Verbindung (Sekunden)",
-                    "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)"
+                    "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
+                    "post_write_settle_milliseconds": "Pause nach Schreibbefehlen (Millisekunden, 0 = aus)"
                 }
             }
         },
@@ -234,7 +240,8 @@
                     "port": "Modbus-TCP-Port",
                     "timeout": "Timeout in Sekunden",
                     "delay": "Verzögerung nach Verbindung (Sekunden)",
-                    "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)"
+                    "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
+                    "post_write_settle_milliseconds": "Pause nach Schreibbefehlen (Millisekunden, 0 = aus)"
                 }
             },
             "update_template": {

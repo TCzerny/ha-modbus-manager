@@ -21,13 +21,16 @@ from .const import (
     DEFAULT_DELAY,
     DEFAULT_MESSAGE_WAIT_MS,
     DEFAULT_PORT,
+    DEFAULT_POST_WRITE_SETTLE_MS,
     DEFAULT_SLAVE,
     DEFAULT_TIMEOUT,
     DOMAIN,
     ENTRY_TYPE_COMBINED_DEVICE,
     ENTRY_TYPE_HUB,
+    MAX_POST_WRITE_SETTLE_MS,
     MIN_DELAY,
     MIN_MESSAGE_WAIT_MS,
+    MIN_POST_WRITE_SETTLE_MS,
     MIN_TIMEOUT,
     EntityIdStrategy,
 )
@@ -99,6 +102,26 @@ def _vol_in_from_dynamic_options(
 
 
 _WINET_BATTERY_CONFIGS = frozenset({"none", "standard_battery", "other"})
+
+
+def _entry_post_write_settle_ms(entry_data: dict[str, Any]) -> int:
+    """Read configured post-write settle delay from hub entry data."""
+    if "post_write_settle_milliseconds" in entry_data:
+        return int(entry_data["post_write_settle_milliseconds"])
+    hub = entry_data.get("hub")
+    if isinstance(hub, dict) and "post_write_settle_milliseconds" in hub:
+        return int(hub["post_write_settle_milliseconds"])
+    return DEFAULT_POST_WRITE_SETTLE_MS
+
+
+def _apply_post_write_settle_to_entry_data(
+    entry_data: dict[str, Any], milliseconds: int
+) -> None:
+    """Persist post-write settle on hub entry (top-level + hub dict)."""
+    entry_data["post_write_settle_milliseconds"] = milliseconds
+    hub = entry_data.get("hub")
+    if isinstance(hub, dict):
+        hub["post_write_settle_milliseconds"] = milliseconds
 
 
 def _clamp_battery_config_for_connection(
@@ -610,6 +633,15 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
                 ),
             )
+            _apply_post_write_settle_to_entry_data(
+                new_data,
+                int(
+                    user_input.get(
+                        "post_write_settle_milliseconds",
+                        _entry_post_write_settle_ms(config_entry.data),
+                    )
+                ),
+            )
             self.hass.config_entries.async_update_entry(config_entry, data=new_data)
             await self.hass.config_entries.async_reload(config_entry.entry_id)
             return self.async_create_entry(title="", data={})
@@ -630,6 +662,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         default=config_entry.data.get(
                             "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
                         ),
+                    ): int,
+                    vol.Required(
+                        "post_write_settle_milliseconds",
+                        default=_entry_post_write_settle_ms(config_entry.data),
                     ): int,
                 }
             ),
@@ -683,6 +719,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Optional("delay", default=DEFAULT_DELAY): int,
                     vol.Optional(
                         "message_wait_milliseconds", default=DEFAULT_MESSAGE_WAIT_MS
+                    ): int,
+                    vol.Optional(
+                        "post_write_settle_milliseconds",
+                        default=DEFAULT_POST_WRITE_SETTLE_MS,
                     ): int,
                     # vol.Optional(
                     #     CONF_TEST_ALLOW_SAME_ENDPOINT_NEW_HUB, default=False
@@ -916,6 +956,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Optional("delay", default=DEFAULT_DELAY): int,
                 vol.Optional(
                     "message_wait_milliseconds", default=DEFAULT_MESSAGE_WAIT_MS
+                ): int,
+                vol.Optional(
+                    "post_write_settle_milliseconds",
+                    default=DEFAULT_POST_WRITE_SETTLE_MS,
                 ): int,
                 # vol.Optional(
                 #     CONF_TEST_ALLOW_SAME_ENDPOINT_NEW_HUB, default=False
@@ -2561,6 +2605,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         "port": self._inverter_config.get("port"),
                         "timeout": self._inverter_config.get("timeout"),
                         "delay": self._inverter_config.get("delay"),
+                        "message_wait_milliseconds": self._inverter_config.get(
+                            "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
+                        ),
+                        "post_write_settle_milliseconds": self._inverter_config.get(
+                            "post_write_settle_milliseconds",
+                            DEFAULT_POST_WRITE_SETTLE_MS,
+                        ),
                     },
                     "devices": devices,
                     # Keep legacy fields for backward compatibility during transition
@@ -2791,6 +2842,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "message_wait_milliseconds": user_input.get(
                         "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
                     ),
+                    "post_write_settle_milliseconds": user_input.get(
+                        "post_write_settle_milliseconds",
+                        DEFAULT_POST_WRITE_SETTLE_MS,
+                    ),
                 },
                 "devices": devices,
                 # Keep legacy fields for backward compatibility
@@ -2804,6 +2859,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "delay": user_input.get("delay", DEFAULT_DELAY),
                 "message_wait_milliseconds": user_input.get(
                     "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
+                ),
+                "post_write_settle_milliseconds": user_input.get(
+                    "post_write_settle_milliseconds",
+                    DEFAULT_POST_WRITE_SETTLE_MS,
                 ),
                 "template_version": template_version,
                 "firmware_version": firmware_version,
@@ -3978,6 +4037,15 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                         "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
                     ),
                 )
+                _apply_post_write_settle_to_entry_data(
+                    new_data,
+                    int(
+                        user_input.get(
+                            "post_write_settle_milliseconds",
+                            _entry_post_write_settle_ms(self.config_entry.data),
+                        )
+                    ),
+                )
                 new_data["host"] = new_host
                 new_data["port"] = new_port
                 hub_config = new_data.get("hub")
@@ -3985,6 +4053,9 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     hub_config = dict(hub_config)
                     hub_config["host"] = new_host
                     hub_config["port"] = new_port
+                    hub_config["post_write_settle_milliseconds"] = new_data[
+                        "post_write_settle_milliseconds"
+                    ]
                     new_data["hub"] = hub_config
 
                 endpoint_changed = (new_host, new_port) != (
@@ -4031,6 +4102,10 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 default=self.config_entry.data.get(
                     "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
                 ),
+            ): int,
+            vol.Required(
+                "post_write_settle_milliseconds",
+                default=_entry_post_write_settle_ms(self.config_entry.data),
             ): int,
         }
 

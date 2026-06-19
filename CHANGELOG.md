@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🔧 Changed
 
-- **Modbus writes — post-write settle ([#67](https://github.com/TCzerny/ha-modbus-manager/issues/67))**: Control writes use a shared hub IO lock, a post-write settle delay (0.5 s LAN / 1.0 s WiNet-S), then coordinator refresh — reduces brief `unavailable` oscillation after holding-register writes on WiNet-S.
+- **Modbus writes — post-write settle ([#67](https://github.com/TCzerny/ha-modbus-manager/issues/67))**: Control writes use a shared hub IO lock, a post-write settle delay (0.5 s LAN / 1.0 s WiNet-S), an immediate read-back of the written register, then entity listener updates — reduces brief `unavailable` oscillation and long UI lag after holding-register writes on WiNet-S.
+- **Modbus writes — configurable settle delay ([#67](https://github.com/TCzerny/ha-modbus-manager/issues/67))**: Hub option **`post_write_settle_milliseconds`** (default **500**, **0** = off, max **5000**) in initial setup, hub reconfigure, and options. Existing entries without the setting keep automatic LAN/WiNet-S delays; use **1000+** on WiNet-S if writes still race with polling.
 
 ### ✨ Added
 

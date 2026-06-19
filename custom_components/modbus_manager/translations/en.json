@@ -33,11 +33,15 @@
                     "timeout": "Timeout in seconds",
                     "delay": "Delay after Connection (seconds)",
                     "message_wait_milliseconds": "Wait between Requests (milliseconds)",
+                    "post_write_settle_milliseconds": "Delay after Control Writes (milliseconds, 0 = off)",
                     "use_coordinator": "Use Coordinator Mode (experimental)",
                     "baudrate": "Baudrate",
                     "data_bits": "Data Bits",
                     "stop_bits": "Stop Bits",
                     "parity": "Parity"
+                },
+                "data_description": {
+                    "post_write_settle_milliseconds": "Wait after a control write before polling again. 0 = off. Use 1000+ on WiNet-S if needed."
                 }
             },
             "dynamic_config": {
@@ -94,6 +98,7 @@
                     "timeout": "Timeout in seconds",
                     "delay": "Delay after Connection (seconds)",
                     "message_wait_milliseconds": "Wait between Requests (milliseconds)",
+                    "post_write_settle_milliseconds": "Delay after Control Writes (milliseconds, 0 = off)",
                     "phases": "Number of phases (1 or 3)",
                     "mppt_count": "Number of MPPT trackers",
                     "battery_config": "Battery Configuration",
@@ -182,7 +187,8 @@
                     "battery_slave_id": "Battery Slave ID",
                     "timeout": "Timeout (seconds)",
                     "delay": "Delay after Connection (seconds)",
-                    "message_wait_milliseconds": "Wait between Requests (milliseconds)"
+                    "message_wait_milliseconds": "Wait between Requests (milliseconds)",
+                    "post_write_settle_milliseconds": "Delay after Control Writes (milliseconds, 0 = off)"
                 }
             }
         },
@@ -225,7 +231,8 @@
                     "port": "Modbus TCP port",
                     "timeout": "Timeout (seconds)",
                     "delay": "Delay after Connection (seconds)",
-                    "message_wait_milliseconds": "Wait between Requests (milliseconds)"
+                    "message_wait_milliseconds": "Wait between Requests (milliseconds)",
+                    "post_write_settle_milliseconds": "Delay after Control Writes (milliseconds, 0 = off)"
                 }
             },
             "update_template": {

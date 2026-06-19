@@ -57,8 +57,13 @@ DEFAULT_DELAY: Final = 0  # Default delay in seconds
 DEFAULT_FORCE_UPDATE: Final = False  # Default force_update value
 MIN_DELAY: Final = 0  # Minimum delay in seconds
 DEFAULT_MESSAGE_WAIT_MS: Final = 100  # Default message wait in milliseconds
-POST_WRITE_SETTLE_SECONDS: Final = 0.5  # Delay after write before next Modbus IO
-POST_WRITE_SETTLE_WINET_SECONDS: Final = 1.0  # Longer settle for WiNet-S paths
+DEFAULT_POST_WRITE_SETTLE_MS: Final = 500  # Delay after control writes before next poll
+MIN_POST_WRITE_SETTLE_MS: Final = 0
+MAX_POST_WRITE_SETTLE_MS: Final = 5000
+POST_WRITE_SETTLE_SECONDS: Final = 0.5  # Fallback when hub option not set (LAN)
+POST_WRITE_SETTLE_WINET_SECONDS: Final = (
+    1.0  # Fallback when hub option not set (WiNet-S)
+)
 MIN_MESSAGE_WAIT_MS: Final = 10  # Minimum message wait in milliseconds
 MAX_MESSAGE_WAIT_MS: Final = 1000  # Maximum message wait in milliseconds
 DEFAULT_RETRY_ON_EMPTY: Final = True
