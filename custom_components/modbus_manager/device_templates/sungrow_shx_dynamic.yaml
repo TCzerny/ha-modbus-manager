@@ -152,8 +152,7 @@ dynamic_config:
     description: "Battery configuration"
     options: ["none", "standard_battery", "sbr_battery"]
     default: "none"
-    # Battery registers only passed through LAN port, not WINET - skip battery flow when WINET
-    condition: "connection_type != 'WINET'"
+    # standard_battery (inverter slave 1) works on LAN and WiNet-S; sbr_battery / slave 200 is LAN-only (config flow enforces)
 
 # Base sensors (will be filtered based on configuration)
 sensors:

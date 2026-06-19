@@ -98,6 +98,22 @@ def _vol_in_from_dynamic_options(
     return default, vol.In(options)
 
 
+_WINET_BATTERY_CONFIGS = frozenset({"none", "standard_battery", "other"})
+
+
+def _clamp_battery_config_for_connection(
+    battery_config: Any, connection_type: Any
+) -> str:
+    """Restrict battery_config for WiNet-S (inverter registers only, no SBR)."""
+    value = str(battery_config or "none").strip()
+    if str(connection_type or "LAN").strip().upper() == "WINET":
+        if value in ("sbr_battery", "other"):
+            return "standard_battery"
+        if value not in _WINET_BATTERY_CONFIGS:
+            return "none"
+    return value
+
+
 # Hub-level keys copied onto per-device records when missing (legacy setups).
 _ENTRY_LEVEL_DEVICE_FIELD_FALLBACKS = (
     "connection_type",
@@ -1330,6 +1346,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             firmware_version, template_data
         )
         connection_type = user_input.get("connection_type", "LAN")
+        dynamic_config["connection_type"] = connection_type
 
         # Derive battery settings from battery_config
         # For SBR templates, always enable battery mode
@@ -1929,6 +1946,25 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             _LOGGER.debug("Battery available: %s", user_input.get("battery_available"))
             if user_input.get("battery_available"):
+                conn = (
+                    str(
+                        (self._inverter_config or {}).get("connection_type")
+                        or self.context.get("connection_type")
+                        or "LAN"
+                    )
+                    .strip()
+                    .upper()
+                )
+                if conn == "WINET":
+                    if self._inverter_config is not None:
+                        self._inverter_config["battery_config"] = "standard_battery"
+                        self._inverter_config["battery_template"] = "none"
+                        if not self._inverter_config.get("connection_type"):
+                            self._inverter_config["connection_type"] = (
+                                self.context.get("connection_type") or "WINET"
+                            )
+                    self._keep_inverter_battery_entities = True
+                    return await self.async_step_final_config(self._inverter_config)
                 return await self.async_step_battery_template_selection()
             else:
                 if self._inverter_config is not None:
@@ -2808,6 +2844,14 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 if entity_strategy_opt is not None:
                     config_data["entity_id_strategy"] = entity_strategy_opt
 
+            if config_data.get("devices"):
+                config_data["devices"] = [
+                    self._normalize_device_record(
+                        _apply_entry_data_fallbacks_to_device(device, config_data)
+                    )
+                    for device in config_data["devices"]
+                ]
+
             # Create title based on host:port for grouping (like Philips Hue)
             host = config_data.get("host", "unknown")
             port = config_data.get("port", 502)
@@ -2948,6 +2992,16 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         "controls": config_data.get("controls", []),
                         "binary_sensors": config_data.get("binary_sensors", []),
                     }
+                    for key in (
+                        "connection_type",
+                        "battery_config",
+                        "battery_enabled",
+                        "meter_type",
+                        "wallbox_connected",
+                        "entity_id_strategy",
+                    ):
+                        if key in config_data:
+                            legacy_device[key] = config_data[key]
                     # Copy dynamic_config fields (entity_ids_without_prefix, meter_type, etc.)
                     template_dynamic = template_data.get("dynamic_config", {})
                     if isinstance(template_dynamic, dict):
@@ -3579,6 +3633,10 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
         if not selected_device:
             return self.async_abort(reason="config_error")
 
+        selected_device = _apply_entry_data_fallbacks_to_device(
+            selected_device, entry.data
+        )
+
         template_name = selected_device.get("template")
         template_data = (
             await get_template_by_name(template_name) if template_name else None
@@ -3614,6 +3672,11 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
                     continue
                 if field_name in user_input:
                     updated_device[field_name] = user_input[field_name]
+
+            updated_device["battery_config"] = _clamp_battery_config_for_connection(
+                updated_device.get("battery_config"),
+                updated_device.get("connection_type"),
+            )
 
             updated_device = self._normalize_device_record(updated_device)
             new_device_id = updated_device.get("device_entry_id")
@@ -3738,9 +3801,26 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
             if isinstance(field_config, dict) and "options" in field_config:
                 options = field_config.get("options", [])
                 if options:
+                    if (
+                        field_name == "battery_config"
+                        and str(selected_device.get("connection_type", "LAN"))
+                        .strip()
+                        .upper()
+                        == "WINET"
+                    ):
+                        field_config = dict(field_config)
+                        opts = field_config.get("options", [])
+                        if isinstance(opts, list):
+                            field_config["options"] = [
+                                o for o in opts if o in _WINET_BATTERY_CONFIGS
+                            ]
                     current = selected_device.get(
                         field_name, field_config.get("default")
                     )
+                    if field_name == "battery_config":
+                        current = _clamp_battery_config_for_connection(
+                            current, selected_device.get("connection_type")
+                        )
                     default, vol_in = _vol_in_from_dynamic_options(
                         field_config, current_value=current
                     )
@@ -4588,14 +4668,23 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     else None
                 )
                 effective_data = {**self.config_entry.data, **user_input}
+                user_input = dict(user_input)
                 if condition and not _evaluate_condition(condition, effective_data):
-                    user_input = dict(user_input)
                     user_input["battery_config"] = "none"
                     user_input["battery_template"] = "none"
                     _LOGGER.info(
                         "Battery disabled: condition '%s' not met (connection_type=%s)",
                         condition,
                         effective_data.get("connection_type"),
+                    )
+                else:
+                    user_input["battery_config"] = _clamp_battery_config_for_connection(
+                        user_input.get(
+                            "battery_config", effective_data.get("battery_config")
+                        ),
+                        user_input.get(
+                            "connection_type", effective_data.get("connection_type")
+                        ),
                     )
 
             # Check if dynamic configuration has changed
@@ -4896,6 +4985,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             firmware_version, template_data
         )
         connection_type = user_input.get("connection_type", "LAN")
+        dynamic_config["connection_type"] = connection_type
 
         # Derive battery settings from battery_config
         # For SBR templates, always enable battery mode

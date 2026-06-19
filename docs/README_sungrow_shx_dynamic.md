@@ -57,8 +57,8 @@ The template supports **all 36** following Sungrow SHx models:
 
 #### **Battery Filtering**
 - **Battery none:** Battery-dependent entities are filtered out
-- **Battery standard_battery:** Inverter battery registers only
-- **Battery sbr_battery:** Inverter battery registers + SBR battery template entities
+- **Battery standard_battery:** Inverter battery registers only (slave 1) — available on **LAN and WiNet-S**
+- **Battery sbr_battery:** Inverter battery registers + separate SBR/SBH template (slave 200) — **LAN only**
 
 #### **Meter Type Filtering**
 - **DTSU666:** Standard single-channel meter (registers 5600-5606)
@@ -66,8 +66,8 @@ The template supports **all 36** following Sungrow SHx models:
 - **Note:** iHomeManager is now a separate template (`sungrow_ihomemanager.yaml`) and should not be selected here
 
 #### **Connection Filtering**
-- **LAN:** All registers available
-- **WINET:** Some statistical registers not available
+- **LAN:** All registers available (including extended statistics and SBR via slave 200)
+- **WINET:** Extended statistical registers not available; use **`standard_battery`** for inverter-side battery sensors and controls (not SBR/slave 200)
 
 #### **Firmware Adaptation**
 - Automatic sensor parameter adjustment based on firmware version

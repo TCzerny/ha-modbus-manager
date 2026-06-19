@@ -5,6 +5,21 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.17] - 2026-06-19
+
+### ✨ Added
+
+- **Sungrow SHx — WiNet-S battery support ([#67](https://github.com/TCzerny/ha-modbus-manager/issues/67))**: Initial setup with **WiNet-S** now offers **`standard_battery`** (inverter slave 1 registers and controls) when a battery is present; **SBR / slave 200** remains **LAN-only**.
+
+### 🐛 Fixed
+
+- **Sungrow SHx — `connection_type` persistence ([#67](https://github.com/TCzerny/ha-modbus-manager/issues/67))**: **`connection_type`** is stored on the device record and included in dynamic filtering; **Reconfigure Device** falls back to hub-level values so **WiNet-S** is no longer shown as **LAN** after setup.
+- **Sungrow SHx — WiNet-S battery config**: **Reconfigure** and options flow restrict **`battery_config`** to **`none`** / **`standard_battery`** on WiNet-S ( **`sbr_battery`** clamped).
+
+### 📖 Documentation
+
+- **[docs/README_sungrow_shx_dynamic.md](docs/README_sungrow_shx_dynamic.md)** — WiNet-S vs LAN battery and connection filtering notes.
+
 ## [1.0.16] - 2026-06-18
 
 ### ✨ Added
