@@ -342,7 +342,7 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
                     address,
                 )
 
-            result = await self.coordinator.hub.async_pb_call(
+            result = await self.coordinator.async_pb_write(
                 slave_id,
                 address,
                 write_value,
@@ -351,8 +351,6 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
 
             if result:
                 _LOGGER.debug("Successfully set %s to %s", self._attr_name, option)
-                # Trigger coordinator update to refresh all entities
-                await self.coordinator.async_request_refresh()
             else:
                 _LOGGER.error("Failed to set %s to %s", self._attr_name, option)
 

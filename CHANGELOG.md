@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.17] - 2026-06-19
 
+### 🔧 Changed
+
+- **Modbus writes — post-write settle ([#67](https://github.com/TCzerny/ha-modbus-manager/issues/67))**: Control writes use a shared hub IO lock, a post-write settle delay (0.5 s LAN / 1.0 s WiNet-S), then coordinator refresh — reduces brief `unavailable` oscillation after holding-register writes on WiNet-S.
+
 ### ✨ Added
 
 - **Sungrow SHx — WiNet-S battery support ([#67](https://github.com/TCzerny/ha-modbus-manager/issues/67))**: Initial setup with **WiNet-S** now offers **`standard_battery`** (inverter slave 1 registers and controls) when a battery is present; **SBR / slave 200** remains **LAN-only**.

@@ -215,16 +215,20 @@ class ModbusCoordinatorText(TextEntity):
                 )
                 call_type = get_write_call_type(count, write_function_code)
 
-                await self._coordinator.hub.async_pb_call(
+                result = await self._coordinator.async_pb_write(
                     slave_id,
                     self._address,
                     write_value,
                     call_type,
                 )
-                _LOGGER.debug(
-                    "Text value written to register %d: %s", self._address, value
-                )
-                await self._coordinator.async_request_refresh()
+                if result:
+                    _LOGGER.debug(
+                        "Text value written to register %d: %s", self._address, value
+                    )
+                else:
+                    _LOGGER.error(
+                        "Error writing text value to register %d", self._address
+                    )
             except Exception as e:
                 _LOGGER.error(
                     "Error writing text value to register %d: %s", self._address, str(e)

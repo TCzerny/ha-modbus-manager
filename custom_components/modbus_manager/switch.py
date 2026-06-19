@@ -276,7 +276,7 @@ class ModbusCoordinatorSwitch(SwitchEntity):
             slave_id = self._register_config.get("slave_id", 1)
 
             # Write to register
-            await self._coordinator.hub.async_pb_call(
+            await self._coordinator.async_pb_write(
                 slave_id,
                 self._address,
                 write_value,

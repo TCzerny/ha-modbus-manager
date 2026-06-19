@@ -183,12 +183,18 @@ class ModbusCoordinatorButton(ButtonEntity):
                 )
                 call_type = get_write_call_type(count, write_function_code)
 
-                await self._coordinator.hub.async_pb_call(
+                result = await self._coordinator.async_pb_write(
                     slave_id,
                     self._address,
                     write_value,
                     call_type,
+                    refresh=self._button_press_duration <= 0,
                 )
+                if not result:
+                    _LOGGER.error(
+                        "Button press write failed for register %d", self._address
+                    )
+                    return
                 _LOGGER.debug(
                     "Button pressed: wrote value %d to register %d",
                     self._button_press_value,
@@ -206,7 +212,7 @@ class ModbusCoordinatorButton(ButtonEntity):
                     reset_call_type = get_write_call_type(
                         reset_count, write_function_code
                     )
-                    await self._coordinator.hub.async_pb_call(
+                    await self._coordinator.async_pb_write(
                         slave_id,
                         self._address,
                         reset_value,
@@ -217,8 +223,6 @@ class ModbusCoordinatorButton(ButtonEntity):
                         self._address,
                         self._button_press_duration,
                     )
-
-                await self._coordinator.async_request_refresh()
             else:
                 _LOGGER.warning("Cannot write to read-only register %d", self._address)
 

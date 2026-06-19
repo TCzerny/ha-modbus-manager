@@ -412,17 +412,14 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             write_function_code = self.register_config.get("write_function_code")
             call_type = get_write_call_type(count, write_function_code)
 
-            result = await self.coordinator.hub.async_pb_call(
+            result = await self.coordinator.async_pb_write(
                 slave_id,
                 address,
                 write_value,
                 call_type,
             )
 
-            if result:
-                # Trigger coordinator update to refresh all entities
-                await self.coordinator.async_request_refresh()
-            else:
+            if not result:
                 _LOGGER.error("Failed to set %s to %s", self._attr_name, value)
 
         except Exception as e:

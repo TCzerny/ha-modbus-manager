@@ -18,7 +18,12 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import DOMAIN, EntityIdStrategy
+from .const import (
+    DOMAIN,
+    POST_WRITE_SETTLE_SECONDS,
+    POST_WRITE_SETTLE_WINET_SECONDS,
+    EntityIdStrategy,
+)
 from .device_utils import (
     create_device_info_dict,
     generate_unique_id,
@@ -131,6 +136,9 @@ class ModbusCoordinator(DataUpdateCoordinator):
         # Flag to indicate if coordinator is being unloaded
         self._is_unloading = False
 
+        # Serialize Modbus reads/writes; writes hold through post-write settle delay
+        self._modbus_io_lock = asyncio.Lock()
+
         # Start with a short interval - will be adjusted after register analysis
         # Use 5 seconds as base to ensure we can update frequently
         update_interval = timedelta(seconds=5)
@@ -201,6 +209,45 @@ class ModbusCoordinator(DataUpdateCoordinator):
         _LOGGER.debug("Marking coordinator as unloading")
         self._is_unloading = True
         self.invalidate_cache()
+
+    def _post_write_settle_seconds(self) -> float:
+        """Return post-write settle delay (longer on WiNet-S)."""
+        connection_type = self.entry.data.get("connection_type", "LAN")
+        devices = self.entry.data.get("devices", [])
+        if isinstance(devices, list):
+            for device in devices:
+                if isinstance(device, dict) and device.get("connection_type"):
+                    connection_type = device["connection_type"]
+                    break
+        if str(connection_type or "LAN").strip().upper() == "WINET":
+            return POST_WRITE_SETTLE_WINET_SECONDS
+        return POST_WRITE_SETTLE_SECONDS
+
+    async def async_pb_write(
+        self,
+        slave_id: int,
+        address: int,
+        value: Any,
+        call_type: str,
+        *,
+        refresh: bool = True,
+    ) -> bool:
+        """Write a Modbus register with IO lock and post-write settle delay."""
+        settle_s = self._post_write_settle_seconds()
+        success = False
+        async with self._modbus_io_lock:
+            result = await self.hub.async_pb_call(
+                slave_id,
+                address,
+                value,
+                call_type,
+            )
+            if result:
+                await asyncio.sleep(settle_s)
+                success = True
+        if success and refresh:
+            await self.async_request_refresh()
+        return success
 
     async def _async_update_data(self) -> Dict[str, Any]:
         """Fetch register data with respect to individual scan intervals."""
@@ -305,29 +352,30 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 len(optimized_ranges),
             )
 
-            # 4. Read all data in minimal calls
-            for range_obj in optimized_ranges:
-                try:
-                    data = await self._read_register_range(range_obj)
-                    if data:
-                        self._distribute_data(data, range_obj)
-                except Exception as e:
-                    # Fallback log if _read_register_range raised (normally it catches all)
-                    register_type = (
-                        range_obj.registers[0].get("input_type", "holding")
-                        if range_obj.registers
-                        else "unknown"
-                    )
-                    entity_list = self._get_register_range_debug_info(range_obj)
-                    _LOGGER.error(
-                        "Error reading %s register range %d-%d: %s. "
-                        "Entities affected: [%s]",
-                        register_type,
-                        range_obj.start_address,
-                        range_obj.end_address,
-                        str(e),
-                        entity_list,
-                    )
+            # 4. Read all data in minimal calls (queued behind in-flight writes)
+            async with self._modbus_io_lock:
+                for range_obj in optimized_ranges:
+                    try:
+                        data = await self._read_register_range(range_obj)
+                        if data:
+                            self._distribute_data(data, range_obj)
+                    except Exception as e:
+                        # Fallback log if _read_register_range raised (normally it catches all)
+                        register_type = (
+                            range_obj.registers[0].get("input_type", "holding")
+                            if range_obj.registers
+                            else "unknown"
+                        )
+                        entity_list = self._get_register_range_debug_info(range_obj)
+                        _LOGGER.error(
+                            "Error reading %s register range %d-%d: %s. "
+                            "Entities affected: [%s]",
+                            register_type,
+                            range_obj.start_address,
+                            range_obj.end_address,
+                            str(e),
+                            entity_list,
+                        )
 
             # 5. Update last_update_time for each interval
             current_time = asyncio.get_running_loop().time()
