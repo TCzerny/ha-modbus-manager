@@ -60,8 +60,9 @@ dynamic_config:
     # Battery Power Limits (from datasheet V2): max_charge_power (W), max_discharge_power (W)
     # AC Output Power Limits (from datasheet V2): max_ac_output_power (W)
     # Both models: 10000W charge / 10000W discharge (50A max current)
+    # SH10RS actual max is 10600W. Out of the box the modbus registers read 10600W.
     "SH8.0RS": {phases: 1, mppt_count: 4, string_count: 1, type_code: "0xD1A", max_charge_power: 10000, max_discharge_power: 10000, max_ac_output_power: 8000}
-    "SH10RS": {phases: 1, mppt_count: 4, string_count: 1, type_code: "0xD1B", max_charge_power: 10000, max_discharge_power: 10000, max_ac_output_power: 10000}
+    "SH10RS": {phases: 1, mppt_count: 4, string_count: 1, type_code: "0xD1B", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 10600}
 
     # SH5.0-10RT Series (Three Phase)
     # Battery Power Limits (from datasheet): max_charge_power (W), max_discharge_power (W)
