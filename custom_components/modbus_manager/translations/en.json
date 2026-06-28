@@ -523,6 +523,36 @@
                     "description": "The new firmware version of the device."
                 }
             }
+        },
+        "read_device_identification": {
+            "name": "Read Device Identification (FC43)",
+            "description": "Connect to a Modbus TCP host and read FC43 vendor/product/version (diagnostic)",
+            "fields": {
+                "host": {
+                    "name": "Host",
+                    "description": "IP address or hostname"
+                },
+                "port": {
+                    "name": "Port",
+                    "description": "Modbus TCP port (default 502)"
+                },
+                "slave_id": {
+                    "name": "Slave ID",
+                    "description": "Modbus slave ID (default 1)"
+                },
+                "read_code": {
+                    "name": "Read code",
+                    "description": "basic, regular, or extended identification"
+                },
+                "timeout": {
+                    "name": "Timeout",
+                    "description": "Connection timeout in seconds (default 3)"
+                },
+                "notify": {
+                    "name": "Show notification",
+                    "description": "Show result text in a persistent notification"
+                }
+            }
         }
     },
     "issues": {

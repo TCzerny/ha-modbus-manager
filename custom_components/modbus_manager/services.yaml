@@ -52,3 +52,60 @@ reload_templates:
       required: false
       selector:
         text:
+
+read_device_identification:
+  name: "Read Device Identification (FC43)"
+  description: "Connect to a Modbus TCP host, read FC43 (0x2B) identification strings, and show the result in a notification"
+  fields:
+    host:
+      name: "Host"
+      description: "IP address or hostname of the Modbus TCP device"
+      required: true
+      selector:
+        text:
+    port:
+      name: "Port"
+      description: "Modbus TCP port (default 502)"
+      required: false
+      default: 502
+      selector:
+        number:
+          min: 1
+          max: 65535
+          mode: box
+    slave_id:
+      name: "Slave ID"
+      description: "Modbus slave/unit ID to query (default 1)"
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 247
+          mode: box
+    read_code:
+      name: "Read code"
+      description: "Identification category (basic, regular, or extended)"
+      required: false
+      default: basic
+      selector:
+        select:
+          options:
+            - basic
+            - regular
+            - extended
+    timeout:
+      name: "Timeout"
+      description: "Connection and read timeout in seconds (default 3)"
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 30
+          mode: box
+    notify:
+      name: "Show notification"
+      description: "Create a persistent notification with the result text"
+      required: false
+      default: true
+      selector:
+        boolean:

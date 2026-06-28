@@ -181,7 +181,67 @@ data:
 
 ---
 
-### 5. Device removal via subentry delete
+### 5. `modbus_manager.read_device_identification`
+
+**Description:** Standalone diagnostic for **Modbus FC43** (function code **0x2B**, MEI Read Device Identification). Opens a **short-lived TCP connection** to the given host/port — **no Modbus Manager config entry required**. Useful before setup or on unknown devices (vendor name, product code, firmware revision) — see [Discussion #56](https://github.com/TCzerny/ha-modbus-manager/discussions/56).
+
+**Service call:**
+
+```yaml
+service: modbus_manager.read_device_identification
+data:
+  host: "192.168.1.100"   # required
+  port: 502                 # optional, default 502
+  slave_id: 1               # optional, default 1
+  read_code: basic          # optional: basic | regular | extended
+  timeout: 3                # optional, seconds (default 3)
+  notify: true              # optional, default true — persistent notification with text
+```
+
+**Parameters:**
+
+| Field | Required | Description |
+|--------|----------|-------------|
+| `host` | **Yes** | IP address or hostname of the Modbus TCP device. |
+| `port` | No | Modbus TCP port. Default `502`. |
+| `slave_id` | No | Modbus slave/unit ID (1–247). Default `1`. |
+| `read_code` | No | `basic` (default), `regular`, or `extended` per Modbus device identification. |
+| `timeout` | No | Connection and read timeout in seconds. Default `3`. |
+| `notify` | No | If `true`, creates a **persistent notification** with the full result text (default `true`). |
+
+**Response:**
+
+- Writes a structured line per object to the **log** (INFO).
+- Optional **persistent notification** with vendor/product/revision as plain text.
+- Service return value: `message` (full text), `objects` map (`0x00`, `0x01`, …), plus `host`, `port`, `slave_id`.
+
+**When to use:**
+
+- New device on the network — only IP known, no integration configured yet.
+- Troubleshooting whether a device supports FC43.
+- One-off manual check from **Developer tools → Actions** or an automation.
+
+**Limitations:**
+
+- **TCP only** in this phase (no RTU/serial standalone probe).
+- Not every device implements FC43; some only support FC17 Report Slave ID.
+- Does not add persistent entities or run at hub startup.
+
+**Example (Developer tools):**
+
+```yaml
+service: modbus_manager.read_device_identification
+data:
+  host: 192.168.1.50
+  port: 502
+  slave_id: 1
+  read_code: basic
+  notify: true
+```
+
+---
+
+### 6. Device removal via subentry delete
 
 **Description:** Per-device removal is now handled directly in Home Assistant UI by deleting the device subentry.
 
