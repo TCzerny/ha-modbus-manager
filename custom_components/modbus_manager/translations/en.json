@@ -511,11 +511,15 @@
         },
         "read_device_identification": {
             "name": "Read Device Identification (FC43)",
-            "description": "Read Modbus FC43 vendor/product/version from a slave (diagnostic)",
+            "description": "Connect to a Modbus TCP host and read FC43 vendor/product/version (diagnostic)",
             "fields": {
-                "entry_id": {
-                    "name": "Config Entry ID",
-                    "description": "Modbus Manager hub entry (not combined device)"
+                "host": {
+                    "name": "Host",
+                    "description": "IP address or hostname"
+                },
+                "port": {
+                    "name": "Port",
+                    "description": "Modbus TCP port (default 502)"
                 },
                 "slave_id": {
                     "name": "Slave ID",
@@ -525,9 +529,13 @@
                     "name": "Read code",
                     "description": "basic, regular, or extended identification"
                 },
+                "timeout": {
+                    "name": "Timeout",
+                    "description": "Connection timeout in seconds (default 3)"
+                },
                 "notify": {
                     "name": "Show notification",
-                    "description": "Show result in a persistent notification"
+                    "description": "Show result text in a persistent notification"
                 }
             }
         }

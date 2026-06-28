@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### ✨ Added
 
-- **`modbus_manager.read_device_identification` service**: Read Modbus **FC43** (0x2B) vendor/product/version strings from a hub slave via the existing `ModbusHub` connection; log + optional notification ([#56](https://github.com/TCzerny/ha-modbus-manager/discussions/56)).
+- **`modbus_manager.read_device_identification` service**: Standalone diagnostic — connect to any Modbus **TCP** host/port, read **FC43** (0x2B) vendor/product/version strings, return text in log + optional persistent notification. No config entry required ([#56](https://github.com/TCzerny/ha-modbus-manager/discussions/56)).
 
 ### 📖 Documentation
 

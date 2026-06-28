@@ -649,11 +649,15 @@
         },
         "read_device_identification": {
             "name": "Geräte-Identifikation lesen (FC43)",
-            "description": "Modbus FC43 Hersteller/Produkt/Version vom Slave lesen (Diagnose)",
+            "description": "Modbus-TCP-Host verbinden und FC43 Hersteller/Produkt/Version lesen (Diagnose)",
             "fields": {
-                "entry_id": {
-                    "name": "Config-Eintrag-ID",
-                    "description": "Modbus-Manager-Hub (kein Combined Device)"
+                "host": {
+                    "name": "Host",
+                    "description": "IP-Adresse oder Hostname"
+                },
+                "port": {
+                    "name": "Port",
+                    "description": "Modbus-TCP-Port (Standard 502)"
                 },
                 "slave_id": {
                     "name": "Slave-ID",
@@ -663,9 +667,13 @@
                     "name": "Read-Code",
                     "description": "basic, regular oder extended"
                 },
+                "timeout": {
+                    "name": "Timeout",
+                    "description": "Verbindungs-Timeout in Sekunden (Standard 3)"
+                },
                 "notify": {
                     "name": "Benachrichtigung",
-                    "description": "Ergebnis als persistente Benachrichtigung anzeigen"
+                    "description": "Ergebnis als Text in persistenter Benachrichtigung"
                 }
             }
         }

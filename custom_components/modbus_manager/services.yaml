@@ -55,15 +55,24 @@ reload_templates:
 
 read_device_identification:
   name: "Read Device Identification (FC43)"
-  description: "Read Modbus FC43 (0x2B) vendor/product/version strings from a slave via the hub connection"
+  description: "Connect to a Modbus TCP host, read FC43 (0x2B) identification strings, and show the result in a notification"
   fields:
-    entry_id:
-      name: "Config Entry ID"
-      description: "Modbus Manager hub config entry (not a combined device entry)"
+    host:
+      name: "Host"
+      description: "IP address or hostname of the Modbus TCP device"
       required: true
       selector:
-        config_entry:
-          integration: modbus_manager
+        text:
+    port:
+      name: "Port"
+      description: "Modbus TCP port (default 502)"
+      required: false
+      default: 502
+      selector:
+        number:
+          min: 1
+          max: 65535
+          mode: box
     slave_id:
       name: "Slave ID"
       description: "Modbus slave/unit ID to query (default 1)"
@@ -84,9 +93,18 @@ read_device_identification:
             - basic
             - regular
             - extended
+    timeout:
+      name: "Timeout"
+      description: "Connection and read timeout in seconds (default 3)"
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 30
+          mode: box
     notify:
       name: "Show notification"
-      description: "Create a persistent notification with the result"
+      description: "Create a persistent notification with the result text"
       required: false
       default: true
       selector:

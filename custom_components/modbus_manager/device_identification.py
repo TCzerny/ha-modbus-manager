@@ -1,13 +1,16 @@
-"""Modbus FC43 (0x2B) Read Device Identification via Home Assistant ModbusHub."""
+"""Modbus FC43 (0x2B) Read Device Identification — standalone TCP probe."""
 
 from __future__ import annotations
 
+import asyncio
 import inspect
 from typing import Any
 
 from homeassistant.components.modbus import ModbusHub
+from homeassistant.core import HomeAssistant
 from pymodbus.exceptions import ModbusException
 
+from .const import DEFAULT_MESSAGE_WAIT_MS, DEFAULT_TIMEOUT
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -81,7 +84,7 @@ async def async_read_device_identification(
     *,
     object_id: int = 0,
 ) -> dict[int, str]:
-    """Read FC43 device identification using the hub's pymodbus client and lock."""
+    """Read FC43 device identification using an existing ModbusHub client and lock."""
     async with hub._lock:
         client = hub._client
         if client is None:
@@ -128,8 +131,58 @@ async def async_read_device_identification(
     return decoded
 
 
+async def async_read_device_identification_tcp(
+    hass: HomeAssistant,
+    host: str,
+    port: int,
+    slave_id: int,
+    read_code: int,
+    *,
+    timeout: int = DEFAULT_TIMEOUT,
+    message_wait_milliseconds: int = DEFAULT_MESSAGE_WAIT_MS,
+) -> dict[int, str]:
+    """Open a short-lived TCP connection, read FC43, then close."""
+    hub_name = f"fc43_probe_{host}_{port}"
+    modbus_config = {
+        "name": hub_name,
+        "type": "tcp",
+        "host": host,
+        "port": port,
+        "delay": 0,
+        "message_wait_milliseconds": message_wait_milliseconds,
+        "timeout": timeout,
+        "slave": slave_id,
+    }
+
+    hub = ModbusHub(hass, modbus_config)
+    try:
+        await hub.async_setup()
+        await asyncio.wait_for(hub.async_pb_connect(), timeout=timeout)
+    except TimeoutError as exc:
+        raise DeviceIdentificationError(
+            f"Connection to {host}:{port} timed out after {timeout}s"
+        ) from exc
+    except Exception as exc:
+        raise DeviceIdentificationError(
+            f"Could not connect to {host}:{port}: {exc}"
+        ) from exc
+
+    try:
+        return await async_read_device_identification(hub, slave_id, read_code)
+    finally:
+        try:
+            await hub.async_close()
+        except Exception as close_err:
+            _LOGGER.debug(
+                "FC43 probe close failed for %s:%s: %s",
+                host,
+                port,
+                close_err,
+            )
+
+
 def format_identification_message(
-    entry_title: str,
+    target: str,
     slave_id: int,
     read_code_name: str,
     objects: dict[int, str],
@@ -137,7 +190,7 @@ def format_identification_message(
     """Build human-readable text for logs and notifications."""
     lines = [
         "Modbus device identification (FC43)",
-        f"Hub: {entry_title}",
+        f"Target: {target}",
         f"Slave ID: {slave_id}",
         f"Read code: {read_code_name}",
         "",
@@ -153,14 +206,12 @@ def format_identification_message(
 
 
 def log_identification(
-    entry_title: str,
+    target: str,
     slave_id: int,
     read_code_name: str,
     objects: dict[int, str],
 ) -> None:
     """Log identification objects at INFO level."""
-    message = format_identification_message(
-        entry_title, slave_id, read_code_name, objects
-    )
+    message = format_identification_message(target, slave_id, read_code_name, objects)
     for line in message.splitlines():
         _LOGGER.info("%s", line)

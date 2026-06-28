@@ -17,7 +17,9 @@ from homeassistant.helpers import entity_registry as er
 from .combined_coordinator import CombinedDeviceCoordinator
 from .const import (
     CONF_ENTRY_TYPE,
+    DEFAULT_PORT,
     DEFAULT_SLAVE,
+    DEFAULT_TIMEOUT,
     DOMAIN,
     ENTRY_TYPE_COMBINED_DEVICE,
     ENTRY_TYPE_HUB,
@@ -29,7 +31,7 @@ from .coordinator import ModbusCoordinator
 from .device_identification import (
     READ_CODE_BY_NAME,
     DeviceIdentificationError,
-    async_read_device_identification,
+    async_read_device_identification_tcp,
     format_identification_message,
     log_identification,
 )
@@ -1468,44 +1470,32 @@ async def async_setup_services(hass: HomeAssistant) -> None:
             _LOGGER.debug("No templates were updated")
 
     async def read_device_identification_service(call):
-        """Read Modbus FC43 device identification from a hub slave (diagnostic)."""
+        """Read Modbus FC43 via a short-lived TCP connection (standalone diagnostic)."""
+        data = call.data or {}
+        notify = bool(data.get("notify", True))
+
         try:
-            entry_id = call.data.get("entry_id") if call.data else None
-            if not entry_id:
-                _LOGGER.error("read_device_identification requires entry_id")
-                return {"error": "entry_id is required"}
+            host = str(data.get("host", "")).strip()
+            if not host:
+                return {"error": "host is required (IP or hostname)"}
 
-            entry = hass.config_entries.async_get_entry(entry_id)
-            if entry is None:
-                _LOGGER.error("Config entry %s not found", entry_id)
-                return {"error": f"Config entry {entry_id} not found"}
+            port = data.get("port", DEFAULT_PORT)
+            try:
+                port = int(port)
+            except (TypeError, ValueError):
+                return {"error": "port must be an integer"}
+            if port < 1 or port > 65535:
+                return {"error": "port must be between 1 and 65535"}
 
-            if (
-                entry.data.get(CONF_ENTRY_TYPE, ENTRY_TYPE_HUB)
-                == ENTRY_TYPE_COMBINED_DEVICE
-            ):
-                _LOGGER.error(
-                    "read_device_identification does not apply to combined entries"
-                )
-                return {"error": "Combined device entries have no Modbus connection"}
-
-            hub_data = hass.data.get(DOMAIN, {}).get(entry_id)
-            if not isinstance(hub_data, dict):
-                _LOGGER.error("Hub data not found for entry %s", entry_id)
-                return {"error": "Hub is not loaded"}
-
-            hub = hub_data.get("hub")
-            if not isinstance(hub, ModbusHub):
-                _LOGGER.error("Modbus hub not available for entry %s", entry_id)
-                return {"error": "Modbus hub is not available"}
-
-            slave_id = call.data.get("slave_id", DEFAULT_SLAVE)
+            slave_id = data.get("slave_id", DEFAULT_SLAVE)
             try:
                 slave_id = int(slave_id)
             except (TypeError, ValueError):
                 return {"error": "slave_id must be an integer"}
+            if slave_id < 1 or slave_id > 247:
+                return {"error": "slave_id must be between 1 and 247"}
 
-            read_code_name = str(call.data.get("read_code", "basic")).strip().lower()
+            read_code_name = str(data.get("read_code", "basic")).strip().lower()
             read_code = READ_CODE_BY_NAME.get(read_code_name)
             if read_code is None:
                 return {
@@ -1513,35 +1503,49 @@ async def async_setup_services(hass: HomeAssistant) -> None:
                     f"(use: {', '.join(READ_CODE_BY_NAME)})"
                 }
 
-            notify = bool(call.data.get("notify", True))
+            timeout = data.get("timeout", DEFAULT_TIMEOUT)
+            try:
+                timeout = int(timeout)
+            except (TypeError, ValueError):
+                return {"error": "timeout must be an integer"}
 
-            objects = await async_read_device_identification(hub, slave_id, read_code)
-            entry_title = entry.title or entry_id
-            log_identification(entry_title, slave_id, read_code_name, objects)
+            target = f"{host}:{port}"
+            objects = await async_read_device_identification_tcp(
+                hass,
+                host,
+                port,
+                slave_id,
+                read_code,
+                timeout=timeout,
+            )
+            log_identification(target, slave_id, read_code_name, objects)
 
             message = format_identification_message(
-                entry_title, slave_id, read_code_name, objects
+                target, slave_id, read_code_name, objects
             )
             if notify:
+                safe_target = target.replace(".", "_").replace(":", "_")
                 await hass.services.async_call(
                     "persistent_notification",
                     "create",
                     {
                         "title": "Modbus Manager — Device identification",
                         "message": message,
-                        "notification_id": f"modbus_fc43_{entry_id}_{slave_id}",
+                        "notification_id": f"modbus_fc43_{safe_target}_{slave_id}",
                     },
                 )
 
             return {
-                "entry_id": entry_id,
+                "host": host,
+                "port": port,
                 "slave_id": slave_id,
                 "read_code": read_code_name,
+                "message": message,
                 "objects": {f"0x{oid:02X}": value for oid, value in objects.items()},
             }
         except DeviceIdentificationError as exc:
             _LOGGER.warning("Device identification failed: %s", exc)
-            if call.data and call.data.get("notify", True):
+            if notify:
                 await hass.services.async_call(
                     "persistent_notification",
                     "create",
