@@ -115,6 +115,8 @@ data:
 
 **History:** Renaming via this service updates only **`entity_id`** in the registry; **`unique_id` is unchanged**. Home Assistant **migrates recorder history** to the new `entity_id` when the rename succeeds. This is the recommended way to move from **unprefixed** (mkaiser-style) to **prefixed** ids without losing history. See [Entity ID strategy](ENTITY_ID_STRATEGY.md) (history preservation).
 
+**mkaiser migration note:** Some entities still need manual automation updates after migration — e.g. battery max power numbers renamed to `battery_max_charging_power` / `battery_max_discharging_power` and scaled to **kW** ([#70](https://github.com/TCzerny/ha-modbus-manager/issues/70)). See [Entity ID strategy — known mkaiser exceptions](ENTITY_ID_STRATEGY.md#known-mkaiser-exceptions-issue-70).
+
 **After running the service:**
 
 1. Set **Entity IDs without prefix** to **no** (or **`entity_id_strategy`** to **`legacy_prefixed`**) for that device (**Configure** on the device in **Settings → Devices & services**).
@@ -183,61 +185,231 @@ data:
 
 ### 5. `modbus_manager.read_device_identification`
 
-**Description:** Standalone diagnostic for **Modbus FC43** (function code **0x2B**, MEI Read Device Identification). Opens a **short-lived TCP connection** to the given host/port — **no Modbus Manager config entry required**. Useful before setup or on unknown devices (vendor name, product code, firmware revision) — see [Discussion #56](https://github.com/TCzerny/ha-modbus-manager/discussions/56).
+**Description:** Standalone diagnostic for **Modbus FC43** (function code **0x2B**, MEI *Read Device Identification*). The service opens a **short-lived TCP connection** to the IP address you provide, asks the device for identification strings (vendor, product code, firmware version, and more), then closes the connection.
 
-**Service call:**
+**You do not need a Modbus Manager hub or device configured** — only network access to the Modbus TCP device (IP, port, and usually slave ID `1`). This matches the use case in [Discussion #56](https://github.com/TCzerny/ha-modbus-manager/discussions/56): read the same kind of text you would see in vendor tools (e.g. Schneider BMS) without extra software.
 
-```yaml
-service: modbus_manager.read_device_identification
-data:
-  host: "192.168.1.100"   # required
-  port: 502                 # optional, default 502
-  slave_id: 1               # optional, default 1
-  read_code: basic          # optional: basic | regular | extended
-  timeout: 3                # optional, seconds (default 3)
-  notify: true              # optional, default true — persistent notification with text
+---
+
+#### What you get back
+
+| Output | Where to find it |
+|--------|------------------|
+| **Plain-text summary** | Persistent notification (if `notify: true`, default) |
+| **Same text + details** | Home Assistant **log** (INFO level, logger `custom_components.modbus_manager.device_identification`) |
+| **Structured data** | Service response in Developer tools (field `objects`, keys like `0x00`, `0x01`, …) |
+
+Example notification / log text:
+
+```text
+Modbus device identification (FC43)
+Target: 192.168.1.100:502
+Slave ID: 1
+Read code: basic
+
+VendorName (0x00): Schneider Electric
+ProductCode (0x01): PM5560
+MajorMinorRevision (0x02): V2.1.0
 ```
 
-**Parameters:**
+Standard object IDs (when the device supports them):
 
-| Field | Required | Description |
-|--------|----------|-------------|
-| `host` | **Yes** | IP address or hostname of the Modbus TCP device. |
-| `port` | No | Modbus TCP port. Default `502`. |
-| `slave_id` | No | Modbus slave/unit ID (1–247). Default `1`. |
-| `read_code` | No | `basic` (default), `regular`, or `extended` per Modbus device identification. |
-| `timeout` | No | Connection and read timeout in seconds. Default `3`. |
-| `notify` | No | If `true`, creates a **persistent notification** with the full result text (default `true`). |
+| ID | Label | Typical content |
+|----|--------|-----------------|
+| `0x00` | VendorName | Manufacturer |
+| `0x01` | ProductCode | Product / model code |
+| `0x02` | MajorMinorRevision | Firmware / version string |
+| `0x04` | ProductName | Product name |
+| `0x05` | ModelName | Model name |
 
-**Response:**
+Use `read_code: regular` or `extended` if `basic` returns too little and your device supports more objects.
 
-- Writes a structured line per object to the **log** (INFO).
-- Optional **persistent notification** with vendor/product/revision as plain text.
-- Service return value: `message` (full text), `objects` map (`0x00`, `0x01`, …), plus `host`, `port`, `slave_id`.
+---
 
-**When to use:**
+#### Step-by-step: run the service in the UI (beginner guide)
 
-- New device on the network — only IP known, no integration configured yet.
-- Troubleshooting whether a device supports FC43.
-- One-off manual check from **Developer tools → Actions** or an automation.
+These steps assume Modbus Manager **1.0.18+** is installed (HACS or manual copy under `config/custom_components/modbus_manager`) and Home Assistant has been **restarted** after the update.
 
-**Limitations:**
+**1. Open Developer tools**
 
-- **TCP only** in this phase (no RTU/serial standalone probe).
-- Not every device implements FC43; some only support FC17 Report Slave ID.
-- Does not add persistent entities or run at hub startup.
+- In the sidebar, click **Settings** (gear icon).
+- Scroll down and click **Developer tools**.
+- Open the **Actions** tab (in older Home Assistant versions this tab may be named **Services**).
 
-**Example (Developer tools):**
+**2. Select the service**
+
+- In **Action**, start typing `read_device_identification` or `modbus_manager`.
+- Choose **`modbus_manager.read_device_identification`**
+  *(label: “Read Device Identification (FC43)”)*.
+
+**3. Fill in the fields**
+
+You only **must** set **Host**. Everything else has defaults.
+
+| UI field | What to enter | Example |
+|----------|----------------|---------|
+| **Host** | IP address or hostname of the Modbus TCP device | `192.168.1.100` |
+| **Port** | Modbus TCP port (leave empty for default **502**) | `502` |
+| **Slave ID** | Modbus unit/slave ID (leave empty for default **1**) | `1` |
+| **Read code** | `basic`, `regular`, or `extended` | `basic` |
+| **Timeout** | Seconds to wait for connect + read (default **3**) | `5` |
+| **Show notification** | If on, creates a visible notification with the result text | `true` |
+
+**Tip:** If you are unsure of the slave ID, try `1` first (common for inverters and gateways). Some batteries or meters use other IDs (e.g. `200`).
+
+**4. Run the action**
+
+- Click **Perform action** (or **Call service** on older UI).
+- Wait a few seconds (timeout defaults to 3 s; increase if the device is slow or far on the network).
+
+**5. Read the result — notification**
+
+- Click the **bell icon** (notifications) in the sidebar (top area on phone app; left sidebar on desktop).
+- Open the entry titled **“Modbus Manager — Device identification”**.
+- The **message body** is the full plain-text report (vendor, product code, version, etc.).
+
+Notifications stay until you dismiss them (X on each entry). Re-running the service updates the same notification ID for that host/port/slave combination.
+
+**6. Read the result — logs (optional)**
+
+If the notification is disabled (`notify: false`) or you need more detail for support:
+
+- **Settings** → **System** → **Logs**
+- Click **Load full log** (or **Show full log**), then search for `device_identification` or `Modbus device identification`
+- Or open the log file on the host: `home-assistant.log` in your config directory
+
+On failure, you still get a notification (if `notify: true`) with the error text, e.g. connection timeout or “device may not support FC43”.
+
+**7. Read the result — Developer tools response (optional)**
+
+After **Perform action**, expand **Response** (if shown). Useful fields:
+
+- `message` — full text block (same as notification)
+- `objects` — map of hex object IDs to string values
+- `error` — present only if the call failed
+
+---
+
+#### YAML examples
+
+**Minimal (only IP required in practice):**
 
 ```yaml
 service: modbus_manager.read_device_identification
 data:
-  host: 192.168.1.50
+  host: 192.168.1.100
+```
+
+**Full options:**
+
+```yaml
+service: modbus_manager.read_device_identification
+data:
+  host: 192.168.1.100
   port: 502
   slave_id: 1
   read_code: basic
+  timeout: 5
   notify: true
 ```
+
+**Log only, no notification:**
+
+```yaml
+service: modbus_manager.read_device_identification
+data:
+  host: 192.168.1.100
+  slave_id: 1
+  notify: false
+```
+
+**Try extended identification (if basic is empty or too short):**
+
+```yaml
+service: modbus_manager.read_device_identification
+data:
+  host: 192.168.1.100
+  read_code: extended
+  notify: true
+```
+
+**Different slave ID (e.g. meter on same gateway):**
+
+```yaml
+service: modbus_manager.read_device_identification
+data:
+  host: 10.40.0.30
+  port: 502
+  slave_id: 247
+  read_code: basic
+```
+
+---
+
+#### Automation example (manual button or schedule)
+
+```yaml
+automation:
+  - alias: "Probe unknown Modbus device FC43"
+    trigger:
+      - platform: event
+        event_type: test_fc43_probe
+    action:
+      - service: modbus_manager.read_device_identification
+        data:
+          host: 192.168.1.100
+          port: 502
+          slave_id: 1
+          read_code: basic
+          notify: true
+```
+
+You can fire the event from **Developer tools → Events** with event type `test_fc43_probe` to test without YAML reload.
+
+---
+
+#### Parameters (reference)
+
+| Field | Required | Default | Description |
+|--------|----------|---------|-------------|
+| `host` | **Yes** | — | IP address or hostname of the Modbus TCP device. |
+| `port` | No | `502` | Modbus TCP port (1–65535). |
+| `slave_id` | No | `1` | Modbus slave/unit ID (1–247). |
+| `read_code` | No | `basic` | `basic`, `regular`, or `extended` (Modbus device identification access level). |
+| `timeout` | No | `3` | Connection and read timeout in seconds (1–30). |
+| `notify` | No | `true` | If `true`, creates a **persistent notification** with the full result text. |
+
+---
+
+#### When to use
+
+- A **new device** is on the network and you only know its **IP address** — before choosing a Modbus Manager template.
+- **Troubleshooting** whether a slave supports FC43 at all.
+- **One-off check** from Developer tools (no polling, no new entities).
+
+---
+
+#### Limitations
+
+- **TCP only** in this release (no standalone RTU/serial probe via this service).
+- Not every Modbus device implements FC43; some only support **FC17 Report Slave ID** or no identification at all.
+- Does **not** create entities, does **not** run at hub startup, and does **not** auto-select a template.
+- Opens a **separate short TCP session** to the target (in addition to any existing Modbus Manager connection to the same IP).
+
+---
+
+#### Troubleshooting `read_device_identification`
+
+| Symptom | What to try |
+|---------|-------------|
+| Service not in the list | Confirm Modbus Manager **1.0.18+** is installed; **restart Home Assistant**; check **Settings → Devices & services → Modbus Manager** is loaded without errors. |
+| `host is required` | Set **Host** in the action data (IP or hostname, no `http://`). |
+| Connection timeout | Ping the IP from the HA host; verify port **502** (or device-specific port); increase **timeout**; check firewall/VLAN. |
+| No response / FC43 not supported | Try another **slave_id**; try `read_code: extended`; device may not implement FC43 — use vendor tools or register docs instead. |
+| No notification | Ensure **Show notification** is `true`; check the **bell icon**; set `notify: true` in YAML. |
+| Empty `objects` | Device answered but returned no strings — try `regular` / `extended`; check slave ID. |
+
+For Schneider and similar BMS devices, **`basic`** is often enough; if the vendor tool shows more fields, try **`extended`**.
 
 ---
 

@@ -74,6 +74,33 @@ Typical steps from the [migration guide](https://github.com/TCzerny/ha-modbus-ma
 
 If you see duplicate entities or `*_2` ids, check the [unique_id comparison](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-mkaiser-unique-id-comparison) wiki and remove conflicting registry rows before re-adding the device.
 
+### Known mkaiser exceptions ([#70](https://github.com/TCzerny/ha-modbus-manager/issues/70))
+
+Some entities **do not** keep the same `entity_id` or **unit/scale** as mkaiser, even when most sensors match. After migration, search automations, scripts, and dashboards for these cases ([#70](https://github.com/TCzerny/ha-modbus-manager/issues/70)).
+
+#### Battery max charge / discharge **number** controls (Sungrow SHx)
+
+Modbus Manager uses **register-accurate** naming and **kW** for the holding registers at **33046 / 33047** (protocol: charge/discharge power limits).
+
+| Aspect | mkaiser (typical) | Modbus Manager SHx template |
+|--------|-------------------|-----------------------------|
+| **`unique_id` suffix** | `battery_max_**charge**_power` / `battery_max_**discharge**_power` | `battery_max_**charging**_power` / `battery_max_**discharging**_power` |
+| **`entity_id` (unprefixed)** | `number.battery_max_charge_power` | `number.battery_max_charging_power` |
+| **`entity_id` (prefix `sg`)** | `number.sg_battery_max_charge_power` | `number.sg_battery_max_charging_power` |
+| **Unit / scale** | Often **W** (integer watts) | **kW** (`unit_of_measurement: kW`, `scale: 0.01`, e.g. **10.6** kW for 10600 W) |
+
+**What to update after migration:**
+
+1. **Entity references** — replace old ids, e.g.
+   `number.sg_battery_max_charge_power` → `number.sg_battery_max_charging_power`
+   (and the same for `…discharge…` → `…discharging…`; without prefix, drop the `sg_` prefix accordingly).
+2. **Numeric values in automations** — if a template or automation assumed **watts**, convert to **kW** (divide by 1000) or use the new entity state directly (already in kW).
+3. **Dashboards** — Dashboard examples in this repo already use `battery_max_charging_power` / `battery_max_discharging_power` with the `{PREFIX_INVERTER}_` placeholder.
+
+The [unique_id comparison wiki](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-mkaiser-unique-id-comparison) lists many matching ids; treat the battery max power **numbers** above as a documented **exception** until the wiki table is updated.
+
+See also [Sungrow SHx template — migration notes](README_sungrow_shx_dynamic.md#migrating-from-mkaiser).
+
 ## Why `[[mm:domain:…]]` in templates
 
 For **`ha_generated`**, you cannot rely on a fixed `sensor.<prefix>_<id>` in Jinja: the **visible** `entity_id` may differ. **Calculated** and **template binary** templates therefore use markers:
@@ -96,5 +123,6 @@ If a reference is missing (e.g. optional entity not created yet), resolution ret
 
 - [Issue #52](https://github.com/TCzerny/ha-modbus-manager/issues/52) – HA “recreate entity IDs”
 - [Migration from mkaiser](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser) – step-by-step migration
+- [Issue #70](https://github.com/TCzerny/ha-modbus-manager/issues/70) – battery max charge/discharge: `entity_id` rename and W → kW
 - [Discussion #54](https://github.com/TCzerny/ha-modbus-manager/discussions/54) – duplicate `*_2` entities after upgrade
 - [SERVICES.md](SERVICES.md) – `add_entity_prefix` for controlled renames

@@ -3,6 +3,24 @@
 > **General documentation (Wiki):** [User Guide](https://github.com/TCzerny/ha-modbus-manager/wiki/User-Guide) · [Template reference](https://github.com/TCzerny/ha-modbus-manager/wiki/Template-Reference) · [Capabilities and limits](https://github.com/TCzerny/ha-modbus-manager/wiki/Capabilities-and-Limits) · [Local customization](https://github.com/TCzerny/ha-modbus-manager/wiki/Local-Customization)
 
 > **Migrating from mkaiser?** See [Migration from mkaiser](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser) and [unique_id comparison](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-mkaiser-unique-id-comparison). Use **`entity_id_strategy: legacy_unprefixed`** on add device to keep unprefixed `entity_id` values and recorder history. Details: [Entity ID strategy](ENTITY_ID_STRATEGY.md) (history preservation, safe checklist). The [mkaiser YAML-based integration](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant) is the usual source install.
+>
+> **Exception — battery max power numbers:** Even with unprefixed ids, update automations for **`battery_max_charging_power`** / **`battery_max_discharging_power`** (not `…charge…` / `…discharge…`) and **kW** instead of **W** ([#70](https://github.com/TCzerny/ha-modbus-manager/issues/70)).
+
+## Migrating from mkaiser
+
+Most Modbus sensor `entity_id` values can match mkaiser when you use **`legacy_unprefixed`**, but a few controls differ by design.
+
+### Battery max charging / discharging power (registers 33046 / 33047)
+
+| | mkaiser (typical) | Modbus Manager |
+|---|-------------------|----------------|
+| Control `entity_id` (unprefixed) | `number.battery_max_**charge**_power` | `number.battery_max_**charging**_power` |
+| | `number.battery_max_**discharge**_power` | `number.battery_max_**discharging**_power` |
+| With prefix `sg` | `number.sg_battery_max_charge_power` | `number.sg_battery_max_charging_power` |
+| Unit | **W** (whole watts) | **kW** (e.g. `10.6` for 10600 W) |
+| Template `unique_id` | `sg_battery_max_charge_power` (mkaiser registry) | `battery_max_charging_power` |
+
+After migration, review automations and dashboards that set or read these limits — update **entity id** and **numeric scale** ([#70](https://github.com/TCzerny/ha-modbus-manager/issues/70)). Full checklist: [Entity ID strategy — known mkaiser exceptions](ENTITY_ID_STRATEGY.md#known-mkaiser-exceptions-issue-70).
 
 ## 📋 Overview
 
@@ -484,8 +502,8 @@ This section contains all entities that will be created by this template, includ
 | 13089 | Active Power Limit Ratio | active_power_limit_ratio |
 | 13099 | Reserved SoC for Backup | reserved_soc_for_backup |
 | 31221 | Export Power Limit Value Wide Range | export_power_limit_value_wide_range |
-| 33046 | Battery Max Charge Power | battery_max_charge_power |
-| 33047 | Battery Max Discharge Power | battery_max_discharge_power |
+| 33046 | Battery Max Charging Power | battery_max_charging_power | kW (scale 0.01; was W in many mkaiser setups |
+| 33047 | Battery Max Discharging Power | battery_max_discharging_power | kW (scale 0.01; mkaiser used `battery_max_discharge_power` in W) |
 | 33148 | Battery Charging Start Power | battery_charging_start_power |
 | 33149 | Battery Discharging Start Power | battery_discharging_start_power |
 | 13017 | PV Power Limitation (SHT only) | pv_power_limitation |

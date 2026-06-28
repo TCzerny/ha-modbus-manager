@@ -7,13 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.18] - 2026-06-28
+
 ### ✨ Added
 
 - **`modbus_manager.read_device_identification` service**: Standalone diagnostic — connect to any Modbus **TCP** host/port, read **FC43** (0x2B) vendor/product/version strings, return text in log + optional persistent notification. No config entry required ([#56](https://github.com/TCzerny/ha-modbus-manager/discussions/56)).
+- **Sungrow SHx — MPPT3/MPPT4 sensors ([#71](https://github.com/TCzerny/ha-modbus-manager/pull/71))**: **`mppt3_voltage`** / **`mppt3_current`** (3+ MPPT models); **`mppt4_voltage`** / **`mppt4_current`** for **SH8.0RS** and **SH10RS** (4 MPPT per protocol V1.1.11).
+- **Dashboard examples — MPPT3/MPPT4 in 30-day PV graphs ([#71](https://github.com/TCzerny/ha-modbus-manager/pull/71))**: **`Dashboard-Examples/sungrow_pv_analysis_mushroom.yaml`** and **`sungrow_pv_analysis_standard.yaml`** include the new MPPT channels.
+
+### 🐛 Fixed
+
+- **Sungrow SHx — SH10RS power limits ([#69](https://github.com/TCzerny/ha-modbus-manager/pull/69))**: Model metadata **`max_charge_power`**, **`max_discharge_power`**, and **`max_ac_output_power`** set to **10600 W** (was **10000 W**), matching register readout and writable range on tested hardware.
 
 ### 📖 Documentation
 
-- **[docs/SERVICES.md](docs/SERVICES.md)** — FC43 diagnostic service usage and examples.
+- **[docs/SERVICES.md](docs/SERVICES.md)** — FC43 diagnostic service usage and examples (incl. beginner UI walkthrough).
+- **mkaiser migration ([#70](https://github.com/TCzerny/ha-modbus-manager/issues/70)):** Documented battery max charge/discharge `entity_id` rename (`…charging…` / `…discharging…`) and **W → kW** in [ENTITY_ID_STRATEGY.md](docs/ENTITY_ID_STRATEGY.md) and [README_sungrow_shx_dynamic.md](docs/README_sungrow_shx_dynamic.md).
+- Thanks to [@Jam3s97](https://github.com/Jam3s97) for **SH10RS** limit correction ([#69](https://github.com/TCzerny/ha-modbus-manager/pull/69)) and **MPPT3/MPPT4** sensors ([#71](https://github.com/TCzerny/ha-modbus-manager/pull/71)).
 
 ## [1.0.17] - 2026-06-19
 
