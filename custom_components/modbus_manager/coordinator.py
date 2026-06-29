@@ -139,6 +139,13 @@ class ModbusCoordinator(DataUpdateCoordinator):
         # Serialize Modbus reads/writes; writes hold through post-write settle delay
         self._modbus_io_lock = asyncio.Lock()
 
+        # Cooldown tracking for Modbus exception code 0x04 (Server Device Failure).
+        # Key: (slave_id, start_address), Value: loop time when cooldown expires.
+        # Used to silently skip reads while the WiNet-S is processing a mode change,
+        # avoiding spurious WARNING spam during the ~17s post-write settle window.
+        self._device_failure_cooldown: dict[tuple, float] = {}
+        self._DEVICE_FAILURE_COOLDOWN_S: float = 20.0
+
         # Start with a short interval - will be adjusted after register analysis
         # Use 5 seconds as base to ensure we can update frequently
         update_interval = timedelta(seconds=5)
@@ -237,6 +244,17 @@ class ModbusCoordinator(DataUpdateCoordinator):
             return POST_WRITE_SETTLE_WINET_SECONDS
         return POST_WRITE_SETTLE_SECONDS
 
+    def _is_winet_connection(self) -> bool:
+        """Return True if the active connection type is WiNet-S."""
+        connection_type = self.entry.data.get("connection_type", "LAN")
+        devices = self.entry.data.get("devices", [])
+        if isinstance(devices, list):
+            for device in devices:
+                if isinstance(device, dict) and device.get("connection_type"):
+                    connection_type = device["connection_type"]
+                    break
+        return str(connection_type or "LAN").strip().upper() == "WINET"
+
     async def async_pb_write(
         self,
         slave_id: int,
@@ -260,6 +278,30 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 if settle_s > 0:
                     await asyncio.sleep(settle_s)
                 success = True
+                # Pre-seed device failure cooldown for WiNet-S connections.
+                # The WiNet-S takes up to ~17s to apply EMS mode changes internally;
+                # during that window it returns exception 0x04 on the affected
+                # control registers.  Pre-seeding here avoids the first poll cycle
+                # hitting that window and generating spurious WARNING log entries.
+                # Only applied for WiNet-S — direct Ethernet inverters don't exhibit
+                # this behaviour.
+                if self._is_winet_connection():
+                    now = asyncio.get_running_loop().time()
+                    expires = now + self._DEVICE_FAILURE_COOLDOWN_S
+                    # Seed the written register itself plus the known co-volatile
+                    # EMS cluster: EMS mode (13049), forced cmd (13050),
+                    # forced power (13051), battery max charge power (33046).
+                    _EMS_VOLATILE_ADDRESSES = {13049, 13050, 13051, 33046}
+                    seeds = _EMS_VOLATILE_ADDRESSES | {address}
+                    for vol_addr in seeds:
+                        self._device_failure_cooldown[(slave_id, vol_addr)] = expires
+                    _LOGGER.debug(
+                        "WiNet-S post-write: pre-seeded %.0fs device failure cooldown "
+                        "for EMS cluster after write to register %d (slave_id=%d)",
+                        self._DEVICE_FAILURE_COOLDOWN_S,
+                        address,
+                        slave_id,
+                    )
                 if refresh:
                     await self._async_read_written_register(slave_id, address)
         if success and refresh:
@@ -1971,6 +2013,24 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     slave_id,
                 )
 
+            # Skip read if this range is within a device failure cooldown window.
+            # This avoids hammering registers that are temporarily unavailable while
+            # the device (e.g. WiNet-S) applies an EMS mode change internally.
+            now = asyncio.get_running_loop().time()
+            cooldown_key = (slave_id, range_obj.start_address)
+            cooldown_until = self._device_failure_cooldown.get(cooldown_key, 0.0)
+            if now < cooldown_until:
+                _LOGGER.debug(
+                    "Skipping %s registers %d-%d (slave_id=%d): device failure "
+                    "cooldown active, expires in %.1fs",
+                    register_type,
+                    range_obj.start_address,
+                    range_obj.end_address,
+                    slave_id,
+                    cooldown_until - now,
+                )
+                return None
+
             # Read registers
             result = await self.hub.async_pb_call(
                 slave_id,
@@ -1980,6 +2040,35 @@ class ModbusCoordinator(DataUpdateCoordinator):
             )
 
             if not result or not hasattr(result, "registers"):
+                # Distinguish between a Modbus exception response and a true
+                # no-response / timeout.  Exception responses carry isError()==True
+                # and an exception_code but no registers attribute.
+                if result is not None and hasattr(result, "isError") and result.isError():
+                    exc_code = getattr(result, "exception_code", None)
+                    if exc_code == 0x04:
+                        # 0x04 = Server Device Failure — the WiNet-S (and some
+                        # direct-Ethernet inverters) return this while internally
+                        # applying an EMS mode change.  It is transient and
+                        # self-clearing; treat it as a silent cooldown rather than
+                        # a warning so the log stays clean.
+                        now = asyncio.get_running_loop().time()
+                        cooldown_key = (slave_id, range_obj.start_address)
+                        self._device_failure_cooldown[cooldown_key] = (
+                            now + self._DEVICE_FAILURE_COOLDOWN_S
+                        )
+                        _LOGGER.debug(
+                            "Modbus exception 0x04 (Server Device Failure) on %s "
+                            "registers %d-%d (slave_id=%d) — suppressing reads for "
+                            "%.0fs. Entities: [%s]",
+                            register_type,
+                            range_obj.start_address,
+                            range_obj.end_address,
+                            slave_id,
+                            self._DEVICE_FAILURE_COOLDOWN_S,
+                            self._get_register_range_debug_info(range_obj),
+                        )
+                        return None  # No WARNING — this is expected post-write behaviour
+
                 # Check if coordinator is being unloaded/reloaded
                 # If so, this is expected and we should log at debug level
                 if (
