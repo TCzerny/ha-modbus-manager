@@ -144,7 +144,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
         # Used to silently skip reads while the WiNet-S is processing a mode change,
         # avoiding spurious WARNING spam during the ~17s post-write settle window.
         self._device_failure_cooldown: dict[tuple, float] = {}
-        self._DEVICE_FAILURE_COOLDOWN_S: float = 20.0
+        self._DEVICE_FAILURE_COOLDOWN_S: float = 90.0
 
         # Start with a short interval - will be adjusted after register analysis
         # Use 5 seconds as base to ensure we can update frequently
