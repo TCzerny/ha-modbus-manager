@@ -2671,7 +2671,9 @@ sensors:
     options:
       0x55: "Disabled"
       0xAA: "Enabled"
-    condition: "battery_enabled == true"
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
+    # Confirmed non-functional at this address on SH10RS/SH6.0RS
+
 
  ################################################################
  # Wallbox Registers (read-only, only when wallbox is connected)
@@ -3129,7 +3131,9 @@ controls:
       0x55: "Disabled"
       0xAA: "Enabled"
     mm_group: "PV_control"
-    condition: "battery_enabled == true"
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
+    # Confirmed non-functional at this address on SH10RS/SH6.0RS
+
 
   - type: "select"
     name: "PV Power Limitation"
