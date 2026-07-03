@@ -5,6 +5,16 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.19] - 2026-07-03
+
+### ✨ Added
+
+- **`modbus_manager.read_device_identification` — RTU support ([#56](https://github.com/TCzerny/ha-modbus-manager/discussions/56))**: Standalone FC43 probe now supports **`connection_type: serial`** (RS485 RTU via `/dev/ttyUSB0` etc.) and **`rtuovertcp`**, in addition to TCP. Serial fields: `serial_port`, `baudrate`, `parity`, `data_bits`, `stop_bits`.
+
+### 📖 Documentation
+
+- **[docs/SERVICES.md](docs/SERVICES.md)** — FC43 service: serial RTU and RTU-over-TCP examples, updated parameter reference and troubleshooting.
+
 ## [1.0.18] - 2026-06-28
 
 ### ✨ Added

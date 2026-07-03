@@ -55,17 +55,28 @@ reload_templates:
 
 read_device_identification:
   name: "Read Device Identification (FC43)"
-  description: "Connect to a Modbus TCP host, read FC43 (0x2B) identification strings, and show the result in a notification"
+  description: "Connect to a Modbus device (TCP, RTU over TCP, or serial RTU), read FC43 (0x2B) identification strings, and show the result in a notification"
   fields:
+    connection_type:
+      name: "Connection type"
+      description: "Transport for the probe (default tcp)"
+      required: false
+      default: tcp
+      selector:
+        select:
+          options:
+            - tcp
+            - serial
+            - rtuovertcp
     host:
       name: "Host"
-      description: "IP address or hostname of the Modbus TCP device"
-      required: true
+      description: "IP address or hostname (required for tcp and rtuovertcp)"
+      required: false
       selector:
         text:
     port:
       name: "Port"
-      description: "Modbus TCP port (default 502)"
+      description: "Modbus TCP port for tcp/rtuovertcp (default 502)"
       required: false
       default: 502
       selector:
@@ -73,6 +84,56 @@ read_device_identification:
           min: 1
           max: 65535
           mode: box
+    serial_port:
+      name: "Serial port"
+      description: "Serial device path for RTU (required for serial, e.g. /dev/ttyUSB0)"
+      required: false
+      selector:
+        text:
+    baudrate:
+      name: "Baudrate"
+      description: "Serial baudrate for RTU (default 9600)"
+      required: false
+      default: 9600
+      selector:
+        select:
+          options:
+            - "9600"
+            - "19200"
+            - "38400"
+            - "57600"
+            - "115200"
+    data_bits:
+      name: "Data bits"
+      description: "Serial data bits for RTU (default 8)"
+      required: false
+      default: 8
+      selector:
+        select:
+          options:
+            - "7"
+            - "8"
+    stop_bits:
+      name: "Stop bits"
+      description: "Serial stop bits for RTU (default 1)"
+      required: false
+      default: 1
+      selector:
+        select:
+          options:
+            - "1"
+            - "2"
+    parity:
+      name: "Parity"
+      description: "Serial parity for RTU (default none)"
+      required: false
+      default: none
+      selector:
+        select:
+          options:
+            - none
+            - even
+            - odd
     slave_id:
       name: "Slave ID"
       description: "Modbus slave/unit ID to query (default 1)"

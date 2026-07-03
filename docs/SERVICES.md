@@ -185,9 +185,9 @@ data:
 
 ### 5. `modbus_manager.read_device_identification`
 
-**Description:** Standalone diagnostic for **Modbus FC43** (function code **0x2B**, MEI *Read Device Identification*). The service opens a **short-lived TCP connection** to the IP address you provide, asks the device for identification strings (vendor, product code, firmware version, and more), then closes the connection.
+**Description:** Standalone diagnostic for **Modbus FC43** (function code **0x2B**, MEI *Read Device Identification*). The service opens a **short-lived connection** (Modbus **TCP**, **RTU over TCP**, or **serial RTU**), asks the device for identification strings (vendor, product code, firmware version, and more), then closes the connection.
 
-**You do not need a Modbus Manager hub or device configured** — only network access to the Modbus TCP device (IP, port, and usually slave ID `1`). This matches the use case in [Discussion #56](https://github.com/TCzerny/ha-modbus-manager/discussions/56): read the same kind of text you would see in vendor tools (e.g. Schneider BMS) without extra software.
+**You do not need a Modbus Manager hub or device configured** — only access to the device (IP/port for TCP, or serial port + baud/parity for RTU). This matches the use case in [Discussion #56](https://github.com/TCzerny/ha-modbus-manager/discussions/56): read the same kind of text you would see in vendor tools (e.g. Schneider BMS) without extra software.
 
 ---
 
@@ -228,7 +228,7 @@ Use `read_code: regular` or `extended` if `basic` returns too little and your de
 
 #### Step-by-step: run the service in the UI (beginner guide)
 
-These steps assume Modbus Manager **1.0.18+** is installed (HACS or manual copy under `config/custom_components/modbus_manager`) and Home Assistant has been **restarted** after the update.
+These steps assume Modbus Manager **1.0.19+** is installed (HACS or manual copy under `config/custom_components/modbus_manager`) and Home Assistant has been **restarted** after the update.
 
 **1. Open Developer tools**
 
@@ -244,12 +244,18 @@ These steps assume Modbus Manager **1.0.18+** is installed (HACS or manual copy 
 
 **3. Fill in the fields**
 
-You only **must** set **Host**. Everything else has defaults.
+For **TCP** (default), you only **must** set **Host**. For **serial RTU**, set **Connection type** to `serial` and **Serial port** (e.g. `/dev/ttyUSB0`).
 
 | UI field | What to enter | Example |
 |----------|----------------|---------|
-| **Host** | IP address or hostname of the Modbus TCP device | `192.168.1.100` |
+| **Connection type** | `tcp` (default), `serial`, or `rtuovertcp` | `tcp` |
+| **Host** | IP or hostname (**tcp** / **rtuovertcp**) | `192.168.1.100` |
 | **Port** | Modbus TCP port (leave empty for default **502**) | `502` |
+| **Serial port** | Device path (**serial** only) | `/dev/ttyUSB0` |
+| **Baudrate** | Serial speed (**serial**, default **9600**) | `9600` |
+| **Data bits** | Usually **8** (**serial**) | `8` |
+| **Stop bits** | Usually **1** (**serial**) | `1` |
+| **Parity** | `none`, `even`, or `odd` (**serial**) | `even` |
 | **Slave ID** | Modbus unit/slave ID (leave empty for default **1**) | `1` |
 | **Read code** | `basic`, `regular`, or `extended` | `basic` |
 | **Timeout** | Seconds to wait for connect + read (default **3**) | `5` |
@@ -292,7 +298,7 @@ After **Perform action**, expand **Response** (if shown). Useful fields:
 
 #### YAML examples
 
-**Minimal (only IP required in practice):**
+**Minimal TCP (only IP required in practice):**
 
 ```yaml
 service: modbus_manager.read_device_identification
@@ -300,7 +306,33 @@ data:
   host: 192.168.1.100
 ```
 
-**Full options:**
+**Serial RTU (e.g. Schneider power meter on USB-RS485):**
+
+```yaml
+service: modbus_manager.read_device_identification
+data:
+  connection_type: serial
+  serial_port: /dev/ttyUSB0
+  baudrate: 9600
+  parity: even
+  data_bits: 8
+  stop_bits: 1
+  slave_id: 1
+  notify: true
+```
+
+**RTU over TCP:**
+
+```yaml
+service: modbus_manager.read_device_identification
+data:
+  connection_type: rtuovertcp
+  host: 192.168.1.50
+  port: 502
+  slave_id: 1
+```
+
+**Full TCP options:**
 
 ```yaml
 service: modbus_manager.read_device_identification
@@ -372,8 +404,14 @@ You can fire the event from **Developer tools → Events** with event type `test
 
 | Field | Required | Default | Description |
 |--------|----------|---------|-------------|
-| `host` | **Yes** | — | IP address or hostname of the Modbus TCP device. |
-| `port` | No | `502` | Modbus TCP port (1–65535). |
+| `connection_type` | No | `tcp` | `tcp`, `serial`, or `rtuovertcp`. |
+| `host` | For tcp/rtuovertcp | — | IP address or hostname. |
+| `port` | No | `502` | Modbus TCP port for tcp/rtuovertcp (1–65535). |
+| `serial_port` | For serial | — | Serial device path (e.g. `/dev/ttyUSB0`). |
+| `baudrate` | No | `9600` | Serial baudrate: 9600, 19200, 38400, 57600, or 115200. |
+| `data_bits` | No | `8` | Serial data bits: `7` or `8`. |
+| `stop_bits` | No | `1` | Serial stop bits: `1` or `2`. |
+| `parity` | No | `none` | Serial parity: `none`, `even`, or `odd`. |
 | `slave_id` | No | `1` | Modbus slave/unit ID (1–247). |
 | `read_code` | No | `basic` | `basic`, `regular`, or `extended` (Modbus device identification access level). |
 | `timeout` | No | `3` | Connection and read timeout in seconds (1–30). |
@@ -383,7 +421,7 @@ You can fire the event from **Developer tools → Events** with event type `test
 
 #### When to use
 
-- A **new device** is on the network and you only know its **IP address** — before choosing a Modbus Manager template.
+- A **new device** is on the network or on **RS485** and you want vendor/product strings before choosing a Modbus Manager template.
 - **Troubleshooting** whether a slave supports FC43 at all.
 - **One-off check** from Developer tools (no polling, no new entities).
 
@@ -391,10 +429,10 @@ You can fire the event from **Developer tools → Events** with event type `test
 
 #### Limitations
 
-- **TCP only** in this release (no standalone RTU/serial probe via this service).
-- Not every Modbus device implements FC43; some only support **FC17 Report Slave ID** or no identification at all.
+- Not every Modbus device implements FC43; some only support **FC17 Report Slave ID** or no identification at all (common on some power meters).
 - Does **not** create entities, does **not** run at hub startup, and does **not** auto-select a template.
-- Opens a **separate short TCP session** to the target (in addition to any existing Modbus Manager connection to the same IP).
+- Opens a **separate short session** to the target (in addition to any existing Modbus connection on the same IP or serial port).
+- For **serial RTU**, the USB/serial port must not be in use by another integration or hub at the same time.
 
 ---
 
@@ -402,9 +440,10 @@ You can fire the event from **Developer tools → Events** with event type `test
 
 | Symptom | What to try |
 |---------|-------------|
-| Service not in the list | Confirm Modbus Manager **1.0.18+** is installed; **restart Home Assistant**; check **Settings → Devices & services → Modbus Manager** is loaded without errors. |
-| `host is required` | Set **Host** in the action data (IP or hostname, no `http://`). |
-| Connection timeout | Ping the IP from the HA host; verify port **502** (or device-specific port); increase **timeout**; check firewall/VLAN. |
+| Service not in the list | Confirm Modbus Manager **1.0.19+** is installed; **restart Home Assistant**; check **Settings → Devices & services → Modbus Manager** is loaded without errors. |
+| `host is required` | Set **Host** for tcp/rtuovertcp, or use **connection_type: serial** with **serial_port**. |
+| Connection timeout | Ping the IP from the HA host; verify port **502** (or device-specific port); increase **timeout**; check firewall/VLAN. For serial, verify `/dev/ttyUSB0` exists and baud/parity match the device. |
+| Serial port busy | Stop other integrations/hubs using the same USB-RS485 adapter; only one process can open the port. |
 | No response / FC43 not supported | Try another **slave_id**; try `read_code: extended`; device may not implement FC43 — use vendor tools or register docs instead. |
 | No notification | Ensure **Show notification** is `true`; check the **bell icon**; set `notify: true` in YAML. |
 | Empty `objects` | Device answered but returned no strings — try `regular` / `extended`; check slave ID. |

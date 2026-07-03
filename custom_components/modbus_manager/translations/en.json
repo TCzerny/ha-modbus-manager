@@ -526,15 +526,39 @@
         },
         "read_device_identification": {
             "name": "Read Device Identification (FC43)",
-            "description": "Connect to a Modbus TCP host and read FC43 vendor/product/version (diagnostic)",
+            "description": "Connect to a Modbus device (TCP/RTU) and read FC43 vendor/product/version (diagnostic)",
             "fields": {
+                "connection_type": {
+                    "name": "Connection type",
+                    "description": "tcp, serial, or rtuovertcp"
+                },
                 "host": {
                     "name": "Host",
-                    "description": "IP address or hostname"
+                    "description": "IP address or hostname (tcp/rtuovertcp)"
                 },
                 "port": {
                     "name": "Port",
                     "description": "Modbus TCP port (default 502)"
+                },
+                "serial_port": {
+                    "name": "Serial port",
+                    "description": "Serial device path (serial RTU, e.g. /dev/ttyUSB0)"
+                },
+                "baudrate": {
+                    "name": "Baudrate",
+                    "description": "Serial baudrate (default 9600)"
+                },
+                "data_bits": {
+                    "name": "Data bits",
+                    "description": "Serial data bits (default 8)"
+                },
+                "stop_bits": {
+                    "name": "Stop bits",
+                    "description": "Serial stop bits (default 1)"
+                },
+                "parity": {
+                    "name": "Parity",
+                    "description": "Serial parity: none, even, or odd"
                 },
                 "slave_id": {
                     "name": "Slave ID",
