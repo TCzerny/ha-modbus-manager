@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🐛 Fixed
 
 - **FC43 serial probe — hub cleanup ([#56](https://github.com/TCzerny/ha-modbus-manager/discussions/56))**: Failed FC43 probe connections now call `async_close()` immediately, so Home Assistant no longer keeps retrying `fc43_probe_…` every 60 seconds until restart.
+- **Sungrow SHx — SH*RS register 13016 ([#73](https://github.com/TCzerny/ha-modbus-manager/pull/73))**: **`forced_startup_under_low_soc_standby`** select excluded for **SH*RS** models — register returns invalid/NaN values on tested RS inverters (e.g. SH6.0RS, SH10RS), which caused `unknown` select state.
 
 ### ✨ Added
 
@@ -18,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 📖 Documentation
 
 - **[docs/SERVICES.md](docs/SERVICES.md)** — FC43 `message_wait_milliseconds`, serial port conflict notes, and 60-second retry troubleshooting.
+- Thanks to [@Jam3s97](https://github.com/Jam3s97) for **SH*RS register 13016** exclusion ([#73](https://github.com/TCzerny/ha-modbus-manager/pull/73)).
 
 ## [1.0.19] - 2026-07-03
 
