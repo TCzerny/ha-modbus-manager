@@ -1,6 +1,6 @@
 # Combined Device (Cross-Hub)
 
-> **Integration version:** 1.0.19+
+> **Integration version:** 1.0.20+
 
 The **Combined Device** is an opt-in virtual Modbus Manager config entry that aggregates data from **two existing hub entries** without additional Modbus I/O. It is intended for setups where physically separate devices (e.g. Sungrow inverter + iHomeManager) should be viewed as one logical unit in Home Assistant.
 

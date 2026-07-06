@@ -5,6 +5,20 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.20] - 2026-07-06
+
+### 🐛 Fixed
+
+- **FC43 serial probe — hub cleanup ([#56](https://github.com/TCzerny/ha-modbus-manager/discussions/56))**: Failed FC43 probe connections now call `async_close()` immediately, so Home Assistant no longer keeps retrying `fc43_probe_…` every 60 seconds until restart.
+
+### ✨ Added
+
+- **`read_device_identification` — `message_wait_milliseconds`**: Optional inter-frame delay (10–1000 ms, default 100) for serial RTU / slow devices.
+
+### 📖 Documentation
+
+- **[docs/SERVICES.md](docs/SERVICES.md)** — FC43 `message_wait_milliseconds`, serial port conflict notes, and 60-second retry troubleshooting.
+
 ## [1.0.19] - 2026-07-03
 
 ### ✨ Added

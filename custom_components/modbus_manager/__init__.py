@@ -1514,6 +1514,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
                 "connection_type": params["connection_type"],
                 "slave_id": slave_id,
                 "read_code": read_code_name,
+                "message_wait_milliseconds": params["message_wait_milliseconds"],
                 "message": message,
                 "objects": {f"0x{oid:02X}": value for oid, value in objects.items()},
             }

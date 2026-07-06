@@ -228,7 +228,7 @@ Use `read_code: regular` or `extended` if `basic` returns too little and your de
 
 #### Step-by-step: run the service in the UI (beginner guide)
 
-These steps assume Modbus Manager **1.0.19+** is installed (HACS or manual copy under `config/custom_components/modbus_manager`) and Home Assistant has been **restarted** after the update.
+These steps assume Modbus Manager **1.0.20+** is installed (HACS or manual copy under `config/custom_components/modbus_manager`) and Home Assistant has been **restarted** after the update.
 
 **1. Open Developer tools**
 
@@ -259,6 +259,7 @@ For **TCP** (default), you only **must** set **Host**. For **serial RTU**, set *
 | **Slave ID** | Modbus unit/slave ID (leave empty for default **1**) | `1` |
 | **Read code** | `basic`, `regular`, or `extended` | `basic` |
 | **Timeout** | Seconds to wait for connect + read (default **3**) | `5` |
+| **Message wait** | Inter-frame delay in ms (**serial**/**RTU**, default **100**; try **100–300** on slow meters) | `200` |
 | **Show notification** | If on, creates a visible notification with the result text | `true` |
 
 **Tip:** If you are unsure of the slave ID, try `1` first (common for inverters and gateways). Some batteries or meters use other IDs (e.g. `200`).
@@ -318,6 +319,7 @@ data:
   data_bits: 8
   stop_bits: 1
   slave_id: 1
+  message_wait_milliseconds: 200
   notify: true
 ```
 
@@ -415,6 +417,7 @@ You can fire the event from **Developer tools → Events** with event type `test
 | `slave_id` | No | `1` | Modbus slave/unit ID (1–247). |
 | `read_code` | No | `basic` | `basic`, `regular`, or `extended` (Modbus device identification access level). |
 | `timeout` | No | `3` | Connection and read timeout in seconds (1–30). |
+| `message_wait_milliseconds` | No | `100` | Inter-frame delay in milliseconds (10–1000). Useful for **serial RTU** on slow devices; try **100–300**. |
 | `notify` | No | `true` | If `true`, creates a **persistent notification** with the full result text. |
 
 ---
@@ -440,10 +443,12 @@ You can fire the event from **Developer tools → Events** with event type `test
 
 | Symptom | What to try |
 |---------|-------------|
-| Service not in the list | Confirm Modbus Manager **1.0.19+** is installed; **restart Home Assistant**; check **Settings → Devices & services → Modbus Manager** is loaded without errors. |
+| Service not in the list | Confirm Modbus Manager **1.0.20+** is installed; **restart Home Assistant**; check **Settings → Devices & services → Modbus Manager** is loaded without errors. |
 | `host is required` | Set **Host** for tcp/rtuovertcp, or use **connection_type: serial** with **serial_port**. |
 | Connection timeout | Ping the IP from the HA host; verify port **502** (or device-specific port); increase **timeout**; check firewall/VLAN. For serial, verify `/dev/ttyUSB0` exists and baud/parity match the device. |
-| Serial port busy | Stop other integrations/hubs using the same USB-RS485 adapter; only one process can open the port. |
+| Serial port busy | Stop other integrations/hubs using the same USB-RS485 adapter (including **built-in Modbus YAML** on that port); only one process can open the port. |
+| Probe retries every 60 s after failed FC43 | Update to **1.0.20+** (probe hub is closed on failure). On older versions, restart HA if you see `fc43_probe_… retrying in 60 seconds`. |
+| `Frame - not ready` on normal RTU polls | Increase **`message_wait_milliseconds`** on the Modbus hub (YAML or FC43 service); try **100–300 ms**. |
 | No response / FC43 not supported | Try another **slave_id**; try `read_code: extended`; device may not implement FC43 — use vendor tools or register docs instead. |
 | No notification | Ensure **Show notification** is `true`; check the **bell icon**; set `notify: true` in YAML. |
 | Empty `objects` | Device answered but returned no strings — try `regular` / `extended`; check slave ID. |

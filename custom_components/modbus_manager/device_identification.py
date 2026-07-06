@@ -11,7 +11,12 @@ from homeassistant.components.modbus import ModbusHub
 from homeassistant.core import HomeAssistant
 from pymodbus.exceptions import ModbusException
 
-from .const import DEFAULT_MESSAGE_WAIT_MS, DEFAULT_TIMEOUT
+from .const import (
+    DEFAULT_MESSAGE_WAIT_MS,
+    DEFAULT_TIMEOUT,
+    MAX_MESSAGE_WAIT_MS,
+    MIN_MESSAGE_WAIT_MS,
+)
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -122,12 +127,29 @@ def parse_identification_service_params(
     if timeout < 1 or timeout > 30:
         return None, "timeout must be between 1 and 30"
 
+    message_wait_milliseconds = data.get(
+        "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
+    )
+    try:
+        message_wait_milliseconds = int(message_wait_milliseconds)
+    except (TypeError, ValueError):
+        return None, "message_wait_milliseconds must be an integer"
+    if (
+        message_wait_milliseconds < MIN_MESSAGE_WAIT_MS
+        or message_wait_milliseconds > MAX_MESSAGE_WAIT_MS
+    ):
+        return None, (
+            f"message_wait_milliseconds must be between "
+            f"{MIN_MESSAGE_WAIT_MS} and {MAX_MESSAGE_WAIT_MS}"
+        )
+
     params: dict[str, Any] = {
         "connection_type": connection_type,
         "slave_id": slave_id,
         "read_code": read_code,
         "read_code_name": read_code_name,
         "timeout": timeout,
+        "message_wait_milliseconds": message_wait_milliseconds,
     }
 
     if connection_type in {CONNECTION_TYPE_TCP, CONNECTION_TYPE_RTU_OVER_TCP}:
@@ -199,18 +221,14 @@ def parse_identification_service_params(
     return params, None
 
 
-def build_probe_modbus_config(
-    params: dict[str, Any],
-    *,
-    message_wait_milliseconds: int = DEFAULT_MESSAGE_WAIT_MS,
-) -> dict[str, Any]:
+def build_probe_modbus_config(params: dict[str, Any]) -> dict[str, Any]:
     """Build a short-lived ModbusHub config dict from parsed service params."""
     connection_type = params["connection_type"]
     modbus_config: dict[str, Any] = {
         "name": params["hub_name"],
         "type": connection_type,
         "delay": 0,
-        "message_wait_milliseconds": message_wait_milliseconds,
+        "message_wait_milliseconds": params["message_wait_milliseconds"],
         "timeout": params["timeout"],
         "slave": params["slave_id"],
     }
@@ -329,38 +347,37 @@ async def async_read_device_identification(
 async def async_read_device_identification_probe(
     hass: HomeAssistant,
     params: dict[str, Any],
-    *,
-    message_wait_milliseconds: int = DEFAULT_MESSAGE_WAIT_MS,
 ) -> dict[int, str]:
     """Open a short-lived Modbus connection, read FC43, then close."""
     target = params["target"]
     slave_id = params["slave_id"]
     read_code = params["read_code"]
     timeout = params["timeout"]
-    modbus_config = build_probe_modbus_config(
-        params, message_wait_milliseconds=message_wait_milliseconds
-    )
+    modbus_config = build_probe_modbus_config(params)
 
     hub = ModbusHub(hass, modbus_config)
+    setup_done = False
     try:
         await hub.async_setup()
+        setup_done = True
         await asyncio.wait_for(hub.async_pb_connect(), timeout=timeout)
+        return await async_read_device_identification(hub, slave_id, read_code)
     except TimeoutError as exc:
         raise DeviceIdentificationError(
             f"Connection to {target} timed out after {timeout}s"
         ) from exc
+    except DeviceIdentificationError:
+        raise
     except Exception as exc:
         raise DeviceIdentificationError(
             f"Could not connect to {target}: {exc}"
         ) from exc
-
-    try:
-        return await async_read_device_identification(hub, slave_id, read_code)
     finally:
-        try:
-            await hub.async_close()
-        except Exception as close_err:
-            _LOGGER.debug("FC43 probe close failed for %s: %s", target, close_err)
+        if setup_done:
+            try:
+                await hub.async_close()
+            except Exception as close_err:
+                _LOGGER.debug("FC43 probe close failed for %s: %s", target, close_err)
 
 
 async def async_read_device_identification_tcp(
@@ -385,6 +402,7 @@ async def async_read_device_identification_tcp(
                 "basic",
             ),
             "timeout": timeout,
+            "message_wait_milliseconds": message_wait_milliseconds,
         },
         default_port=port,
         default_slave=slave_id,
@@ -393,11 +411,7 @@ async def async_read_device_identification_tcp(
     if error or params is None:
         raise DeviceIdentificationError(error or "Invalid TCP probe parameters")
     params["read_code"] = read_code
-    return await async_read_device_identification_probe(
-        hass,
-        params,
-        message_wait_milliseconds=message_wait_milliseconds,
-    )
+    return await async_read_device_identification_probe(hass, params)
 
 
 def format_identification_message(

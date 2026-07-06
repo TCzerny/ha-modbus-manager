@@ -163,6 +163,16 @@ read_device_identification:
           min: 1
           max: 30
           mode: box
+    message_wait_milliseconds:
+      name: "Message wait"
+      description: "Inter-frame delay in milliseconds for RTU/serial (default 100, try 100-300 for slow devices)"
+      required: false
+      default: 100
+      selector:
+        number:
+          min: 10
+          max: 1000
+          mode: box
     notify:
       name: "Show notification"
       description: "Create a persistent notification with the result text"
