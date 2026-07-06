@@ -23,7 +23,7 @@ This document lists the Modbus registers for the Sungrow SBR/SBH battery templat
   - **SBR**: SBR064 (2 mod), SBR096 (3 mod), SBR128 (4), SBR160 (5), SBR192 (6), SBR224 (7), SBR256 (8)
   - **SBH**: SBH100 (2 mod), SBH150 (3), SBH200 (4), SBH250 (5), SBH300 (6), SBH350 (7), SBH400 (8)
 - `battery_config`: options=['sbr_battery'] (default: sbr_battery)
-- `firmware_version`: options=['22011.01.19'] (default: 22011.01.19)
+- `firmware_version`: options=['22011.01.19'] (default: 22011.01.19) — **register-map baseline: this release or higher**; a new option is added only when Sungrow changes specific registers between releases
 
 ### Sensor Registers
 
