@@ -1,6 +1,6 @@
 name: "Compleo eBox Professional"
 display_name: "Compleo eBox Professional"
-version: 3.3
+version: 3.4
 description: "Compleo eBox Professional EV Charger (Innogy eBox)"
 manufacturer: "Compleo"
 model: "eBox Professional"
@@ -670,19 +670,31 @@ calculated:
     type: "sensor"
     firmware_min_version: "2.0.35"
     availability: >-
-      {{ not is_state('[[mm:sensor:{PREFIX}_voltage_phase_1]]', 'unavailable') and
-         not is_state('[[mm:sensor:{PREFIX}_voltage_phase_2]]', 'unavailable') and
-         not is_state('[[mm:sensor:{PREFIX}_voltage_phase_3]]', 'unavailable') }}
+      {% set p1 = '[[mm:sensor:{PREFIX}_voltage_phase_1]]' %}
+      {% set p2 = '[[mm:sensor:{PREFIX}_voltage_phase_2]]' %}
+      {% set p3 = '[[mm:sensor:{PREFIX}_voltage_phase_3]]' %}
+      {% if states(p1) in ['unknown', 'unavailable'] or
+            states(p2) in ['unknown', 'unavailable'] or
+            states(p3) in ['unknown', 'unavailable'] %}
+        false
+      {% else %}
+        {% set v1 = states(p1) | float(-1) %}
+        {% set v2 = states(p2) | float(-1) %}
+        {% set v3 = states(p3) | float(-1) %}
+        {% if v1 < 150 or v1 > 280 or v2 < 150 or v2 > 280 or v3 < 150 or v3 > 280 %}
+          false
+        {% else %}
+          {% set avg = (v1 + v2 + v3) / 3 %}
+          {% set imbalance = (max([v1, v2, v3]) - min([v1, v2, v3])) / avg * 100 %}
+          {{ imbalance <= 50 }}
+        {% endif %}
+      {% endif %}
     state: >-
       {% set v1 = states('[[mm:sensor:{PREFIX}_voltage_phase_1]]') | float(0) %}
       {% set v2 = states('[[mm:sensor:{PREFIX}_voltage_phase_2]]') | float(0) %}
       {% set v3 = states('[[mm:sensor:{PREFIX}_voltage_phase_3]]') | float(0) %}
       {% set avg = (v1 + v2 + v3) / 3 %}
-      {% if avg > 0 %}
-        {{ ((max([v1, v2, v3]) - min([v1, v2, v3])) / avg * 100) | round(1) }}
-      {% else %}
-        0
-      {% endif %}
+      {{ ((max([v1, v2, v3]) - min([v1, v2, v3])) / avg * 100) | round(1) }}
     unit_of_measurement: "%"
     state_class: "measurement"
     mm_group: "EV_voltage_measurement"
