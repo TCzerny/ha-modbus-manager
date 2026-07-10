@@ -5,6 +5,13 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.21] - 2026-07-10
+
+### 🐛 Fixed
+
+- **Modbus total sensors — spurious zero reads ([#75](https://github.com/TCzerny/ha-modbus-manager/issues/75))**: Register-based sensors with `state_class: total` report `unavailable` when a new read is `0` but the previous value was `> 0`, preventing Energy Dashboard statistics corruption from failed Modbus reads. Lifetime counters remain `state_class: total` per Home Assistant semantics.
+- **Compleo eBox — Voltage Imbalance calculated sensor**: Stricter availability (plausible phase voltages, exclude `unknown`) and suppress outliers above 50% so bad Modbus reads no longer produce 100%+ spikes in history (template v3.4).
+
 ## [1.0.20] - 2026-07-06
 
 ### 🐛 Fixed
