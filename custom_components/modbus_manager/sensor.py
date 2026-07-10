@@ -28,6 +28,27 @@ from .value_processor import resolve_flags_sensor_values
 _LOGGER = ModbusManagerLogger(__name__)
 
 
+def should_suppress_spurious_total_zero(
+    state_class: str | None,
+    new_value: Any,
+    previous_value: Any,
+) -> bool:
+    """Treat zero reads on monotonic total counters as unavailable after a positive value."""
+    if state_class != "total":
+        return False
+    try:
+        if float(new_value) != 0:
+            return False
+    except (TypeError, ValueError):
+        return False
+    if previous_value is None:
+        return False
+    try:
+        return float(previous_value) > 0
+    except (TypeError, ValueError):
+        return False
+
+
 async def _handle_group_assignments(
     hass: HomeAssistant, sensors: list[ModbusCoordinatorSensor]
 ) -> None:
@@ -231,7 +252,20 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
                         }
                     else:
                         # Use the processed value directly (no mapping)
-                        self._attr_native_value = processed_value
+                        if should_suppress_spurious_total_zero(
+                            self._attr_state_class,
+                            processed_value,
+                            self._attr_native_value,
+                        ):
+                            _LOGGER.debug(
+                                "Suppressing spurious zero on total sensor %s "
+                                "(previous=%s)",
+                                self._attr_unique_id,
+                                self._attr_native_value,
+                            )
+                            self._attr_native_value = None
+                        else:
+                            self._attr_native_value = processed_value
                         self._attr_extra_state_attributes = {
                             **self._attr_extra_state_attributes,
                             "raw_value": raw_value if raw_value is not None else "N/A",
