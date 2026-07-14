@@ -1,0 +1,396 @@
+# Sandi Solar SD-Pro Dynamic Template for Modbus Manager
+# Protocol: Modbus RTU V2.14 (see docs/README_sandisolar_sd_pro.md)
+# Issue: https://github.com/TCzerny/ha-modbus-manager/issues/60
+#
+# BETA — minimal register set for field testing. Expand valid_models and registers after
+# verification on hardware (850 ms minimum delay between Modbus requests on the hub).
+
+name: "Sandi Solar SD-Pro Series"
+display_name: "Sandi Solar SD-Pro Off-Grid"
+description: "Dynamic template for Sandi Solar SD-Pro off-grid/hybrid inverters (Modbus RTU V2.14). Initial beta — core read-only sensors."
+manufacturer: "Sandi Solar"
+model: "SD-Pro Series Dynamic"
+version: 1.0.0
+default_prefix: "SDPro"
+default_slave_id: 1
+type: "PV_Hybrid_Inverter"
+firmware_version: "2.14"
+
+dynamic_config:
+
+  valid_models:
+  # SD-Pro line — add kW variants after datasheet / field confirmation
+    "SD-Pro-6.5": {phases: 1, mppt_count: 2, string_count: 2, max_ac_output_power: 6500, battery_enabled: true}
+
+  protocol_version:
+    description: "Modbus register map version from manufacturer document"
+    options:
+      "2.14": "V2.14 (default)"
+    default: "2.14"
+
+sensors:
+  # --- System / device ---
+  - name: Inverter status
+    unique_id: inverter_status
+    mm_group: "PV_inverter_status"
+    address: 0
+    input_type: input
+    data_type: uint16
+    scan_interval: 10
+    map:
+      0: "Waiting"
+      1: "Grid-connected"
+      2: "Off-grid"
+      3: "Fault"
+      4: "Firmware update"
+      5: "Bypass"
+      6: "Self-charge"
+
+  - name: Device type code
+    unique_id: device_type_code
+    mm_group: "PV_device_info"
+    address: 36
+    input_type: input
+    data_type: uint16
+    scan_interval: 300
+    entity_category: diagnostic
+
+  - name: PV channel count
+    unique_id: pv_channel_count
+    mm_group: "PV_device_info"
+    address: 63
+    input_type: input
+    data_type: uint16
+    scan_interval: 300
+    entity_category: diagnostic
+
+  - name: Inverter main error code
+    unique_id: inverter_main_error_code
+    mm_group: "PV_diagnostic"
+    address: 32
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+    entity_category: diagnostic
+
+  - name: Inverter main warning code
+    unique_id: inverter_main_warning_code
+    mm_group: "PV_diagnostic"
+    address: 33
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+    entity_category: diagnostic
+
+  - name: System fault word 0
+    unique_id: system_fault_word_0
+    mm_group: "PV_diagnostic"
+    address: 24
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+    entity_category: diagnostic
+
+  # --- Temperatures ---
+  - name: Inverter temperature
+    unique_id: inverter_temperature
+    mm_group: "PV_inverter_temperature"
+    address: 10
+    input_type: input
+    data_type: int16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    scan_interval: 30
+
+  - name: Ambient temperature
+    unique_id: ambient_temperature
+    mm_group: "PV_inverter_temperature"
+    address: 14
+    input_type: input
+    data_type: int16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    scan_interval: 60
+
+  # --- Inverter AC (phase R / single-phase) ---
+  - name: Inverter voltage
+    unique_id: inverter_voltage
+    mm_group: "PV_phase_voltage"
+    address: 2
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    scan_interval: 10
+
+  - name: Inverter current
+    unique_id: inverter_current
+    mm_group: "PV_phase_current"
+    address: 5
+    input_type: input
+    data_type: int16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    scan_interval: 10
+
+  - name: Grid frequency
+    unique_id: grid_frequency
+    mm_group: "PV_grid_frequency"
+    address: 51
+    input_type: input
+    data_type: uint16
+    scale: 0.01
+    precision: 2
+    unit_of_measurement: "Hz"
+    device_class: frequency
+    state_class: measurement
+    scan_interval: 10
+
+  # --- Off-grid (EPS) output ---
+  - name: EPS voltage
+    unique_id: eps_voltage
+    mm_group: "PV_phase_voltage"
+    address: 55
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    scan_interval: 10
+
+  - name: EPS current
+    unique_id: eps_current
+    mm_group: "PV_phase_current"
+    address: 56
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    scan_interval: 10
+
+  - name: EPS frequency
+    unique_id: eps_frequency
+    mm_group: "PV_grid_frequency"
+    address: 54
+    input_type: input
+    data_type: uint16
+    scale: 0.01
+    precision: 2
+    unit_of_measurement: "Hz"
+    device_class: frequency
+    state_class: measurement
+    scan_interval: 10
+
+  - name: EPS active power
+    unique_id: eps_active_power
+    mm_group: "PV_total_power"
+    address: 334
+    input_type: input
+    data_type: int32
+    count: 2
+    swap: word
+    scale: 0.1
+    precision: 0
+    unit_of_measurement: "W"
+    device_class: power
+    state_class: measurement
+    scan_interval: 10
+
+  # --- PV ---
+  - name: PV total power
+    unique_id: pv_total_power
+    mm_group: "PV_total_power"
+    address: 250
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    scale: 0.1
+    precision: 0
+    unit_of_measurement: "W"
+    device_class: power
+    state_class: measurement
+    scan_interval: 10
+    icon: "mdi:solar-power"
+
+  - name: PV1 voltage
+    unique_id: pv1_voltage
+    mm_group: "PV_mppt_voltage"
+    address: 64
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    scan_interval: 10
+    condition: "mppt_count >= 1"
+
+  - name: PV1 current
+    unique_id: pv1_current
+    mm_group: "PV_mppt_current"
+    address: 65
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    scan_interval: 10
+    condition: "mppt_count >= 1"
+
+  - name: PV2 voltage
+    unique_id: pv2_voltage
+    mm_group: "PV_mppt_voltage"
+    address: 66
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    scan_interval: 10
+    condition: "mppt_count >= 2"
+
+  - name: PV2 current
+    unique_id: pv2_current
+    mm_group: "PV_mppt_current"
+    address: 67
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    scan_interval: 10
+    condition: "mppt_count >= 2"
+
+  # --- Battery ---
+  - name: Battery voltage
+    unique_id: battery_voltage
+    mm_group: "PV_battery_voltage"
+    address: 127
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    scan_interval: 10
+    condition: "battery_enabled == true"
+
+  - name: Battery SOC
+    unique_id: battery_soc
+    mm_group: "PV_battery_soc"
+    address: 128
+    input_type: input
+    data_type: uint16
+    scale: 0.01
+    precision: 0
+    unit_of_measurement: "%"
+    state_class: measurement
+    scan_interval: 10
+    condition: "battery_enabled == true"
+
+  - name: Battery current
+    unique_id: battery_current
+    mm_group: "PV_battery_current"
+    address: 141
+    input_type: input
+    data_type: int16
+    scale: 0.01
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    scan_interval: 10
+    condition: "battery_enabled == true"
+
+  - name: Battery temperature
+    unique_id: battery_temperature
+    mm_group: "PV_battery_temperature"
+    address: 142
+    input_type: input
+    data_type: int16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    scan_interval: 30
+    condition: "battery_enabled == true"
+
+  # --- Energy (totals / today) ---
+  - name: PV energy today
+    unique_id: pv_energy_today
+    mm_group: "PV_energy"
+    address: 379
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "kWh"
+    device_class: energy
+    state_class: total_increasing
+    scan_interval: 60
+
+  - name: PV energy total
+    unique_id: pv_energy_total
+    mm_group: "PV_energy"
+    address: 381
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "kWh"
+    device_class: energy
+    state_class: total
+    scan_interval: 300
+
+binary_sensors:
+  - name: Inverter off-grid
+    unique_id: inverter_off_grid
+    mm_group: "PV_inverter_status"
+    device_class: power
+    state: "{{ states('sensor.{PREFIX}_inverter_status') == 'Off-grid' }}"
+    scan_interval: 10
+
+  - name: Inverter grid-connected
+    unique_id: inverter_grid_connected
+    mm_group: "PV_inverter_status"
+    device_class: connectivity
+    state: "{{ states('sensor.{PREFIX}_inverter_status') == 'Grid-connected' }}"
+    scan_interval: 10
+
+  - name: Inverter fault
+    unique_id: inverter_fault
+    mm_group: "PV_inverter_status"
+    device_class: problem
+    state: "{{ states('sensor.{PREFIX}_inverter_status') == 'Fault' }}"
+    scan_interval: 10

@@ -181,6 +181,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Config flow** `VERSION` **4**: Normalizes devices with `ensure_entity_id_strategy_on_device`.
 - **Documentation:** [docs/ENTITY_ID_STRATEGY.md](docs/ENTITY_ID_STRATEGY.md) explains strategies, `[[mm:…]]`, **history preservation**, strategy changes on existing installs, and the [mkaiser migration](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser) checklist.
 
+### 📚 Documentation
+
+- **Sandi Solar SD-Pro:** Added [docs/README_sandisolar_sd_pro.md](docs/README_sandisolar_sd_pro.md) — full Modbus RTU V2.14 input/holding register reference (translated from manufacturer xlsx, Issue #60).
+
+### ✨ Added
+
+- **Sandi Solar SD-Pro template (BETA):** `sandisolar_sd_pro_dynamic.yaml` — initial read-only sensors for SD-Pro-6.5 (status, PV, battery, EPS, energy); expand after field tests ([#60](https://github.com/TCzerny/ha-modbus-manager/issues/60)).
+
 ### 🐛 Fixed
 
 - **Flag sensors (255-character state limit)**: Sensors with template `flags` now always publish the numeric bitmask as state; human-readable flag labels are in the `formatted_value` attribute (truncated when needed). Fixes Home Assistant core errors for registers such as BMS alarm/protection/fault raw ([#58](https://github.com/TCzerny/ha-modbus-manager/issues/58)).
