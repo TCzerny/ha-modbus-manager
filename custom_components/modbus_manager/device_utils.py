@@ -26,6 +26,20 @@ KNOWN_TEMPLATE_DEVICE_TYPES: dict[str, str] = {
 }
 
 
+def clean_firmware_version_string(firmware_version: Any) -> str:
+    """Return a bare firmware value for device_registry sw_version.
+
+    The Home Assistant device page already labels this field "Firmware: <value>"
+    in its own UI, so the value stored here must NOT carry that prefix itself
+    (doing so previously produced a doubled "Firmware: Firmware: ..." display).
+    Also strips any legacy prefix left over from a value stored before this fix.
+    """
+    text = str(firmware_version).strip()
+    while text.lower().startswith("firmware:"):
+        text = text[len("firmware:") :].strip()
+    return text
+
+
 def resolve_device_role_type(device: dict[str, Any]) -> str:
     """Return effective device role; template name overrides mis-stored type."""
     template = str(device.get("template", "")).strip().lower()
@@ -507,7 +521,7 @@ def create_device_info_dict(
         "name": prefix,  # Use prefix only to keep friendly_name short: "Prefix Entityname"
         "manufacturer": "Modbus Manager",
         "model": f"{template_name} (Slave {slave_id})",
-        "sw_version": f"Firmware: {firmware_version}",
+        "sw_version": clean_firmware_version_string(firmware_version),
     }
 
 

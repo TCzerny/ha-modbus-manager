@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **iHomeManager — battery entities missing ([#79](https://github.com/TCzerny/ha-modbus-manager/issues/79))**: Use unified `battery_config` setup (`none` / `battery`) instead of `battery_enabled`; show `battery_config` in the dynamic config step for non-inverter templates; legacy `battery_enabled: true` migrates to `battery_config: battery`. `charging_discharging_power` register corrected to `uint16`.
 - **Combined device — iHM daily grid energy ([#78](https://github.com/TCzerny/ha-modbus-manager/issues/78))**: `combined_ihm_grid_import_daily` and `combined_ihm_grid_export_daily` use `state_class: total_increasing` (midnight reset) instead of `total`.
+- **Sungrow — battery firmware version on device page ([#80](https://github.com/TCzerny/ha-modbus-manager/issues/80))**: Live `battery_firmware_info` register updates the battery device (not only inverter); string registers decoded as null-terminated; removed doubled `Firmware:` prefix in `sw_version`.
 
 ## [1.0.21] - 2026-07-10
 

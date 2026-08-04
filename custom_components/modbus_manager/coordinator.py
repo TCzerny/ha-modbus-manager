@@ -25,9 +25,11 @@ from .const import (
     EntityIdStrategy,
 )
 from .device_utils import (
+    clean_firmware_version_string,
     create_device_info_dict,
     generate_unique_id,
     replace_template_placeholders,
+    resolve_device_role_type,
     resolve_entity_id_strategy,
     resolve_firmware_profile_version,
 )
@@ -2182,9 +2184,14 @@ class ModbusCoordinator(DataUpdateCoordinator):
                         swap=register.get("swap", "none"),
                     )
                     encoding = register.get("encoding", "utf-8")
-                    processed_value = bytes_data.decode(
-                        encoding, errors="ignore"
-                    ).rstrip("\x00")
+                    # Treat as a null-terminated string: some devices leave stray bytes
+                    # in the buffer after the terminator, so cut at the first \x00
+                    # rather than just stripping trailing nulls or removing all of them.
+                    processed_value = (
+                        bytes_data.decode(encoding, errors="ignore")
+                        .split("\x00", 1)[0]
+                        .strip()
+                    )
 
                 else:
                     # Default: return first value for single-register types
@@ -2323,79 +2330,89 @@ class ModbusCoordinator(DataUpdateCoordinator):
         except Exception as e:
             _LOGGER.error("Error updating coordinator interval: %s", str(e))
 
+    _FIRMWARE_REGISTER_ROLES = {
+        "inverter_firmware_info": "inverter",
+        "battery_firmware_info": "battery",
+    }
+
+    def _extract_firmware_register_value(self, key_substring: str) -> Optional[str]:
+        """Return the cleaned live string for a firmware register, if available."""
+        firmware_key = None
+        for key in self.register_data.keys():
+            if key_substring in key.lower():
+                firmware_key = key
+                break
+
+        if not firmware_key:
+            return None
+
+        firmware_value = self.register_data.get(firmware_key)
+        if not firmware_value or firmware_value in ["unknown", "unavailable", None, ""]:
+            return None
+
+        # Extract processed_value if firmware_value is a dictionary
+        if isinstance(firmware_value, dict):
+            firmware_value = firmware_value.get("processed_value")
+            if not firmware_value:
+                return None
+
+        # Clean up firmware string: treat as null-terminated, cut at the first \x00
+        # instead of stripping all nulls (stray bytes can follow the terminator).
+        if isinstance(firmware_value, str):
+            firmware_value = firmware_value.split("\x00", 1)[0].strip()
+            if not firmware_value:
+                return None
+
+        return firmware_value
+
     async def _update_device_firmware_from_register(self) -> None:
-        """Update device firmware version from inverter_firmware_info register if available."""
+        """Stamp each device's live firmware register value onto its device_registry entry.
+
+        Runs every poll but only writes when the value actually changed, so a
+        firmware upgrade on the inverter/battery is picked up on the next read
+        without requiring a Home Assistant restart or integration reload.
+        """
         try:
-            # Track if we've already updated firmware to avoid repeated updates
-            if not hasattr(self, "_firmware_updated"):
-                self._firmware_updated = False
-
-            # Only try once per coordinator lifecycle
-            if self._firmware_updated:
-                return
-
-            # Look for inverter_firmware_info register data
-            firmware_key = None
-            for key in self.register_data.keys():
-                if "inverter_firmware_info" in key.lower():
-                    firmware_key = key
-                    break
-
-            if not firmware_key:
-                return
-
-            firmware_value = self.register_data.get(firmware_key)
-            if not firmware_value or firmware_value in [
-                "unknown",
-                "unavailable",
-                None,
-                "",
-            ]:
-                return
-
-            # Extract processed_value if firmware_value is a dictionary
-            if isinstance(firmware_value, dict):
-                firmware_value = firmware_value.get("processed_value")
-                if not firmware_value:
-                    return
-
-            # Clean up firmware string (remove null bytes, strip whitespace)
-            if isinstance(firmware_value, str):
-                firmware_value = firmware_value.replace("\x00", "").strip()
-                if not firmware_value:
-                    return
-
-            # Get device identifier
             hub_config = self.entry.data.get("hub", {})
             host = hub_config.get("host") or self.entry.data.get("host", "unknown")
             port = hub_config.get("port") or self.entry.data.get("port", 502)
 
-            # Get devices from config entry
             devices = self.entry.data.get("devices", [])
             if not devices:
                 return
 
-            # Find matching device by host/port/slave_id
-            for device in devices:
-                device_slave_id = device.get("slave_id", 1)
+            device_registry = dr.async_get(self.hass)
+
+            for key_substring, role in self._FIRMWARE_REGISTER_ROLES.items():
+                firmware_value = self._extract_firmware_register_value(key_substring)
+                if not firmware_value:
+                    continue
+
+                matching_device = next(
+                    (d for d in devices if resolve_device_role_type(d) == role),
+                    None,
+                )
+                if not matching_device:
+                    continue
+
+                device_slave_id = matching_device.get("slave_id", 1)
                 device_identifier = (
                     f"modbus_manager_{host}_{port}_slave_{device_slave_id}"
                 )
-
-                # Update device registry
-                device_registry = dr.async_get(self.hass)
                 device_entry = device_registry.async_get_device(
                     identifiers={(DOMAIN, device_identifier)}
                 )
+                if not device_entry:
+                    continue
 
-                if device_entry:
-                    # Update firmware version
-                    device_registry.async_update_device(
-                        device_entry.id,
-                        sw_version=f"Firmware: {firmware_value}",
-                    )
-                    self._firmware_updated = True
-                    break
+                new_sw_version = clean_firmware_version_string(firmware_value)
+                if device_entry.sw_version == new_sw_version:
+                    continue
+
+                device_registry.async_update_device(
+                    device_entry.id,
+                    sw_version=new_sw_version,
+                )
 
         except Exception as e:
             _LOGGER.debug(
