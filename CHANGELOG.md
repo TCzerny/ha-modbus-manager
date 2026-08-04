@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Combined device — iHM daily grid energy ([#78](https://github.com/TCzerny/ha-modbus-manager/issues/78))**: `combined_ihm_grid_import_daily` and `combined_ihm_grid_export_daily` use `state_class: total_increasing` (midnight reset) instead of `total`.
 - **Sungrow — battery firmware version on device page ([#80](https://github.com/TCzerny/ha-modbus-manager/issues/80))**: Live `battery_firmware_info` register updates the battery device (not only inverter); string registers decoded as null-terminated; removed doubled `Firmware:` prefix in `sw_version`.
 - **Combined device — PV hybrid inverter sources ([#83](https://github.com/TCzerny/ha-modbus-manager/issues/83))**: `pv_inverter` / `pv_hybrid_inverter` template types resolve to the `inverter` pairing role so SHx/SG hubs (with battery) appear as eligible combined-device sources.
+- **SBR/SBH battery — serial & BCU firmware ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77))**: Added `battery_1_serial_number` (10710) and `battery_1_bcu_firmware` (10720) string sensors; documentation updated for WiNet-S forwarded Modbus unit ID vs internal address 200.
+- **SBR/SBH battery — diagnostic register filtering ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77))**: Cell/module diagnostics (10756+) and related calculated sensors are template-filtered when **`connection_type` is WiNet-S**; direct LAN keeps the full SBR diagnostic set.
 
 ## [1.0.21] - 2026-07-10
 

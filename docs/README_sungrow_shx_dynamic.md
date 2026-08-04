@@ -75,8 +75,8 @@ The template supports **all 36** following Sungrow SHx models:
 
 #### **Battery Filtering**
 - **Battery none:** Battery-dependent entities are filtered out
-- **Battery standard_battery:** Inverter battery registers only (slave 1) — available on **LAN and WiNet-S**
-- **Battery sbr_battery:** Inverter battery registers + separate SBR/SBH template (slave 200) — **LAN only**
+- **Battery standard_battery:** Inverter battery registers only (slave **1**) — available on **LAN and WiNet-S**
+- **Battery sbr_battery:** Inverter battery registers + separate **SBR/SBH** template on the **battery Modbus unit** (registers **10710+**, default unit ID **200** on direct LAN — often a **forwarded ID** such as **2** on WiNet-S; see [SBR/SBH battery doc](README_sungrow_sbr_battery.md) and [#77](https://github.com/TCzerny/ha-modbus-manager/issues/77))
 
 #### **Meter Type Filtering**
 - **DTSU666:** Standard single-channel meter (registers 5600-5606)
@@ -84,8 +84,10 @@ The template supports **all 36** following Sungrow SHx models:
 - **Note:** iHomeManager is now a separate template (`sungrow_ihomemanager.yaml`) and should not be selected here
 
 #### **Connection Filtering**
-- **LAN:** All registers available (including extended statistics and SBR via slave 200)
-- **WINET:** Extended statistical registers not available; use **`standard_battery`** for inverter-side battery sensors and controls (not SBR/slave 200)
+- **LAN:** Inverter extended statistics (monthly/yearly PV blocks from register **6226+** on slave **1**), full inverter-side map, SBR/SBH battery unit typically on ID **200**
+- **WINET:** Monthly/yearly PV statistics on slave **1** are **not** exposed; inverter-side **`standard_battery`** summary still works. Separate SBR/SBH pack data (**10740+**) can work over WiNet-S when using the **forwarded Modbus unit ID** from the WiNet device list (often **2**, not **200**) — see [#77](https://github.com/TCzerny/ha-modbus-manager/issues/77). Detailed SBR cell diagnostics (**10756+** on the battery template) are generally **not** available on WiNet-S.
+
+**Do not confuse register ranges:** **6226+** / **130xx** yearly blocks = **inverter** PV energy statistics (this template, slave 1). **10756+** = **SBR/SBH battery** cell/module diagnostics (`sungrow_sbr_battery.yaml`, battery unit) — different device and map.
 
 #### **Firmware Adaptation**
 - Automatic sensor parameter adjustment based on firmware version
@@ -98,8 +100,8 @@ Use **Connection: WINET** when Modbus TCP goes through the **WiNet-S** dongle (n
 #### Initial setup (battery present)
 - Select **WINET** as connection type during device options.
 - If a battery is configured, initial setup offers **`standard_battery`** automatically (inverter slave **1** registers and controls).
-- The **SBR / slave 200** wizard is **skipped** on WiNet-S — SBR is **LAN-only**.
-- On **Reconfigure Device**, **`battery_config`** is limited to **`none`** or **`standard_battery`** on WiNet-S (`sbr_battery` is clamped).
+- **Separate SBR/SBH device:** the config flow currently offers **`sbr_battery`** mainly when the inverter connection is **LAN**; pack-level data over WiNet-S requires the **forwarded unit ID** from the WiNet web UI (commonly **2**) — see [SBR/SBH doc](README_sungrow_sbr_battery.md) ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77)).
+- On **Reconfigure Device**, **`battery_config`** is limited to **`none`** or **`standard_battery`** on WiNet-S (`sbr_battery` is clamped on the inverter entry).
 
 #### Expected entity count
 - A hybrid such as **SH10RT** with **WiNet-S** and **`standard_battery`** typically creates about **165–180** entities (template sensors/controls + calculated/binary sensors).

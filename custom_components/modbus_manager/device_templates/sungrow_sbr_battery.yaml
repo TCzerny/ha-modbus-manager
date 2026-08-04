@@ -9,7 +9,7 @@ display_name: "Sungrow SBR / SBH Battery"
 description: "Template for Sungrow SBR/SBH battery systems (Modbus via inverter). Contains all battery sensors, controls, and diagnostics."
 manufacturer: "Sungrow"
 model: "SBR Battery"
-version: 1.1.8
+version: 1.2.0
 default_prefix: "SBR"
 default_slave_id: 200
 type: "battery"
@@ -57,6 +57,28 @@ dynamic_config:
 
 sensors:
   # SBR Battery Sensors
+  - name: Battery 1 Serial Number
+    unique_id: battery_1_serial_number
+    address: 10710 # reg 10711-10720; ASCII serial (padded)
+    input_type: input
+    data_type: string
+    count: 10
+    scan_interval: 3600
+    entity_category: diagnostic
+    icon: "mdi:barcode"
+    mm_group: "battery"
+
+  - name: Battery 1 BCU Firmware
+    unique_id: battery_1_bcu_firmware
+    address: 10720 # reg 10721-10730; ASCII BCU firmware string (not a status array)
+    input_type: input
+    data_type: string
+    count: 10
+    scan_interval: 3600
+    entity_category: diagnostic
+    icon: "mdi:chip"
+    mm_group: "battery"
+
   - name: Battery 1 Voltage
     unique_id: battery_1_voltage
     address: 10740 # reg 10741;Bat Spannung 0.1 V; 2010
@@ -151,6 +173,7 @@ sensors:
     scan_interval: 30
     mm_group: "battery"
 
+  # SBR detailed diagnostics (10756+): not exposed on WiNet-S — use direct inverter LAN (issue #77).
   - name: Battery 1 Max Voltage of Cell
     unique_id: battery_1_max_voltage_of_cell
     address: 10756 # reg 10757;Max.Voltage of Cell 0.1mV; 33457 (also 3.3457 Volt)
@@ -164,6 +187,7 @@ sensors:
     scan_interval: 10
     icon: "mdi:battery-plus-variant"
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Position of Max Voltage Cell
     unique_id: battery_1_position_of_max_voltage_cell
@@ -174,6 +198,7 @@ sensors:
     precision: 0
     scan_interval: 10
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Min Voltage of Cell
     unique_id: battery_1_min_voltage_of_cell
@@ -188,6 +213,7 @@ sensors:
     scan_interval: 10
     icon: "mdi:battery-minus-variant"
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Position of Min Voltage Cell
     unique_id: battery_1_position_of_min_voltage_cell
@@ -198,6 +224,7 @@ sensors:
     precision: 0
     scan_interval: 10
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Max Temperature of Module
     unique_id: battery_1_max_temperature_of_module
@@ -211,6 +238,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Position of Max Temperature of Module
     unique_id: battery_1_position_of_max_temperature_of_module
@@ -221,6 +249,7 @@ sensors:
     precision: 0
     scan_interval: 10
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Min Temperature of Module
     unique_id: battery_1_min_temperature_of_module
@@ -234,6 +263,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Position of Min Temperature of Module
     unique_id: battery_1_position_of_min_temperature_of_module
@@ -244,6 +274,7 @@ sensors:
     precision: 0
     scan_interval: 10
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   # Cell Voltage Sensors for BALANCING Analysis
   - name: Battery 1 Max Cell Voltage of Module 1
@@ -258,6 +289,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Max Cell Voltage of Module 2
     unique_id: battery_1_max_cell_voltage_of_module_2
@@ -271,6 +303,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Max Cell Voltage of Module 3
     unique_id: battery_1_max_cell_voltage_of_module_3
@@ -284,6 +317,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Max Cell Voltage of Module 4
     unique_id: battery_1_max_cell_voltage_of_module_4
@@ -297,6 +331,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Max Cell Voltage of Module 5
     unique_id: battery_1_max_cell_voltage_of_module_5
@@ -310,6 +345,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Max Cell Voltage of Module 6
     unique_id: battery_1_max_cell_voltage_of_module_6
@@ -323,6 +359,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Max Cell Voltage of Module 7
     unique_id: battery_1_max_cell_voltage_of_module_7
@@ -336,6 +373,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Max Cell Voltage of Module 8
     unique_id: battery_1_max_cell_voltage_of_module_8
@@ -349,6 +387,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Min Cell Voltage of Module 1
     unique_id: battery_1_min_cell_voltage_of_module_1
@@ -362,6 +401,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Min Cell Voltage of Module 2
     unique_id: battery_1_min_cell_voltage_of_module_2
@@ -375,6 +415,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Min Cell Voltage of Module 3
     unique_id: battery_1_min_cell_voltage_of_module_3
@@ -388,6 +429,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Min Cell Voltage of Module 4
     unique_id: battery_1_min_cell_voltage_of_module_4
@@ -401,6 +443,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Min Cell Voltage of Module 5
     unique_id: battery_1_min_cell_voltage_of_module_5
@@ -414,6 +457,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Min Cell Voltage of Module 6
     unique_id: battery_1_min_cell_voltage_of_module_6
@@ -427,6 +471,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Min Cell Voltage of Module 7
     unique_id: battery_1_min_cell_voltage_of_module_7
@@ -440,6 +485,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Min Cell Voltage of Module 8
     unique_id: battery_1_min_cell_voltage_of_module_8
@@ -453,6 +499,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     mm_group: "battery_cells"
+    condition: "connection_type != 'WINET'"
 
   # Cell Type Sensors
   - name: Battery 1 Cell Type of Module 1
@@ -464,6 +511,7 @@ sensors:
     precision: 0
     scan_interval: 120
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Cell Type of Module 2
     unique_id: battery_1_cell_type_of_module_2
@@ -474,6 +522,7 @@ sensors:
     precision: 0
     scan_interval: 120
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Cell Type of Module 3
     unique_id: battery_1_cell_type_of_module_3
@@ -484,6 +533,7 @@ sensors:
     precision: 0
     scan_interval: 120
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Cell Type of Module 4
     unique_id: battery_1_cell_type_of_module_4
@@ -494,6 +544,7 @@ sensors:
     precision: 0
     scan_interval: 120
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Cell Type of Module 5
     unique_id: battery_1_cell_type_of_module_5
@@ -504,6 +555,7 @@ sensors:
     precision: 0
     scan_interval: 120
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Cell Type of Module 6
     unique_id: battery_1_cell_type_of_module_6
@@ -514,6 +566,7 @@ sensors:
     precision: 0
     scan_interval: 120
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Cell Type of Module 7
     unique_id: battery_1_cell_type_of_module_7
@@ -524,6 +577,7 @@ sensors:
     precision: 0
     scan_interval: 120
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 Cell Type of Module 8
     unique_id: battery_1_cell_type_of_module_8
@@ -534,6 +588,7 @@ sensors:
     precision: 0
     scan_interval: 120
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   # DC Switch State
   - name: Battery 1 State of DC Switch
@@ -545,6 +600,7 @@ sensors:
     precision: 0
     scan_interval: 120
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   # Module Serial Numbers (dynamisch je nach Modell)
   - name: Battery 1 module 1 serial number
@@ -555,7 +611,7 @@ sensors:
     count: 9
     scan_interval: 600
     mm_group: "battery"
-    condition: "modules >= 1"
+    condition: "modules >= 1 and connection_type != 'WINET'"
 
   - name: Battery 1 module 2 serial number
     unique_id: battery_1_module_2_sn
@@ -565,7 +621,7 @@ sensors:
     count: 9
     scan_interval: 600
     mm_group: "battery"
-    condition: "modules >= 2"
+    condition: "modules >= 2 and connection_type != 'WINET'"
 
   - name: Battery 1 module 3 serial number
     unique_id: battery_1_module_3_sn
@@ -575,7 +631,7 @@ sensors:
     count: 9
     scan_interval: 600
     mm_group: "battery"
-    condition: "modules >= 3"
+    condition: "modules >= 3 and connection_type != 'WINET'"
 
   - name: Battery 1 module 4 serial number
     unique_id: battery_1_module_4_sn
@@ -585,6 +641,7 @@ sensors:
     count: 9
     scan_interval: 600
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 module 5 serial number
     unique_id: battery_1_module_5_sn
@@ -594,6 +651,7 @@ sensors:
     count: 9
     scan_interval: 600
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 module 6 serial number
     unique_id: battery_1_module_6_sn
@@ -603,6 +661,7 @@ sensors:
     count: 9
     scan_interval: 600
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 module 7 serial number
     unique_id: battery_1_module_7_sn
@@ -612,6 +671,7 @@ sensors:
     count: 9
     scan_interval: 600
     mm_group: "battery"
+    condition: "connection_type != 'WINET'"
 
   - name: Battery 1 module 8 serial number
     unique_id: battery_1_module_8_sn
@@ -621,18 +681,7 @@ sensors:
     count: 9
     scan_interval: 600
     mm_group: "battery"
-
-  # Battery Status Array
-  # - name: Battery 1 Status Array
-  #   unique_id: battery_1_status_array
-  #   address: 10720 # reg 10721 - 10730; Batt Status; 0,0,0,0,0,0,0,0,0,0
-  #   input_type: input
-  #   data_type: uint16
-  #   scale: 1
-  #   precision: 0
-  #   count: 10
-  #   scan_interval: 600
-  #   group: "battery"
+    condition: "connection_type != 'WINET'"
 
 # Binary Sensors
 binary_sensors: []
@@ -650,6 +699,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
+    condition: "connection_type != 'WINET'"
     state: >
       {% set max_voltage = states('[[mm:sensor:{PREFIX}_battery_1_max_voltage_of_cell]]') | float(0) %}
       {% set min_voltage = states('[[mm:sensor:{PREFIX}_battery_1_min_voltage_of_cell]]') | float(0) %}
@@ -665,7 +715,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 1"
+    condition: "modules >= 1 and connection_type != 'WINET'"
     state: >
       {% set v1 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_1]]') | float(0) %}
       {% set v2 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_2]]') | float(0) %}
@@ -691,7 +741,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 2"
+    condition: "modules >= 2 and connection_type != 'WINET'"
     state: >
       {% set v1 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_1]]') | float(0) %}
       {% set v2 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_2]]') | float(0) %}
@@ -717,7 +767,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 3"
+    condition: "modules >= 3 and connection_type != 'WINET'"
     state: >
       {% set v1 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_1]]') | float(0) %}
       {% set v2 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_2]]') | float(0) %}
@@ -743,7 +793,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 4"
+    condition: "modules >= 4 and connection_type != 'WINET'"
     state: >
       {% set v1 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_1]]') | float(0) %}
       {% set v2 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_2]]') | float(0) %}
@@ -769,7 +819,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 5"
+    condition: "modules >= 5 and connection_type != 'WINET'"
     state: >
       {% set v1 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_1]]') | float(0) %}
       {% set v2 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_2]]') | float(0) %}
@@ -795,7 +845,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 6"
+    condition: "modules >= 6 and connection_type != 'WINET'"
     state: >
       {% set v1 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_1]]') | float(0) %}
       {% set v2 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_2]]') | float(0) %}
@@ -821,7 +871,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 7"
+    condition: "modules >= 7 and connection_type != 'WINET'"
     state: >
       {% set v1 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_1]]') | float(0) %}
       {% set v2 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_2]]') | float(0) %}
@@ -847,7 +897,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 8"
+    condition: "modules >= 8 and connection_type != 'WINET'"
     state: >
       {% set v1 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_1]]') | float(0) %}
       {% set v2 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_2]]') | float(0) %}
@@ -876,6 +926,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
+    condition: "connection_type != 'WINET'"
     state: >
       {% set max_temp = states('[[mm:sensor:{PREFIX}_battery_1_max_temperature_of_module]]') | float(0) %}
       {% set min_temp = states('[[mm:sensor:{PREFIX}_battery_1_min_temperature_of_module]]') | float(0) %}
@@ -889,6 +940,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
+    condition: "connection_type != 'WINET'"
     state: >
       {% set v1 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_1]]') | float(0) %}
       {% set v2 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_2]]') | float(0) %}
@@ -914,6 +966,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
+    condition: "connection_type != 'WINET'"
     state: >
       {% set v1 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_1]]') | float(0) %}
       {% set v2 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_2]]') | float(0) %}
@@ -948,6 +1001,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
+    condition: "connection_type != 'WINET'"
     state: >
       {% set v1 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_1]]') | float(0) %}
       {% set v2 = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_2]]') | float(0) %}
@@ -987,7 +1041,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 1"
+    condition: "modules >= 1 and connection_type != 'WINET'"
     state: >
       {% set max_v = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_1]]') | float(0) %}
       {% set min_v = states('[[mm:sensor:{PREFIX}_battery_1_min_cell_voltage_of_module_1]]') | float(0) %}
@@ -1000,7 +1054,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 2"
+    condition: "modules >= 2 and connection_type != 'WINET'"
     state: >
       {% set max_v = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_2]]') | float(0) %}
       {% set min_v = states('[[mm:sensor:{PREFIX}_battery_1_min_cell_voltage_of_module_2]]') | float(0) %}
@@ -1013,7 +1067,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 3"
+    condition: "modules >= 3 and connection_type != 'WINET'"
     state: >
       {% set max_v = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_3]]') | float(0) %}
       {% set min_v = states('[[mm:sensor:{PREFIX}_battery_1_min_cell_voltage_of_module_3]]') | float(0) %}
@@ -1026,7 +1080,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 4"
+    condition: "modules >= 4 and connection_type != 'WINET'"
     state: >
       {% set max_v = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_4]]') | float(0) %}
       {% set min_v = states('[[mm:sensor:{PREFIX}_battery_1_min_cell_voltage_of_module_4]]') | float(0) %}
@@ -1039,7 +1093,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 5"
+    condition: "modules >= 5 and connection_type != 'WINET'"
     state: >
       {% set max_v = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_5]]') | float(0) %}
       {% set min_v = states('[[mm:sensor:{PREFIX}_battery_1_min_cell_voltage_of_module_5]]') | float(0) %}
@@ -1052,7 +1106,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 6"
+    condition: "modules >= 6 and connection_type != 'WINET'"
     state: >
       {% set max_v = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_6]]') | float(0) %}
       {% set min_v = states('[[mm:sensor:{PREFIX}_battery_1_min_cell_voltage_of_module_6]]') | float(0) %}
@@ -1065,7 +1119,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 7"
+    condition: "modules >= 7 and connection_type != 'WINET'"
     state: >
       {% set max_v = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_7]]') | float(0) %}
       {% set min_v = states('[[mm:sensor:{PREFIX}_battery_1_min_cell_voltage_of_module_7]]') | float(0) %}
@@ -1078,7 +1132,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
-    condition: "modules >= 8"
+    condition: "modules >= 8 and connection_type != 'WINET'"
     state: >
       {% set max_v = states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_8]]') | float(0) %}
       {% set min_v = states('[[mm:sensor:{PREFIX}_battery_1_min_cell_voltage_of_module_8]]') | float(0) %}
@@ -1092,6 +1146,7 @@ calculated:
     state_class: measurement
     precision: 5
     mm_group: "battery_balancing"
+    condition: "connection_type != 'WINET'"
     state: >
       {% set r1 = (states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_1]]') | float(0) - states('[[mm:sensor:{PREFIX}_battery_1_min_cell_voltage_of_module_1]]') | float(0)) | abs %}
       {% set r2 = (states('[[mm:sensor:{PREFIX}_battery_1_max_cell_voltage_of_module_2]]') | float(0) - states('[[mm:sensor:{PREFIX}_battery_1_min_cell_voltage_of_module_2]]') | float(0)) | abs %}
@@ -1109,6 +1164,7 @@ calculated:
   - name: "Battery 1 Max Voltage Cell Info"
     unique_id: battery_1_max_voltage_cell_info
     mm_group: "battery_balancing"
+    condition: "connection_type != 'WINET'"
     state: >
       {% set raw = states('[[mm:sensor:{PREFIX}_battery_1_position_of_max_voltage_cell]]') | int(0) %}
       {% set mod = raw // 256 %}
@@ -1123,6 +1179,7 @@ calculated:
   - name: "Battery 1 Min Voltage Cell Info"
     unique_id: battery_1_min_voltage_cell_info
     mm_group: "battery_balancing"
+    condition: "connection_type != 'WINET'"
     state: >
       {% set raw = states('[[mm:sensor:{PREFIX}_battery_1_position_of_min_voltage_cell]]') | int(0) %}
       {% set mod = raw // 256 %}
@@ -1139,6 +1196,7 @@ calculated:
   - name: "Battery 1 Max Temperature Module Info"
     unique_id: battery_1_max_temperature_module_info
     mm_group: "battery_balancing"
+    condition: "connection_type != 'WINET'"
     state: >
       {% set raw = states('[[mm:sensor:{PREFIX}_battery_1_position_of_max_temperature_of_module]]') | int(0) %}
       {% set mod = raw // 256 %}
@@ -1153,6 +1211,7 @@ calculated:
   - name: "Battery 1 Min Temperature Module Info"
     unique_id: battery_1_min_temperature_module_info
     mm_group: "battery_balancing"
+    condition: "connection_type != 'WINET'"
     state: >
       {% set raw = states('[[mm:sensor:{PREFIX}_battery_1_position_of_min_temperature_of_module]]') | int(0) %}
       {% set mod = raw // 256 %}

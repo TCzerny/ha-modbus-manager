@@ -15,7 +15,45 @@ This document lists the Modbus registers for the Sungrow SBR/SBH battery templat
 ### SBR vs SBH
 
 - **SBR** (SBR064–SBR256): 3.2 kWh per module, 30 A, compatible with SH-RS (single-phase) and SH-RT/SH-T (three-phase).
-- **SBH** (SBH100–SBH400): 5 kWh per module, up to 50 A, compatible with **SH-T only**. Both series use the same Residential Hybrid Inverter Modbus protocol; battery data is read via the inverter (typically slave ID 200, registers 10740+). If you have an SBH with an SH-T inverter, use this template and select the matching SBH model; report back if any registers differ.
+- **SBH** (SBH100–SBH400): 5 kWh per module, up to 50 A. Reported on **SH-T** and **SH-RS** setups ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77)). Both series use the Residential Hybrid Inverter Modbus protocol; battery data is read on the **battery Modbus unit** (registers **10710+**), not on inverter slave 1.
+
+### Modbus unit ID (slave ID) — not always 200
+
+| Path | Typical TCP Unit ID | Notes |
+|------|---------------------|--------|
+| **Inverter LAN (RJ45)** on SH-RT / SH-T | **200** | Internal battery address on the inverter Modbus port |
+| **WiNet-S** (Wi‑Fi or cable to dongle) | **Forwarded ID** from WiNet web UI | Internal address **200** is often forwarded as **2** (or another ID) — see below |
+| **RS485 direct (A1/B1)** | Often **200** | Planned dedicated `RS485` connection type ([#82](https://github.com/TCzerny/ha-modbus-manager/issues/82)) |
+
+**WiNet-S:** Open **Device maintenance → Device list** on the WiNet web page. The **forwarded Modbus ID** column is the Unit ID for Modbus TCP (e.g. inverter **1**, first SBH **2**). Using Unit ID **200** on WiNet-S usually times out even though the battery is reachable ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77)).
+
+The battery **slave ID is configurable** during setup (`battery_slave_id`). Default **200** applies to direct LAN/RS485; WiNet-S users should enter the **forwarded ID** from the device list.
+
+### Register map overview (do not confuse with inverter PV statistics)
+
+This template uses the **SBR/SBH battery map** starting at **10710** on the battery unit:
+
+| Range | Content |
+|-------|---------|
+| **10710** | Battery serial number (ASCII string) |
+| **10720** | BCU firmware string (ASCII) |
+| **10740–10747** | Base pack data: voltage, current, temperature, SOC, SOH, total charge/discharge energy |
+| **10756–10788** | **SBR detailed cell/module diagnostics** (max/min cell voltage, module temps, cell types, DC switch) |
+| **10821+** | Per-module serial numbers |
+
+**Template filtering:** Registers **10756+**, module serials **10821+**, and related calculated sensors are created only when **`connection_type != 'WINET'`** (direct inverter LAN / RS485). **WiNet-S** setups keep base registers **10710–10747** only ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77)). **Note:** Some **SBH** firmware maps may still not implement **10756+** even on LAN — report if you see Modbus exception 2 on those addresses.
+
+**SBH vs SBR diagnostics:** Base registers **10710–10747** work on tested **SBH150** over WiNet-S (Unit ID 2). Registers **10756+** return Modbus exception 2 on SBH150 — they match the **SBR** detailed map and are often only available on **direct inverter LAN** for SBR stacks ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77), [#74](https://github.com/TCzerny/ha-modbus-manager/issues/74)). On **WiNet-S**, detailed cell/module registers are generally **not** exposed even for SBR.
+
+### Three ways to get battery data
+
+| Setup | What you get |
+|-------|----------------|
+| **`standard_battery`** on inverter (slave **1**) | Summary battery sensors on the **inverter** template — works on **LAN and WiNet-S** |
+| **Separate SBR/SBH device** (this template) | Pack serial, BCU firmware, **10740+** totals; SBR cell diagnostics when the path exposes them |
+| **Inverter slave 1 only** | No module serials / no 10756+ cell detail |
+
+When the inverter uses **WiNet-S**, the config flow currently limits **`battery_config`** to **`none`** or **`standard_battery`** on the inverter entry; adding this template still requires a path where **`sbr_battery`** is allowed (typically **LAN** on the inverter hub) or configuring the battery device with the correct **forwarded slave ID** if your setup supports it ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77)).
 
 ### Dynamic Configuration
 
@@ -29,6 +67,8 @@ This document lists the Modbus registers for the Sungrow SBR/SBH battery templat
 
 | Name | Unique ID | Address | Input | Data | Unit | Scale | Condition |
 |---|---|---|---|---|---|---|---|
+| Battery 1 Serial Number | battery_1_serial_number | 10710 | input | string |  |  |  |
+| Battery 1 BCU Firmware | battery_1_bcu_firmware | 10720 | input | string |  |  |  |
 | Battery 1 Voltage | battery_1_voltage | 10740 | input | uint16 | V | 0.1 |  |
 | Battery 1 Current | battery_1_current | 10741 | input | int16 | A | 0.1 |  |
 | Battery 1 Temperature | battery_1_temperature | 10742 | input | uint16 | °C | 0.1 |  |
@@ -36,7 +76,7 @@ This document lists the Modbus registers for the Sungrow SBR/SBH battery templat
 | Battery 1 SOH | battery_1_soh | 10744 | input | uint16 | % | 1 |  |
 | Battery 1 Total Battery Charge | battery_1_total_battery_charge | 10745 | input | uint32 | kWh | 0.1 |  |
 | Battery 1 Total Battery Discharge | battery_1_total_battery_discharge | 10747 | input | uint32 | kWh | 0.1 |  |
-| Battery 1 Max Voltage of Cell | battery_1_max_voltage_of_cell | 10756 | input | uint16 | V | 0.0001 |  |
+| Battery 1 Max Voltage of Cell | battery_1_max_voltage_of_cell | 10756 | input | uint16 | V | 0.0001 | not WINET |
 | Battery 1 Position of Max Voltage Cell | battery_1_position_of_max_voltage_cell | 10757 | input | uint16 |  | 1 |  |
 | Battery 1 Min Voltage of Cell | battery_1_min_voltage_of_cell | 10758 | input | uint16 | V | 0.0001 |  |
 | Battery 1 Position of Min Voltage Cell | battery_1_position_of_min_voltage_cell | 10759 | input | uint16 |  | 1 |  |
@@ -113,3 +153,4 @@ This document lists the Modbus registers for the Sungrow SBR/SBH battery templat
 
 - Addresses are the base register offsets used by the integration.
 - Conditions reflect template logic and are evaluated in the dynamic config.
+- **10756+** = battery cell/module diagnostics (this template), not inverter monthly/yearly PV energy statistics (see `sungrow_shx_dynamic.yaml`, registers 6226+ on slave 1).
