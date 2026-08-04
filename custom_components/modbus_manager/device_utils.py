@@ -25,6 +25,9 @@ KNOWN_TEMPLATE_DEVICE_TYPES: dict[str, str] = {
     "sungrow_ihomemanager": "energy_manager",
 }
 
+# Template YAML types that represent an inverter for combined-device pairing.
+_INVERTER_ROLE_ALIASES = frozenset({"inverter", "pv_inverter", "pv_hybrid_inverter"})
+
 
 def clean_firmware_version_string(firmware_version: Any) -> str:
     """Return a bare firmware value for device_registry sw_version.
@@ -49,6 +52,8 @@ def resolve_device_role_type(device: dict[str, Any]) -> str:
     if mapped:
         return mapped
     device_type = str(device.get("type", "")).strip().lower()
+    if device_type in _INVERTER_ROLE_ALIASES:
+        return "inverter"
     return device_type or "inverter"
 
 
