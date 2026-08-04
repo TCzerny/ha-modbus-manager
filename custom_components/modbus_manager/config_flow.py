@@ -101,6 +101,32 @@ def _vol_in_from_dynamic_options(
     return default, vol.In(options)
 
 
+def _migrate_legacy_battery_enabled(
+    dynamic_config: dict, legacy_source: dict | None = None
+) -> None:
+    """Map deprecated battery_enabled bool to battery_config (iHomeManager legacy)."""
+    battery_config = dynamic_config.get("battery_config")
+    if isinstance(battery_config, dict):
+        return
+    if battery_config not in (None, "none"):
+        return
+    sources = [dynamic_config]
+    if legacy_source:
+        sources.append(legacy_source)
+    for source in sources:
+        if source.get("battery_enabled") is True:
+            dynamic_config["battery_config"] = "battery"
+            return
+
+
+def _resolve_battery_config_value(dynamic_config: dict, fallback: str = "none") -> str:
+    """Return concrete battery_config string from dynamic_config."""
+    battery_config = dynamic_config.get("battery_config", fallback)
+    if isinstance(battery_config, dict):
+        return str(battery_config.get("default", fallback))
+    return str(battery_config or fallback)
+
+
 _WINET_BATTERY_CONFIGS = frozenset({"none", "standard_battery", "other"})
 
 
@@ -996,6 +1022,17 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return has_battery_config
 
     @staticmethod
+    def _battery_config_in_separate_flow(template_data: dict) -> bool:
+        """PV inverters use async_step_battery_detection; others show battery_config inline."""
+        template_type = (template_data.get("type") or "").lower()
+        return template_type in (
+            "pv_inverter",
+            "pv_hybrid_inverter",
+        ) and isinstance(
+            template_data.get("dynamic_config", {}).get("battery_config"), dict
+        )
+
+    @staticmethod
     def _get_valid_models(template_data: dict) -> dict[str, Any] | None:
         """Return valid_models mapping from template dynamic_config or root."""
         dynamic_config = template_data.get("dynamic_config", {})
@@ -1129,8 +1166,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "battery_slave_id",
             ]:
                 continue
-            if field_name == "battery_config" and self._supports_battery_config(
-                template_data
+            if (
+                field_name == "battery_config"
+                and self._battery_config_in_separate_flow(template_data)
             ):
                 continue
 
@@ -1461,6 +1499,23 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                             field_name,
                             field_config.get("default"),
                         )
+
+        _migrate_legacy_battery_enabled(dynamic_config, user_input)
+        if (
+            "sbr" in template_data.get("name", "").lower()
+            or "battery" in template_data.get("type", "").lower()
+        ):
+            battery_config = "sbr_battery"
+            battery_type = "sbr_battery"
+            battery_enabled = True
+        else:
+            battery_config = _resolve_battery_config_value(
+                dynamic_config, fallback=battery_config
+            )
+            battery_type = battery_config
+            battery_enabled = battery_config != "none"
+        dynamic_config["battery_config"] = battery_config
+        dynamic_config["battery_enabled"] = battery_enabled
 
         # Log meter_type if present for debugging
         meter_type = dynamic_config.get("meter_type", "not_set")
@@ -3876,6 +3931,12 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
                     current = selected_device.get(
                         field_name, field_config.get("default")
                     )
+                    if (
+                        field_name == "battery_config"
+                        and selected_device.get("battery_enabled") is True
+                        and current in (None, "none", field_config.get("default"))
+                    ):
+                        current = "battery"
                     if field_name == "battery_config":
                         current = _clamp_battery_config_for_connection(
                             current, selected_device.get("connection_type")
@@ -5137,6 +5198,23 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                             field_name,
                             field_config.get("default"),
                         )
+
+        _migrate_legacy_battery_enabled(dynamic_config, user_input)
+        if (
+            "sbr" in template_data.get("name", "").lower()
+            or "battery" in template_data.get("type", "").lower()
+        ):
+            battery_config = "sbr_battery"
+            battery_type = "sbr_battery"
+            battery_enabled = True
+        else:
+            battery_config = _resolve_battery_config_value(
+                dynamic_config, fallback=battery_config
+            )
+            battery_type = battery_config
+            battery_enabled = battery_config != "none"
+        dynamic_config["battery_config"] = battery_config
+        dynamic_config["battery_enabled"] = battery_enabled
 
         # Log meter_type if present for debugging
         meter_type = dynamic_config.get("meter_type", "not_set")

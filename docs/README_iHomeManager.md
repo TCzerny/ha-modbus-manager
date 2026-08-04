@@ -16,7 +16,7 @@ template: `sungrow_ihomemanager.yaml`.
 
 ### Dynamic Configuration
 
-- `battery_enabled` (true/false): Enables battery-related registers.
+- `battery_config` (`none` / `battery`): Enables battery-related registers (same pattern as inverter templates).
 - `channel_2_enabled` (true/false): Enables PROD.CT channel 2 registers.
 - `charger_enabled` (true/false): Enables charger-related registers.
 - `charger_region` (`EU` / `AU`): EV charger mode map (EU modes 160–163, AU modes 164–167). Default: `EU`.
@@ -79,7 +79,7 @@ Single-template **`daily_consumed_energy`** on the inverter alone does **not** i
 |---|---|---|---|---|---|---|---|
 | EMS Mode Selection | ems_mode_selection | 8023 | holding | uint16 |  |  |  |
 | Charging/Discharging Command | charging_discharging_command | 8024 | holding | uint16 |  |  | battery_enabled == true |
-| Charging/Discharging Power | charging_discharging_power | 8025 | holding | uint32 | kW | 0.1 | battery_enabled == true |
+| Charging/Discharging Power | charging_discharging_power | 8025 | holding | uint16 | kW | 0.1 | battery_enabled == true |
 | Feed-in Power Limitation | feed_in_power_limitation | 8027 | holding | uint16 |  |  |  |
 | Feed-in Power Limit Value | feed_in_power_limit_value | 8028 | holding | uint32 | kW | 0.1 |  |
 | Feed-in Power Limit Ratio | feed_in_power_limit_ratio | 8030 | holding | int16 | % | 0.1 |  |

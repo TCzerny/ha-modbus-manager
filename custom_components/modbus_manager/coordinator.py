@@ -724,6 +724,18 @@ class ModbusCoordinator(DataUpdateCoordinator):
                         dynamic_config[key] = value
                         dynamic_config_source[key] = source
 
+                # Legacy iHomeManager: battery_enabled bool -> battery_config
+                if (
+                    isinstance(template_dynamic_config.get("battery_config"), dict)
+                    and dynamic_config.get("battery_config", "none") == "none"
+                ):
+                    legacy_battery_enabled = device.get("battery_enabled")
+                    if legacy_battery_enabled is True:
+                        dynamic_config["battery_config"] = "battery"
+                        dynamic_config_source[
+                            "battery_config"
+                        ] = "migrated_battery_enabled"
+
                 # Calculate battery_enabled from battery_config for condition filtering
                 battery_config = dynamic_config.get("battery_config", "none")
                 # If battery_config is not set but we have an SBR Battery device, enable battery

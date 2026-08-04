@@ -6,7 +6,7 @@ display_name: "Sungrow iHomeManager"
 description: "Template for Sungrow iHomeManager EMS device (Modbus TCP). Includes iHomeManager meter, EMS, and charger registers."
 manufacturer: "Sungrow"
 model: "iHomeManager"
-version: 1.0.7
+version: 1.0.8
 default_prefix: "IHM"
 default_slave_id: 247
 type: "energy_manager"
@@ -17,12 +17,15 @@ firmware_version: "iHomeManager"
 # V1.0.0: Initial Version
 # V1.0.1: Added channel 2 data of the meter(8565~8574), Application Software Version(8318~8332), active power limit(8051~8052)
 # V1.0.2: Added Feed-in limitation (8028), Changed the data type of Feed-in limitation ratio(8031) from S32 to S16.
+# V1.0.8: battery_config setup (none/battery) replaces battery_enabled; charging_discharging_power uint16 (#79)
 
 dynamic_config:
-  battery_enabled:
-    description: "Enable battery-related registers"
-    options: [true, false]
-    default: false
+  battery_config:
+    description: "Battery configuration"
+    options:
+      none: "No battery"
+      battery: "Battery connected"
+    default: "none"
   channel_2_enabled:
     description: "Enable PROD.CT channel 2 registers"
     options: [true, false]
@@ -583,8 +586,7 @@ controls:
     unique_id: "charging_discharging_power"
     address: 8025 # reg 8026
     input_type: "holding"
-    data_type: "uint32"
-    swap: word
+    data_type: "uint16"
     precision: 1
     scale: 0.1
     unit_of_measurement: kW

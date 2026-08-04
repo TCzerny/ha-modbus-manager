@@ -5,6 +5,12 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.22] - 2026-08-04
+
+### 🐛 Fixed
+
+- **iHomeManager — battery entities missing ([#79](https://github.com/TCzerny/ha-modbus-manager/issues/79))**: Use unified `battery_config` setup (`none` / `battery`) instead of `battery_enabled`; show `battery_config` in the dynamic config step for non-inverter templates; legacy `battery_enabled: true` migrates to `battery_config: battery`. `charging_discharging_power` register corrected to `uint16`.
+
 ## [1.0.21] - 2026-07-10
 
 ### 🐛 Fixed
