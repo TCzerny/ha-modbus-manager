@@ -223,7 +223,7 @@ class CombinedDailyMeterPair:
         return {
             "unit_of_measurement": "kWh",
             "device_class": "energy",
-            "state_class": "total",
+            "state_class": "total_increasing",
             "precision": 3,
             "aggregation": "daily_meter",
             "source_unique_id": meter.source_unique_id,

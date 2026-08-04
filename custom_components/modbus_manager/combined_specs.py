@@ -329,7 +329,7 @@ COMBINED_SENSOR_METRIC_SPECS: dict[str, dict[str, dict[str, Any]]] = {
             "meter_key": "import",
             "unit_of_measurement": "kWh",
             "device_class": "energy",
-            "state_class": "total",
+            "state_class": "total_increasing",
             "precision": 3,
         },
         "combined_ihm_grid_export_daily": {
@@ -338,7 +338,7 @@ COMBINED_SENSOR_METRIC_SPECS: dict[str, dict[str, dict[str, Any]]] = {
             "meter_key": "export",
             "unit_of_measurement": "kWh",
             "device_class": "energy",
-            "state_class": "total",
+            "state_class": "total_increasing",
             "precision": 3,
         },
         # --- Cross-source consumed energy (issue #50) ---
