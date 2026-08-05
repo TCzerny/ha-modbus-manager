@@ -5,6 +5,13 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-08-05
+
+### 🐛 Fixed
+
+- **Device registry — one subentry per device ([#76](https://github.com/TCzerny/ha-modbus-manager/issues/76))**: Device registry identifiers now use stable **`device_entry_id`** keys (`{prefix}_{slave_id}_{template_key}`) instead of Modbus **`slave_id` only**, so inverter + battery subentries no longer collide on the same registry device when they share a connection slave ID. Aligns with Home Assistant core requirement that each device registry entry is linked to at most one config subentry ([#175785](https://github.com/home-assistant/core/pull/175785)).
+- **Device registry — migration & relink on upgrade**: Config entry migration **v6/v7** adds `template_key` and `device_entry_id`, remaps subentry `unique_id`s, and updates existing registry identifiers from legacy `_slave_{id}` (or display-name) keys. Setup relinks devices via `config_entries_subentries` on current Home Assistant APIs.
+
 ## [1.0.22] - 2026-08-04
 
 ### 🐛 Fixed
