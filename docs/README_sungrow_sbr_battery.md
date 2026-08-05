@@ -29,6 +29,30 @@ This document lists the Modbus registers for the Sungrow SBR/SBH battery templat
 
 The battery **slave ID is configurable** during setup (`battery_slave_id`). Default **200** applies to direct LAN/RS485; WiNet-S users should enter the **forwarded ID** from the device list.
 
+### WiNet-S: not a transparent Modbus proxy
+
+On **WiNet-S**, external Modbus TCP is **not** a byte-for-byte copy of the internal battery RTU traffic. WiNet-S polls the SBH/SBR internally on RTU slave **200** (e.g. `FC04`, start **10665**, count **120**) and exposes a **filtered, transformed, or cached** subset on the **forwarded TCP unit ID** (often **2**).
+
+Evidence from COM1 logger exports on **SH20T + SBH150 + WiNet-S2** ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77), thanks @CaneTLOTW):
+
+| Area | Internal COM1 (slave 200) | External WiNet-S TCP (forwarded unit ID) |
+|------|---------------------------|------------------------------------------|
+| **10710–10720** | Serial, BCU firmware strings | Available; matches |
+| **10740–10748** | Voltage, current, temp, SOC, SOH, energy totals | Available; scaling matches |
+| **10756+** | Non-zero cell/module diagnostic bytes | Zeroed, unavailable, or Modbus exception 2 |
+| **10821+** | Module serial slots (often empty on SBH) | Not usefully exposed externally |
+| **10750** | Example: raw **4** in internal block | Example: raw **14** on external TCP — same address, different value |
+
+**Practical meaning:**
+
+- Treat WiNet-S as a **summary battery view**, not full SBR diagnostics.
+- Do **not** expect **10756+** or **10821+** cell/module detail through WiNet-S, even when those registers appear in internal WiNet COM1 logs.
+- **Direct inverter LAN** (or future RS485 path) remains the route for SBR-style detailed diagnostics when the firmware map supports them.
+
+**Template behaviour (v1.0.22+):** Registers **10756+**, module serials **10821+**, and related calculated sensors are **not created** when the inverter **`connection_type` is WiNet-S**, to avoid poll errors on addresses the dongle does not expose. Base pack data **10710–10747** remains available on WiNet-S with the correct **forwarded unit ID**.
+
+**Not in the template yet (optional low-level diagnostics):** External WiNet-S tests also reported stable raw values for **10735–10739** (metadata block), **10749**, **10750**, and **19938** (likely BMS current limit, scale **0.1 A** — semantics unconfirmed). These may be added in a future release with neutral naming.
+
 ### Register map overview (do not confuse with inverter PV statistics)
 
 This template uses the **SBR/SBH battery map** starting at **10710** on the battery unit:
@@ -37,13 +61,16 @@ This template uses the **SBR/SBH battery map** starting at **10710** on the batt
 |-------|---------|
 | **10710** | Battery serial number (ASCII string) |
 | **10720** | BCU firmware string (ASCII) |
+| **10735–10739** | Raw metadata block (optional; stable on some WiNet-S setups; not in template yet) |
 | **10740–10747** | Base pack data: voltage, current, temperature, SOC, SOH, total charge/discharge energy |
+| **10749–10750** | Raw diagnostic words (optional; semantics unknown; WiNet-S may differ from internal COM1) |
+| **19938** | Probable BMS current limit (optional; scale 0.1 A; not in template yet) |
 | **10756–10788** | **SBR detailed cell/module diagnostics** (max/min cell voltage, module temps, cell types, DC switch) |
 | **10821+** | Per-module serial numbers |
 
-**Template filtering:** Registers **10756+**, module serials **10821+**, and related calculated sensors are created only when **`connection_type != 'WINET'`** (direct inverter LAN / RS485). **WiNet-S** setups keep base registers **10710–10747** only ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77)). **Note:** Some **SBH** firmware maps may still not implement **10756+** even on LAN — report if you see Modbus exception 2 on those addresses.
+**Template filtering:** Registers **10756+**, module serials **10821+**, and related calculated sensors are created only when **`connection_type != 'WINET'`** (direct inverter LAN / RS485). **WiNet-S** setups keep base registers **10710–10747** only ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77)). See [WiNet-S: not a transparent Modbus proxy](#winet-s-not-a-transparent-modbus-proxy) above. **Note:** Some **SBH** firmware maps may still not implement **10756+** even on LAN — report if you see Modbus exception 2 on those addresses.
 
-**SBH vs SBR diagnostics:** Base registers **10710–10747** work on tested **SBH150** over WiNet-S (Unit ID 2). Registers **10756+** return Modbus exception 2 on SBH150 — they match the **SBR** detailed map and are often only available on **direct inverter LAN** for SBR stacks ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77), [#74](https://github.com/TCzerny/ha-modbus-manager/issues/74)). On **WiNet-S**, detailed cell/module registers are generally **not** exposed even for SBR.
+**SBH vs SBR diagnostics:** Base registers **10710–10747** work on tested **SBH150** over WiNet-S (Unit ID 2). Registers **10756+** are present in internal WiNet COM1 traffic but are **not** exposed unchanged on external Modbus TCP; on direct LAN they may still return Modbus exception 2 on SBH150 ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77), [#74](https://github.com/TCzerny/ha-modbus-manager/issues/74)).
 
 ### Three ways to get battery data
 
