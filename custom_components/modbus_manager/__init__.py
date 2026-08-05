@@ -35,21 +35,24 @@ from .device_identification import (
     log_identification,
     parse_identification_service_params,
 )
-from .device_utils import get_entity_mm_group, resolve_entity_id_strategy
+from .device_utils import (
+    apply_device_entry_id_remap,
+    build_device_entry_id,
+    get_entity_mm_group,
+    hub_device_identifier,
+    migrate_subentry_device_identifiers,
+    resolve_entity_id_strategy,
+)
 from .logger import ModbusManagerLogger
 from .performance_monitor import PerformanceMonitor
 from .register_optimizer import RegisterOptimizer
-from .template_loader import get_template_by_name, set_hass_instance
+from .template_loader import (
+    get_template_by_name,
+    resolve_template_key,
+    set_hass_instance,
+)
 
 _LOGGER = ModbusManagerLogger(__name__)
-
-
-def _build_device_entry_id(device: dict[str, Any]) -> str:
-    """Build stable logical device id."""
-    prefix = str(device.get("prefix", "device")).strip() or "device"
-    slave_id = str(device.get("slave_id", 1)).strip() or "1"
-    template = str(device.get("template", "template")).strip() or "template"
-    return f"{prefix}_{slave_id}_{template}"
 
 
 def _normalize_device_record(device: dict[str, Any]) -> dict[str, Any]:
@@ -57,9 +60,13 @@ def _normalize_device_record(device: dict[str, Any]) -> dict[str, Any]:
     normalized = dict(device)
     if not normalized.get("type"):
         normalized["type"] = "inverter"
-    normalized["device_entry_id"] = normalized.get(
-        "device_entry_id", _build_device_entry_id(normalized)
+    template_key = normalized.get("template_key") or resolve_template_key(
+        str(normalized.get("template", "template"))
     )
+    normalized["template_key"] = template_key
+    normalized["device_entry_id"] = normalized.get(
+        "device_entry_id"
+    ) or build_device_entry_id(normalized)
     return normalized
 
 
@@ -138,6 +145,7 @@ async def _sync_device_subentries(hass: HomeAssistant, entry: ConfigEntry) -> No
         )
         data = {
             "device_entry_id": device_id,
+            "template_key": device.get("template_key"),
             "type": device.get("type", "inverter"),
             "template": device.get("template"),
             "prefix": device.get("prefix"),
@@ -277,7 +285,6 @@ async def _relink_devices_to_subentries(
                 continue
             normalized = _normalize_device_record(device)
             device_entry_id = normalized.get("device_entry_id")
-            slave_id = normalized.get("slave_id", 1)
             if not device_entry_id:
                 continue
 
@@ -292,24 +299,21 @@ async def _relink_devices_to_subentries(
             if not target_subentry_id:
                 continue
 
-            identifier = f"modbus_manager_{host}_{port}_slave_{slave_id}"
+            identifier = hub_device_identifier(host, port, device_entry_id)
             device_entry = device_registry.async_get_device(
                 identifiers={(DOMAIN, identifier)}
             )
             if not device_entry:
                 continue
 
-            # Ensure device is linked to the concrete subentry.
+            if device_entry.config_subentry_id == target_subentry_id:
+                continue
+
+            # Ensure each registry device is owned by exactly one subentry.
             device_registry.async_update_device(
                 device_entry.id,
                 add_config_entry_id=entry.entry_id,
                 add_config_subentry_id=target_subentry_id,
-            )
-            # Remove legacy unassigned link for this entry to avoid duplicate UI groups.
-            device_registry.async_update_device(
-                device_entry.id,
-                remove_config_entry_id=entry.entry_id,
-                remove_config_subentry_id=None,
             )
             moved += 1
 
@@ -709,10 +713,35 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             _LOGGER.info("Fallback migration completed successfully")
 
         # Keep true config subentries in sync with current devices[] records.
+        id_remap = entry.data.get("device_entry_id_remap")
+        if isinstance(id_remap, dict) and id_remap:
+            remap_updates = apply_device_entry_id_remap(hass, entry, id_remap)
+            if remap_updates:
+                _LOGGER.info(
+                    "Applied %d device_entry_id remap(s) for entry %s",
+                    remap_updates,
+                    entry.entry_id,
+                )
+            remap_data = dict(entry.data)
+            remap_data.pop("device_entry_id_remap", None)
+            remap_data.pop("device_registry_relink_completed", None)
+            remap_data["pending_registry_relink"] = True
+            hass.config_entries.async_update_entry(entry, data=remap_data)
+            entry = hass.config_entries.async_get_entry(entry.entry_id) or entry
+
         await _sync_device_subentries(hass, entry)
+
+        identifier_migrations = migrate_subentry_device_identifiers(hass, entry)
+        if identifier_migrations:
+            _LOGGER.info(
+                "Migrated %d device registry identifier(s) to subentry keys for %s",
+                identifier_migrations,
+                entry.entry_id,
+            )
+
         relink_completed = bool(entry.data.get("device_registry_relink_completed"))
         pending_relink = bool(entry.data.get("pending_registry_relink"))
-        if pending_relink or not relink_completed:
+        if identifier_migrations or pending_relink or not relink_completed:
             await _relink_devices_to_subentries(hass, entry)
             await _relink_entities_to_device_subentries(hass, entry)
             new_data = dict(entry.data)

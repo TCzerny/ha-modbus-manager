@@ -25,9 +25,11 @@ from .const import (
     EntityIdStrategy,
 )
 from .device_utils import (
+    build_device_entry_id,
     clean_firmware_version_string,
     create_device_info_dict,
     generate_unique_id,
+    hub_device_identifier,
     replace_template_placeholders,
     resolve_device_role_type,
     resolve_entity_id_strategy,
@@ -958,7 +960,9 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 hub_config = self.entry.data.get("hub", {})
                 host = hub_config.get("host") or self.entry.data.get("host", "unknown")
                 port = hub_config.get("port") or self.entry.data.get("port", 502)
-                device_entry_id = device.get("device_entry_id")
+                device_entry_id = device.get(
+                    "device_entry_id"
+                ) or build_device_entry_id(device)
                 config_subentry_id = None
                 if device_entry_id:
                     for subentry in self.entry.subentries.values():
@@ -981,6 +985,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     slave_id=slave_id,
                     prefix=prefix,
                     template_name=template_name,
+                    device_entry_id=device_entry_id,
                     firmware_version=device_firmware_version,
                     config_entry_id=self.entry.entry_id,
                 )
@@ -2395,10 +2400,10 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 if not matching_device:
                     continue
 
-                device_slave_id = matching_device.get("slave_id", 1)
-                device_identifier = (
-                    f"modbus_manager_{host}_{port}_slave_{device_slave_id}"
-                )
+                device_entry_id = matching_device.get(
+                    "device_entry_id"
+                ) or build_device_entry_id(matching_device)
+                device_identifier = hub_device_identifier(host, port, device_entry_id)
                 device_entry = device_registry.async_get_device(
                     identifiers={(DOMAIN, device_identifier)}
                 )

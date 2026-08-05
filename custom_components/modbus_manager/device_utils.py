@@ -17,6 +17,7 @@ from .const import (
     ENTRY_TYPE_HUB,
     EntityIdStrategy,
 )
+from .template_loader import resolve_template_key
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -488,6 +489,34 @@ def generate_entity_id(platform: str, unique_id: str) -> str:
     return f"{platform}.{unique_id}"
 
 
+def legacy_build_device_entry_id(device: dict[str, Any]) -> str:
+    """Build device_entry_id using the pre-v7 template display name."""
+    prefix = str(device.get("prefix", "device")).strip() or "device"
+    slave_id = str(device.get("slave_id", 1)).strip() or "1"
+    template = str(device.get("template", "template")).strip() or "template"
+    return f"{prefix}_{slave_id}_{template}"
+
+
+def build_device_entry_id(device: dict[str, Any]) -> str:
+    """Build stable logical device id for one hub subentry."""
+    prefix = str(device.get("prefix", "device")).strip() or "device"
+    slave_id = str(device.get("slave_id", 1)).strip() or "1"
+    template_key = device.get("template_key")
+    if not template_key:
+        template_key = resolve_template_key(str(device.get("template", "template")))
+    return f"{prefix}_{slave_id}_{template_key}"
+
+
+def legacy_hub_device_identifier(host: str, port: int, slave_id: int | str) -> str:
+    """Legacy device registry identifier keyed only by Modbus slave ID."""
+    return f"modbus_manager_{host}_{port}_slave_{slave_id}"
+
+
+def hub_device_identifier(host: str, port: int, device_entry_id: str) -> str:
+    """Build device registry identifier for one logical device subentry."""
+    return f"modbus_manager_{host}_{port}_{device_entry_id}"
+
+
 def create_device_info_dict(
     hass: HomeAssistant,
     host: str,
@@ -495,6 +524,7 @@ def create_device_info_dict(
     slave_id: int,
     prefix: str,
     template_name: str,
+    device_entry_id: str,
     firmware_version: str = None,
     config_entry_id: str = None,
 ) -> Dict[str, Any]:
@@ -505,11 +535,11 @@ def create_device_info_dict(
     can be used by all platforms.
 
     Args:
+        device_entry_id: Stable logical device id (matches config subentry unique_id).
         firmware_version: Firmware version from config entry or register.
                          If None, defaults to "1.0.0".
     """
-    # Create device identifier
-    device_identifier = f"modbus_manager_{host}_{port}_slave_{slave_id}"
+    device_identifier = hub_device_identifier(host, port, device_entry_id)
 
     # Don't create a separate hub device - just use the hub identifier for linking
     # The hub is managed by the Modbus connection in __init__.py
@@ -613,11 +643,6 @@ def entry_host_port(entry: ConfigEntry) -> tuple[str, int]:
     return str(host or "").strip(), port_int
 
 
-def hub_device_identifier(host: str, port: int, slave_id: int | str) -> str:
-    """Build the device registry identifier for one Modbus device."""
-    return f"modbus_manager_{host}_{port}_slave_{slave_id}"
-
-
 def is_hub_endpoint_taken(
     hass: HomeAssistant,
     host: str,
@@ -640,6 +665,99 @@ def is_hub_endpoint_taken(
     return False
 
 
+def _find_device_registry_entry_for_logical_device(
+    device_registry: dr.DeviceRegistry,
+    entry: ConfigEntry,
+    host: str,
+    port: int,
+    device: dict[str, Any],
+    target_subentry_id: str | None,
+) -> dr.DeviceEntry | None:
+    """Locate a device registry row for one logical devices[] record."""
+    device_entry_id = device.get("device_entry_id") or build_device_entry_id(device)
+    new_identifier = hub_device_identifier(host, port, device_entry_id)
+    device_entry = device_registry.async_get_device(
+        identifiers={(DOMAIN, new_identifier)}
+    )
+    if device_entry is not None:
+        return device_entry
+
+    slave_id = device.get("slave_id", 1)
+    legacy_identifier = legacy_hub_device_identifier(host, port, slave_id)
+    device_entry = device_registry.async_get_device(
+        identifiers={(DOMAIN, legacy_identifier)}
+    )
+    if device_entry is not None:
+        return device_entry
+
+    if not target_subentry_id:
+        return None
+
+    for candidate in device_registry.devices.values():
+        if entry.entry_id not in candidate.config_entries:
+            continue
+        if candidate.config_subentry_id == target_subentry_id:
+            return candidate
+    return None
+
+
+def migrate_subentry_device_identifiers(hass: HomeAssistant, entry: ConfigEntry) -> int:
+    """Migrate device registry identifiers from slave-based keys to subentry keys."""
+    device_registry = dr.async_get(hass)
+    devices = entry.data.get("devices", [])
+    if not isinstance(devices, list):
+        return 0
+
+    host, port = entry_host_port(entry)
+    subentry_ids_by_device: dict[str, str] = {}
+    for subentry in entry.subentries.values():
+        if subentry.subentry_type == "device" and subentry.unique_id:
+            subentry_ids_by_device[subentry.unique_id] = subentry.subentry_id
+
+    migrated = 0
+    for device in devices:
+        if not isinstance(device, dict):
+            continue
+
+        device_entry_id = device.get("device_entry_id") or build_device_entry_id(device)
+        target_subentry_id = subentry_ids_by_device.get(device_entry_id)
+        new_identifier = hub_device_identifier(host, port, device_entry_id)
+
+        if device_registry.async_get_device(identifiers={(DOMAIN, new_identifier)}):
+            continue
+
+        device_entry = _find_device_registry_entry_for_logical_device(
+            device_registry,
+            entry,
+            host,
+            port,
+            {**device, "device_entry_id": device_entry_id},
+            target_subentry_id,
+        )
+        if device_entry is None:
+            _LOGGER.debug(
+                "No device registry entry to migrate for logical device %s",
+                device_entry_id,
+            )
+            continue
+
+        if (DOMAIN, new_identifier) in device_entry.identifiers:
+            continue
+
+        device_registry.async_update_device(
+            device_entry.id,
+            new_identifiers={(DOMAIN, new_identifier)},
+        )
+        migrated += 1
+        _LOGGER.info(
+            "Migrated device identifier for %s -> %s",
+            device_entry_id,
+            new_identifier,
+        )
+
+    return migrated
+
+
 def migrate_hub_device_identifiers(
     hass: HomeAssistant,
     entry: ConfigEntry,
@@ -657,15 +775,28 @@ def migrate_hub_device_identifiers(
     if not isinstance(devices, list):
         return 0
 
+    subentry_ids_by_device: dict[str, str] = {}
+    for subentry in entry.subentries.values():
+        if subentry.subentry_type == "device" and subentry.unique_id:
+            subentry_ids_by_device[subentry.unique_id] = subentry.subentry_id
+
     migrated = 0
     for device in devices:
         if not isinstance(device, dict):
             continue
-        slave_id = device.get("slave_id", 1)
-        old_identifier = hub_device_identifier(old_host, old_port, slave_id)
-        new_identifier = hub_device_identifier(new_host, new_port, slave_id)
-        device_entry = device_registry.async_get_device(
-            identifiers={(DOMAIN, old_identifier)}
+
+        device_entry_id = device.get("device_entry_id") or build_device_entry_id(device)
+        target_subentry_id = subentry_ids_by_device.get(device_entry_id)
+        old_identifier = hub_device_identifier(old_host, old_port, device_entry_id)
+        new_identifier = hub_device_identifier(new_host, new_port, device_entry_id)
+
+        device_entry = _find_device_registry_entry_for_logical_device(
+            device_registry,
+            entry,
+            old_host,
+            old_port,
+            {**device, "device_entry_id": device_entry_id},
+            target_subentry_id,
         )
         if device_entry is None:
             _LOGGER.warning(
@@ -673,6 +804,10 @@ def migrate_hub_device_identifiers(
                 old_identifier,
             )
             continue
+
+        if (DOMAIN, new_identifier) in device_entry.identifiers:
+            continue
+
         device_registry.async_update_device(
             device_entry.id,
             new_identifiers={(DOMAIN, new_identifier)},
@@ -684,6 +819,83 @@ def migrate_hub_device_identifiers(
             new_identifier,
         )
     return migrated
+
+
+def apply_device_entry_id_remap(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+    id_remap: dict[str, str],
+) -> int:
+    """Update subentry unique_ids and registry identifiers after id format change."""
+    if not id_remap:
+        return 0
+
+    device_registry = dr.async_get(hass)
+    host, port = entry_host_port(entry)
+    updated = 0
+
+    subentry_by_unique_id = {
+        subentry.unique_id: subentry
+        for subentry in entry.subentries.values()
+        if subentry.subentry_type == "device" and subentry.unique_id
+    }
+
+    for old_id, new_id in id_remap.items():
+        if not old_id or not new_id or old_id == new_id:
+            continue
+
+        subentry = subentry_by_unique_id.get(old_id)
+        if subentry is not None:
+            hass.config_entries.async_update_subentry(
+                entry=entry,
+                subentry=subentry,
+                unique_id=new_id,
+            )
+            subentry_by_unique_id[new_id] = subentry
+            updated += 1
+            _LOGGER.info(
+                "Updated subentry unique_id %s -> %s for entry %s",
+                old_id,
+                new_id,
+                entry.entry_id,
+            )
+
+        old_identifier = hub_device_identifier(host, port, old_id)
+        new_identifier = hub_device_identifier(host, port, new_id)
+        device_entry = device_registry.async_get_device(
+            identifiers={(DOMAIN, old_identifier)}
+        )
+        if device_entry is None:
+            device_entry = device_registry.async_get_device(
+                identifiers={(DOMAIN, new_identifier)}
+            )
+        if device_entry is None and subentry is not None:
+            for candidate in device_registry.devices.values():
+                if (
+                    entry.entry_id in candidate.config_entries
+                    and candidate.config_subentry_id == subentry.subentry_id
+                ):
+                    device_entry = candidate
+                    break
+
+        if device_entry is None:
+            continue
+
+        if (DOMAIN, new_identifier) in device_entry.identifiers:
+            continue
+
+        device_registry.async_update_device(
+            device_entry.id,
+            new_identifiers={(DOMAIN, new_identifier)},
+        )
+        updated += 1
+        _LOGGER.info(
+            "Migrated device registry identifier %s -> %s",
+            old_identifier,
+            new_identifier,
+        )
+
+    return updated
 
 
 def combined_entries_for_source(

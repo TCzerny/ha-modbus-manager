@@ -28,6 +28,8 @@ _base_template_cache: Optional[Dict[str, Dict[str, Any]]] = None
 _cache_file_mtimes: Dict[str, float] = {}
 # Cache mapping template names to file paths for faster lookup
 _template_name_to_path: Dict[str, str] = {}
+# Cache mapping template YAML `name` field to file stem (e.g. sungrow_shx_dynamic)
+_template_name_to_stem: Dict[str, str] = {}
 
 
 def _get_file_mtime(file_path: str) -> float:
@@ -53,6 +55,7 @@ def _invalidate_cache() -> None:
     _base_template_cache = None
     _cache_file_mtimes.clear()
     _template_name_to_path.clear()
+    _template_name_to_stem.clear()
 
 
 from .const import (
@@ -75,6 +78,71 @@ _LOGGER = logging.getLogger(__name__)
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "device_templates")
 BASE_TEMPLATE_DIR = os.path.join(TEMPLATE_DIR, "base_templates")
 MAPPING_DIR = os.path.join(TEMPLATE_DIR, "manufacturer_mappings")
+
+
+def _register_template_name_stem(template_name: str, template_path: str) -> None:
+    """Cache mapping from template YAML name to file stem."""
+    if not template_name or not template_path:
+        return
+    stem = os.path.splitext(os.path.basename(template_path))[0]
+    _template_name_to_stem[str(template_name).strip()] = stem
+
+
+def _scan_template_directory_for_name_stems(template_dir: str) -> None:
+    """Scan a template directory and map YAML name fields to file stems."""
+    if not template_dir or not os.path.isdir(template_dir):
+        return
+    for filename in os.listdir(template_dir):
+        if not filename.endswith((".yaml", ".yml")):
+            continue
+        template_path = os.path.join(template_dir, filename)
+        if not os.path.isfile(template_path):
+            continue
+        try:
+            with open(template_path, "r", encoding="utf-8") as handle:
+                data = yaml.safe_load(handle) or {}
+        except (OSError, yaml.YAMLError):
+            continue
+        template_name = data.get("name")
+        if template_name:
+            _register_template_name_stem(str(template_name).strip(), template_path)
+
+
+def resolve_template_key(template_name: str) -> str:
+    """Resolve a template config key to a stable YAML file stem.
+
+    Device registry identifiers use the file stem (e.g. sungrow_shx_dynamic),
+    not the human-readable template name (e.g. Sungrow SH Series Inverter).
+    """
+    if not template_name or not str(template_name).strip():
+        return "template"
+
+    name = str(template_name).strip()
+    if name in _template_name_to_stem:
+        return _template_name_to_stem[name]
+
+    if name in _template_name_to_path:
+        _register_template_name_stem(name, _template_name_to_path[name])
+        return _template_name_to_stem[name]
+
+    _scan_template_directory_for_name_stems(TEMPLATE_DIR)
+    if name in _template_name_to_stem:
+        return _template_name_to_stem[name]
+
+    if _hass_instance is not None:
+        custom_dir = _hass_instance.config.path("modbus_manager/templates")
+        _scan_template_directory_for_name_stems(custom_dir)
+
+    if name in _template_name_to_stem:
+        return _template_name_to_stem[name]
+
+    # Already a stem-like key (no spaces) — keep as-is.
+    if " " not in name:
+        return name
+
+    slug = re.sub(r"[^\w]+", "_", name).strip("_").lower()
+    return slug or "template"
+
 
 REQUIRED_FIELDS = {"name", "address"}
 OPTIONAL_FIELDS = {
@@ -653,6 +721,7 @@ async def load_single_template(
         # Cache template name to path mapping
         if template_name:
             _template_name_to_path[template_name] = template_path
+            _register_template_name_stem(template_name, template_path)
 
         return result
 

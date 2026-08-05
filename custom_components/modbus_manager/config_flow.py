@@ -35,12 +35,16 @@ from .const import (
     EntityIdStrategy,
 )
 from .device_utils import (
+    build_device_entry_id,
     ensure_entity_id_strategy_on_device,
     entry_device_type_set,
     entry_host_port,
     generate_unique_id,
     get_entity_mm_group,
+    hub_device_identifier,
     is_hub_endpoint_taken,
+    legacy_build_device_entry_id,
+    legacy_hub_device_identifier,
     migrate_hub_device_identifiers,
     reload_dependent_combined_entries,
     replace_template_placeholders,
@@ -52,6 +56,7 @@ from .template_loader import (
     _evaluate_condition,
     get_template_by_name,
     get_template_names,
+    resolve_template_key,
     set_hass_instance,
 )
 
@@ -256,7 +261,7 @@ def _is_prefix_unique_across_hubs(
 class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Modbus Manager."""
 
-    VERSION = 5
+    VERSION = 7
 
     def __init__(self):
         """Initialize the config flow."""
@@ -305,15 +310,16 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     def _build_device_entry_id(self, device: dict[str, Any]) -> str:
         """Build a stable logical device id inside one hub entry."""
-        prefix = str(device.get("prefix", "device")).strip() or "device"
-        slave_id = str(device.get("slave_id", 1)).strip() or "1"
-        template = str(device.get("template", "template")).strip() or "template"
-        return f"{prefix}_{slave_id}_{template}"
+        return build_device_entry_id(device)
 
     def _normalize_device_record(self, device: dict[str, Any]) -> dict[str, Any]:
         """Normalize a device record and ensure required subentry-like fields."""
         normalized = dict(device)
         normalized["type"] = resolve_device_role_type(normalized)
+        template_key = normalized.get("template_key") or resolve_template_key(
+            str(normalized.get("template", "template"))
+        )
+        normalized["template_key"] = template_key
         normalized["device_entry_id"] = normalized.get(
             "device_entry_id", self._build_device_entry_id(normalized)
         )
@@ -436,6 +442,42 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Migrate modbus_type if present as "type"
             if "type" in new_data and "modbus_type" not in new_data:
                 new_data["modbus_type"] = new_data.pop("type")
+
+            # v6: device registry identifiers are keyed by device_entry_id (one device per subentry).
+            if config_entry.version < 6:
+                new_data.pop("device_registry_relink_completed", None)
+                new_data["pending_registry_relink"] = True
+
+            # v7: device_entry_id uses template file stem (sungrow_shx_dynamic), not display name.
+            if config_entry.version < 7:
+                set_hass_instance(hass)
+                id_remap: dict[str, str] = {}
+                devices_for_v7 = new_data.get("devices", [])
+                if isinstance(devices_for_v7, list):
+                    migrated_devices_v7: list[dict[str, Any]] = []
+                    for device in devices_for_v7:
+                        if not isinstance(device, dict):
+                            continue
+                        normalized = dict(device)
+                        old_id = normalized.get(
+                            "device_entry_id"
+                        ) or legacy_build_device_entry_id(normalized)
+                        template_key = resolve_template_key(
+                            str(normalized.get("template", "template"))
+                        )
+                        normalized["template_key"] = template_key
+                        new_id = build_device_entry_id(normalized)
+                        normalized["device_entry_id"] = new_id
+                        if old_id != new_id:
+                            id_remap[old_id] = new_id
+                        migrated_devices_v7.append(
+                            self._normalize_device_record(normalized)
+                        )
+                    new_data["devices"] = migrated_devices_v7
+                if id_remap:
+                    new_data["device_entry_id_remap"] = id_remap
+                new_data.pop("device_registry_relink_completed", None)
+                new_data["pending_registry_relink"] = True
 
             # Update config entry
             hass.config_entries.async_update_entry(
@@ -3402,15 +3444,16 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
 
     @staticmethod
     def _build_device_entry_id(device: dict[str, Any]) -> str:
-        prefix = str(device.get("prefix", "device")).strip() or "device"
-        slave_id = str(device.get("slave_id", 1)).strip() or "1"
-        template = str(device.get("template", "template")).strip() or "template"
-        return f"{prefix}_{slave_id}_{template}"
+        return build_device_entry_id(device)
 
     @classmethod
     def _normalize_device_record(cls, device: dict[str, Any]) -> dict[str, Any]:
         normalized = dict(device)
         normalized["type"] = resolve_device_role_type(normalized)
+        template_key = normalized.get("template_key") or resolve_template_key(
+            str(normalized.get("template", "template"))
+        )
+        normalized["template_key"] = template_key
         normalized["device_entry_id"] = normalized.get(
             "device_entry_id", cls._build_device_entry_id(normalized)
         )
@@ -3454,6 +3497,7 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
     def _build_subentry_data(device: dict[str, Any]) -> dict[str, Any]:
         keys = [
             "device_entry_id",
+            "template_key",
             "type",
             "template",
             "prefix",
@@ -3974,10 +4018,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
 
     def _build_device_entry_id(self, device: dict[str, Any]) -> str:
         """Build stable logical device id."""
-        prefix = str(device.get("prefix", "device")).strip() or "device"
-        slave_id = str(device.get("slave_id", 1)).strip() or "1"
-        template = str(device.get("template", "template")).strip() or "template"
-        return f"{prefix}_{slave_id}_{template}"
+        return build_device_entry_id(device)
 
     def _get_editable_devices(self) -> list[dict[str, Any]]:
         """Return normalized list of devices that can be edited."""
@@ -4006,15 +4047,23 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             port = hub_config.get("port") or self.config_entry.data.get("port", 502)
 
             for battery_device in battery_devices:
-                battery_slave_id = battery_device.get("slave_id", 200)
-                device_identifier = (
-                    f"modbus_manager_{host}_{port}_slave_{battery_slave_id}"
-                )
+                device_entry_id = battery_device.get(
+                    "device_entry_id"
+                ) or build_device_entry_id(battery_device)
+                device_identifier = hub_device_identifier(host, port, device_entry_id)
 
                 # Find device in registry
                 device_entry = device_registry.async_get_device(
                     identifiers={(DOMAIN, device_identifier)}
                 )
+                if device_entry is None:
+                    battery_slave_id = battery_device.get("slave_id", 200)
+                    legacy_identifier = legacy_hub_device_identifier(
+                        host, port, battery_slave_id
+                    )
+                    device_entry = device_registry.async_get_device(
+                        identifiers={(DOMAIN, legacy_identifier)}
+                    )
 
                 if device_entry:
                     # Check if this device belongs to this config entry
@@ -4025,21 +4074,21 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                         # Remove device from registry
                         device_registry.async_remove_device(device_entry.id)
                         _LOGGER.info(
-                            "Removed battery device '%s' (slave %d) from device registry",
+                            "Removed battery device '%s' (%s) from device registry",
                             battery_device.get("prefix", "unknown"),
-                            battery_slave_id,
+                            device_entry_id,
                         )
                     else:
                         _LOGGER.debug(
-                            "Battery device '%s' (slave %d) not found in device registry or belongs to different config entry",
+                            "Battery device '%s' (%s) not found in device registry or belongs to different config entry",
                             battery_device.get("prefix", "unknown"),
-                            battery_slave_id,
+                            device_entry_id,
                         )
                 else:
                     _LOGGER.debug(
-                        "Battery device '%s' (slave %d) not found in device registry",
+                        "Battery device '%s' (%s) not found in device registry",
                         battery_device.get("prefix", "unknown"),
-                        battery_slave_id,
+                        device_entry_id,
                     )
         except Exception as e:
             _LOGGER.error("Error removing battery devices from registry: %s", str(e))
