@@ -17,9 +17,16 @@ from .const import (
     ENTRY_TYPE_HUB,
     EntityIdStrategy,
 )
-from .template_loader import resolve_template_key
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def device_subentry_ids_for_entry(
+    device_entry: dr.DeviceEntry, config_entry_id: str
+) -> set[str | None]:
+    """Return subentry ids linked to a device for one config entry."""
+    return device_entry.config_entries_subentries.get(config_entry_id, set())
+
 
 # Template file stem -> device role for combined-device pairing and filtering.
 KNOWN_TEMPLATE_DEVICE_TYPES: dict[str, str] = {
@@ -503,6 +510,8 @@ def build_device_entry_id(device: dict[str, Any]) -> str:
     slave_id = str(device.get("slave_id", 1)).strip() or "1"
     template_key = device.get("template_key")
     if not template_key:
+        from .template_loader import resolve_template_key
+
         template_key = resolve_template_key(str(device.get("template", "template")))
     return f"{prefix}_{slave_id}_{template_key}"
 
@@ -696,7 +705,9 @@ def _find_device_registry_entry_for_logical_device(
     for candidate in device_registry.devices.values():
         if entry.entry_id not in candidate.config_entries:
             continue
-        if candidate.config_subentry_id == target_subentry_id:
+        if target_subentry_id in device_subentry_ids_for_entry(
+            candidate, entry.entry_id
+        ):
             return candidate
     return None
 
@@ -873,7 +884,8 @@ def apply_device_entry_id_remap(
             for candidate in device_registry.devices.values():
                 if (
                     entry.entry_id in candidate.config_entries
-                    and candidate.config_subentry_id == subentry.subentry_id
+                    and subentry.subentry_id
+                    in device_subentry_ids_for_entry(candidate, entry.entry_id)
                 ):
                     device_entry = candidate
                     break

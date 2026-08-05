@@ -38,6 +38,7 @@ from .device_identification import (
 from .device_utils import (
     apply_device_entry_id_remap,
     build_device_entry_id,
+    device_subentry_ids_for_entry,
     get_entity_mm_group,
     hub_device_identifier,
     migrate_subentry_device_identifiers,
@@ -306,7 +307,9 @@ async def _relink_devices_to_subentries(
             if not device_entry:
                 continue
 
-            if device_entry.config_subentry_id == target_subentry_id:
+            if target_subentry_id in device_subentry_ids_for_entry(
+                device_entry, entry.entry_id
+            ):
                 continue
 
             # Ensure each registry device is owned by exactly one subentry.
