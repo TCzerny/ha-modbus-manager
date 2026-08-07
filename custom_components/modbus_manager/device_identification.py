@@ -17,6 +17,7 @@ from .const import (
     MAX_MESSAGE_WAIT_MS,
     MIN_MESSAGE_WAIT_MS,
 )
+from .device_utils import async_wait_for_hub_connected
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -360,7 +361,10 @@ async def async_read_device_identification_probe(
     try:
         await hub.async_setup()
         setup_done = True
-        await asyncio.wait_for(hub.async_pb_connect(), timeout=timeout)
+        if not await async_wait_for_hub_connected(hub, timeout):
+            raise DeviceIdentificationError(
+                f"Connection to {target} timed out after {timeout}s"
+            )
         return await async_read_device_identification(hub, slave_id, read_code)
     except TimeoutError as exc:
         raise DeviceIdentificationError(

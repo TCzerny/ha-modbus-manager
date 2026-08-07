@@ -25,11 +25,13 @@ from .const import (
     EntityIdStrategy,
 )
 from .device_utils import (
+    async_wait_for_hub_connected,
     build_device_entry_id,
     clean_firmware_version_string,
     create_device_info_dict,
     generate_unique_id,
     hub_device_identifier,
+    hub_is_connected,
     replace_template_placeholders,
     resolve_device_role_type,
     resolve_entity_id_strategy,
@@ -307,7 +309,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
     async def _async_read_written_register(self, slave_id: int, address: int) -> None:
         """Read register(s) immediately after a control write (bypass scan_interval)."""
-        if self._is_unloading or not getattr(self.hub, "_is_connected", False):
+        if self._is_unloading or not hub_is_connected(self.hub):
             return
 
         await self._ensure_register_interval_cache()
@@ -344,25 +346,20 @@ class ModbusCoordinator(DataUpdateCoordinator):
         operation_id = None
         try:
             # Ensure hub is connected (HA standard: UpdateFailed when offline)
-            if not getattr(self.hub, "_is_connected", False):
+            if not hub_is_connected(self.hub):
                 now = asyncio.get_running_loop().time()
                 if now >= self._next_connect_attempt:
                     self._next_connect_attempt = now + self._connect_retry_interval
-                    try:
-                        connect_timeout = self.entry.data.get("timeout", 5)
-                        await asyncio.wait_for(
-                            self.hub.async_pb_connect(), timeout=connect_timeout
-                        )
-                        self.hub._is_connected = True
+                    connect_timeout = self.entry.data.get("timeout", 5)
+                    if await async_wait_for_hub_connected(self.hub, connect_timeout):
                         self._connect_failure_logged = False
                         _LOGGER.info("Modbus hub reconnected successfully")
-                    except Exception as e:
+                    else:
                         if not self._connect_failure_logged:
                             _LOGGER.info(
                                 "Modbus hub not connected; entities will be unavailable until reconnected"
                             )
                             self._connect_failure_logged = True
-                        _LOGGER.debug("Failed to reconnect hub: %s", str(e))
                         raise UpdateFailed("Modbus hub not connected")
                 else:
                     raise UpdateFailed("Modbus hub not connected")
@@ -1935,7 +1932,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
         slave_id = 1
         try:
             # Ensure hub is connected (handled by coordinator update)
-            if not getattr(self.hub, "_is_connected", False):
+            if not hub_is_connected(self.hub):
                 return None
 
             # Determine register type - check all registers in range

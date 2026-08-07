@@ -37,6 +37,7 @@ from .device_identification import (
 )
 from .device_utils import (
     apply_device_entry_id_remap,
+    async_wait_for_hub_connected,
     build_device_entry_id,
     device_subentry_ids_for_entry,
     get_entity_mm_group,
@@ -466,7 +467,7 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
         hub = ModbusHub(hass, modbus_config)
         _LOGGER.debug("Created ModbusHub for coordinator: %s", hub_name)
 
-        # Setup hub, then attempt a best-effort connect
+        # Setup hub; async_setup() starts a single background connect task.
         try:
             await hub.async_setup()
             _LOGGER.debug("ModbusHub setup completed for coordinator")
@@ -474,15 +475,14 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
             _LOGGER.error("Failed to setup ModbusHub for coordinator: %s", str(e))
             return False
 
-        # Avoid blocking setup on unreachable hosts
         connect_timeout = entry.data.get("timeout", 5)
-        try:
-            await asyncio.wait_for(hub.async_pb_connect(), timeout=connect_timeout)
+        if await async_wait_for_hub_connected(hub, connect_timeout):
             _LOGGER.info("ModbusHub connected successfully for coordinator")
-            hub._is_connected = True
-        except Exception as e:
-            _LOGGER.warning("ModbusHub connect failed (continuing offline): %s", str(e))
-            hub._is_connected = False
+        else:
+            _LOGGER.warning(
+                "ModbusHub connect timed out after %ss (continuing offline)",
+                connect_timeout,
+            )
 
         # Store hub globally
         hass.data[DOMAIN][hub_name] = hub

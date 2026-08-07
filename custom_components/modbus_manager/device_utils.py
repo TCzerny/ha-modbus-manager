@@ -1,5 +1,6 @@
 """Device utilities for consistent device creation across all platforms."""
 
+import asyncio
 import logging
 import re
 from typing import Any, Dict, Optional
@@ -628,12 +629,32 @@ def create_base_extra_state_attributes(
     return base_attributes
 
 
+def hub_is_connected(hub: Any) -> bool:
+    """Return True when the HA ModbusHub client is connected."""
+    if hub is None:
+        return False
+    client = getattr(hub, "_client", None)
+    event = getattr(hub, "event_connected", None)
+    return client is not None and event is not None and event.is_set()
+
+
+async def async_wait_for_hub_connected(hub: Any, timeout: float) -> bool:
+    """Wait for the connect task from async_setup() without a duplicate connect."""
+    if hub_is_connected(hub):
+        return True
+    event = getattr(hub, "event_connected", None)
+    if event is None:
+        return False
+    try:
+        await asyncio.wait_for(event.wait(), timeout=timeout)
+    except TimeoutError:
+        return False
+    return hub_is_connected(hub)
+
+
 def is_coordinator_connected(coordinator: Any) -> bool:
     """Return True if the coordinator hub is connected."""
-    hub = getattr(coordinator, "hub", None)
-    if not hub:
-        return False
-    return bool(getattr(hub, "_is_connected", False))
+    return hub_is_connected(getattr(coordinator, "hub", None))
 
 
 def entry_host_port(entry: ConfigEntry) -> tuple[str, int]:
