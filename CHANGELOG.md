@@ -5,6 +5,18 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-08-07
+
+### 🐛 Fixed
+
+- **Modbus TCP — duplicate connection on hub startup**: Wait on `ModbusHub.event_connected` from `async_setup()` instead of calling `async_pb_connect()` again, which opened a second socket per hub.
+- **Modbus TCP — leak on template reload**: Reuse the existing global hub for `host:port` during `reload_templates` instead of creating a new `ModbusHub` while the first TCP session stays open.
+- **Modbus TCP — coordinator reconnect after offline**: Use `client.connected` for live socket checks and `async_restart()` when the hub is stale, instead of waiting on a latched `event_connected` flag.
+
+### 🔧 Changed
+
+- **Hub unload**: Removed unused hub reference-count logic; one config entry owns one TCP hub (close on unload unless a template reload keeps the connection alive).
+
 ## [1.1.0] - 2026-08-05
 
 ### 🐛 Fixed
