@@ -51,14 +51,17 @@ This integration is provided "AS IS" without warranty of any kind. By using this
   - **Connection Types**: LAN/WINET support with register filtering
   - **Meter Support**: DTSU666, DTSU666-20 (dual-channel)
 - ☀️ **Sungrow SG Dynamic**: Model selection for SG series inverters
-- ☀️ **Sungrow iHomeManager**: New EMS template added - *needs testing*
+- 🔋 **Sungrow SBR Battery**: SBR064–SBR256 (field tested)
+- 🔋 **Sungrow SBH Battery**: SBH100–SBH400 base pack (10710–10747); community-tested on WiNet-S/LAN — see [docs](docs/README_sungrow_sbr_battery.md) for cell diagnostics (10756+) limits
+- ☀️ **Sungrow iHomeManager EMS**: Standalone EMS template; fixes in 1.0.22+; Combined Device with inverter tested — standalone hardware validation still welcome
+- 🔥 **Solvis SC2/SC3**: Heating controller template
 - 🔋 **Compleo EBox Professional**: EV charger wallbox integration template
-- 🔋 **Sungrow SBR Battery**: Battery system template
-- 🔌 **Sungrow AC011E Wallbox**: EV wallbox (AC007-00, AC011E-01, AC22E-01), RS485 via inverter – *needs testing*
+- 🔌 **Victron EV Charging Station**: Modbus TCP (register list v3.8)
+- 🔌 **Sungrow AC011E Wallbox**: EV wallbox (AC007-00, AC011E-01, AC22E-01), RS485 via inverter
 - 🔌 **Heidelberg Energy Control**: EV charger (Modbus RTU via proxy) – *needs testing*
 
-**New / BETA templates**
-The following templates were added recently and **have not been tested on real hardware**. If you use them, please report any issues or feedback so we can fix register maps and behaviour: **Sungrow AC011E-01 Wallbox**, **Heidelberg Energy Control**, **Fronius GEN24**, **Growatt MIN/MOD/MAX**, **SMA Sunny Tripower/Boy**, **SolaX Inverter Series**, **BYD Battery Box**. See [Documentation](https://github.com/TCzerny/ha-modbus-manager/wiki) and `docs/` for per-template docs.
+**Needs testing on hardware**
+Templates present with limited field validation — please report issues: **Sungrow iHomeManager EMS** (standalone), **Heidelberg Energy Control**, **Fronius GEN24**, **Growatt MIN/MOD/MAX**, **SMA Sunny Tripower/Boy**, **SolaX Inverter Series**, **BYD Battery Box**. See [Documentation](https://github.com/TCzerny/ha-modbus-manager/wiki) and `docs/` for per-template docs.
 
 
 ## 📋 Configuration
@@ -77,12 +80,18 @@ The following templates were added recently and **have not been tested on real h
 ## 🔍 Device Support
 
 ### Currently Supported
-- **Sungrow SHx Inverters**: Complete dynamic template supporting all 36 SHx models with automatic filtering
-- **Sungrow SG Inverters**: Dynamic template with model selection (SG3.0RS, SG4.0RS, SG5.0RS, SG6.0RS, SG8.0RS, SG10RS, SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT)
-- **Compleo EBox Professional**: Wallbox charging station integration
-- **Sungrow SBR Battery**: Battery system template
-- **Sungrow AC011E Wallbox**: EV wallbox (AC007-00, AC011E-01, AC22E-01) – *needs testing*
-- **Heidelberg Energy Control**: EV charger (Modbus RTU via proxy) – *needs testing*
+- **Sungrow SHx Inverters**: All 36 SHx models with dynamic configuration
+- **Sungrow SG Inverters**: SG3.0RS–SG10RS, SG3.0RT–SG6.0RT
+- **Sungrow SBR Battery**: SBR064–SBR256 (field tested)
+- **Sungrow SBH Battery**: SBH100–SBH400 base metrics (see docs for WiNet-S / diagnostics limits)
+- **Solvis SC2/SC3**: Heating controller
+- **Compleo EBox Professional**: EV wallbox
+- **Victron EV Charging Station**: Modbus TCP
+- **Sungrow AC011E Wallbox**: AC007-00, AC011E-01, AC22E-01
+
+### Needs Testing
+- **Sungrow iHomeManager EMS** — template + Combined Device fixes; standalone validation ongoing
+- **Heidelberg Energy Control**, **BYD Battery Box**, **Fronius GEN24**, **Growatt MIN/MOD/MAX**, **SMA**, **SolaX**
 
 
 ### Template Development
@@ -112,7 +121,9 @@ The following templates were added recently and **have not been tested on real h
 - ✅ Template reload functionality
 - ✅ Calculated sensors with Jinja2
 - ✅ Full float conversion support (IEEE 754)
-- ✅ iHomeManager EMS support (BETA - requires end-user testing)
+- ✅ SBH battery base metrics (community tested on WiNet-S/LAN)
+- ✅ iHomeManager EMS template (community beta — standalone validation ongoing)
+- ✅ Modbus TCP connection lifecycle fixes (v1.1.1)
 - ✅ Home Assistant Entity guidelines compliance (has_entity_name, EntityCategory, etc.)
 
 ## 🤝 Contributing

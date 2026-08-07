@@ -70,18 +70,18 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 ### ✅ Supported
 - **[Sungrow SHx Series](docs/README_sungrow_shx_dynamic.md)** – All 36 SHx models, MPPT, strings, phases, battery, meters (DTSU666)
 - **[Sungrow SG Series](docs/README_sungrow_sg_dynamic.md)** – SG3.0RS–SG10RS, SG3.0RT–SG6.0RT
-- **[Sungrow SBR Battery](docs/README_sungrow_sbr_battery.md)** – SBR064–SBR256, SBH100-SBH400
+- **[Sungrow SBR Battery](docs/README_sungrow_sbr_battery.md)** – SBR064–SBR256 (field tested)
+- **[Sungrow SBH Battery](docs/README_sungrow_sbr_battery.md)** – SBH100–SBH400 base pack (10710–10747); community-tested on WiNet-S/LAN — cell diagnostics (10756+) depend on connection path; see docs
 - **[Solvis SC2/SC3](docs/README_solvis_sc3.md)** – Heating controller, temperature sensors, pump controls
 - **[Compleo eBox Professional](docs/README_compleo_ebox_professional.md)** – EV charger, 3-phase charging
 - **[Victron EV Charging Station](docs/README_victron_ev_charging_station.md)** – EV Charging Station & EV Charging Station NS, Modbus TCP (register list v3.8)
 - **[Sungrow AC011E Wallbox](docs/README_sungrow_ac011e_wallbox.md)** – EV wallbox (AC007-00, AC011E-01, AC22E-01), RS485 via inverter
 
 ### ⚠️ Needs Testing
-*Based on protocol documentation, not verified on hardware.*
+*Template and register map present; limited or no field validation on real hardware — please report issues.*
 
+- **[Sungrow iHomeManager EMS](docs/README_iHomeManager.md)** – Standalone EMS template; fixes in 1.0.22+ ([#79](https://github.com/TCzerny/ha-modbus-manager/issues/79)); Combined Device with inverter tested ([#50](https://github.com/TCzerny/ha-modbus-manager/issues/50), [#78](https://github.com/TCzerny/ha-modbus-manager/issues/78)) — full standalone hardware validation still welcome
 - **[Heidelberg Energy Control](docs/README_heidelberg_energy_control.md)** – EV charger (Modbus RTU via proxy)
-- **[Sungrow iHomeManager EMS](docs/README_iHomeManager.md)** – Energy management system
-- **[Sungrow SBH Battery](docs/README_sungrow_sbr_battery.md)** – SBH100–SBH400
 - **[BYD Battery Box](docs/README_byd_battery_box.md)** – HVS/HVM/HVL/LVS series
 - **[Fronius GEN24](docs/README_fronius_dynamic.md)** – SunSpec-capable
 - **[Growatt MIN/MOD/MAX](docs/README_growatt_min_mod_max_dynamic.md)** – Inverter template
