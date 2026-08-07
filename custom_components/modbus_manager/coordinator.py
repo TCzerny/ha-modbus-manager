@@ -25,6 +25,7 @@ from .const import (
     EntityIdStrategy,
 )
 from .device_utils import (
+    async_ensure_hub_connected,
     async_wait_for_hub_connected,
     build_device_entry_id,
     clean_firmware_version_string,
@@ -351,7 +352,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 if now >= self._next_connect_attempt:
                     self._next_connect_attempt = now + self._connect_retry_interval
                     connect_timeout = self.entry.data.get("timeout", 5)
-                    if await async_wait_for_hub_connected(self.hub, connect_timeout):
+                    if await async_ensure_hub_connected(self.hub, connect_timeout):
                         self._connect_failure_logged = False
                         _LOGGER.info("Modbus hub reconnected successfully")
                     else:

@@ -630,12 +630,29 @@ def create_base_extra_state_attributes(
 
 
 def hub_is_connected(hub: Any) -> bool:
-    """Return True when the HA ModbusHub client is connected."""
+    """Return True when the HA ModbusHub client has a live socket."""
     if hub is None:
         return False
     client = getattr(hub, "_client", None)
+    if client is None:
+        return False
+    connected = getattr(client, "connected", None)
+    if connected is not None:
+        return bool(connected)
     event = getattr(hub, "event_connected", None)
-    return client is not None and event is not None and event.is_set()
+    return event is not None and event.is_set()
+
+
+async def _async_wait_for_connect_task(hub: Any, timeout: float) -> bool:
+    """Wait for the ModbusHub background connect task to finish."""
+    connect_task = getattr(hub, "_connect_task", None)
+    if connect_task is None:
+        return hub_is_connected(hub)
+    try:
+        await asyncio.wait_for(asyncio.shield(connect_task), timeout=timeout)
+    except (TimeoutError, asyncio.CancelledError):
+        return False
+    return hub_is_connected(hub)
 
 
 async def async_wait_for_hub_connected(hub: Any, timeout: float) -> bool:
@@ -645,10 +662,41 @@ async def async_wait_for_hub_connected(hub: Any, timeout: float) -> bool:
     event = getattr(hub, "event_connected", None)
     if event is None:
         return False
-    try:
-        await asyncio.wait_for(event.wait(), timeout=timeout)
-    except TimeoutError:
-        return False
+    if not event.is_set():
+        try:
+            await asyncio.wait_for(event.wait(), timeout=timeout)
+        except TimeoutError:
+            return False
+    return await _async_wait_for_connect_task(hub, timeout)
+
+
+async def async_ensure_hub_connected(hub: Any, timeout: float) -> bool:
+    """Restore or wait for a live Modbus session (coordinator reconnect path)."""
+    if hub_is_connected(hub):
+        return True
+
+    client = getattr(hub, "_client", None)
+    connect_task = getattr(hub, "_connect_task", None)
+
+    if client is None or (
+        connect_task is not None and connect_task.done() and not hub_is_connected(hub)
+    ):
+        try:
+            await hub.async_restart()
+        except Exception:
+            return False
+        return await _async_wait_for_connect_task(hub, timeout)
+
+    if connect_task is not None and not connect_task.done():
+        return await _async_wait_for_connect_task(hub, timeout)
+
+    event = getattr(hub, "event_connected", None)
+    if event is not None and not event.is_set():
+        try:
+            await asyncio.wait_for(event.wait(), timeout=timeout)
+        except TimeoutError:
+            return False
+
     return hub_is_connected(hub)
 
 
