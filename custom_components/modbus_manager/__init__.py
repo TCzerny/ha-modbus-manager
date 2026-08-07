@@ -824,7 +824,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         except Exception as e:
             _LOGGER.error("Error unloading platforms: %s", str(e))
 
-        # Modbus-Hub schließen - aber mit verbesserter Logik
+        # Close Modbus hub on unload unless a template reload is in progress.
         if entry.entry_id in hass.data[DOMAIN]:
             hub_data = hass.data[DOMAIN][entry.entry_id]
 
@@ -841,58 +841,32 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 hub_name = f"modbus_manager_{host}_{port}"
                 global_hub_key = f"global_hub_{host}_{port}"
 
-                # Decrement hub reference counter
-                hub_ref_key = f"_hub_refcount_{hub_name}"
-                current_refcount = hass.data[DOMAIN].get(hub_ref_key, 0)
-                new_refcount = max(0, current_refcount - 1)
-                hass.data[DOMAIN][hub_ref_key] = new_refcount
-
-                _LOGGER.debug(
-                    "📊 Hub %s reference count: %d → %d",
-                    hub_name,
-                    current_refcount,
-                    new_refcount,
-                )
-
-                # CRITICAL: Only close hub if refcount is 0 AND not during reload
-                # This prevents "No Data" errors during reload or multi-device setup
-                if new_refcount == 0 and not is_reload:
+                if is_reload:
+                    _LOGGER.debug(
+                        "Keeping Modbus connection %s alive during reload",
+                        hub_name,
+                    )
+                else:
                     try:
                         _LOGGER.info(
-                            "🔌 Closing Modbus connection %s (no more references)",
+                            "Closing Modbus connection %s",
                             hub_name,
                         )
                         await hub.async_close()
                         _LOGGER.debug("Modbus hub successfully closed")
 
-                        # Remove hub from global storage
                         if hub_name in hass.data[DOMAIN]:
                             del hass.data[DOMAIN][hub_name]
                         if global_hub_key in hass.data[DOMAIN]:
                             del hass.data[DOMAIN][global_hub_key]
-                        if hub_ref_key in hass.data[DOMAIN]:
-                            del hass.data[DOMAIN][hub_ref_key]
                     except Exception as e:
                         _LOGGER.warning("Error closing Modbus hub: %s", str(e))
-                elif is_reload:
-                    _LOGGER.debug(
-                        "✅ Keeping Modbus connection %s alive during reload (refcount: %d)",
-                        hub_name,
-                        new_refcount,
-                    )
-                else:
-                    _LOGGER.debug(
-                        "✅ Keeping Modbus connection %s open (%d devices still using it)",
-                        hub_name,
-                        new_refcount,
-                    )
 
             # Delete data (but hub reference remains for reload)
             if not is_reload:
                 del hass.data[DOMAIN][entry.entry_id]
             else:
-                # Bei Reload nur Entity-Daten löschen, Hub behalten
-                _LOGGER.debug("🔄 Keeping entry data for reload")
+                _LOGGER.debug("Keeping entry data for reload")
 
         _LOGGER.debug(
             "Modbus Manager successfully unloaded for %s",
