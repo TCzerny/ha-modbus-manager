@@ -203,17 +203,21 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
                 numeric_value = register_data.get("numeric_value")
 
                 if self._has_flags:
-                    # Numeric state (bitmask) — never the joined flag labels (HA 255-char limit)
-                    flag_state, formatted_string = resolve_flags_sensor_values(
-                        register_data, self._flags
-                    )
-                    self._attr_native_value = flag_state
-                    self._attr_extra_state_attributes = {
+                    (
+                        flag_state,
+                        formatted_string,
+                        display_state,
+                    ) = resolve_flags_sensor_values(register_data, self._flags)
+                    self._attr_native_value = display_state
+                    flag_attributes = {
                         **self._attr_extra_state_attributes,
                         "raw_value": raw_value if raw_value is not None else "N/A",
                         "processed_value": processed_value,
                         "formatted_value": formatted_string,
                     }
+                    if flag_state is not None:
+                        flag_attributes["numeric_value"] = flag_state
+                    self._attr_extra_state_attributes = flag_attributes
                 elif processed_value is not None:
                     # Map/Options (e.g., cable_status): Use mapped string value for display
                     if self._has_map_or_options:

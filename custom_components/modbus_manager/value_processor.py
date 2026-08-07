@@ -11,6 +11,8 @@ from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
 
+NO_ACTIVE_FLAGS_LABEL = "No active flags"
+
 
 def apply_bit_operations(value: Any, config: Dict[str, Any]) -> Optional[int]:
     """Apply bit operations to a value.
@@ -117,7 +119,7 @@ def coerce_numeric_register_value(value: Any) -> int | float | None:
 
 
 def format_active_flags(value: int | float, flags: Dict[Any, Any]) -> str:
-    """Return comma-separated active flag labels, or 'None' when no bits are set."""
+    """Return comma-separated active flag labels, or NO_ACTIVE_FLAGS_LABEL when clear."""
     int_value = int(value)
     active_flags: list[str] = []
     for bit_pos, flag_name in flags.items():
@@ -129,7 +131,7 @@ def format_active_flags(value: int | float, flags: Dict[Any, Any]) -> str:
             _LOGGER.warning("Invalid flag bit position: %s", bit_pos)
     if active_flags:
         return ", ".join(active_flags)
-    return "None"
+    return NO_ACTIVE_FLAGS_LABEL
 
 
 def truncate_entity_state_string(
@@ -143,13 +145,26 @@ def truncate_entity_state_string(
     return text[: max_length - 3] + "..."
 
 
+def resolve_flags_sensor_display_state(
+    numeric_state: int | float | None, formatted_flags: str
+) -> str | int | float | None:
+    """Build the HA entity state for a flag sensor (Option B display rules)."""
+    if numeric_state is None:
+        return None
+    if int(numeric_state) == 0:
+        return NO_ACTIVE_FLAGS_LABEL
+    return formatted_flags
+
+
 def resolve_flags_sensor_values(
     register_data: Dict[str, Any], flags: Dict[Any, Any]
-) -> tuple[Union[int, float, None], str]:
-    """Resolve numeric entity state and display string for flag-based sensors.
+) -> tuple[Union[int, float, None], str, str | int | float | None]:
+    """Resolve numeric bitmask, formatted labels, and entity display state.
 
-    Entity state must stay numeric (bitmask) to avoid HA's 255-character state limit.
-    The human-readable flag list is returned for use in attributes only.
+    Returns:
+        numeric_state: Raw bitmask for automations (numeric_value attribute).
+        formatted_flags: Human-readable labels (truncated to HA state limit).
+        display_state: Entity state — NO_ACTIVE_FLAGS_LABEL when clear, else labels.
     """
     raw_value = register_data.get("raw_value")
     numeric_value = register_data.get("numeric_value")
@@ -162,13 +177,14 @@ def resolve_flags_sensor_values(
         state = coerce_numeric_register_value(processed_value)
 
     if state is not None:
-        formatted = format_active_flags(state, flags)
+        formatted = truncate_entity_state_string(format_active_flags(state, flags))
     elif isinstance(processed_value, str):
-        formatted = processed_value
+        formatted = truncate_entity_state_string(processed_value)
     else:
-        formatted = "None"
+        formatted = NO_ACTIVE_FLAGS_LABEL
 
-    return state, truncate_entity_state_string(formatted)
+    display_state = resolve_flags_sensor_display_state(state, formatted)
+    return state, formatted, display_state
 
 
 def apply_value_mapping(value: Any, config: Dict[str, Any]) -> Any:

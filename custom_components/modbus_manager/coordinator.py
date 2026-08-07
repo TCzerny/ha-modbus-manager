@@ -2084,21 +2084,19 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     )
                     numeric_value = None
                     if has_mapping:
-                        from .value_processor import (
-                            coerce_numeric_register_value,
-                            process_register_value,
-                        )
+                        from .value_processor import coerce_numeric_register_value
 
-                        raw_numeric = coerce_numeric_register_value(processed_value)
-                        if raw_numeric is not None:
-                            # Numeric value before map/flags/options (scale/offset/precision only)
-                            numeric_config = register.copy()
-                            numeric_config.pop("map", None)
-                            numeric_config.pop("flags", None)
-                            numeric_config.pop("options", None)
-                            numeric_value = process_register_value(
-                                raw_numeric, numeric_config, apply_precision=True
-                            )
+                        numeric_config = register.copy()
+                        numeric_config.pop("map", None)
+                        numeric_config.pop("flags", None)
+                        numeric_config.pop("options", None)
+                        # uint32/int32 values arrive as register lists from the optimizer;
+                        # decode via coordinator (swap/byte_order) without flag/map labels
+                        numeric_value = self._process_register_value(
+                            processed_value, numeric_config
+                        )
+                        if not isinstance(numeric_value, (int, float)):
+                            numeric_value = coerce_numeric_register_value(numeric_value)
 
                     # Store processed data
                     register_data = {
