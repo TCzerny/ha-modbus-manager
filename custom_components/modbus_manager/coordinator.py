@@ -26,7 +26,6 @@ from .const import (
 )
 from .device_utils import (
     async_ensure_hub_connected,
-    async_wait_for_hub_connected,
     build_device_entry_id,
     clean_firmware_version_string,
     create_device_info_dict,
