@@ -124,6 +124,8 @@ Templates present with limited field validation — please report issues: **Sung
 - ✅ SBH battery base metrics (community tested on WiNet-S/LAN)
 - ✅ iHomeManager EMS template (community beta — standalone validation ongoing)
 - ✅ Modbus TCP connection lifecycle fixes (v1.1.1)
+- ✅ iHomeManager feed-in limitation controls (v1.1.2, [#85](https://github.com/TCzerny/ha-modbus-manager/issues/85))
+- ✅ iHomeManager EV charger active power sensors (v1.1.2, [#86](https://github.com/TCzerny/ha-modbus-manager/issues/86))
 - ✅ Home Assistant Entity guidelines compliance (has_entity_name, EntityCategory, etc.)
 
 ## 🤝 Contributing
@@ -154,7 +156,7 @@ If you find this integration useful, please consider:
 
 ---
 
-**Version**: 1.1.1
+**Version**: 1.1.2
 **Status**: Stable - Active Development
 **Home Assistant**: 2025.4.0+
 **Last Updated**: August 2026

@@ -5,6 +5,23 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2026-08-17
+
+### ✨ Added
+
+- **Sungrow iHomeManager — EV charger active power ([#86](https://github.com/TCzerny/ha-modbus-manager/issues/86))**: Undocumented input registers 8593–8599 expose live charger power (total + per phase) when the wallbox is managed via iHM. New sensors `charger_active_power`, `charger_phase_*_active_power`, calculated `charger_total_phase_power`. Template v1.0.10.
+- **Sungrow iHomeManager — `charger_phases` dynamic config**: Select 1- or 3-phase EV charger setup; phase B/C power sensors hidden when single-phase.
+
+### 🐛 Fixed
+
+- **Sungrow iHomeManager — feed-in limitation enable ([#85](https://github.com/TCzerny/ha-modbus-manager/issues/85))**: `feed_in_power_limitation` select options corrected to `0x55` / `0xAA` (Off/On) instead of `0` / `1`; matches device firmware and fixes `unknown` state plus blocked ratio/value writes. Template v1.0.9.
+- **Flags sensors — uint32 decode**: BMS alarm/fault flag registers decoded from uint32 register lists; sensors show readable active flag labels (or “No active flags” when clear) instead of `unknown`, with `numeric_value` kept for automations.
+
+### 📚 Documentation
+
+- **README / HACS info**: Device support status aligned (SBR/SBH field-tested, AC011E supported, iHomeManager beta clarified).
+- **Dashboard examples**: Replaced invalid MDI icons (`battery-backup`, `battery-discharging`) with `mdi:battery-lock` and `mdi:battery-arrow-down` in Sungrow PV analysis YAML examples.
+
 ## [1.1.1] - 2026-08-07
 
 ### 🐛 Fixed

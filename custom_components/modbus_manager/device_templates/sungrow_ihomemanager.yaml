@@ -6,7 +6,7 @@ display_name: "Sungrow iHomeManager"
 description: "Template for Sungrow iHomeManager EMS device (Modbus TCP). Includes iHomeManager meter, EMS, and charger registers."
 manufacturer: "Sungrow"
 model: "iHomeManager"
-version: 1.0.8
+version: 1.0.10
 default_prefix: "IHM"
 default_slave_id: 247
 type: "energy_manager"
@@ -18,6 +18,8 @@ firmware_version: "iHomeManager"
 # V1.0.1: Added channel 2 data of the meter(8565~8574), Application Software Version(8318~8332), active power limit(8051~8052)
 # V1.0.2: Added Feed-in limitation (8028), Changed the data type of Feed-in limitation ratio(8031) from S32 to S16.
 # V1.0.8: battery_config setup (none/battery) replaces battery_enabled; charging_discharging_power uint16 (#79)
+# V1.0.9: feed_in_power_limitation options 0x55/0xAA (not 0/1 per device firmware; #85)
+# V1.0.10: undocumented EV charger active power registers 8593-8599 (#86)
 
 dynamic_config:
   battery_config:
@@ -34,6 +36,10 @@ dynamic_config:
     description: "Enable charger-related registers"
     options: [true, false]
     default: false
+  charger_phases:
+    description: "EV charger phase count (hides phase B/C power sensors when single-phase)"
+    options: [1, 3]
+    default: 3
   charger_region:
     description: "EV charger regional mode map (EU/DE vs Australia)"
     options:
@@ -334,6 +340,63 @@ sensors:
       3: "Charging"
       6: "Charging completed"
 
+  # EV charger active power (undocumented; community-verified, reg 8594-8601 / addr 8593-8599, #86)
+  - name: Charger Active Power
+    unique_id: charger_active_power
+    address: 8593 # reg 8594-8595
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scan_interval: 10
+    mm_group: "PV_charger"
+    condition: "charger_enabled == true"
+
+  - name: Charger Phase A Active Power
+    unique_id: charger_phase_a_active_power
+    address: 8595 # reg 8596-8597
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scan_interval: 10
+    mm_group: "PV_charger"
+    condition: "charger_enabled == true"
+
+  - name: Charger Phase B Active Power
+    unique_id: charger_phase_b_active_power
+    address: 8597 # reg 8598-8599
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scan_interval: 10
+    mm_group: "PV_charger"
+    condition: "charger_enabled == true and charger_phases == 3"
+
+  - name: Charger Phase C Active Power
+    unique_id: charger_phase_c_active_power
+    address: 8599 # reg 8600-8601
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scan_interval: 10
+    mm_group: "PV_charger"
+    condition: "charger_enabled == true and charger_phases == 3"
+
   - name: Output Type Raw
     unique_id: output_type_raw
     address: 8553 # reg 8554
@@ -608,8 +671,8 @@ controls:
     data_type: "uint16"
     scan_interval: 30
     options:
-      0: "Off"
-      1: "On"
+      0x55: "Off"
+      0xAA: "On"
     mm_group: "PV_control_ihm"
 
   - type: "number"
@@ -918,3 +981,26 @@ calculated:
     state_class: "measurement"
     precision: 0
     mm_group: "PV_phase_power"
+
+  # EV charger phase power sum (3-phase; compare with charger_active_power, #86)
+  - name: "Charger Total Phase Power"
+    unique_id: "charger_total_phase_power"
+    type: "sensor"
+    condition: "charger_enabled == true and charger_phases == 3"
+    availability: >-
+      {{
+      not is_state('[[mm:sensor:{PREFIX}_charger_phase_a_active_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_charger_phase_b_active_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_charger_phase_c_active_power]]', 'unavailable')
+      }}
+    state: >-
+      {{
+        (states('[[mm:sensor:{PREFIX}_charger_phase_a_active_power]]') | float(0))
+        + (states('[[mm:sensor:{PREFIX}_charger_phase_b_active_power]]') | float(0))
+        + (states('[[mm:sensor:{PREFIX}_charger_phase_c_active_power]]') | float(0))
+      }}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    precision: 0
+    mm_group: "PV_charger"
