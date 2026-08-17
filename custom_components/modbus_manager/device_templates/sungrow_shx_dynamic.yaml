@@ -2159,6 +2159,8 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    condition: "selected_model not in ['SH10RS'] OR connection_type not in ['WINET']"
+    # SH10RS does not support this register on WINET-S. Other SHx models unconfirmed.
 
   - name: Total imported energy
     unique_id: total_imported_energy
@@ -2211,6 +2213,9 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    condition: "selected_model not in ['SH10RS'] OR connection_type not in ['WINET']"
+    # SH10RS does not support this register on WINET-S. Other SHx models unconfirmed.
+
 
   - name: Total exported energy
     unique_id: total_exported_energy
