@@ -2008,7 +2008,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 600
-    condition: "battery_enabled == true and connection_type == 'WINET'"
+    condition: "battery_enabled == true and connection_type in ['LAN', 'WINET']"
     # WiNet-S returns raw value x10 (e.g. 990 for 99%) - confirmed live, issue #82
 
   - name: Battery state of health
@@ -2021,9 +2021,8 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 600
-    condition: "battery_enabled == true and connection_type in ['LAN', 'RS485']"
+    condition: "battery_enabled == true and connection_type == 'RS485'"
     # RS485 returns true value directly (e.g. 99 for 99%) - confirmed live, issue #82
-    # LAN grouped with RS485 pending confirmation - untested on direct-Ethernet hardware
 
   - name: Battery temperature
     unique_id: battery_temperature
