@@ -125,6 +125,7 @@ dynamic_config:
     options:
       LAN: "Dedicated inverter Ethernet port (RJ45 on the inverter)"
       WINET: "WiNet-S module — Wi-Fi or cable to the dongle (use this if you connect via the dongle, including its LAN port)"
+      RS485: "Used when connecting directly to inverters RS485 serial port using a USB/Ethernet to RS485 adapter"
     default: "LAN"
 
   meter_type:
@@ -500,7 +501,8 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
-    condition: "selected_model in [SH8.0RS, SH10RS]"
+    condition: "selected_model in [SH8.0RS, SH10RS] and connection_type != 'RS485'"
+    # RS485 reads 0xFFFF (65535 * 0.1 scale = 6553.5) on this register - unpopulated over that path
 
   - name: MPPT4 current
     unique_id: mppt4_current
@@ -513,7 +515,8 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
-    condition: "selected_model in [SH8.0RS, SH10RS]"
+    condition: "selected_model in [SH8.0RS, SH10RS] and connection_type != 'RS485'"
+    # RS485 reads 0xFFFF (65535 * 0.1 scale = 6553.5) on this register - unpopulated over that path
 
   - name: Total DC power
     unique_id: total_dc_power
@@ -981,7 +984,7 @@ sensors:
     scale: 0.1
     scan_interval: 10
     # Undocumented registers, reengineered by forum; tested: SH10RT + LAN
-    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type == 'LAN' and selected_model in [SH10RT]"
+    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT]"
 
   - name: Meter phase B voltage
     unique_id: meter_phase_b_voltage
@@ -995,7 +998,7 @@ sensors:
     scale: 0.1
     scan_interval: 10
     # Undocumented registers, reengineered by forum; tested: SH10RT + LAN
-    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type == 'LAN' and selected_model in [SH10RT]"
+    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT]"
 
   - name: Meter phase C voltage
     unique_id: meter_phase_c_voltage
@@ -1009,7 +1012,7 @@ sensors:
     scale: 0.1
     scan_interval: 10
     # Undocumented registers, reengineered by forum; tested: SH10RT + LAN
-    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type == 'LAN' and selected_model in [SH10RT]"
+    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT]"
 
   - name: Meter phase A current
     unique_id: meter_phase_a_current
@@ -1023,7 +1026,7 @@ sensors:
     scale: 0.01
     scan_interval: 10
     # Undocumented registers, reengineered by forum; tested: SH10RT + LAN
-    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type == 'LAN' and selected_model in [SH10RT]"
+    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT]"
 
   - name: Meter phase B current
     unique_id: meter_phase_b_current
@@ -1037,7 +1040,7 @@ sensors:
     scale: 0.01
     scan_interval: 10
     # Undocumented registers, reengineered by forum; tested: SH10RT + LAN
-    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type == 'LAN' and selected_model in [SH10RT]"
+    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT]"
 
   - name: Meter phase C current
     unique_id: meter_phase_c_current
@@ -1051,7 +1054,7 @@ sensors:
     scale: 0.01
     scan_interval: 10
     # Undocumented registers, reengineered by forum; tested: SH10RT + LAN
-    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type == 'LAN' and selected_model in [SH10RT]"
+    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT]"
 
   # following statistic sensors only work on some SH*RT inverters
   # (only LAN attached devices)
@@ -1068,12 +1071,12 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     entity_category: "diagnostic"
 
   - name: Monthly PV generation (02 February)
     unique_id: monthly_pv_generation_02_february
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6227 # reg 6228
     input_type: input
     data_type: uint16
@@ -1087,7 +1090,7 @@ sensors:
 
   - name: Monthly PV generation (03 March)
     unique_id: monthly_pv_generation_03_march
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6228 # reg 6229
     input_type: input
     data_type: uint16
@@ -1101,7 +1104,7 @@ sensors:
 
   - name: Monthly PV generation (04 April)
     unique_id: monthly_pv_generation_04_april
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6229 # reg 6230
     input_type: input
     data_type: uint16
@@ -1115,7 +1118,7 @@ sensors:
 
   - name: Monthly PV generation (05 May)
     unique_id: monthly_pv_generation_05_may
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6230 # reg 6231
     input_type: input
     data_type: uint16
@@ -1129,7 +1132,7 @@ sensors:
 
   - name: Monthly PV generation (06 June)
     unique_id: monthly_pv_generation_06_june
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6231 # reg 6232
     input_type: input
     data_type: uint16
@@ -1143,7 +1146,7 @@ sensors:
 
   - name: Monthly PV generation (07 July)
     unique_id: monthly_pv_generation_07_july
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6232 # reg 6233
     input_type: input
     data_type: uint16
@@ -1157,7 +1160,7 @@ sensors:
 
   - name: Monthly PV generation (08 August)
     unique_id: monthly_pv_generation_08_august
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6233 # reg 6234
     input_type: input
     data_type: uint16
@@ -1171,7 +1174,7 @@ sensors:
 
   - name: Monthly PV generation (09 September)
     unique_id: monthly_pv_generation_09_september
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6234 # reg 6235
     input_type: input
     data_type: uint16
@@ -1185,7 +1188,7 @@ sensors:
 
   - name: Monthly PV generation (10 October)
     unique_id: monthly_pv_generation_10_october
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6235 # reg 6236
     input_type: input
     data_type: uint16
@@ -1199,7 +1202,7 @@ sensors:
 
   - name: Monthly PV generation (11 November)
     unique_id: monthly_pv_generation_11_november
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6236 # reg 6237
     input_type: input
     data_type: uint16
@@ -1213,7 +1216,7 @@ sensors:
 
   - name: Monthly PV generation (12 December)
     unique_id: monthly_pv_generation_12_december
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6237 # reg 6238
     input_type: input
     data_type: uint16
@@ -1229,7 +1232,7 @@ sensors:
   # Start yearly pv generation
   - name: Yearly PV generation (2019)
     unique_id: yearly_pv_generation_2019
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6257 # reg 6258
     input_type: input
     data_type: uint32
@@ -1244,7 +1247,7 @@ sensors:
 
   - name: Yearly PV generation (2020)
     unique_id: yearly_pv_generation_2020
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6259 # reg 6260
     input_type: input
     data_type: uint32
@@ -1259,7 +1262,7 @@ sensors:
 
   - name: Yearly PV generation (2021)
     unique_id: yearly_pv_generation_2021
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6261 # reg 6262
     input_type: input
     data_type: uint32
@@ -1274,7 +1277,7 @@ sensors:
 
   - name: Yearly PV generation (2022)
     unique_id: yearly_pv_generation_2022
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6263 # reg 6264
     input_type: input
     data_type: uint32
@@ -1289,7 +1292,7 @@ sensors:
 
   - name: Yearly PV generation (2023)
     unique_id: yearly_pv_generation_2023
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6265 # reg 6266
     input_type: input
     data_type: uint32
@@ -1304,7 +1307,7 @@ sensors:
 
   - name: Yearly PV generation (2024)
     unique_id: yearly_pv_generation_2024
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6267 # reg 6268
     input_type: input
     data_type: uint32
@@ -1319,7 +1322,7 @@ sensors:
 
   - name: Yearly PV generation (2025)
     unique_id: yearly_pv_generation_2025
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6269 # reg 6270
     input_type: input
     data_type: uint32
@@ -1334,7 +1337,7 @@ sensors:
 
   - name: Yearly PV generation (2026)
     unique_id: yearly_pv_generation_2026
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6271 # reg 6272
     input_type: input
     data_type: uint32
@@ -1349,7 +1352,7 @@ sensors:
 
   - name: Yearly PV generation (2027)
     unique_id: yearly_pv_generation_2027
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6273 # reg 6274
     input_type: input
     data_type: uint32
@@ -1364,7 +1367,7 @@ sensors:
 
   - name: Yearly PV generation (2028)
     unique_id: yearly_pv_generation_2028
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6275 # reg 6276
     input_type: input
     data_type: uint32
@@ -1379,7 +1382,7 @@ sensors:
 
   - name: Yearly PV generation (2029)
     unique_id: yearly_pv_generation_2029e
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6277 # reg 6278
     input_type: input
     data_type: uint32
@@ -1396,7 +1399,7 @@ sensors:
   # Start monthly export
   - name: Monthly export (01 January)
     unique_id: monthly_export_01_january
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6595 # reg 6596
     input_type: input
     data_type: uint16
@@ -1410,7 +1413,7 @@ sensors:
 
   - name: Monthly export (02 February)
     unique_id: monthly_export_02_february
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6596 # reg 6597
     input_type: input
     data_type: uint16
@@ -1424,7 +1427,7 @@ sensors:
 
   - name: Monthly export (03 March)
     unique_id: monthly_export_03_march
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6597 # reg 6598
     input_type: input
     data_type: uint16
@@ -1438,7 +1441,7 @@ sensors:
 
   - name: Monthly export (04 April)
     unique_id: monthly_export_04_april
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6598 # reg 6599
     input_type: input
     data_type: uint16
@@ -1452,7 +1455,7 @@ sensors:
 
   - name: Monthly export (05 May)
     unique_id: monthly_export_05_may
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6599 # reg 6600
     input_type: input
     data_type: uint16
@@ -1466,7 +1469,7 @@ sensors:
 
   - name: Monthly export (06 June)
     unique_id: monthly_export_06_june
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6600 # reg 6601
     input_type: input
     data_type: uint16
@@ -1480,7 +1483,7 @@ sensors:
 
   - name: Monthly export (07 July)
     unique_id: monthly_export_07_july
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6601 # reg 6602
     input_type: input
     data_type: uint16
@@ -1494,7 +1497,7 @@ sensors:
 
   - name: Monthly export (08 August)
     unique_id: monthly_export_08_august
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6602 # reg 6603
     input_type: input
     data_type: uint16
@@ -1508,7 +1511,7 @@ sensors:
 
   - name: Monthly export (09 September)
     unique_id: monthly_export_09_september
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6603 # reg 6604
     input_type: input
     data_type: uint16
@@ -1522,7 +1525,7 @@ sensors:
 
   - name: Monthly export (10 October)
     unique_id: monthly_export_10_october
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6604 # reg 6605
     input_type: input
     data_type: uint16
@@ -1536,7 +1539,7 @@ sensors:
 
   - name: Monthly export (11 November)
     unique_id: monthly_export_11_november
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6605 # reg 6606
     input_type: input
     data_type: uint16
@@ -1550,7 +1553,7 @@ sensors:
 
   - name: Monthly export (12 December)
     unique_id: monthly_export_12_december
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6606 # reg 6607
     input_type: input
     data_type: uint16
@@ -1566,7 +1569,7 @@ sensors:
   # Start yearly export energy from PV
   - name: Yearly Export (2019)
     unique_id: yearly_export_2019
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6615 # reg 6616
     input_type: input
     data_type: uint32
@@ -1581,7 +1584,7 @@ sensors:
 
   - name: Yearly Export (2020)
     unique_id: yearly_export_2020
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6617 # reg 6618
     input_type: input
     data_type: uint32
@@ -1596,7 +1599,7 @@ sensors:
 
   - name: Yearly Export (2021)
     unique_id: yearly_export_2021
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6619 # reg 6620
     input_type: input
     data_type: uint32
@@ -1611,7 +1614,7 @@ sensors:
 
   - name: Yearly Export (2022)
     unique_id: yearly_export_2022
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6621 # reg 6622
     input_type: input
     data_type: uint32
@@ -1626,7 +1629,7 @@ sensors:
 
   - name: Yearly Export (2023)
     unique_id: yearly_export_2023
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6623 # reg 6624
     input_type: input
     data_type: uint32
@@ -1641,7 +1644,7 @@ sensors:
 
   - name: Yearly Export (2024)
     unique_id: yearly_export_2024
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6625 # reg 6626
     input_type: input
     data_type: uint32
@@ -1656,7 +1659,7 @@ sensors:
 
   - name: Yearly Export (2025)
     unique_id: yearly_export_2025
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6627 # reg 6628
     input_type: input
     data_type: uint32
@@ -1671,7 +1674,7 @@ sensors:
 
   - name: Yearly Export (2026)
     unique_id: yearly_export_2026
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6629 # reg 6630
     input_type: input
     data_type: uint32
@@ -1686,7 +1689,7 @@ sensors:
 
   - name: Yearly Export (2027)
     unique_id: yearly_export_2027
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6631 # reg 6632
     input_type: input
     data_type: uint32
@@ -1701,7 +1704,7 @@ sensors:
 
   - name: Yearly Export (2028)
     unique_id: yearly_export_2028
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     address: 6633 # reg 6634
     input_type: input
     data_type: uint32
@@ -2005,7 +2008,22 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 600
-    condition: "battery_enabled == true"
+    condition: "battery_enabled == true and connection_type == 'WINET'"
+    # WiNet-S returns raw value x10 (e.g. 990 for 99%) - confirmed live, issue #82
+
+  - name: Battery state of health
+    unique_id: battery_state_of_health
+    address: 13023 # reg 13024
+    input_type: input
+    data_type: uint16
+    precision: 0
+    unit_of_measurement: "%"
+    state_class: measurement
+    scale: 1
+    scan_interval: 600
+    condition: "battery_enabled == true and connection_type in ['LAN', 'RS485']"
+    # RS485 returns true value directly (e.g. 99 for 99%) - confirmed live, issue #82
+    # LAN grouped with RS485 pending confirmation - untested on direct-Ethernet hardware
 
   - name: Battery temperature
     unique_id: battery_temperature
@@ -3626,7 +3644,7 @@ calculated:
     device_class: "energy"
     state_class: "total_increasing"
     precision: 1
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     mm_group: "calculated_energy"
 
   - name: "Yearly PV generation (current)"
@@ -3642,7 +3660,7 @@ calculated:
     device_class: "energy"
     state_class: "total_increasing"
     precision: 1
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     mm_group: "calculated_energy"
 
   - name: "Monthly export (current)"
@@ -3658,7 +3676,7 @@ calculated:
     device_class: "energy"
     state_class: "total_increasing"
     precision: 1
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     mm_group: "calculated_energy"
 
   - name: "Yearly export (current)"
@@ -3674,7 +3692,7 @@ calculated:
     device_class: "energy"
     state_class: "total_increasing"
     precision: 1
-    condition: "connection_type == 'LAN'"
+    condition: "connection_type in ['LAN', 'RS485']"
     mm_group: "calculated_energy"
 
   # Battery Level and Charge Calculations
