@@ -6,7 +6,7 @@ display_name: "Sungrow SG Series Inverter"
 description: "Dynamic template for Sungrow SG series residential and commercial PV grid-connected inverters. Based on Communication Protocol V1.1.53. (RS, RT, HX, KTL, KTL-MT, HV/BF, CX Series)"
 manufacturer: "Sungrow"
 model: "SG Series Dynamic"
-version: 1.3.2
+version: 1.3.3
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Inverter"
@@ -94,10 +94,11 @@ dynamic_config:
     default: "SAPPHIRE-H_xxxx"
 
   connection_type:
-    description: "Physical Modbus path (LAN vs WiNet-S); affects which registers are available"
+    description: "Physical Modbus path (LAN, WiNet-S, or RS485 gateway); affects which registers are available"
     options:
       LAN: "Dedicated inverter Ethernet port (RJ45 on the inverter)"
       WINET: "WiNet-S module — Wi-Fi or cable to the dongle (use this if you connect via the dongle, including its LAN port)"
+      RS485: "Modbus TCP gateway on the inverter RS485 port (A1/B1), e.g. WaveShare — not native serial RTU in this integration"
     default: "LAN"
 
 # Sensors for read access (Input Registers)

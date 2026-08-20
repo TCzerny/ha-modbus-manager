@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.3] - 2026-08-20
+
+### ✨ Added
+
+- **Sungrow — RS485 connection type ([#82](https://github.com/TCzerny/ha-modbus-manager/issues/82), [#87](https://github.com/TCzerny/ha-modbus-manager/pull/87))**: Setup offers **LAN / WINET / RS485**. `requires_connection_type` accepts a string or list so SBR is offered on LAN and RS485. SHx template v1.2.14 (extended stats on RS485; SOH scale 1 on RS485; MPPT4 hidden on RS485 for SH8.0RS/SH10RS; daily import/export omitted for SH10RS+WINET). SBR v1.2.1. SG dropdown v1.3.3. Existing hubs stay on **LAN** until reconfigured. Thanks to [@Jam3s97](https://github.com/Jam3s97).
+
 ### 🐛 Fixed
 
 - **Sungrow iHomeManager — protocol map vs live controls ([#91](https://github.com/TCzerny/ha-modbus-manager/issues/91))**: Dynamic config `protocol_version` (V1.0.0 / V1.0.1 / V1.0.2) gates registers (feed-in from V1.0.2; channel 2 / app version / active power limit from V1.0.1) and switches feed-in ratio 8031 **S32→S16**. Feed-in value/ratio and active power limit ratio stay unavailable unless the matching enable control is On. Template v1.0.12.

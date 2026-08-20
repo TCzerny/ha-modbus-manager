@@ -60,7 +60,7 @@ The template supports **all 36** following Sungrow SHx models:
 | **Meter Type** | DTSU666, DTSU666-20 | DTSU666 | Meter type connected to inverter |
 | **Firmware** | String | "03011.95.01" | Firmware version (e.g. "03011.95.01") |
 | **Strings** | 1-24 | Auto | Number of PV strings (auto-detected from model) |
-| **Connection** | LAN, WINET | LAN | Connection type |
+| **Connection** | LAN, WINET, RS485 | LAN | Physical Modbus path |
 
 ### 🔄 Automatic Filtering
 
@@ -75,8 +75,8 @@ The template supports **all 36** following Sungrow SHx models:
 
 #### **Battery Filtering**
 - **Battery none:** Battery-dependent entities are filtered out
-- **Battery standard_battery:** Inverter battery registers only (slave **1**) — available on **LAN and WiNet-S**
-- **Battery sbr_battery:** Inverter battery registers + separate **SBR/SBH** template on the **battery Modbus unit** (registers **10710+**, default unit ID **200** on direct LAN — often a **forwarded ID** such as **2** on WiNet-S; see [SBR/SBH battery doc](README_sungrow_sbr_battery.md) and [#77](https://github.com/TCzerny/ha-modbus-manager/issues/77))
+- **Battery standard_battery:** Inverter battery registers only (slave **1**) — available on **LAN, RS485, and WiNet-S**
+- **Battery sbr_battery:** Inverter battery registers + separate **SBR/SBH** template on the **battery Modbus unit** (registers **10710+**, default unit ID **200** on direct **LAN or RS485** — often a **forwarded ID** such as **2** on WiNet-S; see [SBR/SBH battery doc](README_sungrow_sbr_battery.md) and [#77](https://github.com/TCzerny/ha-modbus-manager/issues/77))
 
 #### **Meter Type Filtering**
 - **DTSU666:** Standard single-channel meter (registers 5600-5606)
@@ -84,8 +84,9 @@ The template supports **all 36** following Sungrow SHx models:
 - **Note:** iHomeManager is now a separate template (`sungrow_ihomemanager.yaml`) and should not be selected here
 
 #### **Connection Filtering**
-- **LAN:** Inverter extended statistics (monthly/yearly PV blocks from register **6226+** on slave **1**), full inverter-side map, SBR/SBH battery unit typically on ID **200**
-- **WINET:** Monthly/yearly PV statistics on slave **1** are **not** exposed; inverter-side **`standard_battery`** summary still works. Separate SBR/SBH pack data (**10740+**) can work over WiNet-S when using the **forwarded Modbus unit ID** from the WiNet device list (often **2**, not **200**) — see [#77](https://github.com/TCzerny/ha-modbus-manager/issues/77). Detailed SBR cell diagnostics (**10756+** on the battery template) are generally **not** available on WiNet-S.
+- **LAN:** Dedicated inverter Ethernet (RJ45). Extended statistics (monthly/yearly PV from **6226+** on slave **1**), full inverter-side map, SBR/SBH typically unit ID **200**. Battery SOH (13024) uses **scale 0.1**.
+- **RS485:** Modbus TCP **gateway** on inverter **A1/B1** (e.g. WaveShare) — still TCP, not native RTU in this integration. Same extended statistics as LAN; SBR/SBH on unit **200** works. Battery SOH uses **scale 1** (raw 99 = 99%). **MPPT4** voltage/current on SH8.0RS/SH10RS are omitted (register returns `0xFFFF` on this path) ([#82](https://github.com/TCzerny/ha-modbus-manager/issues/82)). If you previously selected **LAN** for a WaveShare setup, **reconfigure** and set **RS485** so SOH scaling is correct.
+- **WINET:** Monthly/yearly PV statistics on slave **1** are **not** exposed; inverter-side **`standard_battery`** summary still works. Separate SBR/SBH pack data (**10740+**) can work over WiNet-S when using the **forwarded Modbus unit ID** from the WiNet device list (often **2**, not **200**) — see [#77](https://github.com/TCzerny/ha-modbus-manager/issues/77). Detailed SBR cell diagnostics (**10756+** on the battery template) are generally **not** available on WiNet-S. On **SH10RS**, daily imported/exported energy (13036 / 13045) stays at 0 on WiNet-S and is not loaded for that combo.
 
 **Do not confuse register ranges:** **6226+** / **130xx** yearly blocks = **inverter** PV energy statistics (this template, slave 1). **10756+** = **SBR/SBH battery** cell/module diagnostics (`sungrow_sbr_battery.yaml`, battery unit) — different device and map.
 
@@ -100,12 +101,12 @@ Use **Connection: WINET** when Modbus TCP goes through the **WiNet-S** dongle (n
 #### Initial setup (battery present)
 - Select **WINET** as connection type during device options.
 - If a battery is configured, initial setup offers **`standard_battery`** automatically (inverter slave **1** registers and controls).
-- **Separate SBR/SBH device:** the config flow currently offers **`sbr_battery`** mainly when the inverter connection is **LAN**; pack-level data over WiNet-S requires the **forwarded unit ID** from the WiNet web UI (commonly **2**) — see [SBR/SBH doc](README_sungrow_sbr_battery.md) ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77)).
+- **Separate SBR/SBH device:** the config flow offers **`sbr_battery`** when the inverter connection is **LAN** or **RS485**; pack-level data over WiNet-S requires the **forwarded unit ID** from the WiNet web UI (commonly **2**) — see [SBR/SBH doc](README_sungrow_sbr_battery.md) ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77)).
 - On **Reconfigure Device**, **`battery_config`** is limited to **`none`** or **`standard_battery`** on WiNet-S (`sbr_battery` is clamped on the inverter entry).
 
 #### Expected entity count
 - A hybrid such as **SH10RT** with **WiNet-S** and **`standard_battery`** typically creates about **165–180** entities (template sensors/controls + calculated/binary sensors).
-- LAN-only statistics are excluded when **`connection_type`** is **WINET** — a high count is **normal**, not a misconfiguration.
+- Monthly/yearly statistics are excluded when **`connection_type`** is **WINET** — a high count is **normal**, not a misconfiguration.
 
 #### `connection_type` persistence
 - **`connection_type`** is stored on the **device record** and used for entity filtering.
@@ -116,7 +117,7 @@ Use **Connection: WINET** when Modbus TCP goes through the **WiNet-S** dongle (n
 - These are a **known limitation of the WiNet TCP bridge**, not something the integration can fully suppress.
 - If reads/writes still work, the messages can usually be ignored.
 
-### 🔧 Hub communication (LAN and WiNet-S)
+### 🔧 Hub communication (LAN, RS485 gateway, and WiNet-S)
 
 These settings apply to the **Modbus hub** (initial connection step, **Hub Options**, or hub **Reconfigure**). They affect all devices on that hub, including SHx.
 
@@ -127,7 +128,7 @@ These settings apply to the **Modbus hub** (initial connection step, **Hub Optio
 
 **WiNet-S tuning tips:**
 - Start with defaults; increase **`post_write_settle_milliseconds`** to **1000** or higher if controls briefly flicker **`unavailable`** or reads race with writes.
-- Existing hubs **without** `post_write_settle_milliseconds` keep automatic settle (**500 ms** LAN / **1000 ms** WiNet-S) until you set the option explicitly.
+- Existing hubs **without** `post_write_settle_milliseconds` keep automatic settle (**500 ms** LAN/RS485 / **1000 ms** WiNet-S) until you set the option explicitly.
 - Very low **`message_wait_milliseconds`** on WiNet-S can increase errors when many entities poll — **100 ms** is a sensible starting point.
 
 ### ⏱️ Control response timing (writes)
@@ -196,7 +197,7 @@ Undocumented holding registers for Master/Slave cascade configuration. Available
 - **Meter Channel 2** - Channel 2 power data (DTSU666-20 dual-channel meter only)
   - **Note:** iHomeManager meter support is now provided by the separate `sungrow_ihomemanager.yaml` template
 
-### 📈 Statistical Data (LAN only)
+### 📈 Statistical Data (LAN and RS485)
 - **Monthly PV Generation** - Monthly PV generation (12 months)
 - **Yearly PV Generation** - Yearly PV generation (2019-2029)
 - **Monthly Export** - Monthly export (12 months)
@@ -476,7 +477,10 @@ This section contains all entities that will be created by this template, includ
 - **DRM State (13042)**, **BMS fault 2/alarm 2 (13075, 13077)**, **External EMS heartbeat (13079)** are commented out
 - **Battery current (5630)** and **Battery power (5213)** are used instead of 13020/13021 per Protocol V1.1.11 documentation recommendation
 - **Firmware Information** (13249, 13264, 13279) and **Protocol version raw** (4951) are only available on RT/T/K6 models, not on RS/MG models
-- Monthly and yearly statistical sensors are only available with LAN connection
+- Monthly and yearly statistical sensors are available with **LAN** or **RS485** (not WiNet-S)
+- Battery SOH (13024): **scale 0.1** on LAN/WiNet-S, **scale 1** on RS485 ([#82](https://github.com/TCzerny/ha-modbus-manager/issues/82))
+- MPPT4 voltage/current (SH8.0RS / SH10RS) are not loaded on **RS485** (`0xFFFF` on that path)
+- Daily imported/exported energy is not loaded for **SH10RS + WINET** (register stays 0 on WiNet-S)
 - Battery-related sensors are only available when battery is enabled
 - Meter Channel 2 sensors (13199-13205) are only available when meter_type is set to "DTSU666-20"
 - Meter phase voltage/current sensors (5740-5745) are only available for meter types `DTSU666` and `DTSU666-20`

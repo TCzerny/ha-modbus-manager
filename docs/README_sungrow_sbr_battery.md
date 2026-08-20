@@ -11,6 +11,7 @@ This document lists the Modbus registers for the Sungrow SBR/SBH battery templat
 - **Default prefix**: `SBR`
 - **Default slave ID**: `200`
 - **Firmware**: `22011.01.19`
+- **Template version**: 1.2.1 (`requires_connection_type`: LAN or RS485)
 
 ### SBR vs SBH
 
@@ -23,7 +24,7 @@ This document lists the Modbus registers for the Sungrow SBR/SBH battery templat
 |------|---------------------|--------|
 | **Inverter LAN (RJ45)** on SH-RT / SH-T | **200** | Internal battery address on the inverter Modbus port |
 | **WiNet-S** (Wi‑Fi or cable to dongle) | **Forwarded ID** from WiNet web UI | Internal address **200** is often forwarded as **2** (or another ID) — see below |
-| **RS485 direct (A1/B1)** | Often **200** | Planned dedicated `RS485` connection type ([#82](https://github.com/TCzerny/ha-modbus-manager/issues/82)) |
+| **RS485 gateway (A1/B1, e.g. WaveShare TCP)** | Often **200** | Use connection type **RS485** ([#82](https://github.com/TCzerny/ha-modbus-manager/issues/82)) |
 
 **WiNet-S:** Open **Device maintenance → Device list** on the WiNet web page. The **forwarded Modbus ID** column is the Unit ID for Modbus TCP (e.g. inverter **1**, first SBH **2**). Using Unit ID **200** on WiNet-S usually times out even though the battery is reachable ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77)).
 
@@ -47,7 +48,7 @@ Evidence from COM1 logger exports on **SH20T + SBH150 + WiNet-S2** ([#77](https:
 
 - Treat WiNet-S as a **summary battery view**, not full SBR diagnostics.
 - Do **not** expect **10756+** or **10821+** cell/module detail through WiNet-S, even when those registers appear in internal WiNet COM1 logs.
-- **Direct inverter LAN** (or future RS485 path) remains the route for SBR-style detailed diagnostics when the firmware map supports them.
+- **Direct inverter LAN or RS485** remains the route for SBR-style detailed diagnostics when the firmware map supports them.
 
 **Template behaviour (v1.0.22+):** Registers **10756+**, module serials **10821+**, and related calculated sensors are **not created** when the inverter **`connection_type` is WiNet-S**, to avoid poll errors on addresses the dongle does not expose. Base pack data **10710–10747** remains available on WiNet-S with the correct **forwarded unit ID**.
 

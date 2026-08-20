@@ -39,7 +39,7 @@ The template supports the following Sungrow SG series models:
 | **MPPT** | 1-12 | Auto | Number of MPPT trackers (auto-detected from model) |
 | **Strings** | 1-24 | Auto | Number of PV strings (auto-detected from model) |
 | **Firmware** | String | "SAPPHIRE-H_xxx" | Firmware version |
-| **Connection** | LAN, WINET | LAN | Connection type |
+| **Connection** | LAN, WINET, RS485 | LAN | Physical Modbus path |
 
 ### 🔄 Automatic Filtering
 
@@ -55,7 +55,8 @@ The template supports the following Sungrow SG series models:
 - Automatically filters string current sensors based on model
 
 #### **Connection Filtering**
-- **LAN:** Full access to all registers
+- **LAN:** Full access to all registers (dedicated inverter Ethernet)
+- **RS485:** Same as LAN for this template — Modbus TCP gateway on the inverter RS485 port
 - **WINET:** Limited access (some registers not available)
 
 #### **Model-Specific Register Filtering**

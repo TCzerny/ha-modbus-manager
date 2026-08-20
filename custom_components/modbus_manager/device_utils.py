@@ -38,6 +38,23 @@ KNOWN_TEMPLATE_DEVICE_TYPES: dict[str, str] = {
 _INVERTER_ROLE_ALIASES = frozenset({"inverter", "pv_inverter", "pv_hybrid_inverter"})
 
 
+def connection_type_allowed(actual: Any, required: Any) -> bool:
+    """Return True if actual connection_type matches requires_connection_type.
+
+    ``required`` may be a string (legacy) or a list/tuple of allowed types.
+    Comparison is case-insensitive. Missing/empty ``required`` always allows.
+    """
+    if required is None or required == "":
+        return True
+    actual_norm = str(actual or "LAN").strip().upper()
+    if isinstance(required, (list, tuple, set)):
+        allowed = {
+            str(item).strip().upper() for item in required if item not in (None, "")
+        }
+        return actual_norm in allowed
+    return actual_norm == str(required).strip().upper()
+
+
 def clean_firmware_version_string(firmware_version: Any) -> str:
     """Return a bare firmware value for device_registry sw_version.
 

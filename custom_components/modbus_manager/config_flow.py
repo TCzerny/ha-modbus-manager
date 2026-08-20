@@ -38,6 +38,7 @@ from .device_utils import (
     apply_version_replacements,
     build_device_entry_id,
     collect_version_replacements,
+    connection_type_allowed,
     ensure_entity_id_strategy_on_device,
     entity_allowed_for_protocol,
     entry_device_type_set,
@@ -2180,21 +2181,21 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if template_data and isinstance(template_data, dict):
                 template_type = template_data.get("type", "")
                 if template_type == "battery":
-                    # Filter by requires_connection_type (e.g. SBR needs LAN, not WiNet-S)
+                    # Filter by requires_connection_type (string or list; e.g. SBR needs LAN/RS485)
                     required_conn = template_data.get("requires_connection_type")
-                    if required_conn:
-                        required_norm = str(required_conn).strip().upper()
-                        if connection_type_norm != required_norm:
-                            _LOGGER.info(
-                                "Excluding battery template %s: requires connection %s, current is %s",
-                                template_name,
-                                required_conn,
-                                connection_type,
-                            )
-                            note = template_data.get("config_flow_note", "")
-                            if note:
-                                filtered_out_notes.append(f"{template_name}: {note}")
-                            continue
+                    if required_conn and not connection_type_allowed(
+                        connection_type_norm, required_conn
+                    ):
+                        _LOGGER.info(
+                            "Excluding battery template %s: requires connection %s, current is %s",
+                            template_name,
+                            required_conn,
+                            connection_type,
+                        )
+                        note = template_data.get("config_flow_note", "")
+                        if note:
+                            filtered_out_notes.append(f"{template_name}: {note}")
+                        continue
                     display_name = (
                         template_data.get("display_name") or ""
                     ).strip() or template_name
@@ -4655,12 +4656,12 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             template_data = await get_template_by_name(template_name)
             if template_data and isinstance(template_data, dict):
                 if template_data.get("type", "") == "battery":
-                    # Filter by requires_connection_type (e.g. SBR needs LAN)
+                    # Filter by requires_connection_type (string or list; e.g. SBR needs LAN/RS485)
                     required_conn = template_data.get("requires_connection_type")
-                    if required_conn:
-                        required_norm = str(required_conn).strip().upper()
-                        if connection_type_norm != required_norm:
-                            continue
+                    if required_conn and not connection_type_allowed(
+                        connection_type_norm, required_conn
+                    ):
+                        continue
                     display_name = (
                         template_data.get("display_name") or ""
                     ).strip() or template_name
