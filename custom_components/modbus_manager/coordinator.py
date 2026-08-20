@@ -25,10 +25,13 @@ from .const import (
     EntityIdStrategy,
 )
 from .device_utils import (
+    apply_version_replacements,
     async_ensure_hub_connected,
     build_device_entry_id,
     clean_firmware_version_string,
+    collect_version_replacements,
     create_device_info_dict,
+    entity_allowed_for_protocol,
     generate_unique_id,
     hub_device_identifier,
     hub_is_connected,
@@ -802,6 +805,49 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     binary_sensors = filter_by_firmware_version(
                         binary_sensors, firmware_version
                     )
+                protocol_version = dynamic_config.get("protocol_version")
+                if protocol_version:
+                    registers = [
+                        entity
+                        for entity in registers
+                        if entity_allowed_for_protocol(entity, protocol_version)
+                    ]
+                    controls = [
+                        entity
+                        for entity in controls
+                        if entity_allowed_for_protocol(entity, protocol_version)
+                    ]
+                    calculated = [
+                        entity
+                        for entity in calculated
+                        if entity_allowed_for_protocol(entity, protocol_version)
+                    ]
+                    binary_sensors = [
+                        entity
+                        for entity in binary_sensors
+                        if entity_allowed_for_protocol(entity, protocol_version)
+                    ]
+                version_replacements = collect_version_replacements(
+                    template_dynamic_config
+                )
+                if version_replacements:
+
+                    def _apply_replacements(entities: list) -> list:
+                        updated = []
+                        for entity in entities:
+                            entity = apply_version_replacements(
+                                entity, firmware_version, version_replacements
+                            )
+                            entity = apply_version_replacements(
+                                entity, protocol_version, version_replacements
+                            )
+                            updated.append(entity)
+                        return updated
+
+                    registers = _apply_replacements(registers)
+                    controls = _apply_replacements(controls)
+                    calculated = _apply_replacements(calculated)
+                    binary_sensors = _apply_replacements(binary_sensors)
                 firmware_counts = {
                     "sensors": len(registers),
                     "controls": len(controls),

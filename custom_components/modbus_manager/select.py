@@ -19,6 +19,7 @@ from .device_utils import (
     generate_unique_id,
     get_entity_mm_group,
     is_coordinator_connected,
+    is_register_dependency_met,
 )
 from .logger import ModbusManagerLogger
 
@@ -88,6 +89,7 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
         self._options = register_config.get("options", {})
         self._map = register_config.get("map", {})
         self._flags = register_config.get("flags", {})
+        self._register_dependency = register_config.get("depends_on_register")
 
         # Minimize extra_state_attributes - only include static/essential attributes
         # Avoid "options" key because it conflicts with SelectEntity options list
@@ -367,7 +369,11 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
     @property
     def available(self) -> bool:
         """Return if the entity is available."""
-        return is_coordinator_connected(self.coordinator) and super().available
+        if not is_coordinator_connected(self.coordinator) or not super().available:
+            return False
+        return is_register_dependency_met(
+            self.coordinator.data, self._register_dependency
+        )
 
     async def async_added_to_hass(self) -> None:
         """When entity is added to hass."""

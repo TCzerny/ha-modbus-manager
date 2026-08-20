@@ -12,7 +12,11 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
-from .device_utils import create_base_extra_state_attributes, is_coordinator_connected
+from .device_utils import (
+    create_base_extra_state_attributes,
+    is_coordinator_connected,
+    is_register_dependency_met,
+)
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -93,6 +97,7 @@ class ModbusCoordinatorSwitch(SwitchEntity):
 
         # Create register key for coordinator lookup
         self._register_key = f"{self._unique_id}_{self._address}"
+        self._register_dependency = register_config.get("depends_on_register")
 
         # Set entity properties
         self._attr_has_entity_name = True
@@ -229,9 +234,13 @@ class ModbusCoordinatorSwitch(SwitchEntity):
     @property
     def available(self) -> bool:
         """Return if the entity is available."""
-        return (
+        if not (
             is_coordinator_connected(self._coordinator)
             and self._coordinator.last_update_success
+        ):
+            return False
+        return is_register_dependency_met(
+            self._coordinator.data, self._register_dependency
         )
 
     async def async_turn_on(self, **kwargs: Any) -> None:

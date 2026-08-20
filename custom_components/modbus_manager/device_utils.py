@@ -263,6 +263,199 @@ def resolve_firmware_profile_version(
     return fallback
 
 
+def _parse_version_loose(value: Optional[str]):
+    """Parse a version string; return None if it is not a semantic version."""
+    if value is None:
+        return None
+    try:
+        from packaging import version
+
+        return version.parse(str(value).lstrip("Vv"))
+    except Exception:
+        return None
+
+
+def entity_allowed_for_protocol(entity: dict, protocol_version: Optional[str]) -> bool:
+    """Return False if entity protocol_min/max_version excludes protocol_version."""
+    min_v = entity.get("protocol_min_version")
+    max_v = entity.get("protocol_max_version")
+    if not min_v and not max_v:
+        return True
+    if not protocol_version:
+        return True
+
+    current = _parse_version_loose(protocol_version)
+    if current is None:
+        return True
+
+    if min_v:
+        min_parsed = _parse_version_loose(str(min_v))
+        if min_parsed is not None and current < min_parsed:
+            return False
+    if max_v:
+        max_parsed = _parse_version_loose(str(max_v))
+        if max_parsed is not None and current > max_parsed:
+            return False
+    return True
+
+
+def filter_by_protocol_version(entities: list, protocol_version: Optional[str]) -> list:
+    """Drop entities whose protocol_min/max_version does not match."""
+    if not entities:
+        return entities
+    return [
+        entity
+        for entity in entities
+        if entity_allowed_for_protocol(entity, protocol_version)
+    ]
+
+
+def collect_version_replacements(template_dynamic_config: Optional[dict]) -> dict:
+    """Merge sensor_replacements from firmware_version and protocol_version blocks."""
+    merged: dict = {}
+    if not isinstance(template_dynamic_config, dict):
+        return merged
+    for block_key in ("firmware_version", "protocol_version"):
+        block = template_dynamic_config.get(block_key)
+        if not isinstance(block, dict):
+            continue
+        replacements = block.get("sensor_replacements") or {}
+        if not isinstance(replacements, dict):
+            continue
+        for unique_id, versions in replacements.items():
+            if not isinstance(versions, dict):
+                continue
+            merged.setdefault(unique_id, {}).update(versions)
+    top = template_dynamic_config.get("sensor_replacements")
+    if isinstance(top, dict):
+        for unique_id, versions in top.items():
+            if isinstance(versions, dict):
+                merged.setdefault(unique_id, {}).update(versions)
+    return merged
+
+
+def find_applicable_version(
+    current_version: Optional[str], available_versions: list
+) -> Optional[str]:
+    """Highest semantic version in available_versions that is <= current_version."""
+    if not current_version or not available_versions:
+        return None
+    current = _parse_version_loose(current_version)
+    if current is None:
+        if current_version in available_versions:
+            return current_version
+        return None
+
+    applicable = []
+    for ver_str in available_versions:
+        parsed = _parse_version_loose(str(ver_str))
+        if parsed is not None and parsed <= current:
+            applicable.append((parsed, str(ver_str)))
+    if not applicable:
+        return None
+    applicable.sort(key=lambda item: item[0])
+    return applicable[-1][1]
+
+
+def apply_version_replacements(
+    entity: dict,
+    current_version: Optional[str],
+    replacements: dict,
+) -> dict:
+    """Apply unique_id-keyed field replacements for the matching version profile."""
+    if not entity or not current_version or not replacements:
+        return entity
+    unique_id = entity.get("unique_id", "")
+    versions = replacements.get(unique_id)
+    if not isinstance(versions, dict) or not versions:
+        return entity
+    applicable = find_applicable_version(current_version, list(versions.keys()))
+    if not applicable:
+        return entity
+    replacement_config = versions.get(applicable) or {}
+    if not isinstance(replacement_config, dict):
+        return entity
+    modified = entity.copy()
+    for param, value in replacement_config.items():
+        if param == "description":
+            continue
+        modified[param] = value
+    return modified
+
+
+def _coerce_compare_value(value: Any) -> Any:
+    """Normalize hex strings and numbers for register dependency compares."""
+    if isinstance(value, str):
+        trimmed = value.strip()
+        if trimmed.lower().startswith("0x"):
+            try:
+                return int(trimmed, 16)
+            except ValueError:
+                return trimmed
+        if trimmed.isdigit() or (trimmed.startswith("-") and trimmed[1:].isdigit()):
+            try:
+                return int(trimmed)
+            except ValueError:
+                return trimmed
+        return trimmed
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    return value
+
+
+def is_register_dependency_met(
+    coordinator_data: Optional[dict],
+    dependency: Optional[dict],
+) -> bool:
+    """True if depends_on_register is unset, unmet data is missing (fail open), or value matches.
+
+    ``required_value`` or ``required_values`` (list) are accepted. Mapped select
+    states are compared via ``numeric_value`` when present.
+    """
+    if not dependency:
+        return True
+    dep_register_id = dependency.get("register_unique_id")
+    required = dependency.get("required_values")
+    if required is None and dependency.get("required_value") is not None:
+        required = [dependency.get("required_value")]
+    if not dep_register_id or required is None:
+        return True
+    if not isinstance(required, (list, tuple, set)):
+        required = [required]
+    required_norm = [_coerce_compare_value(item) for item in required]
+
+    if not coordinator_data:
+        return True
+
+    dep_address = dependency.get("register_address")
+    register_data = None
+    if dep_address is not None:
+        register_data = coordinator_data.get(f"{dep_register_id}_{dep_address}")
+    if not register_data:
+        for register_key, data in coordinator_data.items():
+            if dep_register_id in str(register_key):
+                register_data = data
+                break
+    if not register_data:
+        return True
+
+    proc_val = register_data.get("numeric_value")
+    if proc_val is None:
+        proc_val = register_data.get("processed_value")
+    if proc_val is None:
+        return False
+
+    proc_norm = _coerce_compare_value(proc_val)
+    for req in required_norm:
+        try:
+            if int(proc_norm) == int(req):
+                return True
+        except (TypeError, ValueError):
+            if proc_norm == req:
+                return True
+    return False
+
+
 def generate_unique_id(
     prefix: str, template_unique_id: str = None, name: str = None
 ) -> str:

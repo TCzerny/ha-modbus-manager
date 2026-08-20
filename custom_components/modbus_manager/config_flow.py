@@ -35,8 +35,11 @@ from .const import (
     EntityIdStrategy,
 )
 from .device_utils import (
+    apply_version_replacements,
     build_device_entry_id,
+    collect_version_replacements,
     ensure_entity_id_strategy_on_device,
+    entity_allowed_for_protocol,
     entry_device_type_set,
     entry_host_port,
     generate_unique_id,
@@ -1597,7 +1600,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if should_include:
                 # Apply firmware-specific modifications
                 modified_sensor = self._apply_firmware_modifications(
-                    sensor, firmware_version, dynamic_config
+                    sensor,
+                    firmware_version,
+                    dynamic_config,
+                    original_dynamic_config,
                 )
                 processed_sensors.append(modified_sensor)
                 _LOGGER.debug("Included sensor: %s", sensor_name)
@@ -1643,7 +1649,14 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 dynamic_config,
                 string_count,
             ):
-                processed_controls.append(control)
+                processed_controls.append(
+                    self._apply_firmware_modifications(
+                        control,
+                        firmware_version,
+                        dynamic_config,
+                        original_dynamic_config,
+                    )
+                )
 
         # Return processed template data and configuration values
 
@@ -1685,6 +1698,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Check if sensor should be included based on configuration."""
         sensor_name = sensor.get("name", "") or ""
         unique_id = sensor.get("unique_id", "") or ""
+
+        if not entity_allowed_for_protocol(
+            sensor, dynamic_config.get("protocol_version")
+        ):
+            return False
 
         # Check firmware_min_version filter first
         sensor_firmware_min = sensor.get("firmware_min_version")
@@ -1983,53 +2001,21 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     # Firmware Handling to replace the sensors with the correct firmware version
     def _apply_firmware_modifications(
-        self, sensor: dict, firmware_version: str, dynamic_config: dict
+        self,
+        sensor: dict,
+        firmware_version: str,
+        dynamic_config: dict,
+        original_dynamic_config: dict | None = None,
     ) -> dict:
-        """Apply firmware-specific modifications to sensor based on unique_id."""
-        modified_sensor = sensor.copy()
-
-        # Get sensor replacements configuration
-        sensor_replacements = dynamic_config.get("sensor_replacements", {})
-
-        # Get sensor unique_id
-        unique_id = sensor.get("unique_id", "")
-
-        # Check if this sensor has firmware-specific replacements
-        if unique_id in sensor_replacements:
-            replacements = sensor_replacements.get(unique_id, {})
-
-            # Check if replacements is valid and not empty
-            if replacements and isinstance(replacements, dict) and replacements:
-                # Find the highest firmware version that matches or is lower than current
-                replacement_keys = list(replacements.keys()) if replacements else []
-                applicable_version = self._find_applicable_firmware_version(
-                    firmware_version, replacement_keys
-                )
-
-                if applicable_version:
-                    replacement_config = replacements.get(applicable_version, {})
-                    _LOGGER.debug(
-                        "Applying firmware %s replacement for sensor %s",
-                        applicable_version,
-                        unique_id,
-                    )
-
-                    # Apply all replacement parameters
-                    if replacement_config and isinstance(replacement_config, dict):
-                        for param, value in replacement_config.items():
-                            if (
-                                param != "description"
-                            ):  # Skip description, it's just for documentation
-                                modified_sensor[param] = value
-                                _LOGGER.debug(
-                                    "Replaced %s=%s for sensor %s (firmware %s)",
-                                    param,
-                                    value,
-                                    unique_id,
-                                    applicable_version,
-                                )
-
-        return modified_sensor
+        """Apply firmware/protocol field replacements keyed by unique_id."""
+        replacements = collect_version_replacements(
+            original_dynamic_config or dynamic_config
+        )
+        modified = apply_version_replacements(sensor, firmware_version, replacements)
+        protocol_version = None
+        if isinstance(dynamic_config, dict):
+            protocol_version = dynamic_config.get("protocol_version")
+        return apply_version_replacements(modified, protocol_version, replacements)
 
     def _find_applicable_firmware_version(
         self, current_version: str, available_versions: list
@@ -5303,7 +5289,10 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             if should_include:
                 # Apply firmware-specific modifications
                 modified_sensor = self._apply_firmware_modifications(
-                    sensor, firmware_version, dynamic_config
+                    sensor,
+                    firmware_version,
+                    dynamic_config,
+                    original_dynamic_config,
                 )
                 processed_sensors.append(modified_sensor)
                 _LOGGER.debug("Included sensor: %s", sensor_name)
@@ -5349,7 +5338,14 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 dynamic_config,
                 string_count,
             ):
-                processed_controls.append(control)
+                processed_controls.append(
+                    self._apply_firmware_modifications(
+                        control,
+                        firmware_version,
+                        dynamic_config,
+                        original_dynamic_config,
+                    )
+                )
 
         # Return processed template data and configuration values
 
@@ -5391,6 +5387,11 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         """Check if sensor should be included based on configuration."""
         sensor_name = sensor.get("name", "") or ""
         unique_id = sensor.get("unique_id", "") or ""
+
+        if not entity_allowed_for_protocol(
+            sensor, dynamic_config.get("protocol_version")
+        ):
+            return False
 
         # Check firmware_min_version filter first
         sensor_firmware_min = sensor.get("firmware_min_version")
@@ -5687,53 +5688,21 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
 
     # Firmware Handling to replace the sensors with the correct firmware version
     def _apply_firmware_modifications(
-        self, sensor: dict, firmware_version: str, dynamic_config: dict
+        self,
+        sensor: dict,
+        firmware_version: str,
+        dynamic_config: dict,
+        original_dynamic_config: dict | None = None,
     ) -> dict:
-        """Apply firmware-specific modifications to sensor based on unique_id."""
-        modified_sensor = sensor.copy()
-
-        # Get sensor replacements configuration
-        sensor_replacements = dynamic_config.get("sensor_replacements", {})
-
-        # Get sensor unique_id
-        unique_id = sensor.get("unique_id", "")
-
-        # Check if this sensor has firmware-specific replacements
-        if unique_id in sensor_replacements:
-            replacements = sensor_replacements.get(unique_id, {})
-
-            # Check if replacements is valid and not empty
-            if replacements and isinstance(replacements, dict) and replacements:
-                # Find the highest firmware version that matches or is lower than current
-                replacement_keys = list(replacements.keys()) if replacements else []
-                applicable_version = self._find_applicable_firmware_version(
-                    firmware_version, replacement_keys
-                )
-
-                if applicable_version:
-                    replacement_config = replacements.get(applicable_version, {})
-                    _LOGGER.debug(
-                        "Applying firmware %s replacement for sensor %s",
-                        applicable_version,
-                        unique_id,
-                    )
-
-                    # Apply all replacement parameters
-                    if replacement_config and isinstance(replacement_config, dict):
-                        for param, value in replacement_config.items():
-                            if (
-                                param != "description"
-                            ):  # Skip description, it's just for documentation
-                                modified_sensor[param] = value
-                                _LOGGER.debug(
-                                    "Replaced %s=%s for sensor %s (firmware %s)",
-                                    param,
-                                    value,
-                                    unique_id,
-                                    applicable_version,
-                                )
-
-        return modified_sensor
+        """Apply firmware/protocol field replacements keyed by unique_id."""
+        replacements = collect_version_replacements(
+            original_dynamic_config or dynamic_config
+        )
+        modified = apply_version_replacements(sensor, firmware_version, replacements)
+        protocol_version = None
+        if isinstance(dynamic_config, dict):
+            protocol_version = dynamic_config.get("protocol_version")
+        return apply_version_replacements(modified, protocol_version, replacements)
 
     def _find_applicable_firmware_version(
         self, current_version: str, available_versions: list

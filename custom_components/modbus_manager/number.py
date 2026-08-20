@@ -18,6 +18,7 @@ from .device_utils import (
     generate_entity_id,
     get_entity_mm_group,
     is_coordinator_connected,
+    is_register_dependency_met,
 )
 from .logger import ModbusManagerLogger
 
@@ -437,95 +438,9 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
         """Return if the entity is available."""
         if not is_coordinator_connected(self.coordinator) or not super().available:
             return False
-
-        # Check register dependency if configured
-        if self._register_dependency:
-            try:
-                dep_register_id = self._register_dependency.get("register_unique_id")
-                required_value = self._register_dependency.get("required_value")
-
-                if dep_register_id and required_value is not None:
-                    # Find the dependency register in coordinator data
-                    # Register key format: "{unique_id}_{address}" (after prefix processing)
-                    dep_address = self._register_dependency.get("register_address")
-
-                    if self.coordinator.data:
-                        # Build the expected register key
-                        # If address is provided, use it for exact match, otherwise search by unique_id
-                        if dep_address is not None:
-                            # Try exact match first: "{unique_id}_{address}"
-                            expected_key = f"{dep_register_id}_{dep_address}"
-                            register_data = self.coordinator.data.get(expected_key)
-
-                            if register_data:
-                                dependency_found = True
-                            else:
-                                # Fallback: search by unique_id in key
-                                dependency_found = False
-                                for register_key, data in self.coordinator.data.items():
-                                    if dep_register_id in register_key:
-                                        register_data = data
-                                        dependency_found = True
-                                        break
-                        else:
-                            # Search by unique_id only
-                            dependency_found = False
-                            register_data = None
-                            for register_key, data in self.coordinator.data.items():
-                                if dep_register_id in register_key:
-                                    register_data = data
-                                    dependency_found = True
-                                    break
-
-                        if dependency_found and register_data:
-                            processed_value = register_data.get("processed_value")
-
-                            if processed_value is not None:
-                                # Compare values (handle hex strings like 0xA1)
-                                req_val = required_value
-                                proc_val = processed_value
-
-                                # Convert hex strings to int
-                                if isinstance(req_val, str) and req_val.startswith(
-                                    "0x"
-                                ):
-                                    req_val = int(req_val, 16)
-                                if isinstance(proc_val, str) and proc_val.startswith(
-                                    "0x"
-                                ):
-                                    proc_val = int(proc_val, 16)
-
-                                # Also check numeric_value if available (for select entities with mapping)
-                                # If the select entity maps 0xA1 to "Power factor setting",
-                                # we need to check the raw numeric value instead
-                                numeric_value = register_data.get("numeric_value")
-                                if numeric_value is not None:
-                                    proc_val = numeric_value
-
-                                if int(proc_val) != int(req_val):
-                                    return False
-                            else:
-                                # Dependency register not available yet
-                                return False
-                        elif not dependency_found:
-                            # Dependency register not found - assume available (might not be loaded yet)
-                            _LOGGER.debug(
-                                "Dependency register %s (address: %s) not found for %s, assuming available",
-                                dep_register_id,
-                                dep_address,
-                                self._attr_name,
-                            )
-                            return True
-            except Exception as e:
-                _LOGGER.debug(
-                    "Error checking register dependency for %s: %s",
-                    self._attr_name,
-                    str(e),
-                )
-                # On error, assume available (fail open)
-                return True
-
-        return True
+        return is_register_dependency_met(
+            self.coordinator.data, self._register_dependency
+        )
 
     async def async_added_to_hass(self) -> None:
         """When entity is added to hass."""

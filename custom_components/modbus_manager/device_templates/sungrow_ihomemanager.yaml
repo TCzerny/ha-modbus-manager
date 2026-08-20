@@ -6,7 +6,7 @@ display_name: "Sungrow iHomeManager"
 description: "Template for Sungrow iHomeManager EMS device (Modbus TCP). Includes iHomeManager meter, EMS, and charger registers."
 manufacturer: "Sungrow"
 model: "iHomeManager"
-version: 1.0.11
+version: 1.0.12
 default_prefix: "IHM"
 default_slave_id: 247
 type: "energy_manager"
@@ -21,6 +21,7 @@ firmware_version: "iHomeManager"
 # V1.0.9: feed_in_power_limitation options 0x55/0xAA (not 0/1 per device firmware; #85)
 # V1.0.10: undocumented EV charger active power registers 8593-8599 (#86)
 # V1.0.11: output_type_raw is an enum — drop scale 0.1 / unit V so options 0/1/2 map correctly (#90)
+# V1.0.12: protocol_version dynamic config; feed-in from V1.0.2; ratio S32→S16; depends_on_register (#91)
 
 dynamic_config:
   battery_config:
@@ -47,6 +48,27 @@ dynamic_config:
       EU: "Europe (modes 160-163)"
       AU: "Australia (modes 164-167)"
     default: "EU"
+  protocol_version:
+    description: "iHomeManager Modbus protocol map (not app firmware). Match the device protocol version sensor."
+    options:
+      "1.0.0": "V1.0.0 — initial map"
+      "1.0.1": "V1.0.1 — meter channel 2, app software version, active power limit"
+      "1.0.2": "V1.0.2 — feed-in limitation; feed-in ratio is S16"
+    default: "1.0.2"
+    sensor_replacements:
+      feed_in_power_limit_ratio:
+        "1.0.0":
+          data_type: "int32"
+          swap: word
+          description: "Feed-in limitation ratio was S32 before protocol V1.0.2"
+        "1.0.1":
+          data_type: "int32"
+          swap: word
+          description: "Feed-in limitation ratio was S32 before protocol V1.0.2"
+        "1.0.2":
+          data_type: "int16"
+          swap: none
+          description: "Protocol V1.0.2 changed ratio register 8031 from S32 to S16"
 
 sensors:
   # Device Information
@@ -323,6 +345,7 @@ sensors:
     scan_interval: 3600
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
+    protocol_min_version: "1.0.1"
 
   # Charger Status
   - name: Charger Status Raw
@@ -528,6 +551,7 @@ sensors:
     scan_interval: 60
     mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
+    protocol_min_version: "1.0.1"
 
   - name: Phase B Voltage Ch2
     unique_id: phase_b_voltage_ch2
@@ -542,6 +566,7 @@ sensors:
     scan_interval: 60
     mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
+    protocol_min_version: "1.0.1"
 
   - name: Phase C Voltage Ch2
     unique_id: phase_c_voltage_ch2
@@ -556,6 +581,7 @@ sensors:
     scan_interval: 60
     mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
+    protocol_min_version: "1.0.1"
 
   - name: Grid Frequency Ch2
     unique_id: grid_frequency_ch2
@@ -570,6 +596,7 @@ sensors:
     scan_interval: 60
     mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
+    protocol_min_version: "1.0.1"
 
   # Grid Meter Channel 2 - Phase Power
   # Note 2：This data is obtained through the PROD.CT sampling port of iHM;
@@ -586,6 +613,7 @@ sensors:
     scan_interval: 10
     mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
+    protocol_min_version: "1.0.1"
 
   - name: Phase B Active Power Ch2
     unique_id: phase_b_active_power_ch2
@@ -600,6 +628,7 @@ sensors:
     scan_interval: 10
     mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
+    protocol_min_version: "1.0.1"
 
   - name: Phase C Active Power Ch2
     unique_id: phase_c_active_power_ch2
@@ -614,6 +643,7 @@ sensors:
     scan_interval: 10
     mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
+    protocol_min_version: "1.0.1"
 
 controls:
   # EMS Settings
@@ -676,6 +706,7 @@ controls:
       0x55: "Off"
       0xAA: "On"
     mm_group: "PV_control_ihm"
+    protocol_min_version: "1.0.2"
 
   - type: "number"
     name: "Feed-in Power Limit Value"
@@ -695,6 +726,11 @@ controls:
     mode: "box"
     scan_interval: 30
     mm_group: "PV_control_ihm"
+    protocol_min_version: "1.0.2"
+    depends_on_register:
+      register_unique_id: "feed_in_power_limitation"
+      register_address: 8027
+      required_value: 0xAA
 
   - type: "number"
     name: "Feed-in Power Limit Ratio"
@@ -712,6 +748,10 @@ controls:
     mode: "box"
     scan_interval: 30
     mm_group: "PV_control_ihm"
+    depends_on_register:
+      register_unique_id: "feed_in_power_limitation"
+      register_address: 8027
+      required_value: 0xAA
 
   # external VPP heartbeat - commented out for now
   # - name: "External VPP Heartbeat"
@@ -826,6 +866,11 @@ controls:
     mode: "box"
     scan_interval: 30
     mm_group: "PV_control_ihm"
+    protocol_min_version: "1.0.1"
+    depends_on_register:
+      register_unique_id: "active_power_limitation"
+      register_address: 8050
+      required_value: 0xAA
 
 calculated:
   # Protocol Version (formatted) - U32 e.g. 0x02000100 = V1.0.2
@@ -966,6 +1011,7 @@ calculated:
     unique_id: "total_phase_power_ch2"
     type: "sensor"
     condition: "channel_2_enabled == true"
+    protocol_min_version: "1.0.1"
     availability: >-
       {{
       not is_state('[[mm:sensor:{PREFIX}_phase_a_active_power_ch2]]', 'unavailable')

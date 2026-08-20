@@ -10,6 +10,7 @@ import yaml
 from homeassistant.core import HomeAssistant
 from homeassistant.util.async_ import run_callback_threadsafe
 
+from .device_utils import entity_allowed_for_protocol
 from .modbus_utils import is_valid_modbus_address
 
 # Global reference to Home Assistant instance for custom template loading
@@ -758,6 +759,11 @@ def _should_include_sensor(
     """Check if sensor should be included based on configuration."""
     sensor_name = sensor.get("name", "")
     unique_id = sensor.get("unique_id", "").lower()
+
+    if not entity_allowed_for_protocol(
+        sensor, dynamic_config.get("protocol_version") if dynamic_config else None
+    ):
+        return False
 
     # Check if name contains module number and compare with actual modules
     if "module" in sensor_name.lower():

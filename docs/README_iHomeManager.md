@@ -12,7 +12,7 @@ template: `sungrow_ihomemanager.yaml`.
 - **Default prefix**: `IHM`
 - **Default slave ID**: `247`
 - **Firmware**: `iHomeManager`
-- **Template version**: 1.0.7
+- **Template version**: 1.0.12
 
 ### Dynamic Configuration
 
@@ -20,6 +20,10 @@ template: `sungrow_ihomemanager.yaml`.
 - `channel_2_enabled` (true/false): Enables PROD.CT channel 2 registers.
 - `charger_enabled` (true/false): Enables charger-related registers.
 - `charger_region` (`EU` / `AU`): EV charger mode map (EU modes 160–163, AU modes 164–167). Default: `EU`.
+- `protocol_version` (`1.0.0` / `1.0.1` / `1.0.2`, default `1.0.2`): iHomeManager **Modbus protocol map** (not app firmware). Match `protocol_version` / `protocol_version_raw` on the device.
+  - **V1.0.1+**: meter channel 2, application software version, active power limit (8051–8052)
+  - **V1.0.2+**: feed-in limitation select (8028); feed-in ratio (8031) is **S16** (older maps use **S32**)
+- Feed-in limit **value/ratio** numbers are available only while Feed-in Power Limitation is **On** (`depends_on_register`). Active power limit ratio requires Active Power Limitation **On**.
 
 Config-flow labels are translated in `en.json` / `de.json` under `config.step.dynamic_config.data`.
 
