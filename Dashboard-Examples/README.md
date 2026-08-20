@@ -56,6 +56,16 @@ Chart-focused dashboard inspired by Grafana and advanced energy monitoring layou
 
 Use this as a template for building custom chart-heavy dashboards.
 
+### Grafana (InfluxDB / InfluxQL)
+
+Long-term PV monitoring in Grafana, parameterized with a dashboard variable **`prefix`** (lowercase Home Assistant device prefix, same idea as `{PREFIX}` in the YAML examples).
+
+#### Grafana/pv_monitoring.json
+
+Import in Grafana (not Home Assistant). See **[Grafana/README.md](Grafana/README.md)** for datasource, prefix, prices, and year comparison.
+
+Includes: current/daily values (including **Autarkiegrad des Tages**), detail graphs, autarky, savings calculator, and **Jahresvergleich** (monthly/yearly PV and EUR). Hybrid battery series use inverter `{PREFIX}_battery_*` entities, not the SBR template.
+
 ### Standalone Diagnostic Dashboard
 
 #### sungrow_inverter_status_diagnostic.yaml
@@ -82,6 +92,8 @@ All dashboards follow the same installation process:
    - Go to **Settings** → **Dashboards** → **+ New Dashboard**
    - Choose **Import from YAML**
    - Paste the content of the YAML file (after replacing the `{PREFIX_*}` and adjusting for your device)
+
+Grafana: import `Grafana/pv_monitoring.json` in **Grafana** (not HA). Set the **`prefix`** variable to your device prefix in **lowercase** (`SG` → `sg`). Details: [Grafana/README.md](Grafana/README.md).
 
 ## Sungrow SBR Battery Analysis Dashboard
 

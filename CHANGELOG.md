@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 📚 Documentation
 
+- **Grafana PV example**: `Dashboard-Examples/Grafana/pv_monitoring.json` with InfluxQL `prefix` variable and [Grafana/README.md](Dashboard-Examples/Grafana/README.md).
 - **Sungrow SHx — RS485 gateway example ([#82](https://github.com/TCzerny/ha-modbus-manager/issues/82))**: WaveShare TCP adapter on inverter **A1/B1**, port 502, slave 1 / SBR 200; link to the field-tested setup photos.
 
 ## [1.1.3] - 2026-08-20
