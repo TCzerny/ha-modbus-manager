@@ -4,6 +4,12 @@ Example Grafana dashboard for **Sungrow SHx** data recorded from Home Assistant 
 
 Battery values in this dashboard are **inverter hybrid registers** (`{PREFIX}_battery_level`, `{PREFIX}_battery_power`, …), not the separate SBR/SBH template. SBR cell dashboards stay in the Home Assistant YAML examples.
 
+## Screenshots
+
+Current and daily values (gauges, autarky, grid/battery status). Detail rows are collapsed.
+
+![Grafana PV monitoring — current and daily values](grafana_1.png)
+
 ## Files
 
 | File | Purpose |

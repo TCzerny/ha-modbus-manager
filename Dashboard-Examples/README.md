@@ -18,6 +18,10 @@ This folder contains example dashboard configurations for the Modbus Manager int
 ![Energy Flow Analysis](EnergyFlowAnalysis.png)
 ![Statistics](Statistics.png)
 
+### Grafana (InfluxQL)
+
+![Grafana PV monitoring — current and daily values](Grafana/grafana_1.png)
+
 ## Dashboard Files
 
 ### Battery Dashboards
@@ -62,7 +66,7 @@ Long-term PV monitoring in Grafana, parameterized with a dashboard variable **`p
 
 #### Grafana/pv_monitoring.json
 
-Import in Grafana (not Home Assistant). See **[Grafana/README.md](Grafana/README.md)** for datasource, prefix, prices, and year comparison.
+Import in Grafana (not Home Assistant). See **[Grafana/README.md](Grafana/README.md)** for datasource, prefix, prices, and year comparison. Screenshot: [grafana_1.png](Grafana/grafana_1.png).
 
 Includes: current/daily values (including **Autarkiegrad des Tages**), detail graphs, autarky, savings calculator, and **Jahresvergleich** (monthly/yearly PV and EUR). Hybrid battery series use inverter `{PREFIX}_battery_*` entities, not the SBR template.
 
