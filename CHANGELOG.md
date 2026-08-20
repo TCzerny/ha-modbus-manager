@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🐛 Fixed
 
+- **Sungrow iHomeManager — Output Type always “Single” ([#90](https://github.com/TCzerny/ha-modbus-manager/issues/90))**: Removed `scale: 0.1` and unit `V` from `output_type_raw` so enum values 1/2 (`3P4L` / `3P3L`) are not truncated to `Single`. Template v1.0.11. Thanks to [@AurimasNav](https://github.com/AurimasNav).
 - **Sungrow SHx — duplicate `mm_group` on device type code ([#88](https://github.com/TCzerny/ha-modbus-manager/pull/88))**: Removed a duplicated `mm_group: "PV_device_info"` key on `Sungrow device type code` in `sungrow_shx_dynamic.yaml` (invalid YAML map). Thanks to [@Jam3s97](https://github.com/Jam3s97).
 
 ## [1.1.2] - 2026-08-17

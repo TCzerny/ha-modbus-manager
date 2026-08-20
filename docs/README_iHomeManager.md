@@ -57,7 +57,7 @@ Single-template **`daily_consumed_energy`** on the inverter alone does **not** i
 | Grid Export Energy | grid_export_energy | 8177 | input | uint32 | kWh | 0.1 |  |
 | Application Software Version | application_software_version | 8317 | input | string |  |  |  |
 | Charger Status Raw | charger_status_raw | 8551 | input | uint16 |  |  | charger_enabled == true |
-| Output Type Raw | output_type_raw | 8553 | input | uint16 | V | 0.1 |  |
+| Output Type Raw | output_type_raw | 8553 | input | uint16 |  |  | enum 0=Single, 1=3P4L, 2=3P3L |
 | Phase A Voltage | phase_a_voltage | 8554 | input | uint16 | V | 0.1 |  |
 | Phase B Voltage | phase_b_voltage | 8555 | input | uint16 | V | 0.1 |  |
 | Phase C Voltage | phase_c_voltage | 8556 | input | uint16 | V | 0.1 |  |
