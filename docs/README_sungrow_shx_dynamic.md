@@ -117,6 +117,23 @@ Use **Connection: WINET** when Modbus TCP goes through the **WiNet-S** dongle (n
 - These are a **known limitation of the WiNet TCP bridge**, not something the integration can fully suppress.
 - If reads/writes still work, the messages can usually be ignored.
 
+### RS485 via Ethernet gateway (SH*RS)
+
+Use **Connection: RS485** when Home Assistant talks **Modbus TCP** to a serial-to-Ethernet adapter on the inverter **RS485** port — not the inverter LAN jack and not WiNet-S. This integration does **not** open a native RTU serial port; the adapter must expose TCP (typically port **502**).
+
+Field-tested example from [#82](https://github.com/TCzerny/ha-modbus-manager/issues/82) (thanks [@Jam3s97](https://github.com/Jam3s97)), **SH10RS** + [WaveShare RS485 TO POE ETH (B)](https://www.waveshare.com/wiki/RS485_TO_POE_ETH_(B)):
+
+| Item | Setting |
+|------|---------|
+| Modbus Manager hub | TCP host = gateway IP, **port 502** |
+| Inverter device | **slave ID 1**, connection type **RS485** |
+| Wiring | Gateway RS485 **A/B** to inverter **A1 / B1** (COM terminals on SH*RS — see the inverter install diagram: RS485 column, not Meter A2/B2) |
+| SBR/SBH (optional second device) | Same hub, **slave ID 200** — works on this path |
+
+On that setup, monthly/yearly PV statistics and the SBR template on slave **200** worked. Battery SOH uses the RS485 scale (see connection filtering above). Photos of the WaveShare TCP/RTU page and the SH10RS COM plug are in [@Jam3s97’s #82 comment](https://github.com/TCzerny/ha-modbus-manager/issues/82#issuecomment-5315594952) (section **5. RS485 setup**).
+
+Always match **A to A** and **B to B**, keep RS485 cable short/twisted pair, and set the gateway to **Modbus TCP server** with the same baud as the inverter COM port (Sungrow RS485 is commonly **9600 8N1** — confirm in the inverter manual).
+
 ### 🔧 Hub communication (LAN, RS485 gateway, and WiNet-S)
 
 These settings apply to the **Modbus hub** (initial connection step, **Hub Options**, or hub **Reconfigure**). They affect all devices on that hub, including SHx.

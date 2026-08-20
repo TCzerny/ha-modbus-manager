@@ -24,7 +24,7 @@ This document lists the Modbus registers for the Sungrow SBR/SBH battery templat
 |------|---------------------|--------|
 | **Inverter LAN (RJ45)** on SH-RT / SH-T | **200** | Internal battery address on the inverter Modbus port |
 | **WiNet-S** (Wi‑Fi or cable to dongle) | **Forwarded ID** from WiNet web UI | Internal address **200** is often forwarded as **2** (or another ID) — see below |
-| **RS485 gateway (A1/B1, e.g. WaveShare TCP)** | Often **200** | Use connection type **RS485** ([#82](https://github.com/TCzerny/ha-modbus-manager/issues/82)) |
+| **RS485 gateway (A1/B1, e.g. WaveShare TCP)** | Often **200** | Use connection type **RS485**. Wiring example (SH*RS A1/B1, port 502, slave 1): [SHx RS485 gateway notes](README_sungrow_shx_dynamic.md#rs485-via-ethernet-gateway-shrs) ([#82](https://github.com/TCzerny/ha-modbus-manager/issues/82)) |
 
 **WiNet-S:** Open **Device maintenance → Device list** on the WiNet web page. The **forwarded Modbus ID** column is the Unit ID for Modbus TCP (e.g. inverter **1**, first SBH **2**). Using Unit ID **200** on WiNet-S usually times out even though the battery is reachable ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77)).
 
