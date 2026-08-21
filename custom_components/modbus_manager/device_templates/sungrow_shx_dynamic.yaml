@@ -3,10 +3,10 @@
 
 name: "Sungrow SH Series Inverter"
 display_name: "Sungrow SH Series Inverter"
-description: "Dynamic template for Sungrow SHx inverters. Supports all 36 SHx models: SHxK6, SHxK-20/V13, SHxK-30, SHx.0RS, SHx.0RT/RT-20/RT-V112/RT-V122, SHxT, MGxRL"
+description: "Dynamic template for Sungrow SHx inverters: RS, RT, T, MG*RL, SH*RL. SH50–125CX not included yet."
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.2.14
+version: 1.2.16
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -41,6 +41,9 @@ firmware_version: "03011.95.01"
 # Battery charging/discharging binomials: running_state (reg 13000) is uint16 — use |int + bitwise_and; do not require
 # value > 0 (0 is valid). If state is not numeric (e.g. unavailable), fallback: register 5213 battery_power sign only.
 # V1.2.14: RS485 connection type (#82 / #87) — SOH scale, MPPT4 hide, LAN-gated stats on RS485, daily import/export not on SH10RS+WINET
+# V1.2.15: Protocol V1.1.16 — SH3/3.6/4/5/6/8/10RL + MG7.5/12RL in valid_models.
+# SH50–125CX (MPPT 5–10, type 0xE51/E52/E39/E3A/E3D) not mapped yet.
+# V1.2.16: inverter_status_display uses {MAX_AC_OUTPUT_POWER} from selected model (not device_type string)
 
 
 # Dynamic configuration support
@@ -100,11 +103,25 @@ dynamic_config:
     "SH20T": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0xE26", max_charge_power: 20000, max_discharge_power: 20000, max_ac_output_power: 20000}
     "SH25T": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0xE28", max_charge_power: 25000, max_discharge_power: 25000, max_ac_output_power: 25000}
 
-    # MG5-10RL Series (Three Phase) - Appendix 1
+    # MG5-12RL Series (Three Phase) - Protocol V1.1.16 Appendix 1
     "MG5RL": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0xD27", max_charge_power: 7500, max_discharge_power: 6000, max_ac_output_power: 5000}
     "MG6RL": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0xD28", max_charge_power: 9000, max_discharge_power: 7200, max_ac_output_power: 6000}
+    "MG7.5RL": {phases: 3, mppt_count: 3, string_count: 1, type_code: "0xD31", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 7500}
     "MG8RL": {phases: 3, mppt_count: 3, string_count: 1, type_code: "0xD29", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 8000}
     "MG10RL": {phases: 3, mppt_count: 3, string_count: 1, type_code: "0xD2A", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 10000}
+    "MG12RL": {phases: 3, mppt_count: 3, string_count: 1, type_code: "0xD2F", max_charge_power: 12000, max_discharge_power: 12000, max_ac_output_power: 12000}
+
+    # SH3-10RL Series (Single Phase) - Protocol V1.1.16 Appendix 1
+    # SH5RL/SH6RL EUR datasheet: 1-phase, 2 MPPT, charge/discharge = rated AC. Other SH*RL limits estimated the same way.
+    "SH3RL": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0xD41", max_charge_power: 3000, max_discharge_power: 3000, max_ac_output_power: 3000}
+    "SH3.6RL": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0xD42", max_charge_power: 3680, max_discharge_power: 3680, max_ac_output_power: 3680}
+    "SH4RL": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0xD43", max_charge_power: 4000, max_discharge_power: 4000, max_ac_output_power: 4000}
+    "SH5RL": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0xD2B", max_charge_power: 5000, max_discharge_power: 5000, max_ac_output_power: 5000}
+    "SH6RL": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0xD2C", max_charge_power: 6000, max_discharge_power: 6000, max_ac_output_power: 6000}
+    "SH8RL": {phases: 1, mppt_count: 3, string_count: 1, type_code: "0xD2D", max_charge_power: 8000, max_discharge_power: 8000, max_ac_output_power: 8000}
+    "SH10RL": {phases: 1, mppt_count: 3, string_count: 1, type_code: "0xD2E", max_charge_power: 10000, max_discharge_power: 10000, max_ac_output_power: 10000}
+
+    # SH50–125CX (small industrial hybrid, MPPT 5–10) not mapped yet.
 
   firmware_version:
     description: "Modbus register profile; names differ from the inverter UI — pick by behavior, not by exact string match"
@@ -261,11 +278,20 @@ sensors:
       3621: "SH15T"
       3622: "SH20T"
       3624: "SH25T"
-      # MG5-10RL (0xD27, 0xD28, 0xD29, 0xD2A) - Appendix 1
+      # MG5-12RL / SH3-10RL - Protocol V1.1.16 Appendix 1
       3367: "MG5RL"
       3368: "MG6RL"
       3369: "MG8RL"
       3370: "MG10RL"
+      3371: "SH5RL"
+      3372: "SH6RL"
+      3373: "SH8RL"
+      3374: "SH10RL"
+      3375: "MG12RL"
+      3377: "MG7.5RL"
+      3393: "SH3RL"
+      3394: "SH3.6RL"
+      3395: "SH4RL"
     mm_group: "PV_device_info"
 
   - name: Protocol version raw
@@ -334,8 +360,8 @@ sensors:
       1: "3P4L"
       2: "3P3L"
 
-  # Firmware Information (Protocol V1.1.11)
-  # Note: Not available on SH3.0-10RS and MG5-10RL models
+  # Firmware Information (Protocol V1.1.16)
+  # Note: Not available on SH3.0-10RS, MG5-12RL, and SH3-10RL models
   - name: Inverter Firmware Info
     unique_id: inverter_firmware_info
     address: 13249 # reg 13250-13264 (15 bytes UTF-8 string)
@@ -346,7 +372,7 @@ sensors:
     mm_group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
-    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG8RL, MG10RL]"
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
 
   - name: Communication Module Firmware Info
     unique_id: communication_module_firmware_info
@@ -358,7 +384,7 @@ sensors:
     mm_group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
-    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG8RL, MG10RL]"
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
 
   - name: Battery Firmware Info
     unique_id: battery_firmware_info
@@ -370,7 +396,7 @@ sensors:
     mm_group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
-    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG8RL, MG10RL]"
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
 
   # Basic Inverter Data
   # Power generation of active output (including PV power generation and battery discharge)
@@ -705,7 +731,7 @@ sensors:
     scale: 1
     scan_interval: 10
     mm_group: "PV_meter_channel_2"
-    condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
+    condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
     entity_category: "diagnostic"
 
   - name: Meter Channel 2 Phase A Active Power raw
@@ -721,7 +747,7 @@ sensors:
     scale: 1
     scan_interval: 10
     mm_group: "PV_meter_channel_2"
-    condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
+    condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
     entity_category: "diagnostic"
 
   - name: Meter Channel 2 Phase B Active Power raw
@@ -737,7 +763,7 @@ sensors:
     scale: 1
     scan_interval: 10
     mm_group: "PV_meter_channel_2"
-    condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
+    condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
     entity_category: "diagnostic"
 
   - name: Meter Channel 2 Phase C Active Power raw
@@ -753,7 +779,7 @@ sensors:
     scale: 1
     scan_interval: 10
     mm_group: "PV_meter_channel_2"
-    condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
+    condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
     entity_category: "diagnostic"
 
   - name: BDC rated power
@@ -2955,8 +2981,8 @@ controls:
     mode: "box"  # Explicitly set to box for consistent UI display
     scan_interval: 30
     mm_group: "PV_control"
-    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
-    # Confirmed non-functional at this address on SH10RS/SH6.0RS
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
+    # Protocol V1.1.16: not supported on SH3.0-10RS, MG5-12RL, SH3-10RL
 
   - type: "select"
     name: "Active Power Limitation"
@@ -2969,8 +2995,8 @@ controls:
       0x55: "Disabled"
       0xAA: "Enabled"
     mm_group: "PV_control"
-    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
-    # Confirmed non-functional at this address on SH10RS/SH6.0RS
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
+    # Protocol V1.1.16: not supported on SH3.0-10RS, MG5-12RL, SH3-10RL
 
   - type: "select"
     name: "Active Power Limitation"
@@ -3000,8 +3026,8 @@ controls:
     step: 1
     scan_interval: 30
     mm_group: "PV_control"
-    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
-    # Confirmed non-functional at this address on SH10RS/SH6.0RS
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
+    # Protocol V1.1.16: not supported on SH3.0-10RS, MG5-12RL, SH3-10RL
 
   - type: "number"
     name: "Active Power Limit Ratio"
@@ -4900,46 +4926,7 @@ calculated:
     type: "sensor"
     state: >-
       {% set power = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
-      {% set temp = states('[[mm:sensor:{PREFIX}_inverter_temperature]]') | float(0) %}
-      {% set device_type = states('[[mm:sensor:{PREFIX}_sungrow_device_type_code]]') %}
-
-      {# Extract power rating from device type code #}
-      {% set inverter_power = 5000 %}  {# Default fallback #}
-      {% if device_type is defined and device_type != 'unknown' and device_type != 'unavailable' %}
-        {% if 'SH3.0' in device_type or 'SH3K' in device_type %}
-          {% set inverter_power = 3000 %}
-        {% elif 'SH3.6' in device_type %}
-          {% set inverter_power = 3600 %}
-        {% elif 'SH4.0' in device_type or 'SH4K' in device_type %}
-          {% set inverter_power = 4000 %}
-        {% elif 'SH5.0' in device_type or 'SH5K' in device_type or 'SH5T' in device_type %}
-          {% set inverter_power = 5000 %}
-        {% elif 'SH6.0' in device_type or 'SH6K' in device_type or 'SH6T' in device_type %}
-          {% set inverter_power = 6000 %}
-        {% elif 'SH7.0' in device_type %}
-          {% set inverter_power = 7000 %}
-        {% elif 'SH8.0' in device_type or 'SH8K' in device_type or 'SH8T' in device_type %}
-          {% set inverter_power = 8000 %}
-        {% elif 'SH10' in device_type or 'SH10T' in device_type %}
-          {% set inverter_power = 10000 %}
-        {% elif 'SH12' in device_type or 'SH12T' in device_type %}
-          {% set inverter_power = 12000 %}
-        {% elif 'SH15' in device_type or 'SH15T' in device_type %}
-          {% set inverter_power = 15000 %}
-        {% elif 'SH17' in device_type %}
-          {% set inverter_power = 17000 %}
-        {% elif 'SH20' in device_type or 'SH20T' in device_type %}
-          {% set inverter_power = 20000 %}
-        {% elif 'SH25' in device_type or 'SH25T' in device_type %}
-          {% set inverter_power = 25000 %}
-        {% elif 'MG5' in device_type %}
-          {% set inverter_power = 5000 %}
-        {% elif 'MG6' in device_type %}
-          {% set inverter_power = 6000 %}
-        {% endif %}
-      {% endif %}
-
-      {# Calculate percentage of rated power #}
+      {% set inverter_power = {MAX_AC_OUTPUT_POWER} | int(0) %}
       {% set power_percentage = (power / inverter_power * 100) if inverter_power > 0 else 0 %}
 
       {% if power_percentage >= 80 %}
@@ -4954,45 +4941,7 @@ calculated:
     icon_template: >-
       {% set power = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
       {% set temp = states('[[mm:sensor:{PREFIX}_inverter_temperature]]') | float(0) %}
-      {% set device_type = states('[[mm:sensor:{PREFIX}_sungrow_device_type_code]]') %}
-
-      {# Extract power rating from device type code #}
-      {% set inverter_power = 5000 %}  {# Default fallback #}
-      {% if device_type is defined and device_type != 'unknown' and device_type != 'unavailable' %}
-        {% if 'SH3.0' in device_type or 'SH3K' in device_type %}
-          {% set inverter_power = 3000 %}
-        {% elif 'SH3.6' in device_type %}
-          {% set inverter_power = 3600 %}
-        {% elif 'SH4.0' in device_type or 'SH4K' in device_type %}
-          {% set inverter_power = 4000 %}
-        {% elif 'SH5.0' in device_type or 'SH5K' in device_type or 'SH5T' in device_type %}
-          {% set inverter_power = 5000 %}
-        {% elif 'SH6.0' in device_type or 'SH6K' in device_type or 'SH6T' in device_type %}
-          {% set inverter_power = 6000 %}
-        {% elif 'SH7.0' in device_type %}
-          {% set inverter_power = 7000 %}
-        {% elif 'SH8.0' in device_type or 'SH8K' in device_type or 'SH8T' in device_type %}
-          {% set inverter_power = 8000 %}
-        {% elif 'SH10' in device_type or 'SH10T' in device_type %}
-          {% set inverter_power = 10000 %}
-        {% elif 'SH12' in device_type or 'SH12T' in device_type %}
-          {% set inverter_power = 12000 %}
-        {% elif 'SH15' in device_type or 'SH15T' in device_type %}
-          {% set inverter_power = 15000 %}
-        {% elif 'SH17' in device_type %}
-          {% set inverter_power = 17000 %}
-        {% elif 'SH20' in device_type or 'SH20T' in device_type %}
-          {% set inverter_power = 20000 %}
-        {% elif 'SH25' in device_type or 'SH25T' in device_type %}
-          {% set inverter_power = 25000 %}
-        {% elif 'MG5' in device_type %}
-          {% set inverter_power = 5000 %}
-        {% elif 'MG6' in device_type %}
-          {% set inverter_power = 6000 %}
-        {% endif %}
-      {% endif %}
-
-      {# Calculate percentage of rated power #}
+      {% set inverter_power = {MAX_AC_OUTPUT_POWER} | int(0) %}
       {% set power_percentage = (power / inverter_power * 100) if inverter_power > 0 else 0 %}
 
       {% if temp > 70 %}

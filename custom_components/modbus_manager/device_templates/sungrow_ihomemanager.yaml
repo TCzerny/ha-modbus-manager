@@ -6,7 +6,7 @@ display_name: "Sungrow iHomeManager"
 description: "Template for Sungrow iHomeManager EMS device (Modbus TCP). Includes iHomeManager meter, EMS, and charger registers."
 manufacturer: "Sungrow"
 model: "iHomeManager"
-version: 1.0.13
+version: 1.0.14
 default_prefix: "IHM"
 default_slave_id: 247
 type: "energy_manager"
@@ -23,6 +23,7 @@ firmware_version: "iHomeManager"
 # V1.0.11: output_type_raw is an enum — drop scale 0.1 / unit V so options 0/1/2 map correctly (#90)
 # V1.0.12: protocol_version dynamic config; feed-in from V1.0.2; ratio S32→S16; depends_on_register (#91)
 # V1.0.13: charger_grid_power_draw only when charging mode is Eco (protocol 8050)
+# V1.0.14: charging_discharging_power is U32 + swap word (protocol 8026; #79/#85/#91)
 
 dynamic_config:
   battery_config:
@@ -682,7 +683,8 @@ controls:
     unique_id: "charging_discharging_power"
     address: 8025 # reg 8026
     input_type: "holding"
-    data_type: "uint16"
+    data_type: "uint32"
+    swap: word
     precision: 1
     scale: 0.1
     unit_of_measurement: kW

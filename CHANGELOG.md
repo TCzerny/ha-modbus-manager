@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.5] - 2026-08-21
+
+### ✨ Added
+
+- **Sungrow SHx — SH\*RL / extra MG\*RL models**: Protocol V1.1.16 `valid_models` for SH3/3.6/4/5/6/8/10RL (single-phase) and MG7.5RL / MG12RL. Firmware, meter channel 2, and feed-in/active-power limit registers **13088–13090** gated off for those families. Template v1.2.15. SH50–125CX (MPPT 5–10) not mapped yet.
+- **Sungrow SHx — `inverter_status_display`**: Rated power from `{MAX_AC_OUTPUT_POWER}` (`valid_models`) instead of hardcoded device-type string matching. Template v1.2.16.
+
+### 🐛 Fixed
+
+- **Sungrow iHomeManager — charging/discharging power U32**: Register **8026** (address **8025**) restored to **uint32** + `swap: word` per protocol V1.0.1/V1.0.2. uint16 reads looked correct when the high word was 0, but writes used FC06 and were ignored. Field-confirmed ([#85](https://github.com/TCzerny/ha-modbus-manager/issues/85#issuecomment-5368489492)). Template v1.0.14.
+
 ## [1.1.4] - 2026-08-21
 
 ### ✨ Added

@@ -28,7 +28,7 @@ The **Sungrow SHx Dynamic Template** is a complete, dynamically configurable tem
 
 ## 🏭 Supported Inverter Models
 
-The template supports **all 36** following Sungrow SHx models:
+The template supports Sungrow SHx hybrid models (RS, RT, T, MG\*RL, SH\*RL). **SH50–125CX** (MPPT 5–10) is not mapped yet.
 
 ### 🔋 Hybrid-Inverters (with Battery Support)
 - **SH5.0RT, SH6.0RT, SH8.0RT, SH10RT** - Standard Hybrid Models
@@ -44,8 +44,9 @@ The template supports **all 36** following Sungrow SHx models:
 ### 🏠 Residential Models
 - **SH5T, SH6T, SH8T, SH10T, SH12T, SH15T, SH20T, SH25T** - T Series
 
-### 🏢 Commercial Models
-- **MG5RL, MG6RL** - Commercial Series
+### 🏢 Commercial / RL Models
+- **MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL** - Three-phase MG RL
+- **SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL** - Single-phase SH RL (Protocol V1.1.16)
 
 ## ⚙️ Dynamic Configuration
 
