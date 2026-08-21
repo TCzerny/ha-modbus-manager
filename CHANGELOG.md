@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.4] - 2026-08-21
+
 ### ✨ Added
 
 - **Sungrow iHomeManager — Eco-only grid power draw**: `charger_grid_power_draw` (reg **8050**) is unavailable unless charging mode is Eco (EU **161**, AU **165**/**166**), matching the protocol. Template v1.0.13.
