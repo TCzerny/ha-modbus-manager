@@ -8,14 +8,15 @@ display_name: "Solvis SC3 Heating Control"
 description: "Template for Solvis SC2/SC3 heating controllers. Supports temperature sensors (S1-S16), flow sensors (S17-S18), pump controls (A1-A9), and heating circuit management via Modbus TCP."
 manufacturer: "Solvis"
 model: "SC3"
-version: 1.0.2
+version: 1.0.3
 default_prefix: "SC3"
 default_slave_id: 1
 type: "heating_control"
 firmware_version: "SC3"
 
+# V1.0.3: heating-curve slope is 2826/3082/3338 (scale 0.01). PDF 2832/3088 read as 3 on live SC3 (not slope).
 # V1.0.2: energy/power 33536–33553, analog PWM 33294–33299, HKR3, Vorlaufart, WP bivalence;
-# dynamic_config gates (hkr2/hkr3/solar/heat_pump/pv2heat/heat_meter). Heating-curve slope stays 2832/3088 (PDF).
+# dynamic_config gates (hkr2/hkr3/solar/heat_pump/pv2heat/heat_meter).
 
 # Dynamic configuration support
 dynamic_config:
@@ -1122,12 +1123,14 @@ controls:
   - type: "number"
     name: "HKR1 Heizkurve Steilheit"
     unique_id: "hkr1_heizkurve_steilheit"
-    address: 2832
+    address: 2826
     input_type: "holding"
     data_type: "uint16"
-    min_value: 20
-    max_value: 250
-    step: 1
+    scale: 0.01
+    precision: 2
+    min_value: 0.2
+    max_value: 2.5
+    step: 0.05
     mode: "box"
     scan_interval: 60
     mm_group: "heating_control"
@@ -1235,12 +1238,14 @@ controls:
     name: "HKR2 Heizkurve Steilheit"
     unique_id: "hkr2_heizkurve_steilheit"
     condition: "hkr2_enabled == true"
-    address: 3088
+    address: 3082
     input_type: "holding"
     data_type: "uint16"
-    min_value: 20
-    max_value: 250
-    step: 1
+    scale: 0.01
+    precision: 2
+    min_value: 0.2
+    max_value: 2.5
+    step: 0.05
     mode: "box"
     scan_interval: 60
     mm_group: "heating_control"
@@ -1407,7 +1412,24 @@ controls:
     scan_interval: 60
     mm_group: "heating_control"
     icon: "mdi:thermometer"
-    # Absenk is 3337 (Lars 2026-02 fix). Slope 3338/3344 not mapped yet.
+    # Absenk is 3337 (Lars 2026-02 fix).
+
+  - type: "number"
+    name: "HKR3 Heizkurve Steilheit"
+    unique_id: "hkr3_heizkurve_steilheit"
+    condition: "hkr3_enabled == true"
+    address: 3338
+    input_type: "holding"
+    data_type: "uint16"
+    scale: 0.01
+    precision: 2
+    min_value: 0.2
+    max_value: 2.5
+    step: 0.05
+    mode: "box"
+    scan_interval: 60
+    mm_group: "heating_control"
+    icon: "mdi:chart-line"
 
   - type: "switch"
     name: "HKR3 Warmwasser Vorrang"

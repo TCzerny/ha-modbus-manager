@@ -78,19 +78,20 @@ This document lists the Modbus registers for the Solvis SC2/SC3 template: `solvi
 | HKR1 Heizkurve Tag-Temperatur 2 | hkr1_heizkurve_tag_temperatur_2 | 2823 | holding | uint16 | °C |  |  |
 | HKR1 Heizkurve Tag-Temperatur 3 | hkr1_heizkurve_tag_temperatur_3 | 2824 | holding | uint16 | °C |  |  |
 | HKR1 Heizkurve Absenk-Temperatur | hkr1_heizkurve_absenk_temperatur | 2825 | holding | uint16 | °C |  |  |
-| HKR1 Heizkurve Steilheit | hkr1_heizkurve_steilheit | 2832 | holding | uint16 |  |  |  |
+| HKR1 Heizkurve Steilheit | hkr1_heizkurve_steilheit | 2826 | holding | uint16 |  | 0.01 |  |
 | HKR2 Fix Vorlauf Tag-Temperatur | hkr2_fix_vorlauf_tag_temperatur | 3076 | holding | uint16 | °C |  |  |
 | HKR2 Fix Vorlauf Absenk-Temperatur | hkr2_fix_vorlauf_absenk_temperatur | 3077 | holding | uint16 | °C |  |  |
 | HKR2 Heizkurve Tag-Temperatur 1 | hkr2_heizkurve_tag_temperatur_1 | 3078 | holding | uint16 | °C |  |  |
 | HKR2 Heizkurve Tag-Temperatur 2 | hkr2_heizkurve_tag_temperatur_2 | 3079 | holding | uint16 | °C |  |  |
 | HKR2 Heizkurve Tag-Temperatur 3 | hkr2_heizkurve_tag_temperatur_3 | 3080 | holding | uint16 | °C |  |  |
 | HKR2 Heizkurve Absenk-Temperatur | hkr2_heizkurve_absenk_temperatur | 3081 | holding | uint16 | °C |  |  |
-| HKR2 Heizkurve Steilheit | hkr2_heizkurve_steilheit | 3088 | holding | uint16 |  |  |  |
+| HKR2 Heizkurve Steilheit | hkr2_heizkurve_steilheit | 3082 | holding | uint16 |  | 0.01 | hkr2_enabled |
 | HKR1 Warmwasser Vorrang | hkr1_warmwasser_vorrang | 2817 | holding | uint16 |  |  |  |
 | HKR2 Warmwasser Vorrang | hkr2_warmwasser_vorrang | 3073 | holding | uint16 |  |  |  |
 | Warmwasser Nachheizung Start | warmwasser_nachheizung_start | 2322 | holding | uint16 |  |  |  |
 | HKR3 Betriebsart | hkr3_betriebsart | 3330 | holding | uint16 |  |  | hkr3_enabled |
-| HKR3 curve/fix temps | hkr3_* | 3332–3337 | holding | uint16 | °C |  | hkr3_enabled; Absenk 3337; slope not mapped |
+| HKR3 curve/fix temps | hkr3_* | 3332–3337 | holding | uint16 | °C |  | hkr3_enabled; Absenk 3337 |
+| HKR3 Heizkurve Steilheit | hkr3_heizkurve_steilheit | 3338 | holding | uint16 |  | 0.01 | hkr3_enabled |
 | HKR3 Warmwasser Vorrang | hkr3_warmwasser_vorrang | 3329 | holding | uint16 |  |  | hkr3_enabled |
 
 ### Binary Sensors
@@ -135,4 +136,5 @@ This document lists the Modbus registers for the Solvis SC2/SC3 template: `solvi
 
 - Addresses are the base register offsets used by the integration.
 - Conditions reflect template logic and are evaluated in the dynamic config.
-- Template **v1.0.2**: energy/power **33536–33553**, analog PWM **33294–33299**, Vorlaufart **2819/3075/3331**, WP bivalence **838/839**. Heating-curve slope remains **2832/3088** (PDF).
+- Template **v1.0.3**: heating-curve slope **2826/3082/3338** (scale 0.01). PDF addresses 2832/3088 are not the live slope registers.
+- Template **v1.0.2**: energy/power **33536–33553**, analog PWM **33294–33299**, Vorlaufart **2819/3075/3331**, WP bivalence **838/839**.
