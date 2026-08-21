@@ -107,7 +107,7 @@ Charger mode values: EU `160`–`163`, AU `164`–`167` (same register 8047). Pr
 
 With iHomeManager, poll **this** template (slave **247**, iHM IP, port **502** or **503**, SSL off). The iHM Modbus protocol documents charger **status 8552**, **modes 8048**, **enable 8049**, **grid draw 8050**. Live power **8594–8601** is not in the PDF; it is in the template ([#86](https://github.com/TCzerny/ha-modbus-manager/issues/86)).
 
-Not on iHM (needs charger `21xxx` / TLS): setpoint current, phase count write, remote start/stop, session/lifetime energy, per-phase V/I. A scan of 8574–8773 during charging found **no energy counter**. Use Riemann / `utility_meter` on `charger_active_power` for kWh, or keep Sungrow EMS as source of truth.
+Not on iHM (charger `21xxx` only, not planned in MM while iHM holds TLS `:516`): setpoint current, phase count write, remote start/stop, session/lifetime energy, per-phase V/I. A scan of 8574–8773 during charging found **no energy counter**. Use Riemann / `utility_meter` on `charger_active_power` for kWh, or keep Sungrow EMS as source of truth.
 
 GRID.CT **8554–8564** is the iHM meter, not the wallbox. Forum maps that put charger “load” on **8553** / **8558–8562** are the meter/output-type block; live charger watts are **8593–8599** ([photovoltaikforum 248099](https://www.photovoltaikforum.com/thread/248099-ihomemanager-modbus-register/?pageNo=10), [#86](https://github.com/TCzerny/ha-modbus-manager/issues/86)).
 

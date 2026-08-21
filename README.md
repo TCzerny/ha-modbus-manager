@@ -175,7 +175,7 @@ The repo file [`CONTRIBUTING.md`](CONTRIBUTING.md) is a short entry point with t
 - **[Compleo eBox Professional](docs/README_compleo_ebox_professional.md)** - EV charger template
 - **[Victron EV Charging Station](docs/README_victron_ev_charging_station.md)** - Victron EVCS / EVCS NS (Modbus TCP)
 - **[Sungrow AC011E Wallbox](docs/README_sungrow_ac011e_wallbox.md)** - EV wallbox template (AC007, AC011E, AC22E)
-- **[Sungrow AC wallbox connection](docs/README_sungrow_wallbox_connection.md)** - RS485 via inverter vs iHM (`charger_enabled`; TLS only for unused `21xxx`)
+- **[Sungrow AC wallbox connection](docs/README_sungrow_wallbox_connection.md)** - RS485 via inverter vs iHM (`charger_enabled`; no TLS to charger `:516` while iHM holds that port)
 - **[Heidelberg Energy Control](docs/README_heidelberg_energy_control.md)** - EV charger (Modbus RTU via proxy)
 - **[BYD Battery Box](docs/README_byd_battery_box.md)** - BYD Battery-Box template (BETA)
 - **[Fronius GEN24 Dynamic](docs/README_fronius_dynamic.md)** - Fronius GEN24 template (BETA)

@@ -7,7 +7,7 @@ Applies to **AC007-00**, **AC011E-01**, and **AC22E-01**.
 
 This page is about **wiring and which Modbus endpoint Home Assistant should use**. Surplus charging in iSolarCloud is Sungrow EMS behaviour.
 
-> **Modbus Manager today** uses Home Assistant’s `ModbusHub` (plain TCP, RTU-over-TCP, or serial). It does **not** speak **Modbus/TLS**. With iHM that is usually fine: HA talks to the **iHM** on unencrypted TCP; the iHM talks to the charger on **516/TLS**. Direct TLS to the charger is only needed for the charger-local `21xxx` map ([discussion #92](https://github.com/TCzerny/ha-modbus-manager/discussions/92)).
+> **Modbus Manager** uses Home Assistant’s `ModbusHub` (plain TCP, RTU-over-TCP, or serial). It does **not** speak **Modbus/TLS**. That is intentional for iHM setups: HA talks to the **iHM** on unencrypted TCP; the iHM already holds **TLS :516** on the charger. A second TLS client would typically be refused or kick the EMS off the port ([discussion #92](https://github.com/TCzerny/ha-modbus-manager/discussions/92)).
 
 ## Charger ports (AC22E-01)
 
@@ -36,10 +36,10 @@ Port **502/516 on the WiNet dongle** is a different device: that is the **invert
 flowchart TD
   start[Sungrow AC wallbox]
   start --> ihm{iHomeManager in the system?}
-  ihm -->|No, SH-RT hybrid| rs485[RS485 charger to inverter]
+  ihm -->|No, using SH-RT hybrid| rs485[RS485 charger to inverter]
   rs485 --> gw{How HA reaches the inverter}
-  gw -->|WiNet-S or inverter LAN :502| mm1[MM TCP slave 3 plus 21xxx]
-  gw -->|RS485 Ethernet gateway| mm1b[MM RTU-over-TCP slave 3]
+  gw -->|WiNet-S or inverter LAN :502| mm1[MM TCP]
+  gw -->|RS485 Ethernet gateway| mm1b[MM RTU-over-TCP]
   ihm -->|Yes| lan[Charger on LAN or WiFi only]
   lan --> mm2[MM: iHM template charger_enabled on iHM TCP]
 ```
@@ -53,12 +53,12 @@ flowchart TD
 
 Sungrow’s documented path for **SH-RT + AC011E/AC22E** is still **RS485 from charger port II to the inverter**. The inverter (not the wallbox Ethernet jack) is the Modbus gateway for Home Assistant.
 
-How **you** reach that inverter is independent: **WiNet-S**, the hybrid’s **own LAN port**, or an **RS485-to-Ethernet adapter on the inverter bus**. In all of those cases Modbus Manager uses **plain TCP (or RTU-over-TCP) to the gateway**, then **slave ID of the wallbox on that bus**.
+How **you** reach that inverter is dependent: **WiNet-S**, the hybrid’s **own LAN port**, or an **RS485-to-Ethernet adapter on the inverter bus**. In all of those cases Modbus Manager uses **plain TCP (or RTU-over-TCP) to the gateway**, then **slave ID of the wallbox on that bus**.
 
 | HA / MM host | Typical wallbox slave | Notes |
 | --- | --- | --- |
 | **WiNet-S** IP `:502` | **3** (confirm in the WiNet / iSolarCloud device list) | Enable Modbus **502 without encryption** on WiNet. Battery on WiNet is often forwarded as **2**, not 200. |
-| **Inverter built-in LAN** `:502` | **3** | Same bus, no dongle. Inverter slave **1**, SBR often **200**, wallbox **3**. |
+| **Inverter built-in LAN** `:502` | **1** | Same bus, no dongle. Inverter slave **1**, SBR often **200**, wallbox **3**. |
 | RS485 Ethernet gateway on inverter A1/B1 | **3** | MM connection type **RS485** / RTU-over-TCP as for other SHx gateway setups. |
 
 Do **not** point MM at the **wallbox LAN IP** in this topology. Port **I** on the charger is not a substitute for RS485-to-inverter: EMS on the charger IP still tends to expose **516/TLS** (unsupported in MM) and **502 closed**. Use charger Ethernet only if you deliberately run a third-party EMS **instead of** Sungrow RS485 (USB/Waveshare, slave **248**) — not in parallel with the inverter.
@@ -93,7 +93,7 @@ RS485 charger↔inverter is **unsupported** with iHM and can raise inverter alar
 
 **Inverter `33540–33549` stay frozen.** Mode changes show up on iHM **8047** (Fast / ECO / …), as in [discussion #92](https://github.com/TCzerny/ha-modbus-manager/discussions/92).
 
-Do **not** also load the AC011E wallbox template against the charger IP (TLS missing) or against the inverter (dead proxy registers). Two writers (iHM + `21xxx` current/phase) fight the EMS.
+Do **not** also load the AC011E wallbox template against the charger IP or the inverter. Port **516** is already the iHM EMS session (Modbus devices usually allow **one client per port**). A Home Assistant TLS hub would compete with iHM and can drop surplus charging. Writing `21xxx` while iHM owns EMS fights the same control path. Modbus Manager will **not** add charger TLS for this topology.
 
 ### iHM charger registers already in Modbus Manager
 
@@ -109,15 +109,13 @@ Protocol: *Communication Protocol of iHomeManager* V1.0.1 / V1.0.2 (Sungrow regi
 
 GRID.CT voltages/power **8553–8563** are the **iHM meter**, not the wallbox terminals.
 
-Community setups (e.g. [photovoltaikforum 248099](https://www.photovoltaikforum.com/thread/248099-ihomemanager-modbus-register/?pageNo=10)) often map my-PV / HA “Ladestation” to **8553** (output type) and **8558–8562** (GRID.CT phase power). Those stay **0** or look random while the car charges. Use **8593–8599** instead.
-
 ### What is not on the iHM map
 
 Protocol table of contents lists **§3.4 Charger Control**, but that section is **missing** from the V1.0.2 PDF (broken bookmark). The published RW table stops at modes / enable / grid-draw.
 
-[#86](https://github.com/TCzerny/ha-modbus-manager/issues/86) scanned **8574–8773** during a ~4 kW session: **no accumulating energy register**. Session/lifetime kWh needs a HA Riemann / `utility_meter` on `charger_active_power`, or TLS to charger `21299` / `21309`.
+[#86](https://github.com/TCzerny/ha-modbus-manager/issues/86) scanned **8574–8773** during a ~4 kW session: **no accumulating energy register**. Session/lifetime kWh: Riemann / `utility_meter` on `charger_active_power`. Direct charger `21299` / `21309` would need a second TLS session on **516**, which iHM already uses.
 
-Not exposed on iHM (charger `21xxx` only): setpoint current **21202**, phase switch **21203**, remote start/stop **21211**, per-phase V/I, session timestamps, device type. Using those while iHM is EMS is the TLS/conflict path — not required for Fast/ECO like iSolarCloud.
+Not exposed on iHM (charger `21xxx` only): setpoint current **21202**, phase switch **21203**, remote start/stop **21211**, per-phase V/I, session timestamps, device type. Those stay on the charger; they are not a planned MM TLS feature while iHM is EMS.
 
 Possible later template tweaks (not implemented): extend `charger_status_raw` options with wallbox codes 4/5/7/8/9 if they appear on iHM; Riemann helper recipe for kWh.
 
@@ -144,7 +142,7 @@ Do not share that RS485 segment with iHM or the inverter.
 | --- | --- | --- | --- | --- | --- |
 | SH-RT, RS485 via inverter | WiNet **or inverter LAN** or RS485 gateway | 502 | TCP or RTU-over-TCP | wallbox **3** (verify) | AC011E Wallbox |
 | iHM + charger on LAN | **iHM** IP | 502 or 503 (no SSL) | TCP | **247** | iHomeManager, **`charger_enabled`** |
-| Direct charger `21xxx` on LAN | Charger IP | 516 | TLS | typically 248 | **Not in MM** (optional future) |
+| Direct charger `21xxx` on LAN | Charger IP | 516 | TLS | typically 248 | **Not in MM** — iHM already owns this port; one Modbus client |
 | RS485 USB / Waveshare only | Adapter / gateway | 502 or serial | RTU / RTU-over-TCP | **248** | AC011E Wallbox |
 
 ---
@@ -153,4 +151,4 @@ Do not share that RS485 segment with iHM or the inverter.
 
 - Template entities: [README_sungrow_ac011e_wallbox.md](README_sungrow_ac011e_wallbox.md)
 - iHM registers / `charger_enabled`: [README_iHomeManager.md](README_iHomeManager.md)
-- Feature request (TLS): [discussion #92](https://github.com/TCzerny/ha-modbus-manager/discussions/92)
+- Feature request (TLS, not planned with iHM): [discussion #92](https://github.com/TCzerny/ha-modbus-manager/discussions/92)
