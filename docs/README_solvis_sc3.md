@@ -16,6 +16,11 @@ This document lists the Modbus registers for the Solvis SC2/SC3 template: `solvi
 
 - `selected_model`: Solvis device model (options: ['SC2', 'SC3']) (default: SC3)
 - `connection_type`: Connection type (options: ['TCP', 'RTU']) (default: TCP)
+- `hkr2_enabled` / `hkr3_enabled`: Heating circuits 2 and 3 (default HKR2 on, HKR3 off)
+- `solar_enabled`: Solar energy, power, PWM O2/O3, S17 (default on)
+- `heat_pump_enabled`: Heat pump energy/power, bivalence, PWM O4, A2/A13/A14 (default off)
+- `pv2heat_enabled`: PV2Heat energy **33539** and power **33548** (default off; 33539 is not gas power)
+- `heat_meter_enabled`: External heat-meter power **33550** (default off)
 
 ### Sensor Registers
 
@@ -84,6 +89,9 @@ This document lists the Modbus registers for the Solvis SC2/SC3 template: `solvi
 | HKR1 Warmwasser Vorrang | hkr1_warmwasser_vorrang | 2817 | holding | uint16 |  |  |  |
 | HKR2 Warmwasser Vorrang | hkr2_warmwasser_vorrang | 3073 | holding | uint16 |  |  |  |
 | Warmwasser Nachheizung Start | warmwasser_nachheizung_start | 2322 | holding | uint16 |  |  |  |
+| HKR3 Betriebsart | hkr3_betriebsart | 3330 | holding | uint16 |  |  | hkr3_enabled |
+| HKR3 curve/fix temps | hkr3_* | 3332–3337 | holding | uint16 | °C |  | hkr3_enabled; Absenk 3337; slope not mapped |
+| HKR3 Warmwasser Vorrang | hkr3_warmwasser_vorrang | 3329 | holding | uint16 |  |  | hkr3_enabled |
 
 ### Binary Sensors
 
@@ -127,3 +135,4 @@ This document lists the Modbus registers for the Solvis SC2/SC3 template: `solvi
 
 - Addresses are the base register offsets used by the integration.
 - Conditions reflect template logic and are evaluated in the dynamic config.
+- Template **v1.0.2**: energy/power **33536–33553**, analog PWM **33294–33299**, Vorlaufart **2819/3075/3331**, WP bivalence **838/839**. Heating-curve slope remains **2832/3088** (PDF).

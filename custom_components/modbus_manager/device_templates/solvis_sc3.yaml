@@ -8,11 +8,14 @@ display_name: "Solvis SC3 Heating Control"
 description: "Template for Solvis SC2/SC3 heating controllers. Supports temperature sensors (S1-S16), flow sensors (S17-S18), pump controls (A1-A9), and heating circuit management via Modbus TCP."
 manufacturer: "Solvis"
 model: "SC3"
-version: 1.0.1
+version: 1.0.2
 default_prefix: "SC3"
 default_slave_id: 1
 type: "heating_control"
 firmware_version: "SC3"
+
+# V1.0.2: energy/power 33536–33553, analog PWM 33294–33299, HKR3, Vorlaufart, WP bivalence;
+# dynamic_config gates (hkr2/hkr3/solar/heat_pump/pv2heat/heat_meter). Heating-curve slope stays 2832/3088 (PDF).
 
 # Dynamic configuration support
 dynamic_config:
@@ -25,6 +28,36 @@ dynamic_config:
     description: "Connection type"
     options: ["TCP", "RTU"]
     default: "TCP"
+
+  hkr2_enabled:
+    description: "Enable heating circuit 2 (HKR2) registers"
+    options: [true, false]
+    default: true
+
+  hkr3_enabled:
+    description: "Enable heating circuit 3 (HKR3) registers"
+    options: [true, false]
+    default: false
+
+  solar_enabled:
+    description: "Enable solar collector energy, power, PWM and S17 flow"
+    options: [true, false]
+    default: true
+
+  heat_pump_enabled:
+    description: "Enable heat pump energy, power and bivalence registers"
+    options: [true, false]
+    default: false
+
+  pv2heat_enabled:
+    description: "Enable PV2Heat energy and power registers (not gas power)"
+    options: [true, false]
+    default: false
+
+  heat_meter_enabled:
+    description: "Enable external heat-meter power register 33550"
+    options: [true, false]
+    default: false
 
 # Sensors (Input Registers - Read Only)
 sensors:
@@ -90,6 +123,7 @@ sensors:
 
   - name: "Wärmepumpe Ladepumpe Modus"
     unique_id: "warmepumpe_ladepumpe_modus"
+    condition: "heat_pump_enabled == true"
     address: 3845
     input_type: "input"
     data_type: "uint16"
@@ -433,6 +467,7 @@ sensors:
 
   - name: "Raumtemperatur 2"
     unique_id: "raumtemperatur_2"
+    condition: "hkr2_enabled == true"
     address: 34305
     input_type: "holding"
     data_type: "int16"
@@ -447,6 +482,7 @@ sensors:
 
   - name: "Raumtemperatur 3"
     unique_id: "raumtemperatur_3"
+    condition: "hkr3_enabled == true"
     address: 34306
     input_type: "holding"
     data_type: "int16"
@@ -462,6 +498,7 @@ sensors:
   # Flow Sensors (S17-S18: addresses 33040-33041, l/min)
   - name: "Durchflussmenge S17"
     unique_id: "durchflussmenge_s17"
+    condition: "solar_enabled == true"
     address: 33040
     input_type: "input"
     data_type: "uint16"
@@ -542,6 +579,383 @@ sensors:
     mm_group: "heating_status"
     icon: "mdi:alert"
 
+  # Analog Out O1–O6 PWM / 0–10 V (input 33294–33299, hass_solvis_control #144)
+  - name: "Brennermodulation PWM"
+    unique_id: "brennermodulation_pwm"
+    address: 33294
+    input_type: "input"
+    data_type: "uint16"
+    precision: 0
+    unit_of_measurement: "%"
+    state_class: "measurement"
+    scan_interval: 30
+    mm_group: "heating_analog"
+    icon: "mdi:gauge"
+
+  - name: "Solarpumpe primär PWM"
+    unique_id: "solarpumpe_primaer_pwm"
+    address: 33295
+    input_type: "input"
+    data_type: "uint16"
+    precision: 0
+    unit_of_measurement: "%"
+    state_class: "measurement"
+    scan_interval: 30
+    mm_group: "heating_analog"
+    icon: "mdi:pump"
+    condition: "solar_enabled == true"
+
+  - name: "Solarpumpe sekundär PWM"
+    unique_id: "solarpumpe_sekundaer_pwm"
+    address: 33296
+    input_type: "input"
+    data_type: "uint16"
+    precision: 0
+    unit_of_measurement: "%"
+    state_class: "measurement"
+    scan_interval: 30
+    mm_group: "heating_analog"
+    icon: "mdi:pump"
+    condition: "solar_enabled == true"
+
+  - name: "Wärmepumpe Ladepumpe PWM"
+    unique_id: "waermepumpe_ladepumpe_pwm"
+    address: 33297
+    input_type: "input"
+    data_type: "uint16"
+    precision: 0
+    unit_of_measurement: "%"
+    state_class: "measurement"
+    scan_interval: 30
+    mm_group: "heating_analog"
+    icon: "mdi:pump"
+    condition: "heat_pump_enabled == true"
+
+  - name: "Warmwasserpumpe PWM"
+    unique_id: "warmwasserpumpe_pwm"
+    address: 33298
+    input_type: "input"
+    data_type: "uint16"
+    precision: 0
+    unit_of_measurement: "%"
+    state_class: "measurement"
+    scan_interval: 30
+    mm_group: "heating_analog"
+    icon: "mdi:water-pump"
+
+  - name: "Analog Out O6 PWM"
+    unique_id: "analog_out_o6_pwm"
+    address: 33299
+    input_type: "input"
+    data_type: "uint16"
+    precision: 0
+    unit_of_measurement: "%"
+    state_class: "measurement"
+    scan_interval: 30
+    mm_group: "heating_analog"
+    icon: "mdi:gauge"
+
+  # Energy (SC3 map 2.0.0: 10 kWh). 33539 is PV2Heat energy, not gas power (Patrick still uses old meaning).
+  - name: "Wärmemenge Solarthermie"
+    unique_id: "waermemenge_solarthermie"
+    address: 33536
+    input_type: "input"
+    data_type: "uint16"
+    scale: 10
+    precision: 0
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    scan_interval: 300
+    mm_group: "heating_energy"
+    icon: "mdi:solar-power"
+    condition: "solar_enabled == true"
+
+  - name: "Wärmemenge Wärmepumpe"
+    unique_id: "waermemenge_waermepumpe"
+    address: 33537
+    input_type: "input"
+    data_type: "uint16"
+    scale: 10
+    precision: 0
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    scan_interval: 300
+    mm_group: "heating_energy"
+    icon: "mdi:heat-pump"
+    condition: "heat_pump_enabled == true"
+
+  - name: "Wärmemenge Brenner"
+    unique_id: "waermemenge_brenner"
+    address: 33538
+    input_type: "input"
+    data_type: "uint16"
+    scale: 10
+    precision: 0
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    scan_interval: 300
+    mm_group: "heating_energy"
+    icon: "mdi:fire"
+
+  - name: "Wärmemenge PV2Heat"
+    unique_id: "waermemenge_pv2heat"
+    address: 33539
+    input_type: "input"
+    data_type: "uint16"
+    scale: 10
+    precision: 0
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    scan_interval: 300
+    mm_group: "heating_energy"
+    icon: "mdi:solar-power"
+    condition: "pv2heat_enabled == true"
+
+  - name: "Wärmemenge Warmwasser"
+    unique_id: "waermemenge_warmwasser"
+    address: 33540
+    input_type: "input"
+    data_type: "uint16"
+    scale: 10
+    precision: 0
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    scan_interval: 300
+    mm_group: "heating_energy"
+    icon: "mdi:water-boiler"
+
+  - name: "Wärmemenge Heizkreise"
+    unique_id: "waermemenge_heizkreise"
+    address: 33541
+    input_type: "input"
+    data_type: "uint16"
+    scale: 10
+    precision: 0
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    scan_interval: 300
+    mm_group: "heating_energy"
+    icon: "mdi:radiator"
+    condition: "selected_model == SC3"
+
+  - name: "Leistung Solarthermie"
+    unique_id: "leistung_solarthermie"
+    address: 33543
+    input_type: "holding"
+    data_type: "uint16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "kW"
+    device_class: "power"
+    state_class: "measurement"
+    scan_interval: 30
+    mm_group: "heating_power"
+    icon: "mdi:solar-power"
+    condition: "solar_enabled == true"
+
+  - name: "Leistung Wärmepumpe thermisch"
+    unique_id: "leistung_waermepumpe_thermisch"
+    address: 33544
+    input_type: "holding"
+    data_type: "uint16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "kW"
+    device_class: "power"
+    state_class: "measurement"
+    scan_interval: 30
+    mm_group: "heating_power"
+    icon: "mdi:heat-pump"
+    condition: "heat_pump_enabled == true"
+
+  - name: "Leistung Wärmepumpe elektrisch"
+    unique_id: "leistung_waermepumpe_elektrisch"
+    address: 33545
+    input_type: "holding"
+    data_type: "uint16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "kW"
+    device_class: "power"
+    state_class: "measurement"
+    scan_interval: 30
+    mm_group: "heating_power"
+    icon: "mdi:lightning-bolt"
+    condition: "heat_pump_enabled == true"
+
+  - name: "Leistung Wärmeerzeuger 2 thermisch"
+    unique_id: "leistung_waermeerzeuger_2_thermisch"
+    address: 33546
+    input_type: "input"
+    data_type: "uint16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "kW"
+    device_class: "power"
+    state_class: "measurement"
+    scan_interval: 30
+    mm_group: "heating_power"
+    icon: "mdi:fire"
+    condition: "selected_model == SC3"
+
+  - name: "Leistung Wärmeerzeuger 2 elektrisch"
+    unique_id: "leistung_waermeerzeuger_2_elektrisch"
+    address: 33547
+    input_type: "input"
+    data_type: "uint16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "kW"
+    device_class: "power"
+    state_class: "measurement"
+    scan_interval: 30
+    mm_group: "heating_power"
+    icon: "mdi:lightning-bolt"
+    condition: "selected_model == SC3"
+
+  - name: "Leistung PV2Heat elektrisch"
+    unique_id: "leistung_pv2heat_elektrisch"
+    address: 33548
+    input_type: "holding"
+    data_type: "uint16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "kW"
+    device_class: "power"
+    state_class: "measurement"
+    scan_interval: 30
+    mm_group: "heating_power"
+    icon: "mdi:solar-power"
+    condition: "pv2heat_enabled == true"
+
+  - name: "Leistung Warmwasser thermisch"
+    unique_id: "leistung_warmwasser_thermisch"
+    address: 33549
+    input_type: "input"
+    data_type: "uint16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "kW"
+    device_class: "power"
+    state_class: "measurement"
+    scan_interval: 30
+    mm_group: "heating_power"
+    icon: "mdi:water-boiler"
+
+  - name: "Leistung Wärmemengenzähler"
+    unique_id: "leistung_waermemengenzaehler"
+    address: 33550
+    input_type: "input"
+    data_type: "uint16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "kW"
+    device_class: "power"
+    state_class: "measurement"
+    scan_interval: 30
+    mm_group: "heating_power"
+    icon: "mdi:gauge"
+    condition: "heat_meter_enabled == true"
+
+  - name: "Laufzeit Solarpumpe 1"
+    unique_id: "laufzeit_solarpumpe_1"
+    address: 33552
+    input_type: "input"
+    data_type: "uint16"
+    precision: 0
+    unit_of_measurement: "h"
+    device_class: "duration"
+    state_class: "total_increasing"
+    scan_interval: 300
+    mm_group: "heating_energy"
+    icon: "mdi:timer"
+    condition: "solar_enabled == true and selected_model == SC3"
+
+  - name: "Laufzeit Solarpumpe 2"
+    unique_id: "laufzeit_solarpumpe_2"
+    address: 33553
+    input_type: "input"
+    data_type: "uint16"
+    precision: 0
+    unit_of_measurement: "h"
+    device_class: "duration"
+    state_class: "total_increasing"
+    scan_interval: 300
+    mm_group: "heating_energy"
+    icon: "mdi:timer"
+    condition: "solar_enabled == true and selected_model == SC3"
+
+  - name: "WP Bivalenz Warmwasser"
+    unique_id: "wp_bivalenz_warmwasser"
+    address: 838
+    input_type: "holding"
+    data_type: "int16"
+    precision: 0
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 300
+    mm_group: "heating_temperatures"
+    icon: "mdi:thermometer"
+    entity_category: "diagnostic"
+    condition: "heat_pump_enabled == true"
+
+  - name: "WP Bivalenz Heizung"
+    unique_id: "wp_bivalenz_heizung"
+    address: 839
+    input_type: "holding"
+    data_type: "int16"
+    precision: 0
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 300
+    mm_group: "heating_temperatures"
+    icon: "mdi:thermometer"
+    entity_category: "diagnostic"
+    condition: "heat_pump_enabled == true"
+
+  - name: "HKR1 Vorlaufart"
+    unique_id: "hkr1_vorlaufart"
+    address: 2819
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 60
+    mm_group: "heating_control"
+    icon: "mdi:pipe"
+    entity_category: "diagnostic"
+
+  - name: "HKR2 Vorlaufart"
+    unique_id: "hkr2_vorlaufart"
+    address: 3075
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 60
+    mm_group: "heating_control"
+    icon: "mdi:pipe"
+    entity_category: "diagnostic"
+    condition: "hkr2_enabled == true"
+
+  - name: "HKR3 Vorlaufart"
+    unique_id: "hkr3_vorlaufart"
+    address: 3331
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 60
+    mm_group: "heating_control"
+    icon: "mdi:pipe"
+    entity_category: "diagnostic"
+    condition: "hkr3_enabled == true"
+
 # Controls (Holding Registers - Read/Write)
 controls:
   # Circulation Mode (available since v0.9)
@@ -582,6 +996,7 @@ controls:
   - type: "select"
     name: "HKR2 Betriebsart"
     unique_id: "hkr2_betriebsart"
+    condition: "hkr2_enabled == true"
     address: 3074
     input_type: "holding"
     data_type: "uint16"
@@ -722,6 +1137,7 @@ controls:
   - type: "number"
     name: "HKR2 Fix Vorlauf Tag-Temperatur"
     unique_id: "hkr2_fix_vorlauf_tag_temperatur"
+    condition: "hkr2_enabled == true"
     address: 3076
     input_type: "holding"
     data_type: "uint16"
@@ -737,6 +1153,7 @@ controls:
   - type: "number"
     name: "HKR2 Fix Vorlauf Absenk-Temperatur"
     unique_id: "hkr2_fix_vorlauf_absenk_temperatur"
+    condition: "hkr2_enabled == true"
     address: 3077
     input_type: "holding"
     data_type: "uint16"
@@ -753,6 +1170,7 @@ controls:
   - type: "number"
     name: "HKR2 Heizkurve Tag-Temperatur 1"
     unique_id: "hkr2_heizkurve_tag_temperatur_1"
+    condition: "hkr2_enabled == true"
     address: 3078
     input_type: "holding"
     data_type: "uint16"
@@ -768,6 +1186,7 @@ controls:
   - type: "number"
     name: "HKR2 Heizkurve Tag-Temperatur 2"
     unique_id: "hkr2_heizkurve_tag_temperatur_2"
+    condition: "hkr2_enabled == true"
     address: 3079
     input_type: "holding"
     data_type: "uint16"
@@ -783,6 +1202,7 @@ controls:
   - type: "number"
     name: "HKR2 Heizkurve Tag-Temperatur 3"
     unique_id: "hkr2_heizkurve_tag_temperatur_3"
+    condition: "hkr2_enabled == true"
     address: 3080
     input_type: "holding"
     data_type: "uint16"
@@ -798,6 +1218,7 @@ controls:
   - type: "number"
     name: "HKR2 Heizkurve Absenk-Temperatur"
     unique_id: "hkr2_heizkurve_absenk_temperatur"
+    condition: "hkr2_enabled == true"
     address: 3081
     input_type: "holding"
     data_type: "uint16"
@@ -813,6 +1234,7 @@ controls:
   - type: "number"
     name: "HKR2 Heizkurve Steilheit"
     unique_id: "hkr2_heizkurve_steilheit"
+    condition: "hkr2_enabled == true"
     address: 3088
     input_type: "holding"
     data_type: "uint16"
@@ -842,6 +1264,7 @@ controls:
   - type: "switch"
     name: "HKR2 Warmwasser Vorrang"
     unique_id: "hkr2_warmwasser_vorrang"
+    condition: "hkr2_enabled == true"
     address: 3073
     input_type: "holding"
     data_type: "uint16"
@@ -870,6 +1293,136 @@ controls:
     scan_interval: 60
     mm_group: "heating_control"
     icon: "mdi:water-boiler"
+
+  - type: "select"
+    name: "HKR3 Betriebsart"
+    unique_id: "hkr3_betriebsart"
+    condition: "hkr3_enabled == true"
+    address: 3330
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 60
+    mm_group: "heating_control"
+    icon: "mdi:radiator"
+    options:
+      2: "Automatik"
+      3: "Tagbetrieb"
+      4: "Absenkbetrieb"
+      5: "Standby"
+      6: "Eco"
+      7: "Urlaub"
+
+  - type: "number"
+    name: "HKR3 Fix Vorlauf Tag-Temperatur"
+    unique_id: "hkr3_fix_vorlauf_tag_temperatur"
+    condition: "hkr3_enabled == true"
+    address: 3332
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 75
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "box"
+    scan_interval: 60
+    mm_group: "heating_control"
+    icon: "mdi:thermometer"
+
+  - type: "number"
+    name: "HKR3 Fix Vorlauf Absenk-Temperatur"
+    unique_id: "hkr3_fix_vorlauf_absenk_temperatur"
+    condition: "hkr3_enabled == true"
+    address: 3333
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 75
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "box"
+    scan_interval: 60
+    mm_group: "heating_control"
+    icon: "mdi:thermometer"
+
+  - type: "number"
+    name: "HKR3 Heizkurve Tag-Temperatur 1"
+    unique_id: "hkr3_heizkurve_tag_temperatur_1"
+    condition: "hkr3_enabled == true"
+    address: 3334
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 50
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "box"
+    scan_interval: 60
+    mm_group: "heating_control"
+    icon: "mdi:thermometer"
+
+  - type: "number"
+    name: "HKR3 Heizkurve Tag-Temperatur 2"
+    unique_id: "hkr3_heizkurve_tag_temperatur_2"
+    condition: "hkr3_enabled == true"
+    address: 3335
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 30
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "box"
+    scan_interval: 60
+    mm_group: "heating_control"
+    icon: "mdi:thermometer"
+
+  - type: "number"
+    name: "HKR3 Heizkurve Tag-Temperatur 3"
+    unique_id: "hkr3_heizkurve_tag_temperatur_3"
+    condition: "hkr3_enabled == true"
+    address: 3336
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 30
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "box"
+    scan_interval: 60
+    mm_group: "heating_control"
+    icon: "mdi:thermometer"
+
+  - type: "number"
+    name: "HKR3 Heizkurve Absenk-Temperatur"
+    unique_id: "hkr3_heizkurve_absenk_temperatur"
+    condition: "hkr3_enabled == true"
+    address: 3337
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 30
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "box"
+    scan_interval: 60
+    mm_group: "heating_control"
+    icon: "mdi:thermometer"
+    # Absenk is 3337 (Lars 2026-02 fix). Slope 3338/3344 not mapped yet.
+
+  - type: "switch"
+    name: "HKR3 Warmwasser Vorrang"
+    unique_id: "hkr3_warmwasser_vorrang"
+    condition: "hkr3_enabled == true"
+    address: 3329
+    input_type: "holding"
+    data_type: "uint16"
+    write_value: 1
+    write_value_off: 0
+    on_value: 1
+    off_value: 0
+    scan_interval: 60
+    mm_group: "heating_control"
+    icon: "mdi:water-boiler-alert"
 
 # Calculated Sensors
 calculated:
@@ -903,6 +1456,7 @@ calculated:
 
   - name: "Solarthermie Leistung"
     unique_id: "solarthermie_leistung"
+    condition: "solar_enabled == true"
     mm_group: "heating_calculated"
     icon: "mdi:solar-power"
     unit_of_measurement: "kW"
@@ -923,6 +1477,7 @@ calculated:
 
   - name: "Solarkollektor Delta T"
     unique_id: "solarkollektor_delta_t"
+    condition: "solar_enabled == true"
     mm_group: "heating_calculated"
     icon: "mdi:thermometer-lines"
     unit_of_measurement: "°C"
@@ -962,6 +1517,7 @@ calculated:
 
   - name: "Heizkreis 2 Delta T"
     unique_id: "heizkreis_2_delta_t"
+    condition: "hkr2_enabled == true"
     mm_group: "heating_calculated"
     icon: "mdi:thermometer-lines"
     unit_of_measurement: "°C"
@@ -1000,6 +1556,7 @@ calculated:
 
   - name: "Heizkreis 2 Leistung"
     unique_id: "heizkreis_2_leistung"
+    condition: "hkr2_enabled == true"
     mm_group: "heating_calculated"
     icon: "mdi:radiator"
     unit_of_measurement: "kW"
@@ -1018,6 +1575,7 @@ calculated:
 
   - name: "Solar Effizienz"
     unique_id: "solar_effizienz"
+    condition: "solar_enabled == true"
     mm_group: "heating_calculated"
     icon: "mdi:gauge"
     unit_of_measurement: "%"
@@ -1069,6 +1627,7 @@ binary_sensors:
 
   - name: "Wärmepumpe Ladepumpe (A2)"
     unique_id: "warmepumpe_ladepumpe_a2"
+    condition: "heat_pump_enabled == true"
     address: 33281
     input_type: "input"
     data_type: "uint16"
@@ -1091,6 +1650,7 @@ binary_sensors:
 
   - name: "HKR2 Pumpe (A4)"
     unique_id: "hkr2_pumpe_a4"
+    condition: "hkr2_enabled == true"
     address: 33283
     input_type: "input"
     data_type: "uint16"
@@ -1102,6 +1662,7 @@ binary_sensors:
 
   - name: "Ausgang A5"
     unique_id: "ausgang_a5"
+    condition: "hkr3_enabled == true"
     address: 33284
     input_type: "input"
     data_type: "uint16"
@@ -1113,6 +1674,7 @@ binary_sensors:
 
   - name: "Ausgang A6"
     unique_id: "ausgang_a6"
+    condition: "hkr3_enabled == true"
     address: 33285
     input_type: "input"
     data_type: "uint16"
@@ -1124,6 +1686,7 @@ binary_sensors:
 
   - name: "Ausgang A7"
     unique_id: "ausgang_a7"
+    condition: "hkr3_enabled == true"
     address: 33286
     input_type: "input"
     data_type: "uint16"
@@ -1157,6 +1720,7 @@ binary_sensors:
 
   - name: "HKR2 Mischer Heizkreis auf (A10)"
     unique_id: "hkr2_mischer_heizkreis_auf_a10"
+    condition: "hkr2_enabled == true"
     address: 33289
     input_type: "input"
     data_type: "uint16"
@@ -1168,6 +1732,7 @@ binary_sensors:
 
   - name: "HKR2 Mischer Heizkreis zu (A11)"
     unique_id: "hkr2_mischer_heizkreis_zu_a11"
+    condition: "hkr2_enabled == true"
     address: 33290
     input_type: "input"
     data_type: "uint16"
@@ -1190,6 +1755,7 @@ binary_sensors:
 
   - name: "Wärmepumpe Heizstab Stufe 2 & 3 (A13)"
     unique_id: "warmepumpe_heizstab_stufe_2_3_a13"
+    condition: "heat_pump_enabled == true"
     address: 33292
     input_type: "input"
     data_type: "uint16"
@@ -1201,6 +1767,7 @@ binary_sensors:
 
   - name: "Wärmepumpe Umschaltventil (A14)"
     unique_id: "warmepumpe_umschaltventil_a14"
+    condition: "heat_pump_enabled == true"
     address: 33293
     input_type: "input"
     data_type: "uint16"
