@@ -75,7 +75,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 - **[Solvis SC2/SC3](docs/README_solvis_sc3.md)** – Heating controller, temperature sensors, pump controls
 - **[Compleo eBox Professional](docs/README_compleo_ebox_professional.md)** – EV charger, 3-phase charging
 - **[Victron EV Charging Station](docs/README_victron_ev_charging_station.md)** – EV Charging Station & EV Charging Station NS, Modbus TCP (register list v3.8)
-- **[Sungrow AC011E Wallbox](docs/README_sungrow_ac011e_wallbox.md)** – EV wallbox (AC007-00, AC011E-01, AC22E-01), RS485 via inverter
+- **[Sungrow AC011E Wallbox](docs/README_sungrow_ac011e_wallbox.md)** – EV wallbox (AC007-00, AC011E-01, AC22E-01); [connection with/without iHM](docs/README_sungrow_wallbox_connection.md)
 
 ### ⚠️ Needs Testing
 *Template and register map present; limited or no field validation on real hardware — please report issues.*
@@ -175,6 +175,7 @@ The repo file [`CONTRIBUTING.md`](CONTRIBUTING.md) is a short entry point with t
 - **[Compleo eBox Professional](docs/README_compleo_ebox_professional.md)** - EV charger template
 - **[Victron EV Charging Station](docs/README_victron_ev_charging_station.md)** - Victron EVCS / EVCS NS (Modbus TCP)
 - **[Sungrow AC011E Wallbox](docs/README_sungrow_ac011e_wallbox.md)** - EV wallbox template (AC007, AC011E, AC22E)
+- **[Sungrow AC wallbox connection](docs/README_sungrow_wallbox_connection.md)** - RS485 via inverter vs iHM (`charger_enabled`; TLS only for unused `21xxx`)
 - **[Heidelberg Energy Control](docs/README_heidelberg_energy_control.md)** - EV charger (Modbus RTU via proxy)
 - **[BYD Battery Box](docs/README_byd_battery_box.md)** - BYD Battery-Box template (BETA)
 - **[Fronius GEN24 Dynamic](docs/README_fronius_dynamic.md)** - Fronius GEN24 template (BETA)

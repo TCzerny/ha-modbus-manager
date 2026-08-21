@@ -53,11 +53,11 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 - ☀️ **Sungrow SG Dynamic**: Model selection for SG series inverters
 - 🔋 **Sungrow SBR Battery**: SBR064–SBR256 (field tested)
 - 🔋 **Sungrow SBH Battery**: SBH100–SBH400 base pack (10710–10747); community-tested on WiNet-S/LAN — see [docs](docs/README_sungrow_sbr_battery.md) for cell diagnostics (10756+) limits
-- ☀️ **Sungrow iHomeManager EMS**: Standalone EMS template; fixes in 1.0.22+; Combined Device with inverter tested — standalone hardware validation still welcome
+- ☀️ **Sungrow iHomeManager EMS**: Standalone EMS template; Combined Device with inverter; EV charger via **`charger_enabled`** (not the AC011E `21xxx` hub) — [connection topologies](docs/README_sungrow_wallbox_connection.md)
 - 🔥 **Solvis SC2/SC3**: Heating controller template
 - 🔋 **Compleo EBox Professional**: EV charger wallbox integration template
 - 🔌 **Victron EV Charging Station**: Modbus TCP (register list v3.8)
-- 🔌 **Sungrow AC011E Wallbox**: EV wallbox (AC007-00, AC011E-01, AC22E-01), RS485 via inverter
+- 🔌 **Sungrow AC011E Wallbox**: AC007-00, AC011E-01, AC22E-01 — **without iHM:** RS485 via inverter (slave **3**); **with iHM:** use the iHomeManager template instead ([topologies](docs/README_sungrow_wallbox_connection.md))
 - 🔌 **Heidelberg Energy Control**: EV charger (Modbus RTU via proxy) – *needs testing*
 
 **Needs testing on hardware**
@@ -87,7 +87,8 @@ Templates present with limited field validation — please report issues: **Sung
 - **Solvis SC2/SC3**: Heating controller
 - **Compleo EBox Professional**: EV wallbox
 - **Victron EV Charging Station**: Modbus TCP
-- **Sungrow AC011E Wallbox**: AC007-00, AC011E-01, AC22E-01
+- **Sungrow AC011E Wallbox**: AC007-00, AC011E-01, AC22E-01 (RS485 via inverter; with iHomeManager use the iHM template)
+- **Sungrow iHomeManager EMS**: Grid/EMS + optional charger (`charger_enabled`)
 
 ### Needs Testing
 - **Sungrow iHomeManager EMS** — template + Combined Device fixes; standalone validation ongoing

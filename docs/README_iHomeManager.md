@@ -12,13 +12,13 @@ template: `sungrow_ihomemanager.yaml`.
 - **Default prefix**: `IHM`
 - **Default slave ID**: `247`
 - **Firmware**: `iHomeManager`
-- **Template version**: 1.0.12
+- **Template version**: 1.0.13
 
 ### Dynamic Configuration
 
 - `battery_config` (`none` / `battery`): Enables battery-related registers (same pattern as inverter templates).
 - `channel_2_enabled` (true/false): Enables PROD.CT channel 2 registers.
-- `charger_enabled` (true/false): Enables charger-related registers.
+- `charger_enabled` (true/false): Enables EV charger registers on the **iHM**. With iHM, this is the supported MM path (not the AC011E `21xxx` template). Wiring: [Sungrow AC wallbox connection topologies](README_sungrow_wallbox_connection.md).
 - `charger_region` (`EU` / `AU`): EV charger mode map (EU modes 160–163, AU modes 164–167). Default: `EU`.
 - `protocol_version` (`1.0.0` / `1.0.1` / `1.0.2`, default `1.0.2`): iHomeManager **Modbus protocol map** (not app firmware). Match `protocol_version` / `protocol_version_raw` on the device.
   - **V1.0.1+**: meter channel 2, application software version, active power limit (8051–8052)
@@ -61,6 +61,10 @@ Single-template **`daily_consumed_energy`** on the inverter alone does **not** i
 | Grid Export Energy | grid_export_energy | 8177 | input | uint32 | kWh | 0.1 |  |
 | Application Software Version | application_software_version | 8317 | input | string |  |  |  |
 | Charger Status Raw | charger_status_raw | 8551 | input | uint16 |  |  | charger_enabled == true |
+| Charger Active Power | charger_active_power | 8593 | input | int32 | W |  | charger_enabled == true; undocumented ([#86](https://github.com/TCzerny/ha-modbus-manager/issues/86)) |
+| Charger Phase A Active Power | charger_phase_a_active_power | 8595 | input | int32 | W |  | charger_enabled == true |
+| Charger Phase B Active Power | charger_phase_b_active_power | 8597 | input | int32 | W |  | charger_enabled == true and charger_phases == 3 |
+| Charger Phase C Active Power | charger_phase_c_active_power | 8599 | input | int32 | W |  | charger_enabled == true and charger_phases == 3 |
 | Output Type Raw | output_type_raw | 8553 | input | uint16 |  |  | enum 0=Single, 1=3P4L, 2=3P3L |
 | Phase A Voltage | phase_a_voltage | 8554 | input | uint16 | V | 0.1 |  |
 | Phase B Voltage | phase_b_voltage | 8555 | input | uint16 | V | 0.1 |  |
@@ -91,13 +95,21 @@ Single-template **`daily_consumed_energy`** on the inverter alone does **not** i
 | Charger Charging Modes (EU) | charger_charging_modes | 8047 | holding | uint16 |  |  | charger_enabled == true and charger_region == 'EU' |
 | Charger Charging Modes (AU) | charger_charging_modes_au | 8047 | holding | uint16 |  |  | charger_enabled == true and charger_region == 'AU' |
 | Charger Enable | charger_enable | 8048 | holding | uint16 |  |  | charger_enabled == true |
-| Charger Grid Power Draw | charger_grid_power_draw | 8049 | holding | uint16 |  |  | charger_enabled == true |
+| Charger Grid Power Draw | charger_grid_power_draw | 8049 | holding | uint16 |  |  | charger_enabled == true; Eco mode (`depends_on_register` 8047 = 161 / 165 / 166) |
 | Active Power Limitation | active_power_limitation | 8050 | holding | uint16 |  |  |  |
 | Active Power Limit Ratio | active_power_limit_ratio | 8051 | holding | uint16 | % | 0.1 |  |
 
 EMS mode values: `0` AI Mode, `1` Self-consumption, `2` Time plan, `4` VPP, `5` Compulsory mode.
 
-Charger mode values: EU `160`–`163`, AU `164`–`167` (same register 8047).
+Charger mode values: EU `160`–`163`, AU `164`–`167` (same register 8047). Protocol V1.0.2 only lists Fast/ECO (`160`/`161`); extra modes come from field maps. **Grid power draw** (8049) is writable only in Eco (`depends_on_register`).
+
+### EV charger on iHM vs wallbox `21xxx`
+
+With iHomeManager, poll **this** template (slave **247**, iHM IP, port **502** or **503**, SSL off). The iHM Modbus protocol documents charger **status 8552**, **modes 8048**, **enable 8049**, **grid draw 8050**. Live power **8594–8601** is not in the PDF; it is in the template ([#86](https://github.com/TCzerny/ha-modbus-manager/issues/86)).
+
+Not on iHM (needs charger `21xxx` / TLS): setpoint current, phase count write, remote start/stop, session/lifetime energy, per-phase V/I. A scan of 8574–8773 during charging found **no energy counter**. Use Riemann / `utility_meter` on `charger_active_power` for kWh, or keep Sungrow EMS as source of truth.
+
+GRID.CT **8554–8564** is the iHM meter, not the wallbox. Forum maps that put charger “load” on **8553** / **8558–8562** are the meter/output-type block; live charger watts are **8593–8599** ([photovoltaikforum 248099](https://www.photovoltaikforum.com/thread/248099-ihomemanager-modbus-register/?pageNo=10), [#86](https://github.com/TCzerny/ha-modbus-manager/issues/86)).
 
 Register **8032** (External VPP Heartbeat) is documented in the protocol but **not** exposed in the template yet.
 
@@ -114,6 +126,7 @@ Register **8032** (External VPP Heartbeat) is documented in the protocol but **n
 | Phase B Power | phase_b_power |  |
 | Phase C Power | phase_c_power |  |
 | Total Phase Power Ch2 | total_phase_power_ch2 | channel_2_enabled == true |
+| Charger Total Phase Power | charger_total_phase_power | charger_enabled == true and charger_phases == 3 |
 
 Grid import/export power is derived from `meter_active_power_raw` (positive = import, negative = export).
 

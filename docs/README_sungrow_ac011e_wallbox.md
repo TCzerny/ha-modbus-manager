@@ -14,7 +14,11 @@ The **Sungrow AC011E Wallbox Template** provides integration for Sungrow EV wall
 
 ## 🔌 Connection
 
-The wallbox is connected to the inverter via **RS485**. Modbus Manager connects to the inverter (Modbus TCP via WiNet-S or LAN). To address the wallbox on the inverter’s RS485 bus, configure the wallbox **slave ID** (default **3** – verify in the iSolarCloud app).
+Topologies **with and without iHomeManager**, ports, slave IDs, and what Modbus Manager can poll today: **[Sungrow AC wallbox connection topologies](README_sungrow_wallbox_connection.md)**.
+
+**Without iHM (SH-RT):** RS485 from the charger to the inverter. Point this template at **WiNet, the inverter LAN port, or an inverter RS485 gateway** (port **502**), wallbox **slave ID 3** (verify). Not the wallbox Ethernet IP.
+
+**With iHM:** do **not** use this template. Use the [iHomeManager](README_iHomeManager.md) hub (`charger_enabled`). iHM talks to the charger on TLS internally; Home Assistant polls iHM on plain TCP. The `21xxx` map on the charger IP would need Modbus/TLS, which MM does not support, and would fight the EMS.
 
 ## ⚙️ Configuration
 
@@ -42,9 +46,9 @@ Add as a Modbus Manager device with:
 
 - **Template:** Sungrow AC011E Wallbox
 - **Model:** AC011E-01 (or your model)
-- **Host:** IP of inverter WiNet-S dongle or Modbus gateway (not the wallbox itself)
+- **Host:** WiNet / inverter IP when the charger is on the inverter RS485 bus (**not** the wallbox LAN IP in that topology)
 - **Port:** 502
-- **Slave ID:** 3 (or your wallbox slave ID)
+- **Slave ID:** 3 via inverter, or **248** on a dedicated RS485/USB/Waveshare hub (see [connection topologies](README_sungrow_wallbox_connection.md))
 
 ## 📊 Available Entities
 

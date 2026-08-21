@@ -7,10 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Added
+
+- **Sungrow iHomeManager — Eco-only grid power draw**: `charger_grid_power_draw` (reg **8050**) is unavailable unless charging mode is Eco (EU **161**, AU **165**/**166**), matching the protocol. Template v1.0.13.
+
 ### 📚 Documentation
 
 - **Grafana PV example**: `Dashboard-Examples/Grafana/pv_monitoring.json` with InfluxQL `prefix` variable and [Grafana/README.md](Dashboard-Examples/Grafana/README.md).
 - **Sungrow SHx — RS485 gateway example ([#82](https://github.com/TCzerny/ha-modbus-manager/issues/82))**: WaveShare TCP adapter on inverter **A1/B1**, port 502, slave 1 / SBR 200; link to the field-tested setup photos.
+- **Sungrow AC wallbox topologies**: [connection with/without iHomeManager](docs/README_sungrow_wallbox_connection.md) — with iHM, use the **iHM** template (`charger_enabled`); charger `:516` TLS only for unused `21xxx`. iHM charger map vs protocol PDF and [#86](https://github.com/TCzerny/ha-modbus-manager/issues/86) (no energy register on iHM). `info.md` and [SHx README](docs/README_sungrow_shx_dynamic.md): leave SHx `wallbox_connected` off when iHM is EMS (`33540` frozen).
 
 ## [1.1.3] - 2026-08-20
 

@@ -57,7 +57,8 @@ The template supports **all 36** following Sungrow SHx models:
 | **Phases** | 1, 3 | Auto | Number of phases (auto-detected from model) |
 | **MPPT** | 1, 2, 3 | Auto | Number of MPPT trackers (auto-detected from model) |
 | **Battery** | none, standard_battery, sbr_battery | none | Battery configuration |
-| **Meter Type** | DTSU666, DTSU666-20 | DTSU666 | Meter type connected to inverter |
+| **Meter Type** | DTSU666, DTSU666-20 | DTSU666 | Meter type connected to inverter (not iHomeManager) |
+| **Wallbox connected** | no, yes | no | Inverter proxy registers `33540–33549` (RS485 charger on SH-RT). Leave **no** when iHomeManager is the EMS — those addresses stay frozen. |
 | **Firmware** | String | "03011.95.01" | Firmware version (e.g. "03011.95.01") |
 | **Strings** | 1-24 | Auto | Number of PV strings (auto-detected from model) |
 | **Connection** | LAN, WINET, RS485 | LAN | Physical Modbus path |
@@ -81,7 +82,13 @@ The template supports **all 36** following Sungrow SHx models:
 #### **Meter Type Filtering**
 - **DTSU666:** Standard single-channel meter (registers 5600-5606)
 - **DTSU666-20:** Dual-channel meter with Channel 2 support (registers 5600-5606 + 13199-13205)
-- **Note:** iHomeManager is now a separate template (`sungrow_ihomemanager.yaml`) and should not be selected here
+- **Note:** iHomeManager is a separate template (`sungrow_ihomemanager.yaml`) and must not be selected as meter type here.
+
+#### **Sungrow AC wallbox (`wallbox_connected`)**
+
+Leave **Wallbox connected = no** unless the charger is on the **inverter RS485 bus** (typical SH-RT, wallbox slave **3**). That option only loads inverter proxy registers **`33540–33549`** (`wb_*`). For live Fast/ECO control and power, add the [AC011E Wallbox template](README_sungrow_ac011e_wallbox.md) on that same inverter/WiNet hub (slave **3**), not this proxy block alone.
+
+**With iHomeManager:** do **not** enable `wallbox_connected` and do **not** use the AC011E template on the inverter. Sungrow does not support charger↔inverter RS485 in that topology; `33540–33549` stay frozen. EMS and charger entities belong on the [iHomeManager template](README_iHomeManager.md) (`charger_enabled`). Details: [Sungrow AC wallbox connection topologies](README_sungrow_wallbox_connection.md).
 
 #### **Connection Filtering**
 - **LAN:** Dedicated inverter Ethernet (RJ45). Extended statistics (monthly/yearly PV from **6226+** on slave **1**), full inverter-side map, SBR/SBH typically unit ID **200**. Battery SOH (13024) uses **scale 0.1**.
@@ -503,7 +510,8 @@ This section contains all entities that will be created by this template, includ
 - Meter phase voltage/current sensors (5740-5745) are only available for meter types `DTSU666` and `DTSU666-20`
 - `Load power` (13007), `Export power raw` (13009), `Daily/Total import` (13035/13036), and `Daily/Total export` (13044/13045) are no longer meter-type-filtered
 - Battery control/diagnostic entities around 13050/13051, 33046/33047, and 33148/33149 are available when `battery_enabled == true` (independent of `meter_type`)
-- **iHomeManager is now a separate template** (`sungrow_ihomemanager.yaml`) - do not use meter_type "iHomeManager" with this template
+- **iHomeManager is a separate template** (`sungrow_ihomemanager.yaml`) — do not use meter_type "iHomeManager" with this template
+- **Wallbox `33540–33549`:** only when `wallbox_connected == yes` (RS485 to inverter). Frozen / unused if iHomeManager is the EMS — use `charger_enabled` on the iHM hub instead ([wallbox topologies](README_sungrow_wallbox_connection.md))
 
 ### Controls (Read/Write)
 
@@ -643,7 +651,7 @@ This section contains all entities that will be created by this template, includ
 | - | Monthly export (current) | monthly_export_current |
 | - | Yearly export (current) | yearly_export_current |
 
-> **With iHomeManager:** `daily_consumed_energy` and `total_consumed_energy` use **this inverter’s** registers only. For house-level balance with iHM GRID.CT, use the [Cross-hub Combined Device](README_Combined_Device.md) (1.0.11+) or the manual approach in [#50](https://github.com/TCzerny/ha-modbus-manager/issues/50).
+> **With iHomeManager:** `daily_consumed_energy` and `total_consumed_energy` use **this inverter’s** registers only. For house-level balance with iHM GRID.CT, use the [Cross-hub Combined Device](README_Combined_Device.md) (1.0.11+) or the manual approach in [#50](https://github.com/TCzerny/ha-modbus-manager/issues/50). EV charger control is on the iHM hub (`charger_enabled`), not inverter `33540`.
 
 #### Device Information
 | Address | Name | Unique ID | Description |

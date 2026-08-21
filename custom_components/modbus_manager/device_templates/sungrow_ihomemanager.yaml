@@ -6,7 +6,7 @@ display_name: "Sungrow iHomeManager"
 description: "Template for Sungrow iHomeManager EMS device (Modbus TCP). Includes iHomeManager meter, EMS, and charger registers."
 manufacturer: "Sungrow"
 model: "iHomeManager"
-version: 1.0.12
+version: 1.0.13
 default_prefix: "IHM"
 default_slave_id: 247
 type: "energy_manager"
@@ -22,6 +22,7 @@ firmware_version: "iHomeManager"
 # V1.0.10: undocumented EV charger active power registers 8593-8599 (#86)
 # V1.0.11: output_type_raw is an enum — drop scale 0.1 / unit V so options 0/1/2 map correctly (#90)
 # V1.0.12: protocol_version dynamic config; feed-in from V1.0.2; ratio S32→S16; depends_on_register (#91)
+# V1.0.13: charger_grid_power_draw only when charging mode is Eco (protocol 8050)
 
 dynamic_config:
   battery_config:
@@ -824,7 +825,8 @@ controls:
     mm_group: "PV_control_ihm"
     condition: "charger_enabled == true"
 
-  # Setting is allowed when the charging mode is Eco charging mode.
+  # Protocol: setting allowed only in Eco charging mode (reg 8050).
+  # EU Eco = 161; AU eco-family = 165 / 166. unique_id prefix also matches charger_charging_modes_au.
   - type: "select"
     name: "Charger Grid Power Draw"
     unique_id: "charger_grid_power_draw"
@@ -837,6 +839,10 @@ controls:
       0x55: "Disable"
     mm_group: "PV_control_ihm"
     condition: "charger_enabled == true"
+    depends_on_register:
+      register_unique_id: "charger_charging_modes"
+      register_address: 8047
+      required_values: [161, 165, 166]
 
   - type: "switch"
     name: "Active Power Limitation"
