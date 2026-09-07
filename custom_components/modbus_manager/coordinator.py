@@ -27,6 +27,7 @@ from .const import (
 from .device_utils import (
     apply_version_replacements,
     async_ensure_hub_connected,
+    async_get_registry_device,
     build_device_entry_id,
     clean_firmware_version_string,
     collect_version_replacements,
@@ -2445,8 +2446,8 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     "device_entry_id"
                 ) or build_device_entry_id(matching_device)
                 device_identifier = hub_device_identifier(host, port, device_entry_id)
-                device_entry = device_registry.async_get_device(
-                    identifiers={(DOMAIN, device_identifier)}
+                device_entry = async_get_registry_device(
+                    device_registry, device_identifier, self.entry.entry_id
                 )
                 if not device_entry:
                     continue

@@ -29,6 +29,25 @@ def device_subentry_ids_for_entry(
     return device_entry.config_entries_subentries.get(config_entry_id, set())
 
 
+def async_get_registry_device(
+    device_registry: dr.DeviceRegistry,
+    identifier: str,
+    config_entry_id: str,
+) -> dr.DeviceEntry | None:
+    """Look up a device by ``(DOMAIN, identifier)`` scoped to a config entry.
+
+    Home Assistant 2026.8+ deprecates ``async_get_device`` because identifiers
+    are no longer unique across config entries (removed in 2027.8). Use
+    ``async_get_device_by_identifier`` when present; fall back on older cores
+    so HACS minimum HA 2025.4.0 still works.
+    """
+    ident = (DOMAIN, identifier)
+    getter = getattr(device_registry, "async_get_device_by_identifier", None)
+    if getter is not None:
+        return getter(ident, config_entry_id)
+    return device_registry.async_get_device(identifiers={ident})
+
+
 # Template file stem -> device role for combined-device pairing and filtering.
 KNOWN_TEMPLATE_DEVICE_TYPES: dict[str, str] = {
     "sungrow_ihomemanager": "energy_manager",
@@ -964,16 +983,16 @@ def _find_device_registry_entry_for_logical_device(
     """Locate a device registry row for one logical devices[] record."""
     device_entry_id = device.get("device_entry_id") or build_device_entry_id(device)
     new_identifier = hub_device_identifier(host, port, device_entry_id)
-    device_entry = device_registry.async_get_device(
-        identifiers={(DOMAIN, new_identifier)}
+    device_entry = async_get_registry_device(
+        device_registry, new_identifier, entry.entry_id
     )
     if device_entry is not None:
         return device_entry
 
     slave_id = device.get("slave_id", 1)
     legacy_identifier = legacy_hub_device_identifier(host, port, slave_id)
-    device_entry = device_registry.async_get_device(
-        identifiers={(DOMAIN, legacy_identifier)}
+    device_entry = async_get_registry_device(
+        device_registry, legacy_identifier, entry.entry_id
     )
     if device_entry is not None:
         return device_entry
@@ -1013,7 +1032,7 @@ def migrate_subentry_device_identifiers(hass: HomeAssistant, entry: ConfigEntry)
         target_subentry_id = subentry_ids_by_device.get(device_entry_id)
         new_identifier = hub_device_identifier(host, port, device_entry_id)
 
-        if device_registry.async_get_device(identifiers={(DOMAIN, new_identifier)}):
+        if async_get_registry_device(device_registry, new_identifier, entry.entry_id):
             continue
 
         device_entry = _find_device_registry_entry_for_logical_device(
@@ -1152,12 +1171,12 @@ def apply_device_entry_id_remap(
 
         old_identifier = hub_device_identifier(host, port, old_id)
         new_identifier = hub_device_identifier(host, port, new_id)
-        device_entry = device_registry.async_get_device(
-            identifiers={(DOMAIN, old_identifier)}
+        device_entry = async_get_registry_device(
+            device_registry, old_identifier, entry.entry_id
         )
         if device_entry is None:
-            device_entry = device_registry.async_get_device(
-                identifiers={(DOMAIN, new_identifier)}
+            device_entry = async_get_registry_device(
+                device_registry, new_identifier, entry.entry_id
             )
         if device_entry is None and subentry is not None:
             for candidate in device_registry.devices.values():

@@ -37,6 +37,7 @@ from .device_identification import (
 )
 from .device_utils import (
     apply_device_entry_id_remap,
+    async_get_registry_device,
     async_wait_for_hub_connected,
     build_device_entry_id,
     device_subentry_ids_for_entry,
@@ -303,8 +304,8 @@ async def _relink_devices_to_subentries(
                 continue
 
             identifier = hub_device_identifier(host, port, device_entry_id)
-            device_entry = device_registry.async_get_device(
-                identifiers={(DOMAIN, identifier)}
+            device_entry = async_get_registry_device(
+                device_registry, identifier, entry.entry_id
             )
             if not device_entry:
                 continue

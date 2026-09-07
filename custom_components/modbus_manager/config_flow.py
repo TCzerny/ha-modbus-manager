@@ -36,6 +36,7 @@ from .const import (
 )
 from .device_utils import (
     apply_version_replacements,
+    async_get_registry_device,
     build_device_entry_id,
     collect_version_replacements,
     connection_type_allowed,
@@ -4039,17 +4040,20 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 ) or build_device_entry_id(battery_device)
                 device_identifier = hub_device_identifier(host, port, device_entry_id)
 
-                # Find device in registry
-                device_entry = device_registry.async_get_device(
-                    identifiers={(DOMAIN, device_identifier)}
+                device_entry = async_get_registry_device(
+                    device_registry,
+                    device_identifier,
+                    self.config_entry.entry_id,
                 )
                 if device_entry is None:
                     battery_slave_id = battery_device.get("slave_id", 200)
                     legacy_identifier = legacy_hub_device_identifier(
                         host, port, battery_slave_id
                     )
-                    device_entry = device_registry.async_get_device(
-                        identifiers={(DOMAIN, legacy_identifier)}
+                    device_entry = async_get_registry_device(
+                        device_registry,
+                        legacy_identifier,
+                        self.config_entry.entry_id,
                     )
 
                 if device_entry:

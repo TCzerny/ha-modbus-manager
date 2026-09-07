@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Solvis SC3 — energy, power, PWM, HKR3**: Analog Out O1–O6 (**33294–33299**), energy/power **33536–33553**, WP bivalence **838/839**, Vorlaufart **2819/3075/3331**, HKR3 controls. Dynamic config gates for HKR2/HKR3, solar, heat pump, PV2Heat, heat meter. Template v1.0.2.
 
+### 🐛 Fixed
+
+- **Device registry lookup ([#97](https://github.com/TCzerny/ha-modbus-manager/issues/97))**: Use `async_get_device_by_identifier` with the config entry id on Home Assistant 2026.8+, with a fallback to `async_get_device` on older cores (HACS minimum 2025.4.0). Avoids the deprecation that becomes a hard break in 2027.8.
+
 ### 🔧 Improved
 
 - **Solvis SC3 — heating-curve slope**: Live SC3 showed raw **3** on PDF addresses **2832/3088** while the controller showed **1.2 / 0.8**. Map **2826/3082/3338** with **scale 0.01** (0.20–2.50). Template v1.0.3.
