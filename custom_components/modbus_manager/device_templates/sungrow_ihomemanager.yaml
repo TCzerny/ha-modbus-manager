@@ -6,7 +6,7 @@ display_name: "Sungrow iHomeManager"
 description: "Template for Sungrow iHomeManager EMS device (Modbus TCP). Includes iHomeManager meter, EMS, and charger registers."
 manufacturer: "Sungrow"
 model: "iHomeManager"
-version: 1.0.14
+version: 1.0.15
 default_prefix: "IHM"
 default_slave_id: 247
 type: "energy_manager"
@@ -24,6 +24,7 @@ firmware_version: "iHomeManager"
 # V1.0.12: protocol_version dynamic config; feed-in from V1.0.2; ratio S32→S16; depends_on_register (#91)
 # V1.0.13: charger_grid_power_draw only when charging mode is Eco (protocol 8050)
 # V1.0.14: charging_discharging_power is U32 + swap word (protocol 8026; #79/#85/#91)
+# V1.0.15: feed-in ratio 8031 from V1.0.1 as S32 / V1.0.2 S16; value 8029 from V1.0.1 (depends_on 8028 when present) (#94)
 
 dynamic_config:
   battery_config:
@@ -54,23 +55,23 @@ dynamic_config:
     description: "iHomeManager Modbus protocol map (not app firmware). Match the device protocol version sensor."
     options:
       "1.0.0": "V1.0.0 — initial map"
-      "1.0.1": "V1.0.1 — meter channel 2, app software version, active power limit"
-      "1.0.2": "V1.0.2 — feed-in limitation; feed-in ratio is S16"
+      "1.0.1": "V1.0.1 — meter channel 2, app software version, active power limit; feed-in ratio S32"
+      "1.0.2": "V1.0.2 — feed-in limitation enable (8028); feed-in ratio is S16"
     default: "1.0.2"
     sensor_replacements:
       feed_in_power_limit_ratio:
         "1.0.0":
           data_type: "int32"
           swap: word
-          description: "Feed-in limitation ratio was S32 before protocol V1.0.2"
+          description: "Feed-in limitation ratio 8031 is S32 on V1.0.0/V1.0.1"
         "1.0.1":
           data_type: "int32"
           swap: word
-          description: "Feed-in limitation ratio was S32 before protocol V1.0.2"
+          description: "Feed-in limitation ratio 8031 is S32 on V1.0.1"
         "1.0.2":
           data_type: "int16"
           swap: none
-          description: "Protocol V1.0.2 changed ratio register 8031 from S32 to S16"
+          description: "V1.0.2 changelog: 8031 S32 → S16 (range 0-1000)"
 
 sensors:
   # Device Information
@@ -729,7 +730,9 @@ controls:
     mode: "box"
     scan_interval: 30
     mm_group: "PV_control_ihm"
-    protocol_min_version: "1.0.2"
+    protocol_min_version: "1.0.1"
+    # Undocumented U32 in PDF gap 8029–8030. On V1.0.2 require enable 8028=On.
+    # On V1.0.1 the enable entity is not created → depends_on fails open.
     depends_on_register:
       register_unique_id: "feed_in_power_limitation"
       register_address: 8027
@@ -751,10 +754,8 @@ controls:
     mode: "box"
     scan_interval: 30
     mm_group: "PV_control_ihm"
-    depends_on_register:
-      register_unique_id: "feed_in_power_limitation"
-      register_address: 8027
-      required_value: 0xAA
+    protocol_min_version: "1.0.1"
+    # V1.0.1 PDF: S32. Enable 8028 does not exist until V1.0.2 — do not depends_on it.
 
   # external VPP heartbeat - commented out for now
   # - name: "External VPP Heartbeat"

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.6] - 2026-09-07
+
 ### ✨ Added
 
 - **Solvis SC3 — energy, power, PWM, HKR3**: Analog Out O1–O6 (**33294–33299**), energy/power **33536–33553**, WP bivalence **838/839**, Vorlaufart **2819/3075/3331**, HKR3 controls. Dynamic config gates for HKR2/HKR3, solar, heat pump, PV2Heat, heat meter. Template v1.0.2.
@@ -17,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🔧 Improved
 
+- **Sungrow iHomeManager — feed-in ratio 8031 ([#94](https://github.com/TCzerny/ha-modbus-manager/issues/94))**: Ratio from **V1.0.1** as **S32**, **V1.0.2** **S16**. Undocumented kW **value** (8029–8030 U32) also from V1.0.1; `depends_on` enable **8028** when that entity exists (V1.0.2). Enable select stays V1.0.2. Template v1.0.15.
 - **Solvis SC3 — heating-curve slope**: Live SC3 showed raw **3** on PDF addresses **2832/3088** while the controller showed **1.2 / 0.8**. Map **2826/3082/3338** with **scale 0.01** (0.20–2.50). Template v1.0.3.
 
 ## [1.1.5] - 2026-08-21

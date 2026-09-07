@@ -155,7 +155,7 @@ If you find this integration useful, please consider:
 
 ---
 
-**Version**: 1.1.5
+**Version**: 1.1.6
 **Status**: Stable - Active Development
 **Home Assistant**: 2025.4.0+
-**Last Updated**: August 2026
+**Last Updated**: September 2026
