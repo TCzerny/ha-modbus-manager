@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Device registry lookup ([#97](https://github.com/TCzerny/ha-modbus-manager/issues/97))**: Use `async_get_device_by_identifier` with the config entry id on Home Assistant 2026.8+, with a fallback to `async_get_device` on older cores (HACS minimum 2025.4.0). Avoids the deprecation that becomes a hard break in 2027.8.
 
+### 🔧 Changed
+
+- **Home Assistant 2026.9 compatibility**: Verified on Core **2026.9.1**. Setup and device-registry lookups run without the `async_get_device` deprecation warning. Minimum remains **2025.4.0** (HACS).
+
 ### 🔧 Improved
 
 - **Sungrow iHomeManager — feed-in ratio 8031 ([#94](https://github.com/TCzerny/ha-modbus-manager/issues/94))**: Ratio from **V1.0.1** as **S32**, **V1.0.2** **S16**. Undocumented kW **value** (8029–8030 U32) also from V1.0.1; `depends_on` enable **8028** when that entity exists (V1.0.2). Enable select stays V1.0.2. Template v1.0.15.
