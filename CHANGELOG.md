@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### 🐛 Fixed
+
+- **Sungrow SBR/SBH — WiNet-S offer ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77))**: The pack template is offered on **WINET** as well as LAN/RS485. Setup note tells WiNet-S users to use the **forwarded Modbus ID** (often **2**, not **200**). Cell diagnostics **10756+** stay hidden on WiNet-S. Template v1.2.2.
+
 ## [1.1.6] - 2026-09-07
 
 ### ✨ Added
@@ -16,10 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🐛 Fixed
 
 - **Device registry lookup ([#97](https://github.com/TCzerny/ha-modbus-manager/issues/97))**: Use `async_get_device_by_identifier` with the config entry id on Home Assistant 2026.8+, with a fallback to `async_get_device` on older cores (HACS minimum 2025.4.0). Avoids the deprecation that becomes a hard break in 2027.8.
-
-### 🔧 Changed
-
-- **Home Assistant 2026.9 compatibility**: Verified on Core **2026.9.1**. Setup and device-registry lookups run without the `async_get_device` deprecation warning. Minimum remains **2025.4.0** (HACS).
 
 ### 🔧 Improved
 

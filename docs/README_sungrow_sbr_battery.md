@@ -11,7 +11,7 @@ This document lists the Modbus registers for the Sungrow SBR/SBH battery templat
 - **Default prefix**: `SBR`
 - **Default slave ID**: `200`
 - **Firmware**: `22011.01.19`
-- **Template version**: 1.2.1 (`requires_connection_type`: LAN or RS485)
+- **Template version**: 1.2.2 (LAN, WiNet-S, and RS485; cell diagnostics 10756+ stay off WiNet-S)
 
 ### SBR vs SBH
 
@@ -81,7 +81,7 @@ This template uses the **SBR/SBH battery map** starting at **10710** on the batt
 | **Separate SBR/SBH device** (this template) | Pack serial, BCU firmware, **10740+** totals; SBR cell diagnostics when the path exposes them |
 | **Inverter slave 1 only** | No module serials / no 10756+ cell detail |
 
-When the inverter uses **WiNet-S**, the config flow currently limits **`battery_config`** to **`none`** or **`standard_battery`** on the inverter entry; adding this template still requires a path where **`sbr_battery`** is allowed (typically **LAN** on the inverter hub) or configuring the battery device with the correct **forwarded slave ID** if your setup supports it ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77)).
+When the inverter uses **WiNet-S**, add this template as a separate device and set **`battery_slave_id`** to the **forwarded Modbus ID** from the WiNet device list (often **2**, not **200**). The config flow defaults the slave ID to **2** on WiNet-S. Cell diagnostics (**10756+**) are not created on that path ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77)).
 
 ### Dynamic Configuration
 

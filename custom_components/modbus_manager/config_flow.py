@@ -137,7 +137,7 @@ def _resolve_battery_config_value(dynamic_config: dict, fallback: str = "none") 
     return str(battery_config or fallback)
 
 
-_WINET_BATTERY_CONFIGS = frozenset({"none", "standard_battery", "other"})
+_WINET_BATTERY_CONFIGS = frozenset({"none", "standard_battery", "sbr_battery", "other"})
 
 
 def _entry_post_write_settle_ms(entry_data: dict[str, Any]) -> int:
@@ -163,14 +163,28 @@ def _apply_post_write_settle_to_entry_data(
 def _clamp_battery_config_for_connection(
     battery_config: Any, connection_type: Any
 ) -> str:
-    """Restrict battery_config for WiNet-S (inverter registers only, no SBR)."""
+    """Keep battery_config on a known option for the hub connection type.
+
+    WiNet-S can use the separate SBR/SBH pack template (forwarded unit id).
+    ``other`` is still remapped to ``standard_battery`` (inverter slave 1).
+    """
     value = str(battery_config or "none").strip()
     if str(connection_type or "LAN").strip().upper() == "WINET":
-        if value in ("sbr_battery", "other"):
+        if value == "other":
             return "standard_battery"
         if value not in _WINET_BATTERY_CONFIGS:
             return "none"
     return value
+
+
+def _default_battery_slave_id(template_default: Any, connection_type: Any) -> int:
+    """Default pack unit id: 200 on LAN/RS485, forwarded id 2 on WiNet-S."""
+    if str(connection_type or "LAN").strip().upper() == "WINET":
+        return 2
+    try:
+        return int(template_default if template_default is not None else 200)
+    except (TypeError, ValueError):
+        return 200
 
 
 # Hub-level keys copied onto per-device records when missing (legacy setups).
@@ -770,7 +784,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         template_data = self._templates.get(self._selected_template, {})
         default_prefix = template_data.get("default_prefix", "SG")
         default_slave_id = template_data.get("default_slave_id", DEFAULT_SLAVE)
-        # Show config_flow_note when selected template has one (e.g. SBR: LAN required)
+        # Show config_flow_note when selected template has one (e.g. SBR slave-id hint)
         config_flow_note = template_data.get("config_flow_note", "") or ""
 
         # Show connection parameters form
@@ -912,7 +926,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "pv_inverter",
                 "pv_hybrid_inverter",
             ] and self._supports_battery_config(template_data):
-                # Check battery_config condition (e.g. connection_type != WINET - skip battery when WINET)
+                # Check battery_config condition (skip battery flow when not met)
                 battery_config_def = template_data.get("dynamic_config", {}).get(
                     "battery_config", {}
                 )
@@ -2182,7 +2196,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if template_data and isinstance(template_data, dict):
                 template_type = template_data.get("type", "")
                 if template_type == "battery":
-                    # Filter by requires_connection_type (string or list; e.g. SBR needs LAN/RS485)
+                    # Filter by requires_connection_type (string or list)
                     required_conn = template_data.get("requires_connection_type")
                     if required_conn and not connection_type_allowed(
                         connection_type_norm, required_conn
@@ -2290,10 +2304,15 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
         default_slave_id = 200  # Standard battery slave ID
         default_prefix = "SBR"  # Default battery prefix
+        config_flow_note = ""
 
         if battery_template_data and isinstance(battery_template_data, dict):
-            default_slave_id = battery_template_data.get("default_slave_id", 200)
+            default_slave_id = _default_battery_slave_id(
+                battery_template_data.get("default_slave_id", 200),
+                (self._inverter_config or {}).get("connection_type", "LAN"),
+            )
             default_prefix = battery_template_data.get("default_prefix", "SBR")
+            config_flow_note = battery_template_data.get("config_flow_note", "") or ""
 
         _LOGGER.debug(
             "Battery template defaults - prefix: %s, slave_id: %d",
@@ -2339,6 +2358,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             description_placeholders={
                 "inverter_prefix": inverter_prefix,
                 "battery_template": self._selected_battery_template,
+                "config_flow_note": config_flow_note,
             },
         )
 
@@ -4660,7 +4680,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             template_data = await get_template_by_name(template_name)
             if template_data and isinstance(template_data, dict):
                 if template_data.get("type", "") == "battery":
-                    # Filter by requires_connection_type (string or list; e.g. SBR needs LAN/RS485)
+                    # Filter by requires_connection_type (string or list)
                     required_conn = template_data.get("requires_connection_type")
                     if required_conn and not connection_type_allowed(
                         connection_type_norm, required_conn
@@ -4765,18 +4785,27 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             _LOGGER.error("Battery template '%s' not found", battery_template_name)
             return self.async_abort(reason="battery_template_not_found")
 
-        # Get defaults from template FIRST (highest priority), then from config_entry
+        # Prefer a stored slave id; otherwise LAN/RS485 → 200, WiNet-S → 2
+        config_flow_note = ""
         if battery_template_data and isinstance(battery_template_data, dict):
-            # Template defaults have highest priority
             template_default_slave_id = battery_template_data.get("default_slave_id")
             template_default_prefix = battery_template_data.get("default_prefix")
+            config_flow_note = battery_template_data.get("config_flow_note", "") or ""
 
-            # Use template defaults if available, otherwise use config_entry values, otherwise use fallback
-            default_slave_id = (
-                template_default_slave_id
-                if template_default_slave_id is not None
-                else self.config_entry.data.get("battery_slave_id", 200)
-            )
+            stored_slave_id = self.config_entry.data.get("battery_slave_id")
+            if stored_slave_id is not None:
+                try:
+                    default_slave_id = int(stored_slave_id)
+                except (TypeError, ValueError):
+                    default_slave_id = _default_battery_slave_id(
+                        template_default_slave_id,
+                        self.config_entry.data.get("connection_type", "LAN"),
+                    )
+            else:
+                default_slave_id = _default_battery_slave_id(
+                    template_default_slave_id,
+                    self.config_entry.data.get("connection_type", "LAN"),
+                )
             default_prefix = (
                 template_default_prefix
                 if template_default_prefix
@@ -4823,13 +4852,14 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             data_schema=vol.Schema(schema_fields),
             description_placeholders={
                 "battery_template": battery_template_name or "Unknown",
+                "config_flow_note": config_flow_note,
             },
         )
 
     async def async_step_apply_config_changes(self, user_input: dict) -> FlowResult:
         """Apply configuration changes and reload integration if needed."""
         try:
-            # Force battery_config to none when battery_config condition not met (e.g. WINET)
+            # Force battery_config to none when battery_config condition not met
             template_name = self.config_entry.data.get("template", "Unknown")
             template_data = await get_template_by_name(template_name)
             if template_data:

@@ -172,7 +172,8 @@ dynamic_config:
     description: "Battery configuration"
     options: ["none", "standard_battery", "sbr_battery"]
     default: "none"
-    # standard_battery (inverter slave 1) works on LAN, RS485, and WiNet-S; sbr_battery / slave 200 is LAN or RS485 (not WiNet-S)
+    # standard_battery (inverter slave 1) works on LAN, RS485, and WiNet-S.
+    # sbr_battery is the separate pack template: unit 200 on LAN/RS485, forwarded id (often 2) on WiNet-S.
 
 # Base sensors (will be filtered based on configuration)
 sensors:

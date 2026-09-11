@@ -9,14 +9,14 @@ display_name: "Sungrow SBR / SBH Battery"
 description: "Template for Sungrow SBR/SBH battery systems (Modbus via inverter). Contains all battery sensors, controls, and diagnostics."
 manufacturer: "Sungrow"
 model: "SBR Battery"
-version: 1.2.1
+version: 1.2.2
 default_prefix: "SBR"
 default_slave_id: 200
 type: "battery"
 firmware_version: "22011.01.19"
-# SBR Battery requires direct Modbus access to slave 200; WiNet-S connection is not supported
-requires_connection_type: ["LAN", "RS485"]
-config_flow_note: "Requires LAN or RS485 connection. WiNet-S is not supported."
+# Reachable on LAN/RS485 (unit 200) and WiNet-S (forwarded unit id, often 2).
+# Cell diagnostics 10756+ stay gated off WINET in the register list below.
+config_flow_note: "LAN/RS485: slave ID 200. WiNet-S: use the forwarded Modbus ID from the WiNet device list (often 2, not 200). Cell diagnostics (10756+) are not available through WiNet-S."
 
 # Dynamic configuration support
 dynamic_config:
