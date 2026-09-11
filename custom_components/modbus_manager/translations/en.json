@@ -217,7 +217,7 @@
             "already_configured": "Device is already configured",
             "reconfigure_successful": "Device reconfigured successfully.",
             "invalid_config": "Invalid configuration. {error}",
-            "no_available_devices_for_subentry": "All devices already have a subentry.",
+            "no_available_devices_for_subentry": "All devices are already configured.",
             "template_not_found": "Template {template_name} not found.",
             "no_registers": "Template {template_name} has no entities defined.",
             "update_error": "Error updating template: {error}",
@@ -355,8 +355,8 @@
     "config_subentries": {
         "step": {
             "user": {
-                "title": "Add Device Subentry",
-                "description": "Add a new device to this hub.",
+                "title": "Add device",
+                "description": "Choose the hub connection this device should use, then pick a template, prefix, and slave ID.",
                 "data": {
                     "template": "Device Template",
                     "prefix": "Device Prefix",
@@ -406,18 +406,26 @@
         },
         "abort": {
             "reconfigure_successful": "Device reconfigured successfully.",
-            "already_configured": "No additional device subentry can be created.",
+            "already_configured": "This prefix is already used by another device.",
             "invalid_config": "Invalid configuration. {error}",
-            "no_available_devices_for_subentry": "All devices already have a subentry.",
+            "no_available_devices_for_subentry": "All devices are already configured.",
             "config_error": "Configuration error.",
             "nested_device_attached": "Device added under the inverter. It does not get its own hub row.",
-            "device_attached": "Device added to the hub."
+            "device_attached": "Device added to the hub.",
+            "combined_device": "Combined devices have no Modbus connection. Add the device on the source hub instead.",
+            "no_templates": "No device templates found."
         },
         "device": {
+            "title": "Add device",
+            "entry_type": "Device",
+            "initiate_flow": {
+                "user": "Add device",
+                "reconfigure": "Reconfigure device"
+            },
             "step": {
                 "user": {
-                    "title": "Add Device Subentry",
-                    "description": "Add a new device to this hub.",
+                    "title": "Add device",
+                    "description": "This device will use this hub's connection (host/port or serial). Choose a template, then prefix and slave ID.",
                     "data": {
                         "template": "Device Template",
                         "prefix": "Device Prefix",
@@ -467,12 +475,14 @@
             },
             "abort": {
                 "reconfigure_successful": "Device reconfigured successfully.",
-                "already_configured": "No additional device subentry can be created.",
+                "already_configured": "This prefix is already used by another device.",
                 "invalid_config": "Invalid configuration. {error}",
-                "no_available_devices_for_subentry": "All devices already have a subentry.",
+                "no_available_devices_for_subentry": "All devices are already configured.",
                 "config_error": "Configuration error.",
                 "nested_device_attached": "Device added under the inverter. It does not get its own hub row.",
-                "device_attached": "Device added to the hub."
+                "device_attached": "Device added to the hub.",
+                "combined_device": "Combined devices have no Modbus connection. Add the device on the source hub instead.",
+                "no_templates": "No device templates found."
             }
         }
     },

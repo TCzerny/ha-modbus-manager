@@ -237,7 +237,7 @@
             "already_configured": "Gerät ist bereits konfiguriert",
             "reconfigure_successful": "Gerät erfolgreich neu konfiguriert.",
             "invalid_config": "Ungültige Konfiguration. {error}",
-            "no_available_devices_for_subentry": "Alle Geräte haben bereits ein Subentry.",
+            "no_available_devices_for_subentry": "Alle Geräte sind bereits konfiguriert.",
             "template_not_found": "Template {template_name} nicht gefunden.",
             "no_registers": "Template {template_name} hat keine Entitäten definiert.",
             "update_error": "Fehler beim Aktualisieren des Templates: {error}",
@@ -375,8 +375,8 @@
     "config_subentries": {
         "step": {
             "user": {
-                "title": "Geräte-Subentry hinzufügen",
-                "description": "Füge diesem Hub ein neues Gerät hinzu.",
+                "title": "Gerät hinzufügen",
+                "description": "Wählen Sie die Hub-Verbindung, an die das Gerät soll, danach Template, Präfix und Slave-ID.",
                 "data": {
                     "template": "Geräte-Template",
                     "prefix": "Geräte-Prefix",
@@ -426,18 +426,26 @@
         },
         "abort": {
             "reconfigure_successful": "Gerät erfolgreich neu konfiguriert.",
-            "already_configured": "Es kann kein zusätzliches Geräte-Subentry erstellt werden.",
+            "already_configured": "Dieses Prefix wird bereits von einem anderen Gerät verwendet.",
             "invalid_config": "Ungültige Konfiguration. {error}",
-            "no_available_devices_for_subentry": "Alle Geräte haben bereits ein Subentry.",
+            "no_available_devices_for_subentry": "Alle Geräte sind bereits konfiguriert.",
             "config_error": "Konfigurationsfehler.",
             "nested_device_attached": "Gerät unter dem Wechselrichter hinzugefügt. Es gibt keine eigene Hub-Zeile.",
-            "device_attached": "Gerät zum Hub hinzugefügt."
+            "device_attached": "Gerät zum Hub hinzugefügt.",
+            "combined_device": "Combined Devices haben keine Modbus-Verbindung. Gerät am Quell-Hub hinzufügen.",
+            "no_templates": "Keine Geräte-Templates gefunden."
         },
         "device": {
+            "title": "Gerät hinzufügen",
+            "entry_type": "Gerät",
+            "initiate_flow": {
+                "user": "Gerät hinzufügen",
+                "reconfigure": "Gerät neu konfigurieren"
+            },
             "step": {
                 "user": {
-                    "title": "Geräte-Subentry hinzufügen",
-                    "description": "Füge diesem Hub ein neues Gerät hinzu.",
+                    "title": "Gerät hinzufügen",
+                    "description": "Das Gerät hängt an dieser Hub-Verbindung (Host/Port oder seriell). Template wählen, danach Präfix und Slave-ID.",
                     "data": {
                         "template": "Geräte-Template",
                         "prefix": "Geräte-Prefix",
@@ -487,12 +495,14 @@
             },
             "abort": {
                 "reconfigure_successful": "Gerät erfolgreich neu konfiguriert.",
-                "already_configured": "Es kann kein zusätzliches Geräte-Subentry erstellt werden.",
+                "already_configured": "Dieses Prefix wird bereits von einem anderen Gerät verwendet.",
                 "invalid_config": "Ungültige Konfiguration. {error}",
-                "no_available_devices_for_subentry": "Alle Geräte haben bereits ein Subentry.",
+                "no_available_devices_for_subentry": "Alle Geräte sind bereits konfiguriert.",
                 "config_error": "Konfigurationsfehler.",
                 "nested_device_attached": "Gerät unter dem Wechselrichter hinzugefügt. Es gibt keine eigene Hub-Zeile.",
-                "device_attached": "Gerät zum Hub hinzugefügt."
+                "device_attached": "Gerät zum Hub hinzugefügt.",
+                "combined_device": "Combined Devices haben keine Modbus-Verbindung. Gerät am Quell-Hub hinzufügen.",
+                "no_templates": "Keine Geräte-Templates gefunden."
             }
         }
     },
