@@ -16,7 +16,7 @@ The **Sungrow AC011E Wallbox Template** provides integration for Sungrow EV wall
 
 Topologies **with and without iHomeManager**, ports, slave IDs, and what Modbus Manager can poll today: **[Sungrow AC wallbox connection topologies](README_sungrow_wallbox_connection.md)**.
 
-**Without iHM (SH-RT):** RS485 from the charger to the inverter. Point this template at **WiNet, the inverter LAN port, or an inverter RS485 gateway** (port **502**), wallbox **slave ID 3** (verify). Not the wallbox Ethernet IP.
+**Without iHM (SH-RT):** RS485 from the charger to the inverter. Point this template at **WiNet, the inverter LAN port, or an inverter RS485 gateway** (port **502**), wallbox **slave ID 3** (verify). Not the wallbox Ethernet IP. New hub Identify probes type-code **21223** on slaves **3, 2, 4, 5** of that same inverter hub (never slave 1, never the SBR slave).
 
 **With iHM:** do **not** use this template. Use the [iHomeManager](README_iHomeManager.md) hub (`charger_enabled`). iHM talks to the charger on TLS internally; Home Assistant polls iHM on plain TCP. The `21xxx` map on the charger IP would need Modbus/TLS, which MM does not support, and would fight the EMS.
 

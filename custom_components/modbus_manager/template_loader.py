@@ -684,9 +684,13 @@ async def load_single_template(
             "manufacturer": data.get("manufacturer", ""),
             "model": data.get("model", ""),
             "default_prefix": data.get("default_prefix", "device"),
+            "default_slave_id": data.get("default_slave_id", 1),
             "firmware_version": data.get("firmware_version", "1.0.0"),
             "available_firmware_versions": data.get("available_firmware_versions", []),
         }
+        detect_slave_ids = data.get("detect_slave_ids")
+        if isinstance(detect_slave_ids, list):
+            result["detect_slave_ids"] = detect_slave_ids
 
         # Include dynamic_config if present
         if "dynamic_config" in data:

@@ -55,6 +55,7 @@ from .device_utils import (
     updated_hub_entry_title,
 )
 from .dynamic_processing import process_dynamic_config
+from .hub_identify import IdentifyHit, async_identify_hub
 from .logger import ModbusManagerLogger
 from .template_loader import (
     _evaluate_condition,
@@ -496,6 +497,29 @@ def _is_prefix_unique_across_hubs(
     return True
 
 
+def _unique_device_prefix(hass: HomeAssistant, base: str) -> str:
+    """Return ``base`` or ``base2``… so the prefix is unique across hubs."""
+    candidate = str(base or "device").strip() or "device"
+    if _is_prefix_unique_across_hubs(hass, candidate):
+        return candidate
+    for index in range(2, 30):
+        numbered = f"{candidate}{index}"
+        if _is_prefix_unique_across_hubs(hass, numbered):
+            return numbered
+    return f"{candidate}_{os.urandom(2).hex()}"
+
+
+def _template_default_connection_type(template_data: dict[str, Any]) -> str | None:
+    """Default connection_type from template dynamic_config, if any."""
+    dynamic = template_data.get("dynamic_config") or {}
+    if not isinstance(dynamic, dict):
+        return None
+    ct_cfg = dynamic.get("connection_type")
+    if isinstance(ct_cfg, dict) and ct_cfg.get("default") is not None:
+        return str(ct_cfg.get("default"))
+    return None
+
+
 class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Modbus Manager."""
 
@@ -506,6 +530,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         super().__init__()
         self._templates = {}
         self._selected_template = None
+        self._connection_params: dict[str, Any] = {}
+        self._probe_result: IdentifyHit | None = None
 
     def _combined_source_candidates(self) -> dict[str, str]:
         """Return selectable source entries for combined device flow."""
@@ -736,98 +762,300 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     #     with open(file_path, "r", encoding="utf-8") as f:
     #         return f.read()
 
-    # Step 1: User selects template
-    # show all templates and let the user select one
-    # if the template has dynamic_config, show the connection step
-    # if the template has no dynamic_config, show the device config step
-    async def async_step_user(self, user_input: dict = None) -> FlowResult:
-        """Handle the initial step."""
-        try:
-            # Required for first-ever integration setup so user templates from
-            # config/modbus_manager/templates are visible immediately.
-            set_hass_instance(self.hass)
-            template_names = await get_template_names()
-            self._templates = {}
-            for name in template_names:
-                template_data = await get_template_by_name(name)
-                if template_data:
-                    self._templates[name] = template_data
-                    _LOGGER.debug(
-                        "Loaded template %s: has_dynamic_config=%s",
-                        name,
-                        "dynamic_config" in template_data,
-                    )
-
-            if not self._templates:
-                return self.async_abort(
-                    reason="no_templates",
-                    description_placeholders={
-                        "error": "No templates found. Please ensure templates are present in the device_templates directory."
-                    },
-                )
-
-            if user_input is not None:
-                # Select template
-                if "template" in user_input:
-                    self._selected_template = user_input["template"]
-                    if self._selected_template == COMBINED_TEMPLATE_SENTINEL:
-                        return await self.async_step_combined_device()
-                    _LOGGER.debug("=== TEMPLATE SELECTION DEBUG ===")
-                    _LOGGER.debug("Selected template: %s", self._selected_template)
-
-                    # Debug template data
-                    template_data = self._templates.get(self._selected_template, {})
-                    _LOGGER.debug("Template data keys: %s", list(template_data.keys()))
-                    _LOGGER.debug(
-                        "Template type: '%s'", template_data.get("type", "NOT_FOUND")
-                    )
-
-                    # Check template type
-                    template_data = self._templates.get(self._selected_template, {})
-                    _LOGGER.debug(
-                        "Template data for %s: keys=%s, has_dynamic_config=%s",
-                        self._selected_template,
-                        list(template_data.keys()),
-                        "dynamic_config" in template_data,
-                    )
-
-                    # Check for dynamic config
-                    if template_data.get("dynamic_config"):
-                        return await self.async_step_connection()
-                    else:
-                        return await self.async_step_device_config()
-
-                # Device configuration
-                return await self.async_step_final_config(user_input)
-
-            # Show template selection (stored value = template `name`; label = display_name)
-            template_names = sorted(list(self._templates.keys()))
-            template_choices = {
-                name: (
-                    (self._templates[name].get("display_name") or "").strip() or name
-                )
-                for name in template_names
-            }
-            template_choices[COMBINED_TEMPLATE_SENTINEL] = "Combined Device (cross-hub)"
-            return self.async_show_form(
-                step_id="user",
-                data_schema=vol.Schema(
-                    {
-                        vol.Required("template"): vol.In(template_choices),
-                    }
-                ),
+    async def _async_load_templates(self) -> FlowResult | None:
+        """Load YAML templates. Return an abort result when none are available."""
+        set_hass_instance(self.hass)
+        template_names = await get_template_names()
+        self._templates = {}
+        for name in template_names:
+            template_data = await get_template_by_name(name)
+            if template_data:
+                self._templates[name] = template_data
+        if not self._templates:
+            return self.async_abort(
+                reason="no_templates",
                 description_placeholders={
-                    "config_flow_note": "",
-                    "template_count": str(len(template_names)),
-                    "template_list": ", ".join(template_choices.values()),
+                    "error": "No templates found. Please ensure templates are present in the device_templates directory."
                 },
             )
+        return None
 
+    def _template_choices(self, *, include_combined: bool = False) -> dict[str, str]:
+        """Map template YAML name → display label."""
+        names = sorted(self._templates.keys())
+        choices = {
+            name: ((self._templates[name].get("display_name") or "").strip() or name)
+            for name in names
+        }
+        if include_combined:
+            choices[COMBINED_TEMPLATE_SENTINEL] = "Combined Device (cross-hub)"
+        return choices
+
+    async def _continue_after_template_choice(self, template_name: str) -> FlowResult:
+        """Route a chosen template into connection or simple device config."""
+        self._selected_template = template_name
+        if template_name == COMBINED_TEMPLATE_SENTINEL:
+            return await self.async_step_combined_device()
+        template_data = self._templates.get(template_name, {})
+        if template_data.get("dynamic_config"):
+            return await self.async_step_connection()
+        return await self.async_step_device_config()
+
+    # Step 1: Detect on a known host, pick a template, or Combined Device.
+    async def async_step_user(self, user_input: dict = None) -> FlowResult:
+        """Choose detect, manual template, or Combined Device."""
+        try:
+            abort = await self._async_load_templates()
+            if abort is not None:
+                return abort
+            if user_input is not None and "template" in user_input:
+                return await self._continue_after_template_choice(
+                    user_input["template"]
+                )
+            return self.async_show_menu(
+                step_id="user",
+                menu_options=["detect", "template", "combined_device"],
+            )
         except Exception as e:
             _LOGGER.error("Error in Config Flow: %s", str(e))
             return self.async_abort(
                 reason="unknown_error", description_placeholders={"error": str(e)}
             )
+
+    async def async_step_template(self, user_input: dict | None = None) -> FlowResult:
+        """Manual template picker (probe miss, or user skipped detect)."""
+        abort = await self._async_load_templates()
+        if abort is not None:
+            return abort
+        if user_input is not None and "template" in user_input:
+            return await self._continue_after_template_choice(user_input["template"])
+        template_choices = self._template_choices(include_combined=True)
+        return self.async_show_form(
+            step_id="template",
+            data_schema=vol.Schema(
+                {vol.Required("template"): vol.In(template_choices)}
+            ),
+            description_placeholders={
+                "config_flow_note": "",
+                "template_count": str(len(self._templates)),
+                "template_list": ", ".join(template_choices.values()),
+            },
+        )
+
+    async def async_step_detect(self, user_input: dict | None = None) -> FlowResult:
+        """Host/port first, then two-step identify (type-code, then bus extras)."""
+        abort = await self._async_load_templates()
+        if abort is not None:
+            return abort
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            host = str(user_input.get("host") or "").strip()
+            if not host:
+                errors["host"] = "invalid_host"
+            else:
+                try:
+                    port = int(user_input.get("port") or DEFAULT_PORT)
+                except (TypeError, ValueError):
+                    errors["port"] = "invalid_port"
+                    port = DEFAULT_PORT
+                if not errors:
+                    stored = dict(getattr(self, "_connection_params", {}) or {})
+                    stored.update(
+                        {
+                            "host": host,
+                            "port": port,
+                            "modbus_type": user_input.get("modbus_type", "tcp"),
+                            "timeout": user_input.get("timeout", DEFAULT_TIMEOUT),
+                            "delay": user_input.get("delay", DEFAULT_DELAY),
+                            "message_wait_milliseconds": user_input.get(
+                                "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
+                            ),
+                        }
+                    )
+                    self._connection_params = stored
+                    try:
+                        hit = await async_identify_hub(
+                            self.hass, stored, self._templates
+                        )
+                    except Exception as err:
+                        _LOGGER.debug("Hub identify failed: %s", err)
+                        hit = None
+                    self._probe_result = hit
+                    if hit is None:
+                        return await self.async_step_template()
+                    return await self.async_step_identify_confirm()
+
+        stored = getattr(self, "_connection_params", {}) or {}
+        return self.async_show_form(
+            step_id="detect",
+            data_schema=vol.Schema(
+                {
+                    vol.Required("host", default=str(stored.get("host") or "")): str,
+                    vol.Optional(
+                        "port", default=int(stored.get("port") or DEFAULT_PORT)
+                    ): int,
+                    vol.Optional(
+                        "modbus_type", default=stored.get("modbus_type", "tcp")
+                    ): vol.In({"tcp": "TCP", "rtuovertcp": "RTU over TCP"}),
+                    vol.Optional(
+                        "timeout",
+                        default=int(stored.get("timeout") or DEFAULT_TIMEOUT),
+                    ): int,
+                    vol.Optional(
+                        "delay", default=int(stored.get("delay") or DEFAULT_DELAY)
+                    ): int,
+                    vol.Optional(
+                        "message_wait_milliseconds",
+                        default=int(
+                            stored.get(
+                                "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
+                            )
+                        ),
+                    ): int,
+                }
+            ),
+            errors=errors,
+        )
+
+    async def async_step_identify_confirm(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Confirm probed template/model/slave; never applied until Submit."""
+        hit = self._probe_result
+        if hit is None:
+            return await self.async_step_template()
+        abort = await self._async_load_templates()
+        if abort is not None:
+            return abort
+
+        template_choices = self._template_choices()
+        template_data = self._templates.get(hit.template_name, {})
+        default_prefix = str(template_data.get("default_prefix") or "device")
+        valid_models = self._get_valid_models(template_data) or {}
+        model_options = (
+            self._build_model_option_labels(valid_models) if valid_models else {}
+        )
+
+        if user_input is not None:
+            if user_input.get("choose_template_instead"):
+                self._probe_result = None
+                return await self.async_step_template()
+            chosen = str(user_input.get("template") or hit.template_name)
+            self._selected_template = chosen
+            selected_model = user_input.get("selected_model") or hit.selected_model
+            if selected_model:
+                self._selected_model = selected_model
+                self.context["selected_model"] = selected_model
+            chosen_data = self._templates.get(chosen, {})
+            connection_type = (
+                user_input.get("connection_type")
+                or hit.connection_type
+                or _template_default_connection_type(chosen_data)
+            )
+            if connection_type:
+                self.context["connection_type"] = connection_type
+            stored = dict(self._connection_params)
+            stored["prefix"] = str(user_input.get("prefix") or default_prefix).strip()
+            stored["slave_id"] = int(user_input.get("slave_id") or hit.slave_id)
+            if connection_type:
+                stored["connection_type"] = connection_type
+            if selected_model:
+                stored["selected_model"] = selected_model
+            if hit.battery_config:
+                stored["battery_config"] = hit.battery_config
+            if user_input.get("battery_slave_id") is not None:
+                stored["battery_slave_id"] = int(user_input["battery_slave_id"])
+            elif hit.battery_slave_id is not None:
+                stored["battery_slave_id"] = hit.battery_slave_id
+            if hit.battery_model:
+                stored["battery_model"] = hit.battery_model
+            if hit.wallbox_connected:
+                stored["wallbox_connected"] = hit.wallbox_connected
+            elif (chosen_data.get("dynamic_config") or {}).get("wallbox_connected"):
+                stored["wallbox_connected"] = "no"
+            if user_input.get("wallbox_slave_id") is not None:
+                stored["wallbox_slave_id"] = int(user_input["wallbox_slave_id"])
+            elif hit.wallbox_slave_id is not None:
+                stored["wallbox_slave_id"] = hit.wallbox_slave_id
+            if hit.wallbox_model:
+                stored["wallbox_model"] = hit.wallbox_model
+            if hit.charger_enabled is not None:
+                stored["charger_enabled"] = hit.charger_enabled
+            elif (chosen_data.get("dynamic_config") or {}).get("charger_enabled"):
+                stored["charger_enabled"] = False
+            self._connection_params = stored
+            if chosen_data.get("dynamic_config"):
+                return await self._route_after_connection_setup()
+            return await self.async_step_device_config()
+
+        schema_fields: dict[Any, Any] = {
+            vol.Required("template", default=hit.template_name): vol.In(
+                template_choices
+            ),
+            vol.Required("prefix", default=default_prefix): str,
+            vol.Required("slave_id", default=int(hit.slave_id)): int,
+            vol.Optional("choose_template_instead", default=False): bool,
+        }
+        if model_options:
+            default_model = (
+                hit.selected_model
+                if hit.selected_model in model_options
+                else next(iter(model_options))
+            )
+            schema_fields[
+                vol.Optional("selected_model", default=default_model)
+            ] = vol.In(model_options)
+        elif hit.selected_model:
+            schema_fields[
+                vol.Optional("selected_model", default=hit.selected_model)
+            ] = str
+        if hit.battery_slave_id is not None:
+            schema_fields[
+                vol.Optional("battery_slave_id", default=int(hit.battery_slave_id))
+            ] = int
+        if hit.wallbox_slave_id is not None:
+            schema_fields[
+                vol.Optional("wallbox_slave_id", default=int(hit.wallbox_slave_id))
+            ] = int
+
+        detail_lines = [f"Slave ID: {hit.slave_id}"]
+        if hit.selected_model:
+            detail_lines.insert(0, f"Model: {hit.selected_model}")
+        if hit.serial:
+            detail_lines.append(f"Serial: {hit.serial}")
+        if hit.connection_type:
+            detail_lines.append(f"Connection path: {hit.connection_type}")
+        battery = ""
+        if hit.battery_config or hit.battery_slave_id is not None:
+            battery_bits = [hit.battery_model or hit.battery_config or "battery"]
+            if hit.battery_slave_id is not None:
+                battery_bits.append(f"slave {hit.battery_slave_id}")
+            battery = " ".join(str(bit) for bit in battery_bits)
+            detail_lines.append(f"Battery: {battery}")
+        wallbox = ""
+        if hit.wallbox_slave_id is not None:
+            wallbox = f"{hit.wallbox_model or 'wallbox'} (slave {hit.wallbox_slave_id})"
+            detail_lines.append(f"Wallbox: {wallbox}")
+        elif hit.charger_enabled:
+            wallbox = "charger on iHomeManager"
+            detail_lines.append("Charger: yes")
+        return self.async_show_form(
+            step_id="identify_confirm",
+            data_schema=vol.Schema(schema_fields),
+            description_placeholders={
+                "found_name": hit.display_name,
+                "found_details": "\n".join(detail_lines),
+                "found_host": str(self._connection_params.get("host") or ""),
+                "found_port": str(self._connection_params.get("port") or ""),
+                # Keep legacy keys: HA may cache the previous translation string.
+                "found_model": hit.selected_model or "",
+                "found_slave": str(hit.slave_id),
+                "found_serial": hit.serial or "",
+                "found_connection": hit.connection_type or "",
+                "found_battery": battery,
+                "found_wallbox": wallbox,
+            },
+        )
 
     async def async_step_combined_device(
         self, user_input: dict | None = None
@@ -990,8 +1218,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 user_input["message_wait_milliseconds"] = user_input["request_delay"]
             user_input.pop("request_delay", None)
 
-            # Store connection parameters
-            self._connection_params = user_input
+            stored = dict(getattr(self, "_connection_params", {}) or {})
+            stored.update(user_input)
+            self._connection_params = stored
 
             # Proceed to model selection or dynamic config
             _LOGGER.info(
@@ -1001,8 +1230,24 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         # Get template defaults for prefilling
         template_data = self._templates.get(self._selected_template, {})
-        default_prefix = template_data.get("default_prefix", "SG")
-        default_slave_id = template_data.get("default_slave_id", DEFAULT_SLAVE)
+        stored = getattr(self, "_connection_params", {}) or {}
+        default_prefix = stored.get("prefix") or template_data.get(
+            "default_prefix", "SG"
+        )
+        default_slave_id = stored.get("slave_id")
+        if default_slave_id is None:
+            default_slave_id = template_data.get("default_slave_id", DEFAULT_SLAVE)
+        default_host = str(stored.get("host") or "")
+        default_port = int(stored.get("port") or DEFAULT_PORT)
+        default_modbus = stored.get("modbus_type") or "tcp"
+        default_timeout = int(stored.get("timeout") or DEFAULT_TIMEOUT)
+        default_delay = int(stored.get("delay") or DEFAULT_DELAY)
+        default_wait = int(
+            stored.get("message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS)
+        )
+        default_settle = int(
+            stored.get("post_write_settle_milliseconds", DEFAULT_POST_WRITE_SETTLE_MS)
+        )
         # Show config_flow_note when selected template has one (e.g. SBR slave-id hint)
         config_flow_note = template_data.get("config_flow_note", "") or ""
 
@@ -1012,23 +1257,23 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required("prefix", default=default_prefix): str,
-                    vol.Required("host"): str,
-                    vol.Optional("port", default=DEFAULT_PORT): int,
-                    vol.Optional("slave_id", default=default_slave_id): int,
-                    vol.Optional("modbus_type", default="tcp"): vol.In(
+                    vol.Required("host", default=default_host): str,
+                    vol.Optional("port", default=default_port): int,
+                    vol.Optional("slave_id", default=int(default_slave_id)): int,
+                    vol.Optional("modbus_type", default=default_modbus): vol.In(
                         {
                             "tcp": "TCP",
                             "rtuovertcp": "RTU over TCP",
                         }
                     ),
-                    vol.Optional("timeout", default=DEFAULT_TIMEOUT): int,
-                    vol.Optional("delay", default=DEFAULT_DELAY): int,
+                    vol.Optional("timeout", default=default_timeout): int,
+                    vol.Optional("delay", default=default_delay): int,
                     vol.Optional(
-                        "message_wait_milliseconds", default=DEFAULT_MESSAGE_WAIT_MS
+                        "message_wait_milliseconds", default=default_wait
                     ): int,
                     vol.Optional(
                         "post_write_settle_milliseconds",
-                        default=DEFAULT_POST_WRITE_SETTLE_MS,
+                        default=default_settle,
                     ): int,
                     # vol.Optional(
                     #     CONF_TEST_ALLOW_SAME_ENDPOINT_NEW_HUB, default=False
@@ -1115,6 +1360,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 dynamic_partial["selected_model"] = selected_model
             # Combine connection params with dynamic config
             combined_input = {
+                **self._setup_values_already_known(),
                 **self._connection_params,
                 **dynamic_partial,
                 **user_input,
@@ -1172,6 +1418,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 self.context["connection_type"] = combined_input.get(
                     "connection_type", "LAN"
                 )
+                if self._probe_found_battery():
+                    _LOGGER.debug(
+                        "Identify already found the battery — skip battery UI"
+                    )
+                    return await self._async_apply_probed_battery()
                 _LOGGER.debug("PV inverter detected - proceeding to battery detection")
                 return await self.async_step_battery_detection()
             else:
@@ -1184,11 +1435,15 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         # Generate schema for dynamic config using the helper function
         include_model_selection = not self._template_has_model_selection(template_data)
+        if self._setup_values_already_known().get("selected_model"):
+            include_model_selection = False
         schema_fields = self._get_dynamic_config_schema(
             template_data,
             user_input,
             include_model_selection=include_model_selection,
         )
+        if not schema_fields:
+            return await self.async_step_dynamic_config({})
 
         description_placeholders = {
             "template_name": self._selected_template,
@@ -1368,10 +1623,151 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             vol.Required("selected_model", default=current_model): vol.In(model_options)
         }
 
+    def _setup_values_already_known(self) -> dict[str, Any]:
+        """Setup values already decided by identify/confirm (not used in options)."""
+        known: dict[str, Any] = {}
+        params = getattr(self, "_connection_params", {}) or {}
+        probe = getattr(self, "_probe_result", None)
+        selected_model = getattr(self, "_selected_model", None) or self.context.get(
+            "selected_model"
+        )
+        if selected_model:
+            known["selected_model"] = selected_model
+        connection_type = params.get("connection_type")
+        if not connection_type and probe is not None:
+            connection_type = probe.connection_type
+        if connection_type:
+            known["connection_type"] = connection_type
+        if probe is not None and probe.battery_config:
+            known["battery_config"] = probe.battery_config
+        wallbox = params.get("wallbox_connected")
+        if not wallbox and probe is not None:
+            wallbox = probe.wallbox_connected or "no"
+        if wallbox:
+            known["wallbox_connected"] = wallbox
+        charger = params.get("charger_enabled")
+        if charger is None and probe is not None:
+            charger = probe.charger_enabled
+        if charger is not None:
+            known["charger_enabled"] = charger
+        return known
+
+    def _probe_found_battery(self) -> bool:
+        """True when identify already found a battery slave on this hub."""
+        probe = getattr(self, "_probe_result", None)
+        return (
+            probe is not None
+            and probe.battery_slave_id is not None
+            and bool(probe.battery_config)
+        )
+
+    async def _async_apply_probed_battery(self) -> FlowResult:
+        """Attach the identified SBR/SBH pack and skip battery setup forms."""
+        hit = self._probe_result
+        if hit is None or hit.battery_slave_id is None:
+            return await self.async_step_battery_detection()
+
+        template_name = hit.battery_template or "Sungrow SBR Battery"
+        battery_template_data = await get_template_by_name(template_name)
+        if not battery_template_data:
+            _LOGGER.debug(
+                "Probed battery template %s missing; fall back to battery UI",
+                template_name,
+            )
+            return await self.async_step_battery_detection()
+
+        params = self._connection_params or {}
+        slave_id = params.get("battery_slave_id") or hit.battery_slave_id
+        model = params.get("battery_model") or hit.battery_model
+        modules = hit.battery_modules
+        if model and not modules:
+            valid_models = (battery_template_data.get("dynamic_config") or {}).get(
+                "valid_models"
+            ) or {}
+            if isinstance(valid_models, dict) and model in valid_models:
+                modules = valid_models[model].get("modules")
+        if model is None:
+            # Capacity/module probe missed — keep the model picker only.
+            self._selected_battery_template = template_name
+            self._keep_inverter_battery_entities = True
+            if self._inverter_config is not None:
+                self._inverter_config["battery_config"] = hit.battery_config
+                self._inverter_config["battery_template"] = template_name
+            return await self.async_step_battery_config()
+
+        prefix = _unique_device_prefix(
+            self.hass,
+            hit.battery_prefix or battery_template_data.get("default_prefix") or "SBR",
+        )
+        self._selected_battery_template = template_name
+        self._keep_inverter_battery_entities = True
+        self._battery_config = {
+            "battery_prefix": prefix,
+            "battery_slave_id": int(slave_id),
+            "battery_model": model,
+            "battery_modules": int(modules or 5),
+        }
+        if self._inverter_config is not None:
+            self._inverter_config["battery_config"] = hit.battery_config
+            self._inverter_config["battery_template"] = template_name
+            self._inverter_config["battery_slave_id"] = int(slave_id)
+        return await self.async_step_finalize_inverter_with_battery()
+
+    def _append_probed_wallbox(
+        self, devices: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
+        """Add the AC011E device on the same hub when identify found it."""
+        hit = getattr(self, "_probe_result", None)
+        params = getattr(self, "_connection_params", {}) or {}
+        inverter = getattr(self, "_inverter_config", None) or {}
+        if hit is None or not hit.wallbox_template or hit.wallbox_slave_id is None:
+            return devices
+        connected = (
+            inverter.get("wallbox_connected")
+            or params.get("wallbox_connected")
+            or hit.wallbox_connected
+        )
+        if str(connected).strip().lower() not in {"yes", "true", "1"}:
+            return devices
+        slave_id = int(params.get("wallbox_slave_id") or hit.wallbox_slave_id)
+        for device in devices:
+            if int(device.get("slave_id") or -1) == slave_id:
+                return devices
+        wallbox_data = (self._templates or {}).get(hit.wallbox_template) or {}
+        if not wallbox_data:
+            return devices
+        prefix = _unique_device_prefix(
+            self.hass, hit.wallbox_prefix or wallbox_data.get("default_prefix") or "WB"
+        )
+        wallbox_device = {
+            "type": wallbox_data.get("type") or "ev_charger",
+            "template": hit.wallbox_template,
+            "prefix": prefix,
+            "slave_id": slave_id,
+            "selected_model": params.get("wallbox_model") or hit.wallbox_model,
+            "template_version": wallbox_data.get("version", 1),
+            "firmware_version": wallbox_data.get("firmware_version", "1.0.0"),
+        }
+        devices.append(self._normalize_device_record(wallbox_device))
+        for device in devices:
+            if int(device.get("slave_id") or -1) == int(hit.slave_id):
+                device["wallbox_connected"] = "yes"
+        _LOGGER.info(
+            "Identify attached wallbox %s slave=%s model=%s",
+            hit.wallbox_template,
+            slave_id,
+            wallbox_device.get("selected_model"),
+        )
+        return devices
+
     async def _route_after_connection_setup(self) -> FlowResult:
         """Proceed to model selection or dynamic params after connection step."""
         template_data = self._templates.get(self._selected_template, {})
         if self._template_has_model_selection(template_data):
+            if getattr(self, "_selected_model", None) or self.context.get(
+                "selected_model"
+            ):
+                return await self.async_step_dynamic_config()
             return await self.async_step_model_selection()
         return await self.async_step_dynamic_config()
 
@@ -1416,7 +1812,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input:
             selected_model = user_input.get("selected_model")
 
-        if include_model_selection and valid_models:
+        known = self._setup_values_already_known()
+
+        if include_model_selection and valid_models and "selected_model" not in known:
             model_options = self._build_model_option_labels(valid_models)
             default_model = next(iter(model_options))
             current_model = (
@@ -1445,6 +1843,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "connection_type",
                 "battery_slave_id",
             ]:
+                continue
+            if field_name in known:
                 continue
             if (
                 field_name == "battery_config"
@@ -1488,7 +1888,21 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                             default,
                         )
                     else:
-                        default, vol_in = _vol_in_from_dynamic_options(field_config)
+                        probe = getattr(self, "_probe_result", None)
+                        current_value = None
+                        if field_name == "selected_model":
+                            current_value = getattr(self, "_selected_model", None) or (
+                                probe.selected_model if probe else None
+                            )
+                        elif (
+                            field_name == "battery_config"
+                            and probe is not None
+                            and probe.battery_config
+                        ):
+                            current_value = probe.battery_config
+                        default, vol_in = _vol_in_from_dynamic_options(
+                            field_config, current_value=current_value
+                        )
                         schema_fields[
                             vol.Optional(field_name, default=default)
                         ] = vol_in
@@ -1560,11 +1974,21 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Optional("firmware_version", default=fw_default)
                 ] = fw_in
 
-        # Add connection type if available
-        if "connection_type" in dynamic_config:
+        # Add connection type if available (options flow / manual setup only)
+        if "connection_type" in dynamic_config and "connection_type" not in known:
             ct_cfg = dynamic_config["connection_type"]
             if isinstance(ct_cfg, dict) and "options" in ct_cfg:
-                ct_default, ct_in = _vol_in_from_dynamic_options(ct_cfg)
+                probe = getattr(self, "_probe_result", None)
+                ct_current = None
+                if probe is not None and probe.connection_type:
+                    ct_current = probe.connection_type
+                elif (getattr(self, "_connection_params", {}) or {}).get(
+                    "connection_type"
+                ):
+                    ct_current = self._connection_params.get("connection_type")
+                ct_default, ct_in = _vol_in_from_dynamic_options(
+                    ct_cfg, current_value=ct_current
+                )
                 schema_fields[
                     vol.Optional("connection_type", default=ct_default)
                 ] = ct_in
@@ -1599,7 +2023,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     .strip()
                     .upper()
                 )
-                if conn == "WINET":
+                if conn == "WINET" and not (
+                    getattr(self, "_probe_result", None) is not None
+                    and self._probe_result.battery_config == "sbr_battery"
+                ):
                     if self._inverter_config is not None:
                         self._inverter_config["battery_config"] = "standard_battery"
                         self._inverter_config["battery_template"] = "none"
@@ -1632,7 +2059,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="battery_detection",
             data_schema=vol.Schema(
                 {
-                    vol.Required("battery_available", default=False): bool,
+                    vol.Required(
+                        "battery_available",
+                        default=bool(
+                            getattr(self, "_probe_result", None) is not None
+                            and self._probe_result.battery_slave_id is not None
+                        ),
+                    ): bool,
                 }
             ),
             description_placeholders={
@@ -2202,6 +2635,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
             devices.append(self._normalize_device_record(inverter_device))
             devices.append(self._normalize_device_record(battery_device))
+            devices = self._append_probed_wallbox(devices)
 
             # Update config with new structure
             self._inverter_config.update(
@@ -2438,6 +2872,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
                 devices.append(self._normalize_device_record(device))
                 _LOGGER.debug("Created new devices array with single device")
+
+            devices = self._append_probed_wallbox(devices)
 
             config_data = {
                 "hub": {

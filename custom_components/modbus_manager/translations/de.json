@@ -3,8 +3,13 @@
         "title": "Modbus Manager",
         "step": {
             "user": {
-                "title": "Modbus Manager Konfiguration",
-                "description": "Konfiguriere eine neue Modbus Manager Verbindung",
+                "title": "Modbus Manager",
+                "description": "Gerät an bekannter Adresse erkennen, Template selbst wählen oder Combined Device anlegen (kein Modbus-I/O).",
+                "menu_options": {
+                    "detect": "Gerät an bekannter Adresse erkennen",
+                    "template": "Template selbst wählen",
+                    "combined_device": "Combined Device (über Hub-Grenzen)"
+                },
                 "data": {
                     "template": "Geräte-Template",
                     "name": "Name",
@@ -12,6 +17,38 @@
                     "port": "Port",
                     "slave": "Slave ID",
                     "device_type": "Gerätetyp"
+                }
+            },
+            "detect": {
+                "title": "Hub-Verbindung",
+                "description": "Host und Port eingeben. Modbus Manager versucht, das Gerät zu erkennen. Seriell RTU: Template selbst wählen.",
+                "data": {
+                    "host": "IP-Adresse",
+                    "port": "Modbus-TCP-Port",
+                    "modbus_type": "Modbus-Verbindungstyp",
+                    "timeout": "Timeout in Sekunden",
+                    "delay": "Verzögerung nach Verbindung (Sekunden)",
+                    "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)"
+                }
+            },
+            "template": {
+                "title": "Template wählen",
+                "description": "Keine automatische Erkennung, oder Sie wählen selbst. Die Adresse aus dem vorherigen Schritt bleibt erhalten.",
+                "data": {
+                    "template": "Geräte-Template"
+                }
+            },
+            "identify_confirm": {
+                "title": "Erkanntes Gerät bestätigen",
+                "description": "Gefunden: {found_name} unter {found_host}:{found_port}.\n\n{found_details}\n\nAbsenden übernimmt diese Werte. „Template selbst wählen“ ignoriert die Probe. Bestehende Hubs bleiben unverändert. Den Verbindungstyp können Sie später in den Optionen ändern.",
+                "data": {
+                    "template": "Geräte-Template",
+                    "prefix": "Geräte-Präfix (muss eindeutig sein)",
+                    "slave_id": "Modbus Slave-ID",
+                    "selected_model": "Modell",
+                    "battery_slave_id": "Batterie Slave-ID",
+                    "wallbox_slave_id": "Wallbox Slave-ID",
+                    "choose_template_instead": "Template selbst wählen (diesen Treffer ignorieren)"
                 }
             },
             "firmware": {
@@ -223,6 +260,7 @@
         "error": {
             "cannot_connect": "Verbindung fehlgeschlagen",
             "invalid_host": "Ungültiger Hostname oder IP-Adresse",
+            "invalid_port": "Port muss eine gültige Zahl sein.",
             "unknown": "Unerwarteter Fehler",
             "firmware_not_detected": "Firmware-Version konnte nicht erkannt werden",
             "invalid_firmware": "Ungültige Firmware-Version",

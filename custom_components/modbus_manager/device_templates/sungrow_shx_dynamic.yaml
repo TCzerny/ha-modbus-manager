@@ -6,7 +6,7 @@ display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters: RS, RT, T, MG*RL, SH*RL. SH50–125CX not included yet."
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.2.16
+version: 1.2.19
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -44,7 +44,7 @@ firmware_version: "03011.95.01"
 # V1.2.15: Protocol V1.1.16 — SH3/3.6/4/5/6/8/10RL + MG7.5/12RL in valid_models.
 # SH50–125CX (MPPT 5–10, type 0xE51/E52/E39/E3A/E3D) not mapped yet.
 # V1.2.16: inverter_status_display uses {MAX_AC_OUTPUT_POWER} from selected model (not device_type string)
-
+# V1.2.19: hub detect reads sungrow_device_type_code (reg 5000) and valid_models.type_code.
 
 # Dynamic configuration support
 dynamic_config:

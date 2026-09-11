@@ -9,9 +9,11 @@ display_name: "Sungrow SBR / SBH Battery"
 description: "Template for Sungrow SBR/SBH battery systems (Modbus via inverter). Contains all battery sensors, controls, and diagnostics."
 manufacturer: "Sungrow"
 model: "SBR Battery"
-version: 1.2.2
+version: 1.2.3
 default_prefix: "SBR"
 default_slave_id: 200
+# LAN unit 200; WiNet-S often forwards the pack as unit 2.
+detect_slave_ids: [200, 2]
 type: "battery"
 firmware_version: "22011.01.19"
 # Reachable on LAN/RS485 (unit 200) and WiNet-S (forwarded unit id, often 2).

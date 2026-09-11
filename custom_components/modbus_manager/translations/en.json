@@ -3,8 +3,13 @@
         "title": "Modbus Manager",
         "step": {
             "user": {
-                "title": "Modbus Manager Configuration",
-                "description": "Set up a new Modbus Manager connection",
+                "title": "Modbus Manager",
+                "description": "Identify a device at a known address, pick a template yourself, or create a Combined Device (no Modbus I/O).",
+                "menu_options": {
+                    "detect": "Identify a device at a known address",
+                    "template": "Choose a template myself",
+                    "combined_device": "Combined Device (cross-hub)"
+                },
                 "data": {
                     "template": "Device Template",
                     "name": "Name",
@@ -12,6 +17,38 @@
                     "port": "Port",
                     "slave": "Slave ID",
                     "device_type": "Device Type"
+                }
+            },
+            "detect": {
+                "title": "Hub connection",
+                "description": "Enter host and port. Modbus Manager will try to identify the device. Serial RTU: choose a template yourself instead.",
+                "data": {
+                    "host": "IP address",
+                    "port": "Modbus TCP port",
+                    "modbus_type": "Modbus connection type",
+                    "timeout": "Timeout in seconds",
+                    "delay": "Delay after connection (seconds)",
+                    "message_wait_milliseconds": "Wait between requests (milliseconds)"
+                }
+            },
+            "template": {
+                "title": "Choose a template",
+                "description": "No automatic match, or you chose to pick the template. The address from the previous step is kept.",
+                "data": {
+                    "template": "Device template"
+                }
+            },
+            "identify_confirm": {
+                "title": "Confirm identified device",
+                "description": "Found {found_name} at {found_host}:{found_port}.\n\n{found_details}\n\nSubmit to use these values, or tick “Choose a template myself” to ignore the probe. Existing hubs are not changed. Connection type can be changed later in Options.",
+                "data": {
+                    "template": "Device template",
+                    "prefix": "Device prefix (must be unique)",
+                    "slave_id": "Modbus slave ID",
+                    "selected_model": "Model",
+                    "battery_slave_id": "Battery slave ID",
+                    "wallbox_slave_id": "Wallbox slave ID",
+                    "choose_template_instead": "Choose a template myself (ignore this match)"
                 }
             },
             "firmware": {
@@ -203,6 +240,7 @@
         "error": {
             "cannot_connect": "Failed to connect",
             "invalid_host": "Invalid hostname or IP address",
+            "invalid_port": "Port must be a valid number.",
             "unknown": "Unexpected error",
             "firmware_not_detected": "Could not detect firmware version",
             "invalid_firmware": "Invalid firmware version",

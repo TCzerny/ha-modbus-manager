@@ -8,12 +8,13 @@ display_name: "Solvis SC3 Heating Control"
 description: "Template for Solvis SC2/SC3 heating controllers. Supports temperature sensors (S1-S16), flow sensors (S17-S18), pump controls (A1-A9), and heating circuit management via Modbus TCP."
 manufacturer: "Solvis"
 model: "SC3"
-version: 1.0.3
+version: 1.0.5
 default_prefix: "SC3"
 default_slave_id: 1
 type: "heating_control"
 firmware_version: "SC3"
 
+# V1.0.5: no type-code entity — hub detect does not auto-match; use the template picker.
 # V1.0.3: heating-curve slope is 2826/3082/3338 (scale 0.01). PDF 2832/3088 read as 3 on live SC3 (not slope).
 # V1.0.2: energy/power 33536–33553, analog PWM 33294–33299, HKR3, Vorlaufart, WP bivalence;
 # dynamic_config gates (hkr2/hkr3/solar/heat_pump/pv2heat/heat_meter).

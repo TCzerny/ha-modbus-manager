@@ -1,16 +1,18 @@
 # Sungrow AC011E-01 Wallbox Template for Modbus Manager
 
-# Typically connected via RS485 to SHRT inverter
-# Slave ID: default 3, verify in iSolarCloud app
+# V1.1.2: valid_models type_code (0x20ED / 0x20DA / 0x3F80)
+# V1.1.3: detect_slave_ids for hub detect after the inverter is known
 
 name: "Sungrow AC011E Wallbox"
 display_name: "Sungrow AC011E Wallbox"
 description: "Sungrow AC011E-01 EV wallbox (L1). Supports AC007-00, AC011E-01, AC22E-01."
 manufacturer: "Sungrow"
 model: "AC011E-01"
-version: 1.1.1
+version: 1.1.3
 default_prefix: "WB"
 default_slave_id: 3
+# Same hub as the inverter (RS485 via WiNet/LAN). Never the charger Ethernet IP.
+detect_slave_ids: [3, 2, 4, 5]
 type: "ev_charger"
 
 # Model selection: min/max output current from datasheet per model
@@ -18,18 +20,21 @@ dynamic_config:
   valid_models:
     # AC007-00: 7.4 kW single-phase, 32A max
     "AC007-00":
+      type_code: "0x20ED"
       min_current: 6
       max_current: 32
       phases: 1
       max_power_w: 7400
     # AC011E-01: 11 kW three-phase, 16A per phase
     "AC011E-01":
+      type_code: "0x20DA"
       min_current: 6
       max_current: 16
       phases: 3
       max_power_w: 11000
     # AC22E-01: 11/22 kW three-phase, 32A per phase
     "AC22E-01":
+      type_code: "0x3F80"
       min_current: 6
       max_current: 32
       phases: 3

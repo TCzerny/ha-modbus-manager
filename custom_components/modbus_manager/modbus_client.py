@@ -445,3 +445,138 @@ async def async_read_device_identification_via_unit(
         if value:
             decoded[oid] = value
     return decoded
+
+
+def _probe_connection_type(params: dict[str, Any]) -> str:
+    """Map config-flow modbus_type to FC43/temporary-unit connection_type."""
+    raw = (
+        str(params.get("connection_type") or params.get("modbus_type") or "tcp")
+        .strip()
+        .lower()
+    )
+    if raw in ("serial", "rtu"):
+        return "serial"
+    if raw in ("rtuovertcp", "rtu_over_tcp"):
+        return "rtuovertcp"
+    return "tcp"
+
+
+class TemporaryRegisterReader:
+    """Short-lived register reads before a config entry exists.
+
+    HA 2026.9+ uses ``async_get_temporary_unit`` (no extra socket). Older cores
+    open a ModbusHub for the probe and close it afterwards.
+    """
+
+    def __init__(self, hass: HomeAssistant, params: dict[str, Any]) -> None:
+        self.hass = hass
+        self.params = dict(params)
+        self._hub: Any | None = None
+        self._uses_core = core_units_available()
+
+    async def __aenter__(self) -> TemporaryRegisterReader:
+        if self._uses_core:
+            return self
+        from homeassistant.components.modbus import ModbusHub
+
+        from .device_utils import async_wait_for_hub_connected
+
+        host = str(self.params.get("host") or "")
+        port = int(self.params.get("port") or 502)
+        modbus_type = _probe_connection_type(self.params)
+        if modbus_type == "serial":
+            raise RuntimeError("Serial identify uses the template path in this slice")
+        timeout = int(self.params.get("timeout") or DEFAULT_TIMEOUT)
+        hub_name = f"mm_identify_{host}_{port}"
+        hub = ModbusHub(
+            self.hass,
+            {
+                "name": hub_name,
+                "type": "rtuovertcp" if modbus_type == "rtuovertcp" else "tcp",
+                "host": host,
+                "port": port,
+                "delay": int(self.params.get("delay") or DEFAULT_DELAY),
+                "message_wait_milliseconds": int(
+                    self.params.get(
+                        "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
+                    )
+                ),
+                "timeout": timeout,
+                "slave": int(self.params.get("slave_id") or DEFAULT_SLAVE),
+            },
+        )
+        await hub.async_setup()
+        await async_wait_for_hub_connected(hub, timeout)
+        self._hub = hub
+        return self
+
+    async def __aexit__(self, *_exc: object) -> None:
+        if self._hub is None:
+            return
+        try:
+            await self._hub.async_close()
+        except Exception as err:
+            _LOGGER.debug("Identify hub close failed: %s", err)
+        self._hub = None
+
+    async def async_read(
+        self,
+        slave_id: int,
+        address: int,
+        count: int,
+        input_type: str,
+    ) -> list[int] | None:
+        """Return register words, or None when the read fails."""
+        call_type = (
+            CALL_TYPE_REGISTER_INPUT
+            if str(input_type).strip().lower() == "input"
+            else CALL_TYPE_REGISTER_HOLDING
+        )
+        if self._uses_core:
+            from homeassistant.components.modbus import async_get_temporary_unit
+
+            probe_params = {
+                **self.params,
+                "connection_type": _probe_connection_type(self.params),
+                "host": self.params.get("host"),
+                "port": self.params.get("port") or 502,
+            }
+            link_params = connection_params_from_probe(probe_params)
+            try:
+                async with async_get_temporary_unit(
+                    self.hass, link_params, int(slave_id)
+                ) as unit:
+                    timeout = self.params.get("timeout")
+                    if timeout is not None and hasattr(unit, "require_timeout"):
+                        unit.require_timeout(float(timeout))
+                    wait_ms = self.params.get("message_wait_milliseconds")
+                    if wait_ms and hasattr(unit, "set_message_spacing"):
+                        unit.set_message_spacing(float(wait_ms) / 1000.0)
+                    if call_type == CALL_TYPE_REGISTER_INPUT:
+                        registers = await unit.read_input_registers(
+                            int(address), int(count)
+                        )
+                    else:
+                        registers = await unit.read_holding_registers(
+                            int(address), int(count)
+                        )
+                    return list(registers) if registers is not None else None
+            except Exception as err:
+                _LOGGER.debug(
+                    "Temporary unit read failed slave=%s addr=%s type=%s: %s",
+                    slave_id,
+                    address,
+                    input_type,
+                    err,
+                )
+                return None
+
+        if self._hub is None:
+            return None
+        result = await self._hub.async_pb_call(
+            int(slave_id), int(address), int(count), call_type
+        )
+        if result is None:
+            return None
+        registers = getattr(result, "registers", None)
+        return list(registers) if registers is not None else None
