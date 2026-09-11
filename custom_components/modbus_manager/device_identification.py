@@ -350,6 +350,14 @@ async def async_read_device_identification_probe(
     params: dict[str, Any],
 ) -> dict[int, str]:
     """Open a short-lived Modbus connection, read FC43, then close."""
+    from .modbus_client import (
+        async_read_device_identification_via_unit,
+        core_units_available,
+    )
+
+    if core_units_available():
+        return await async_read_device_identification_via_unit(hass, params)
+
     target = params["target"]
     slave_id = params["slave_id"]
     read_code = params["read_code"]

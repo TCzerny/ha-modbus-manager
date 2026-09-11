@@ -7,7 +7,6 @@ from types import MappingProxyType
 from typing import Any
 
 import yaml
-from homeassistant.components.modbus import ModbusHub
 from homeassistant.config_entries import ConfigEntry, ConfigSubentry
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
@@ -38,16 +37,15 @@ from .device_identification import (
 from .device_utils import (
     apply_device_entry_id_remap,
     async_get_registry_device,
-    async_wait_for_hub_connected,
     build_device_entry_id,
     device_subentry_ids_for_entry,
     get_entity_mm_group,
     hub_device_identifier,
-    hub_is_connected,
     migrate_subentry_device_identifiers,
     resolve_entity_id_strategy,
 )
 from .logger import ModbusManagerLogger
+from .modbus_client import async_create_modbus_transport
 from .performance_monitor import PerformanceMonitor
 from .register_optimizer import RegisterOptimizer
 from .template_loader import (
@@ -443,63 +441,13 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
             entry.data.get("prefix", "unknown"),
         )
 
-        # Create or reuse Modbus hub (one TCP connection per host:port).
-        host = entry.data.get("host")
-        port = entry.data.get("port", 502)
-        hub_name = f"modbus_manager_{host}_{port}"
-        global_hub_key = f"global_hub_{host}_{port}"
-        connect_timeout = entry.data.get("timeout", 5)
-
-        existing_hub = hass.data.get(DOMAIN, {}).get(global_hub_key)
-        if existing_hub is not None and hub_is_connected(existing_hub):
-            hub = existing_hub
-            _LOGGER.info("Reusing existing ModbusHub for coordinator: %s", hub_name)
-        else:
-            if existing_hub is not None:
-                try:
-                    await existing_hub.async_close()
-                except Exception as e:
-                    _LOGGER.warning(
-                        "Error closing stale Modbus hub before recreate: %s", str(e)
-                    )
-
-            # Support both modbus_type (new) and type (legacy) for backward compatibility
-            modbus_type = entry.data.get("modbus_type") or entry.data.get("type", "tcp")
-            modbus_config = {
-                "name": hub_name,
-                "type": modbus_type,
-                "host": host,
-                "port": port,
-                "delay": entry.data.get("delay", 0),
-                "message_wait_milliseconds": entry.data.get(
-                    "message_wait_milliseconds",
-                    entry.data.get("request_delay", 100),
-                ),
-                "timeout": connect_timeout,
-                "slave": entry.data.get("slave_id", 1),
-            }
-
-            hub = ModbusHub(hass, modbus_config)
-            _LOGGER.debug("Created ModbusHub for coordinator: %s", hub_name)
-
-            # async_setup() starts a single background connect task.
-            try:
-                await hub.async_setup()
-                _LOGGER.debug("ModbusHub setup completed for coordinator")
-            except Exception as e:
-                _LOGGER.error("Failed to setup ModbusHub for coordinator: %s", str(e))
-                return False
-
-            if await async_wait_for_hub_connected(hub, connect_timeout):
-                _LOGGER.info("ModbusHub connected successfully for coordinator")
-            else:
-                _LOGGER.warning(
-                    "ModbusHub connect timed out after %ss (continuing offline)",
-                    connect_timeout,
-                )
-
-        hass.data[DOMAIN][hub_name] = hub
-        hass.data[DOMAIN][global_hub_key] = hub
+        try:
+            hub = await async_create_modbus_transport(hass, entry)
+        except Exception as e:
+            _LOGGER.error(
+                "Failed to setup Modbus transport for coordinator: %s", str(e)
+            )
+            return False
 
         # Create coordinator
         coordinator = ModbusCoordinator(
@@ -849,12 +797,18 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     )
                 else:
                     try:
-                        _LOGGER.info(
-                            "Closing Modbus connection %s",
-                            hub_name,
-                        )
+                        if getattr(hub, "uses_core_units", False):
+                            _LOGGER.info(
+                                "Releasing Core Modbus units for %s",
+                                hub_name,
+                            )
+                        else:
+                            _LOGGER.info(
+                                "Closing Modbus connection %s",
+                                hub_name,
+                            )
                         await hub.async_close()
-                        _LOGGER.debug("Modbus hub successfully closed")
+                        _LOGGER.debug("Modbus transport successfully closed")
 
                         if hub_name in hass.data[DOMAIN]:
                             del hass.data[DOMAIN][hub_name]

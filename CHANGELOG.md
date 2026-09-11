@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Added
+
+- **Dual Modbus I/O path**: On Home Assistant **2026.9+** the coordinator and FC43 probes use Core `async_get_unit` / `async_get_temporary_unit` (shared serialized connection, no second pymodbus socket). Older cores keep the `ModbusHub` fallback until **HA 2026.12**, then the hub path can be removed. `unique_id` / `entity_id` are unchanged.
+
 ### 🐛 Fixed
 
 - **Sungrow SBR/SBH — WiNet-S offer ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77))**: The pack template is offered on **WINET** as well as LAN/RS485. Setup note tells WiNet-S users to use the **forwarded Modbus ID** (often **2**, not **200**). Cell diagnostics **10756+** stay hidden on WiNet-S. Template v1.2.2.

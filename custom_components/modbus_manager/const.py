@@ -85,6 +85,10 @@ MAX_ENTITY_STATE_LENGTH: Final = 255
 DEFAULT_SLAVE = 1
 DEFAULT_PORT = 502
 
+# Dual I/O path: Core ``async_get_unit`` on HA 2026.9+; ``ModbusHub`` until then.
+# Remove the hub fallback after this Core version (target: end of 2026).
+MODBUS_HUB_FALLBACK_UNTIL_HA: Final = "2026.12"
+
 # Service Namen
 SERVICE_SET_BATTERY_MODE = "set_battery_mode"
 

@@ -607,9 +607,11 @@ def _expand_mm_registry_prefix_markers(result: str, p_reg: str) -> str:
     """
     return re.sub(
         r"\[\[mm:([a-zA-Z0-9_]+):\{PREFIX\}_([a-zA-Z0-9_]+)\]\]",
-        lambda m: f"[[mm:{m.group(1)}:{p_reg}_{m.group(2)}]]"
-        if p_reg
-        else f"[[mm:{m.group(1)}:_{m.group(2)}]]",
+        lambda m: (
+            f"[[mm:{m.group(1)}:{p_reg}_{m.group(2)}]]"
+            if p_reg
+            else f"[[mm:{m.group(1)}:_{m.group(2)}]]"
+        ),
         result,
     )
 
@@ -859,9 +861,18 @@ def create_base_extra_state_attributes(
 
 
 def hub_is_connected(hub: Any) -> bool:
-    """Return True when the HA ModbusHub client has a live socket."""
+    """Return True when the Modbus backend can accept I/O.
+
+    Core units (HA 2026.9+) connect lazily on the first request, so they
+    count as ready. The ``ModbusHub`` fallback still needs a live socket.
+    """
     if hub is None:
         return False
+    if getattr(hub, "uses_core_units", False):
+        return True
+    inner = getattr(hub, "_hub", None)
+    if inner is not None:
+        hub = inner
     client = getattr(hub, "_client", None)
     if client is None:
         return False
@@ -886,6 +897,11 @@ async def _async_wait_for_connect_task(hub: Any, timeout: float) -> bool:
 
 async def async_wait_for_hub_connected(hub: Any, timeout: float) -> bool:
     """Wait for the connect task from async_setup() without a duplicate connect."""
+    if getattr(hub, "uses_core_units", False):
+        return True
+    inner = getattr(hub, "_hub", None)
+    if inner is not None:
+        hub = inner
     if hub_is_connected(hub):
         return True
     event = getattr(hub, "event_connected", None)
@@ -901,6 +917,11 @@ async def async_wait_for_hub_connected(hub: Any, timeout: float) -> bool:
 
 async def async_ensure_hub_connected(hub: Any, timeout: float) -> bool:
     """Restore or wait for a live Modbus session (coordinator reconnect path)."""
+    if getattr(hub, "uses_core_units", False):
+        return True
+    inner = getattr(hub, "_hub", None)
+    if inner is not None:
+        hub = inner
     if hub_is_connected(hub):
         return True
 
