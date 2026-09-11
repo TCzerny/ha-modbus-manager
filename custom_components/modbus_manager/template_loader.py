@@ -59,6 +59,11 @@ def _invalidate_cache() -> None:
     _template_name_to_stem.clear()
 
 
+def invalidate_template_cache() -> None:
+    """Drop in-memory YAML template caches so the next load reads from disk."""
+    _invalidate_cache()
+
+
 from .const import (
     CONF_MM_GROUP,
     DEFAULT_MAX_REGISTER_READ,

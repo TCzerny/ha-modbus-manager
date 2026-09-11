@@ -3,11 +3,10 @@
 import asyncio
 import os
 from datetime import datetime
-from types import MappingProxyType
 from typing import Any
 
 import yaml
-from homeassistant.config_entries import ConfigEntry, ConfigSubentry
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
@@ -37,11 +36,14 @@ from .device_identification import (
 from .device_utils import (
     apply_device_entry_id_remap,
     async_get_registry_device,
+    async_move_device_to_subentry,
     build_device_entry_id,
     device_subentry_ids_for_entry,
     get_entity_mm_group,
     hub_device_identifier,
+    logical_device_for_registry_entry,
     migrate_subentry_device_identifiers,
+    resolve_device_role_type,
     resolve_entity_id_strategy,
 )
 from .logger import ModbusManagerLogger
@@ -60,8 +62,7 @@ _LOGGER = ModbusManagerLogger(__name__)
 def _normalize_device_record(device: dict[str, Any]) -> dict[str, Any]:
     """Normalize device shape for subentry sync."""
     normalized = dict(device)
-    if not normalized.get("type"):
-        normalized["type"] = "inverter"
+    normalized["type"] = resolve_device_role_type(normalized)
     template_key = normalized.get("template_key") or resolve_template_key(
         str(normalized.get("template", "template"))
     )
@@ -72,263 +73,106 @@ def _normalize_device_record(device: dict[str, Any]) -> dict[str, Any]:
     return normalized
 
 
-async def _sync_device_subentries(hass: HomeAssistant, entry: ConfigEntry) -> None:
-    """Sync config subentries from entry.data['devices'].
+async def _detach_device_subentries(hass: HomeAssistant, entry: ConfigEntry) -> int:
+    """Hang devices and entities on the hub entry; drop config-subentry rows.
 
-    Keeps true HA subentries aligned with the current devices list.
+    The Hubs UI otherwise inserts an extra group between the hub and the
+    devices. unique_id / entity_id are unchanged.
     """
-    devices = entry.data.get("devices", [])
-    if not isinstance(devices, list):
-        return
+    entity_registry = er.async_get(hass)
+    device_registry = dr.async_get(hass)
 
-    normalized_devices = [
-        _normalize_device_record(device)
-        for device in devices
-        if isinstance(device, dict)
-    ]
-    existing_device_subentries = {
-        subentry.subentry_id: subentry
-        for subentry in entry.subentries.values()
-        if subentry.subentry_type == "device"
-    }
-    existing_by_unique_id = {
-        subentry.unique_id: subentry
-        for subentry in existing_device_subentries.values()
-        if subentry.unique_id
-    }
-
-    # Mark setup as initialized once we have at least one persisted device subentry.
-    subentries_initialized = bool(entry.data.get("device_subentries_initialized"))
-    if existing_by_unique_id and not subentries_initialized:
-        subentries_initialized = True
-
-    new_data = dict(entry.data)
-    data_changed = False
-
-    pending_device_id = entry.data.get("pending_subentry_device_id")
-
-    # After initialization, treat subentries as source of truth for device existence.
-    # If a user deletes a subentry in HA UI, prune the matching device record from devices[]
-    # so it doesn't come back on next restart.
-    #
-    # Exception: keep one pending device id from add flow until its subentry exists
-    # to avoid races between async_update_entry + async_schedule_reload + subentry persist.
-    if subentries_initialized:
-        existing_ids = set(existing_by_unique_id.keys())
-        filtered_devices = [
-            device
-            for device in normalized_devices
-            if (
-                device.get("device_entry_id") in existing_ids
-                or device.get("device_entry_id") == pending_device_id
-            )
-        ]
-        if len(filtered_devices) != len(normalized_devices):
-            _LOGGER.info(
-                "Pruned %d device(s) removed via subentry delete for entry %s",
-                len(normalized_devices) - len(filtered_devices),
-                entry.entry_id,
-            )
-            normalized_devices = filtered_devices
-            new_data["devices"] = normalized_devices
-            data_changed = True
-
-    wanted_ids = {device.get("device_entry_id") for device in normalized_devices}
-
-    for device in normalized_devices:
-        device_id = device.get("device_entry_id")
-        if not device_id:
+    moved_entities = 0
+    for reg_entry in list(entity_registry.entities.values()):
+        if reg_entry.config_entry_id != entry.entry_id:
             continue
+        if not reg_entry.config_subentry_id:
+            continue
+        try:
+            entity_registry.async_update_entity(
+                reg_entry.entity_id,
+                config_entry_id=entry.entry_id,
+                config_subentry_id=None,
+            )
+            moved_entities += 1
+        except Exception as err:
+            _LOGGER.warning(
+                "Could not detach entity %s from subentry: %s",
+                reg_entry.entity_id,
+                err,
+            )
 
-        title = (
-            f"{device.get('prefix', 'unknown')} | "
-            f"slave {device.get('slave_id', '?')} | "
-            f"{device.get('template', 'unknown')}"
+    moved_devices = 0
+    for device_entry in list(device_registry.devices.values()):
+        linked = entry.entry_id in getattr(device_entry, "config_entries", set())
+        if getattr(device_entry, "config_entry_id", None) == entry.entry_id:
+            linked = True
+        if not linked:
+            continue
+        sub_ids = device_subentry_ids_for_entry(device_entry, entry.entry_id)
+        has_sub = bool(getattr(device_entry, "config_subentry_id", None)) or any(
+            sid for sid in sub_ids if sid
         )
-        data = {
-            "device_entry_id": device_id,
-            "template_key": device.get("template_key"),
-            "type": device.get("type", "inverter"),
-            "template": device.get("template"),
-            "prefix": device.get("prefix"),
-            "slave_id": device.get("slave_id"),
-            "selected_model": device.get("selected_model"),
-            "firmware_version": device.get("firmware_version"),
-            "connection_type": device.get("connection_type"),
-            "meter_type": device.get("meter_type"),
-        }
-
-        existing_subentry = existing_by_unique_id.get(device_id)
-        if existing_subentry:
-            hass.config_entries.async_update_subentry(
-                entry=entry,
-                subentry=existing_subentry,
-                title=title,
-                data=data,
-                unique_id=device_id,
+        if not has_sub:
+            continue
+        try:
+            async_move_device_to_subentry(
+                device_registry,
+                device_entry.id,
+                entry.entry_id,
+                None,
             )
-        elif not subentries_initialized:
-            # Bootstrap only once. After initialization, missing subentries mean
-            # the corresponding device was intentionally deleted.
-            hass.config_entries.async_add_subentry(
-                entry=entry,
-                subentry=ConfigSubentry(
-                    data=MappingProxyType(data),
-                    subentry_type="device",
-                    title=title,
-                    unique_id=device_id,
-                ),
+            moved_devices += 1
+        except Exception as err:
+            _LOGGER.warning(
+                "Could not detach device %s from subentry: %s",
+                device_entry.id,
+                err,
             )
 
-    # Remove stale device subentries no longer present in devices[]
-    for subentry in existing_device_subentries.values():
-        if subentry.unique_id and subentry.unique_id not in wanted_ids:
-            hass.config_entries.async_remove_subentry(
-                entry=entry, subentry_id=subentry.subentry_id
+    leftover_by_subentry: dict[str, list[str]] = {}
+    for reg_entry in entity_registry.entities.values():
+        if reg_entry.config_entry_id != entry.entry_id:
+            continue
+        if not reg_entry.config_subentry_id:
+            continue
+        leftover_by_subentry.setdefault(reg_entry.config_subentry_id, []).append(
+            reg_entry.entity_id
+        )
+
+    removed = 0
+    for subentry in list(entry.subentries.values()):
+        if subentry.subentry_type != "device":
+            continue
+        leftover = leftover_by_subentry.get(subentry.subentry_id, [])
+        if leftover:
+            _LOGGER.error(
+                "Refusing to remove subentry %s; %d entities still attached: %s",
+                subentry.unique_id,
+                len(leftover),
+                leftover[:8],
             )
+            continue
+        hass.config_entries.async_remove_subentry(
+            entry=entry, subentry_id=subentry.subentry_id
+        )
+        removed += 1
 
-    # Clear pending add marker once subentry exists (or no longer relevant).
-    if pending_device_id:
-        if (
-            pending_device_id in existing_by_unique_id
-            or pending_device_id not in wanted_ids
-        ):
-            new_data.pop("pending_subentry_device_id", None)
-            data_changed = True
+    if moved_entities or moved_devices or removed:
+        _LOGGER.info(
+            "Detached hub subentries for %s (entities=%d, devices=%d, rows=%d)",
+            entry.entry_id,
+            moved_entities,
+            moved_devices,
+            removed,
+        )
 
-    if not entry.data.get("device_subentries_initialized"):
-        new_data["device_subentries_initialized"] = True
-        data_changed = True
-
-    if data_changed:
+    if entry.data.get("pending_subentry_device_id"):
+        new_data = dict(entry.data)
+        new_data.pop("pending_subentry_device_id", None)
         hass.config_entries.async_update_entry(entry, data=new_data)
 
-
-async def _relink_entities_to_device_subentries(
-    hass: HomeAssistant, entry: ConfigEntry
-) -> None:
-    """Assign existing entities to matching device subentries by prefix.
-
-    This migrates previously created entities (without subentry link) so they no
-    longer appear under "devices not assigned to a subentry".
-    """
-    try:
-        entity_registry = er.async_get(hass)
-        devices = entry.data.get("devices", [])
-        if not isinstance(devices, list):
-            return
-
-        # Build mapping from prefix -> subentry_id using device_entry_id(unique_id)
-        prefix_to_subentry_id: dict[str, str] = {}
-        for device in devices:
-            if not isinstance(device, dict):
-                continue
-            normalized = _normalize_device_record(device)
-            device_entry_id = normalized.get("device_entry_id")
-            prefix = str(normalized.get("prefix", "")).strip().lower()
-            if not device_entry_id or not prefix:
-                continue
-            for subentry in entry.subentries.values():
-                if (
-                    subentry.subentry_type == "device"
-                    and subentry.unique_id == device_entry_id
-                ):
-                    prefix_to_subentry_id[prefix] = subentry.subentry_id
-                    break
-
-        if not prefix_to_subentry_id:
-            return
-
-        updated = 0
-        for reg_entry in list(entity_registry.entities.values()):
-            if reg_entry.config_entry_id != entry.entry_id:
-                continue
-            unique_id = reg_entry.unique_id or ""
-            if "_" not in unique_id:
-                continue
-            entity_prefix = unique_id.split("_", 1)[0].strip().lower()
-            target_subentry_id = prefix_to_subentry_id.get(entity_prefix)
-            if not target_subentry_id:
-                continue
-            if reg_entry.config_subentry_id == target_subentry_id:
-                continue
-            entity_registry.async_update_entity(
-                reg_entry.entity_id, config_subentry_id=target_subentry_id
-            )
-            updated += 1
-
-        if updated:
-            _LOGGER.info(
-                "Assigned %d existing entities to device subentries for entry %s",
-                updated,
-                entry.entry_id,
-            )
-    except Exception as e:
-        _LOGGER.warning("Could not relink entities to subentries: %s", str(e))
-
-
-async def _relink_devices_to_subentries(
-    hass: HomeAssistant, entry: ConfigEntry
-) -> None:
-    """Relink device registry entries from legacy (None) to concrete subentries."""
-    try:
-        device_registry = dr.async_get(hass)
-        devices = entry.data.get("devices", [])
-        if not isinstance(devices, list):
-            return
-
-        hub_config = entry.data.get("hub", {})
-        host = hub_config.get("host") or entry.data.get("host", "unknown")
-        port = hub_config.get("port") or entry.data.get("port", 502)
-
-        moved = 0
-        for device in devices:
-            if not isinstance(device, dict):
-                continue
-            normalized = _normalize_device_record(device)
-            device_entry_id = normalized.get("device_entry_id")
-            if not device_entry_id:
-                continue
-
-            target_subentry_id = None
-            for subentry in entry.subentries.values():
-                if (
-                    subentry.subentry_type == "device"
-                    and subentry.unique_id == device_entry_id
-                ):
-                    target_subentry_id = subentry.subentry_id
-                    break
-            if not target_subentry_id:
-                continue
-
-            identifier = hub_device_identifier(host, port, device_entry_id)
-            device_entry = async_get_registry_device(
-                device_registry, identifier, entry.entry_id
-            )
-            if not device_entry:
-                continue
-
-            if target_subentry_id in device_subentry_ids_for_entry(
-                device_entry, entry.entry_id
-            ):
-                continue
-
-            # Ensure each registry device is owned by exactly one subentry.
-            device_registry.async_update_device(
-                device_entry.id,
-                add_config_entry_id=entry.entry_id,
-                add_config_subentry_id=target_subentry_id,
-            )
-            moved += 1
-
-        if moved:
-            _LOGGER.info(
-                "Relinked %d device registry entries to concrete subentries for %s",
-                moved,
-                entry.entry_id,
-            )
-    except Exception as e:
-        _LOGGER.warning("Could not relink device registry entries: %s", str(e))
+    return removed
 
 
 async def _cleanup_stale_registry_entities(
@@ -515,40 +359,18 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
         return False
 
 
-def _get_unprefixed_subentry_ids(entry: ConfigEntry) -> set:
-    """Return config_subentry_ids for devices using legacy_unprefixed entity_id strategy."""
-    unprefixed_ids = set()
-    devices = entry.data.get("devices", [])
-    if not isinstance(devices, list):
-        return unprefixed_ids
-    for device in devices:
-        if not isinstance(device, dict):
-            continue
-        if resolve_entity_id_strategy(device) != EntityIdStrategy.LEGACY_UNPREFIXED:
-            continue
-        device_entry_id = device.get("device_entry_id")
-        if not device_entry_id:
-            continue
-        for subentry in entry.subentries.values():
-            if (
-                subentry.subentry_type == "device"
-                and subentry.unique_id == device_entry_id
-            ):
-                unprefixed_ids.add(subentry.subentry_id)
-                break
-    return unprefixed_ids
-
-
 async def _normalize_binary_sensor_entity_ids(
     hass: HomeAssistant, entry: ConfigEntry
 ) -> None:
     """Ensure binary_sensor entity_ids include the device prefix.
 
     Skips entities from devices with entity_id_strategy=legacy_unprefixed (entity_ids stay unprefixed).
+    Resolves the logical device from the device registry so nested battery
+    entities are not renamed with the inverter prefix.
     """
     try:
         entity_registry = er.async_get(hass)
-        unprefixed_subentry_ids = _get_unprefixed_subentry_ids(entry)
+        device_registry = dr.async_get(hass)
         updated = 0
 
         for entity_entry in list(entity_registry.entities.values()):
@@ -558,26 +380,17 @@ async def _normalize_binary_sensor_entity_ids(
                 continue
             if not entity_entry.device_id:
                 continue
-            if entity_entry.config_subentry_id in unprefixed_subentry_ids:
-                continue
 
-            devices = entry.data.get("devices", [])
-            prefix = None
-            if isinstance(devices, list):
-                for subentry in entry.subentries.values():
-                    if (
-                        subentry.subentry_type == "device"
-                        and subentry.subentry_id == entity_entry.config_subentry_id
-                    ):
-                        device_entry_id = subentry.unique_id
-                        for dev in devices:
-                            if (
-                                isinstance(dev, dict)
-                                and dev.get("device_entry_id") == device_entry_id
-                            ):
-                                prefix = dev.get("prefix")
-                                break
-                        break
+            registry_device = device_registry.async_get(entity_entry.device_id)
+            matching = logical_device_for_registry_entry(entry, registry_device)
+            if matching is None:
+                continue
+            if (
+                resolve_entity_id_strategy(matching)
+                == EntityIdStrategy.LEGACY_UNPREFIXED
+            ):
+                continue
+            prefix = matching.get("prefix")
             if not prefix:
                 prefix = entry.data.get("prefix")
             if not prefix:
@@ -693,7 +506,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             hass.config_entries.async_update_entry(entry, data=remap_data)
             entry = hass.config_entries.async_get_entry(entry.entry_id) or entry
 
-        await _sync_device_subentries(hass, entry)
+        await _detach_device_subentries(hass, entry)
+        entry = hass.config_entries.async_get_entry(entry.entry_id) or entry
 
         identifier_migrations = migrate_subentry_device_identifiers(hass, entry)
         if identifier_migrations:
@@ -706,17 +520,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         relink_completed = bool(entry.data.get("device_registry_relink_completed"))
         pending_relink = bool(entry.data.get("pending_registry_relink"))
         if identifier_migrations or pending_relink or not relink_completed:
-            await _relink_devices_to_subentries(hass, entry)
-            await _relink_entities_to_device_subentries(hass, entry)
             new_data = dict(entry.data)
             new_data["device_registry_relink_completed"] = True
             new_data.pop("pending_registry_relink", None)
             hass.config_entries.async_update_entry(entry, data=new_data)
-        else:
-            _LOGGER.debug(
-                "Skipping registry relink for %s (already completed)",
-                entry.entry_id,
-            )
+            entry = hass.config_entries.async_get_entry(entry.entry_id) or entry
 
         # Always use coordinator mode
         return await _setup_coordinator_entry(hass, entry)
@@ -1119,7 +927,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
                 _LOGGER.error("No devices in entry %s", entry_id)
                 return
 
-            # Build device_entry_id -> (prefix, config_subentry_id) for migration devices
+            # Map device_entry_id -> prefix for unprefixed devices.
             targets = {}
             for device in devices:
                 if not isinstance(device, dict):
@@ -1135,16 +943,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
                     continue
                 if device_entry_id and dev_id != device_entry_id:
                     continue
-                subentry_id = None
-                for subentry in config_entry.subentries.values():
-                    if (
-                        subentry.subentry_type == "device"
-                        and subentry.unique_id == dev_id
-                    ):
-                        subentry_id = subentry.subentry_id
-                        break
-                if subentry_id:
-                    targets[dev_id] = (prefix.lower(), subentry_id)
+                targets[dev_id] = prefix.lower()
 
             if not targets:
                 _LOGGER.warning(
@@ -1157,17 +956,14 @@ async def async_setup_services(hass: HomeAssistant) -> None:
             for reg_entry in list(entity_registry.entities.values()):
                 if reg_entry.config_entry_id != entry_id:
                     continue
-                subentry_id = reg_entry.config_subentry_id
-                if not subentry_id:
-                    continue
-                prefix_info = None
-                for dev_id, (prefix_lower, sid) in targets.items():
-                    if sid == subentry_id:
-                        prefix_info = (prefix_lower, dev_id)
+                unique_id = (reg_entry.unique_id or "").lower()
+                prefix_lower = None
+                for _dev_id, candidate in targets.items():
+                    if unique_id.startswith(f"{candidate}_") or unique_id == candidate:
+                        prefix_lower = candidate
                         break
-                if not prefix_info:
+                if not prefix_lower:
                     continue
-                prefix_lower, _ = prefix_info
                 domain, object_id = reg_entry.entity_id.split(".", 1)
                 if object_id.startswith(f"{prefix_lower}_"):
                     continue

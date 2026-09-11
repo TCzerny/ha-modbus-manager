@@ -47,6 +47,7 @@ from .device_utils import (
     generate_unique_id,
     get_entity_mm_group,
     hub_device_identifier,
+    hub_entry_title_for_new_entry,
     is_hub_endpoint_taken,
     legacy_build_device_entry_id,
     legacy_hub_device_identifier,
@@ -55,12 +56,14 @@ from .device_utils import (
     replace_template_placeholders,
     resolve_device_role_type,
     resolve_firmware_profile_version,
+    updated_hub_entry_title,
 )
 from .logger import ModbusManagerLogger
 from .template_loader import (
     _evaluate_condition,
     get_template_by_name,
     get_template_names,
+    invalidate_template_cache,
     resolve_template_key,
     set_hass_instance,
 )
@@ -212,6 +215,251 @@ def _apply_entry_data_fallbacks_to_device(
         if key not in merged and key in entry_data:
             merged[key] = entry_data[key]
     return merged
+
+
+def _device_display_title(device: dict[str, Any]) -> str:
+    """Short label for a hub device in options / reconfigure forms."""
+    identity = device.get("selected_model") or device.get("prefix")
+    text = str(identity).strip() if identity else ""
+    return text or "device"
+
+
+def _normalize_stored_device(device: dict[str, Any]) -> dict[str, Any]:
+    """Ensure type, template_key, and device_entry_id on a devices[] record."""
+    normalized = dict(device)
+    normalized["type"] = resolve_device_role_type(normalized)
+    template_key = normalized.get("template_key") or resolve_template_key(
+        str(normalized.get("template", "template"))
+    )
+    normalized["template_key"] = template_key
+    normalized["device_entry_id"] = normalized.get(
+        "device_entry_id", build_device_entry_id(normalized)
+    )
+    return normalized
+
+
+def _device_reconfigure_schema(
+    selected_device: dict[str, Any], template_data: dict[str, Any] | None
+) -> vol.Schema:
+    """Build prefix / slave / model / dynamic_config schema for one device."""
+    dynamic_config = (
+        template_data.get("dynamic_config", {})
+        if isinstance(template_data, dict)
+        else {}
+    )
+    if not isinstance(dynamic_config, dict):
+        dynamic_config = {}
+
+    schema_fields: dict[Any, Any] = {
+        vol.Required("prefix", default=selected_device.get("prefix", "device")): str,
+        vol.Required("slave_id", default=selected_device.get("slave_id", 1)): int,
+    }
+
+    valid_models = dynamic_config.get("valid_models")
+    if isinstance(valid_models, dict) and valid_models:
+        model_options = {name: name for name in valid_models.keys()}
+        current_model = selected_device.get("selected_model")
+        default_model = (
+            current_model
+            if current_model in model_options
+            else next(iter(model_options))
+        )
+        schema_fields[vol.Optional("selected_model", default=default_model)] = vol.In(
+            model_options
+        )
+
+    for field_name, field_config in dynamic_config.items():
+        if field_name in ("valid_models", "selected_model"):
+            continue
+        if isinstance(field_config, dict) and "options" in field_config:
+            options = field_config.get("options", [])
+            if options:
+                if (
+                    field_name == "battery_config"
+                    and str(selected_device.get("connection_type", "LAN"))
+                    .strip()
+                    .upper()
+                    == "WINET"
+                ):
+                    field_config = dict(field_config)
+                    opts = field_config.get("options", [])
+                    if isinstance(opts, list):
+                        field_config["options"] = [
+                            o for o in opts if o in _WINET_BATTERY_CONFIGS
+                        ]
+                current = selected_device.get(field_name, field_config.get("default"))
+                if (
+                    field_name == "battery_config"
+                    and selected_device.get("battery_enabled") is True
+                    and current in (None, "none", field_config.get("default"))
+                ):
+                    current = "battery"
+                if field_name == "battery_config":
+                    current = _clamp_battery_config_for_connection(
+                        current, selected_device.get("connection_type")
+                    )
+                default, vol_in = _vol_in_from_dynamic_options(
+                    field_config, current_value=current
+                )
+                schema_fields[vol.Optional(field_name, default=default)] = vol_in
+        elif isinstance(field_config, dict) and "default" in field_config:
+            current = selected_device.get(field_name, field_config.get("default"))
+            if isinstance(current, bool):
+                schema_fields[vol.Optional(field_name, default=current)] = bool
+            elif isinstance(current, int):
+                schema_fields[vol.Optional(field_name, default=current)] = int
+            elif isinstance(current, float):
+                schema_fields[vol.Optional(field_name, default=current)] = float
+            else:
+                schema_fields[vol.Optional(field_name, default=str(current))] = str
+
+    return vol.Schema(schema_fields)
+
+
+def _apply_device_reconfigure(
+    entry_data: dict[str, Any],
+    selected_device_id: str,
+    user_input: dict[str, Any],
+    template_data: dict[str, Any] | None,
+) -> dict[str, Any]:
+    """Return new hub entry.data with one devices[] record updated."""
+    devices: list[dict[str, Any]] = []
+    for device in entry_data.get("devices") or []:
+        if not isinstance(device, dict):
+            continue
+        record = dict(device)
+        if not record.get("device_entry_id"):
+            record["device_entry_id"] = build_device_entry_id(record)
+        devices.append(record)
+
+    selected_device = next(
+        (d for d in devices if d.get("device_entry_id") == selected_device_id),
+        None,
+    )
+    if selected_device is None:
+        raise ValueError(f"Device {selected_device_id} not found in hub data")
+
+    selected_device = _apply_entry_data_fallbacks_to_device(selected_device, entry_data)
+    dynamic_config = (
+        template_data.get("dynamic_config", {})
+        if isinstance(template_data, dict)
+        else {}
+    )
+    if not isinstance(dynamic_config, dict):
+        dynamic_config = {}
+
+    updated_device = dict(selected_device)
+    updated_device["prefix"] = str(
+        user_input.get("prefix", updated_device.get("prefix", ""))
+    )
+    updated_device["slave_id"] = user_input.get(
+        "slave_id", updated_device.get("slave_id", 1)
+    )
+    if "selected_model" in user_input:
+        updated_device["selected_model"] = user_input["selected_model"]
+
+    for field_name in dynamic_config:
+        if field_name == "valid_models":
+            continue
+        if field_name in user_input:
+            updated_device[field_name] = user_input[field_name]
+
+    updated_device["battery_config"] = _clamp_battery_config_for_connection(
+        updated_device.get("battery_config"),
+        updated_device.get("connection_type"),
+    )
+    updated_device = _normalize_stored_device(updated_device)
+
+    new_devices = [
+        updated_device if d.get("device_entry_id") == selected_device_id else d
+        for d in devices
+    ]
+    new_data = dict(entry_data)
+    new_data["devices"] = new_devices
+
+    legacy_device_id = build_device_entry_id(
+        {
+            "prefix": entry_data.get("prefix"),
+            "slave_id": entry_data.get("slave_id", 1),
+            "template": entry_data.get("template"),
+        }
+    )
+    if selected_device_id == legacy_device_id:
+        new_data["prefix"] = updated_device.get("prefix", entry_data.get("prefix"))
+        new_data["slave_id"] = updated_device.get(
+            "slave_id", entry_data.get("slave_id", 1)
+        )
+        if "selected_model" in updated_device:
+            new_data["selected_model"] = updated_device["selected_model"]
+        for field_name in dynamic_config:
+            if field_name in updated_device:
+                new_data[field_name] = updated_device[field_name]
+
+    return new_data
+
+
+def _dynamic_input_for_device(
+    device: dict[str, Any],
+    template_data: dict[str, Any],
+    entry_data: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Build _process_dynamic_config input from one devices[] record."""
+    merged = _apply_entry_data_fallbacks_to_device(device, entry_data or {})
+    dynamic_config = (
+        template_data.get("dynamic_config", {})
+        if isinstance(template_data, dict)
+        else {}
+    )
+    if not isinstance(dynamic_config, dict):
+        dynamic_config = {}
+
+    result: dict[str, Any] = {
+        "slave_id": merged.get("slave_id", 1),
+        "phases": merged.get("phases", 1),
+        "mppt_count": merged.get("mppt_count", 2),
+        "string_count": merged.get("string_count", 0),
+        "battery_config": merged.get("battery_config", "none"),
+        "battery_slave_id": merged.get("battery_slave_id", 200),
+        "firmware_version": merged.get("firmware_version", "1.0.0"),
+        "connection_type": merged.get("connection_type", "LAN"),
+        "meter_type": merged.get("meter_type", "DTSU666"),
+        "selected_model": merged.get("selected_model"),
+    }
+    for field_name, field_config in dynamic_config.items():
+        if field_name == "valid_models":
+            continue
+        if field_name in merged:
+            result[field_name] = merged[field_name]
+            continue
+        if isinstance(field_config, dict):
+            if "default" in field_config:
+                result[field_name] = field_config.get("default")
+            elif "options" in field_config:
+                result[field_name] = _first_dynamic_option_value(
+                    field_config.get("options", [])
+                )
+    return result
+
+
+def _format_template_reload_summary(rows: list[dict[str, Any]], language: str) -> str:
+    """Plain-text confirmation list for every hub device template."""
+    lang = str(language or "en").split("-", 1)[0].lower()
+    changed_word = "changed" if lang != "de" else "geändert"
+    same_word = "unchanged" if lang != "de" else "unverändert"
+    blocks: list[str] = []
+    for row in rows:
+        status = (
+            changed_word
+            if row.get("stored_version") != row.get("current_version")
+            else same_word
+        )
+        blocks.append(
+            f"{row.get('title')} — {row.get('template_name')}\n"
+            f"  v{row.get('stored_version')} → v{row.get('current_version')} ({status})\n"
+            f"  {row.get('sensors', 0)} sensors, {row.get('calculated', 0)} calculated, "
+            f"{row.get('controls', 0)} controls"
+        )
+    return "\n\n".join(blocks) if blocks else ""
 
 
 def _backfill_devices_from_entry_data(
@@ -3016,10 +3264,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     for device in config_data["devices"]
                 ]
 
-            # Create title based on host:port for grouping (like Philips Hue)
+            # Create title from identity for new hubs; do not rename existing entries.
             host = config_data.get("host", "unknown")
             port = config_data.get("port", 502)
-            title = f"Modbus Hub ({host}:{port})"
+            title = hub_entry_title_for_new_entry(devices, host, port)
             # Dev-only: re-enable CONF_TEST_ALLOW_SAME_ENDPOINT_NEW_HUB in schema to test
             # combined device on a single physical Modbus endpoint.
             allow_same_endpoint_new_hub = False
@@ -3229,10 +3477,21 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     },
                 )
 
-            # Create title based on host:port for grouping (like Philips Hue)
+            # Create title from identity for new hubs; do not rename existing entries.
             host = self._connection_data.get("host", "unknown")
             port = self._connection_data.get("port", 502)
-            title = f"Modbus Hub ({host}:{port})"
+            title = hub_entry_title_for_new_entry(
+                [
+                    {
+                        "type": template_data.get("type"),
+                        "template": self._selected_template,
+                        "prefix": user_input["prefix"],
+                        "selected_model": user_input.get("selected_model"),
+                    }
+                ],
+                host,
+                port,
+            )
 
             # Create config entry for simple template
             return self.async_create_entry(
@@ -3495,11 +3754,7 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
 
     @staticmethod
     def _build_subentry_title(device: dict[str, Any]) -> str:
-        return (
-            f"{device.get('prefix', 'unknown')} | "
-            f"slave {device.get('slave_id', '?')} | "
-            f"{device.get('template', 'unknown')}"
-        )
+        return _device_display_title(device)
 
     @staticmethod
     def _build_subentry_data(device: dict[str, Any]) -> dict[str, Any]:
@@ -3703,44 +3958,6 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
             normalized_device = self._normalize_device_record(device)
 
             devices = self._get_devices(entry)
-            active_subentry_unique_ids = {
-                subentry.unique_id
-                for subentry in entry.subentries.values()
-                if subentry.subentry_type == "device" and subentry.unique_id
-            }
-
-            # If a device subentry was deleted in HA UI, devices[] can be temporarily stale
-            # until the next sync/reload. Prune only the stale duplicate candidate here so
-            # re-adding the same logical device works immediately.
-            pruned_devices: list[dict[str, Any]] = []
-            removed_stale_duplicate = False
-            for existing in devices:
-                existing_device_id = existing.get("device_entry_id")
-                same_entry_id = existing_device_id == normalized_device.get(
-                    "device_entry_id"
-                )
-                same_identity = (
-                    existing.get("prefix") == normalized_device.get("prefix")
-                    and existing.get("slave_id") == normalized_device.get("slave_id")
-                    and existing.get("template") == normalized_device.get("template")
-                )
-                is_orphaned = existing_device_id not in active_subentry_unique_ids
-
-                if is_orphaned and (same_entry_id or same_identity):
-                    removed_stale_duplicate = True
-                    _LOGGER.info(
-                        "Pruned stale device record without subentry before add: %s",
-                        existing_device_id,
-                    )
-                    continue
-
-                pruned_devices.append(existing)
-
-            if removed_stale_duplicate:
-                devices = pruned_devices
-                new_data = dict(entry.data)
-                new_data["devices"] = devices
-                self.hass.config_entries.async_update_entry(entry, data=new_data)
 
             # Prefix must be unique across other hubs.
             # Current hub duplicates are validated below against active devices[].
@@ -3763,20 +3980,10 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
 
             new_data = dict(entry.data)
             new_data["devices"] = devices + [normalized_device]
-            # Mark newly added logical device as pending until its subentry exists.
-            # This avoids add-flow race conditions where setup pruning runs before
-            # HA persists the subentry.
-            new_data["pending_subentry_device_id"] = normalized_device.get(
-                "device_entry_id"
-            )
+            new_data.pop("pending_subentry_device_id", None)
             self.hass.config_entries.async_update_entry(entry, data=new_data)
             self.hass.config_entries.async_schedule_reload(entry.entry_id)
-
-            return self.async_create_entry(
-                title=self._build_subentry_title(normalized_device),
-                data=self._build_subentry_data(normalized_device),
-                unique_id=normalized_device.get("device_entry_id"),
-            )
+            return self.async_abort(reason="device_attached")
 
         return await self._show_add_template_select_form()
 
@@ -3807,11 +4014,6 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
         template_data = (
             await get_template_by_name(template_name) if template_name else None
         )
-        dynamic_config = (
-            template_data.get("dynamic_config", {})
-            if isinstance(template_data, dict)
-            else {}
-        )
 
         if user_input is not None:
             new_prefix = str(
@@ -3825,58 +4027,21 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
             ):
                 return self.async_abort(reason="already_configured")
 
-            updated_device = dict(selected_device)
-            updated_device["prefix"] = new_prefix
-            updated_device["slave_id"] = user_input.get(
-                "slave_id", updated_device.get("slave_id", 1)
+            new_data = _apply_device_reconfigure(
+                entry.data,
+                selected_device_id,
+                user_input,
+                template_data,
             )
-            if "selected_model" in user_input:
-                updated_device["selected_model"] = user_input["selected_model"]
-
-            for field_name in dynamic_config.keys():
-                if field_name == "valid_models":
-                    continue
-                if field_name in user_input:
-                    updated_device[field_name] = user_input[field_name]
-
-            updated_device["battery_config"] = _clamp_battery_config_for_connection(
-                updated_device.get("battery_config"),
-                updated_device.get("connection_type"),
+            updated_device = next(
+                (
+                    device
+                    for device in new_data.get("devices", [])
+                    if device.get("device_entry_id") == selected_device_id
+                ),
+                selected_device,
             )
-
-            updated_device = self._normalize_device_record(updated_device)
             new_device_id = updated_device.get("device_entry_id")
-
-            new_devices = []
-            for device in devices:
-                if device.get("device_entry_id") == selected_device_id:
-                    new_devices.append(updated_device)
-                else:
-                    new_devices.append(device)
-
-            new_data = dict(entry.data)
-            new_data["devices"] = new_devices
-
-            # Keep legacy top-level keys in sync for the legacy main device
-            legacy_device_id = self._build_device_entry_id(
-                {
-                    "prefix": entry.data.get("prefix"),
-                    "slave_id": entry.data.get("slave_id", 1),
-                    "template": entry.data.get("template"),
-                }
-            )
-            if selected_device_id == legacy_device_id:
-                new_data["prefix"] = updated_device.get(
-                    "prefix", entry.data.get("prefix")
-                )
-                new_data["slave_id"] = updated_device.get(
-                    "slave_id", entry.data.get("slave_id", 1)
-                )
-                if "selected_model" in updated_device:
-                    new_data["selected_model"] = updated_device["selected_model"]
-                for field_name in dynamic_config.keys():
-                    if field_name in updated_device:
-                        new_data[field_name] = updated_device[field_name]
 
             self.hass.config_entries.async_update_entry(entry, data=new_data)
             self.hass.config_entries.async_update_subentry(
@@ -3939,82 +4104,34 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
             await self.hass.config_entries.async_reload(entry.entry_id)
             return self.async_abort(reason="reconfigure_successful")
 
-        schema_fields: dict[Any, Any] = {
-            vol.Required(
-                "prefix", default=selected_device.get("prefix", "device")
-            ): str,
-            vol.Required("slave_id", default=selected_device.get("slave_id", 1)): int,
-        }
-
-        valid_models = dynamic_config.get("valid_models")
-        if isinstance(valid_models, dict) and valid_models:
-            model_options = {name: name for name in valid_models.keys()}
-            current_model = selected_device.get("selected_model")
-            default_model = (
-                current_model
-                if current_model in model_options
-                else next(iter(model_options))
-            )
-            schema_fields[
-                vol.Optional("selected_model", default=default_model)
-            ] = vol.In(model_options)
-
-        for field_name, field_config in dynamic_config.items():
-            if field_name == "valid_models":
-                continue
-            if field_name == "selected_model":
-                continue
-            if isinstance(field_config, dict) and "options" in field_config:
-                options = field_config.get("options", [])
-                if options:
-                    if (
-                        field_name == "battery_config"
-                        and str(selected_device.get("connection_type", "LAN"))
-                        .strip()
-                        .upper()
-                        == "WINET"
-                    ):
-                        field_config = dict(field_config)
-                        opts = field_config.get("options", [])
-                        if isinstance(opts, list):
-                            field_config["options"] = [
-                                o for o in opts if o in _WINET_BATTERY_CONFIGS
-                            ]
-                    current = selected_device.get(
-                        field_name, field_config.get("default")
-                    )
-                    if (
-                        field_name == "battery_config"
-                        and selected_device.get("battery_enabled") is True
-                        and current in (None, "none", field_config.get("default"))
-                    ):
-                        current = "battery"
-                    if field_name == "battery_config":
-                        current = _clamp_battery_config_for_connection(
-                            current, selected_device.get("connection_type")
-                        )
-                    default, vol_in = _vol_in_from_dynamic_options(
-                        field_config, current_value=current
-                    )
-                    schema_fields[vol.Optional(field_name, default=default)] = vol_in
-            elif isinstance(field_config, dict) and "default" in field_config:
-                current = selected_device.get(field_name, field_config.get("default"))
-                if isinstance(current, bool):
-                    schema_fields[vol.Optional(field_name, default=current)] = bool
-                elif isinstance(current, int):
-                    schema_fields[vol.Optional(field_name, default=current)] = int
-                elif isinstance(current, float):
-                    schema_fields[vol.Optional(field_name, default=current)] = float
-                else:
-                    schema_fields[vol.Optional(field_name, default=str(current))] = str
-
         return self.async_show_form(
             step_id="reconfigure",
-            data_schema=vol.Schema(schema_fields),
+            data_schema=_device_reconfigure_schema(selected_device, template_data),
             description_placeholders={
-                "device": self._build_subentry_title(selected_device),
+                "device": _device_display_title(selected_device),
             },
         )
+
+
+# Dict labels for async_show_menu (list lookups stay blank until HA restarts).
+_OPTIONS_MENU_LABELS = {
+    "en": {
+        "connection": "Connection — host, port, and request timing",
+        "inverter": "Inverter — model, MPPT, and connection",
+        "device": "Device — heating, wallbox, and other options",
+        "battery": "Battery — model, prefix, and slave",
+        "battery_template": "Battery — add, change, or remove template",
+        "reload_template": "Reload register templates",
+    },
+    "de": {
+        "connection": "Verbindung — Host, Port und Timing",
+        "inverter": "Wechselrichter — Modell, MPPT und Verbindung",
+        "device": "Gerät — Heizkreis, Wallbox und Optionen",
+        "battery": "Batterie — Modell, Prefix und Slave",
+        "battery_template": "Batterie — Template hinzufügen, wechseln oder entfernen",
+        "reload_template": "Register-Templates neu laden",
+    },
+}
 
 
 class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
@@ -4036,11 +4153,30 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
 
         normalized_devices: list[dict[str, Any]] = []
         for device in devices:
-            normalized = dict(device)
-            if not normalized.get("device_entry_id"):
-                normalized["device_entry_id"] = self._build_device_entry_id(normalized)
+            if not isinstance(device, dict):
+                continue
+            normalized = _apply_entry_data_fallbacks_to_device(
+                device, self.config_entry.data
+            )
+            normalized = _normalize_stored_device(normalized)
             normalized_devices.append(normalized)
         return normalized_devices
+
+    def _devices_with_role(self, role: str) -> list[dict[str, Any]]:
+        """Devices whose resolved role matches ``role``."""
+        return [
+            device
+            for device in self._get_editable_devices()
+            if resolve_device_role_type(device) == role
+        ]
+
+    def _other_option_devices(self) -> list[dict[str, Any]]:
+        """Heating, wallbox, energy manager — not inverter or battery."""
+        return [
+            device
+            for device in self._get_editable_devices()
+            if resolve_device_role_type(device) not in {"inverter", "battery"}
+        ]
 
     async def _remove_battery_devices_from_registry(
         self, battery_devices: list
@@ -4115,8 +4251,196 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         )
         return has_battery_config
 
+    def _options_menu_options(self) -> list[str]:
+        """Connection always; device forms and template reload when applicable."""
+        options = ["connection"]
+        devices = self._get_editable_devices()
+        roles = {resolve_device_role_type(device) for device in devices}
+        if "inverter" in roles:
+            options.append("inverter")
+        if self._other_option_devices():
+            options.append("device")
+        if "battery" in roles:
+            options.append("battery")
+        if "inverter" in roles or "battery" in roles:
+            options.append("battery_template")
+        if devices:
+            options.append("reload_template")
+        return options
+
+    def _options_menu_labels(self, option_ids: list[str]) -> dict[str, str]:
+        """Hardcoded menu labels so rows stay visible if translations are stale.
+
+        ``async_show_menu`` with a list looks up
+        ``options.step.init.menu_options.<id>``. New keys are blank until a
+        Home Assistant restart. A dict bypasses that cache.
+        """
+        language = str(getattr(self.hass.config, "language", "en") or "en")
+        language = language.split("-", 1)[0].lower()
+        catalog = _OPTIONS_MENU_LABELS.get(language, _OPTIONS_MENU_LABELS["en"])
+        fallback = _OPTIONS_MENU_LABELS["en"]
+        return {
+            option_id: catalog.get(option_id) or fallback.get(option_id, option_id)
+            for option_id in option_ids
+        }
+
     async def async_step_init(self, user_input: dict = None) -> FlowResult:
-        """Manage hub-level options only."""
+        """Show an options menu, or the connection form when it is the only item."""
+        if (
+            self.config_entry.data.get(CONF_ENTRY_TYPE, ENTRY_TYPE_HUB)
+            == ENTRY_TYPE_COMBINED_DEVICE
+        ):
+            return self.async_abort(reason="combined_device")
+
+        menu_options = self._options_menu_options()
+        if len(menu_options) == 1:
+            return await self.async_step_connection()
+        return self.async_show_menu(
+            step_id="init",
+            menu_options=self._options_menu_labels(menu_options),
+        )
+
+    async def _async_device_options(
+        self,
+        selected_device: dict[str, Any],
+        user_input: dict | None,
+        step_id: str,
+    ) -> FlowResult:
+        """Show or save the former subentry reconfigure form for one device."""
+        selected_device = _apply_entry_data_fallbacks_to_device(
+            selected_device, self.config_entry.data
+        )
+        template_name = selected_device.get("template")
+        template_data = (
+            await get_template_by_name(template_name) if template_name else None
+        )
+        errors: dict[str, str] = {}
+
+        if user_input is not None:
+            new_prefix = str(
+                user_input.get("prefix", selected_device.get("prefix", ""))
+            )
+            if not _is_prefix_unique_across_hubs(
+                self.hass,
+                new_prefix,
+                exclude_entry_id=self.config_entry.entry_id,
+                exclude_device_entry_id=selected_device.get("device_entry_id"),
+            ):
+                errors["prefix"] = "already_configured"
+            else:
+                try:
+                    new_data = _apply_device_reconfigure(
+                        self.config_entry.data,
+                        selected_device.get("device_entry_id"),
+                        user_input,
+                        template_data,
+                    )
+                except ValueError:
+                    return self.async_abort(reason="config_error")
+                self.hass.config_entries.async_update_entry(
+                    self.config_entry, data=new_data
+                )
+                await self.hass.config_entries.async_reload(self.config_entry.entry_id)
+                return self.async_create_entry(title="", data={})
+
+        return self.async_show_form(
+            step_id=step_id,
+            data_schema=_device_reconfigure_schema(selected_device, template_data),
+            errors=errors,
+            description_placeholders={
+                "device": _device_display_title(selected_device),
+            },
+        )
+
+    async def _async_pick_or_edit_device(
+        self,
+        devices: list[dict[str, Any]],
+        *,
+        state_attr: str,
+        step_id: str,
+        user_input: dict | None,
+    ) -> FlowResult:
+        """Pick among several devices, then show the device options form."""
+        if not devices:
+            return self.async_abort(reason="config_error")
+
+        stored = getattr(self, state_attr, None)
+        picking = stored is None and len(devices) > 1
+        picker_submit = bool(
+            user_input
+            and "prefix" not in user_input
+            and user_input.get("device_entry_id")
+        )
+        if picking and picker_submit:
+            chosen = next(
+                (
+                    device
+                    for device in devices
+                    if device.get("device_entry_id")
+                    == user_input.get("device_entry_id")
+                ),
+                None,
+            )
+            if not chosen:
+                return self.async_abort(reason="config_error")
+            setattr(self, state_attr, chosen)
+            return await self._async_device_options(chosen, None, step_id)
+
+        if picking and not picker_submit:
+            choices = {
+                device.get("device_entry_id"): _device_display_title(device)
+                for device in devices
+            }
+            return self.async_show_form(
+                step_id=step_id,
+                data_schema=vol.Schema(
+                    {vol.Required("device_entry_id"): vol.In(choices)}
+                ),
+            )
+
+        device = stored or devices[0]
+        return await self._async_device_options(device, user_input, step_id)
+
+    async def async_step_inverter(self, user_input: dict = None) -> FlowResult:
+        """Edit inverter prefix, slave, model, and template dynamic_config."""
+        return await self._async_pick_or_edit_device(
+            self._devices_with_role("inverter"),
+            state_attr="_options_inverter_device",
+            step_id="inverter",
+            user_input=user_input,
+        )
+
+    async def async_step_device(self, user_input: dict = None) -> FlowResult:
+        """Edit heating / wallbox / energy-manager device options."""
+        return await self._async_pick_or_edit_device(
+            self._other_option_devices(),
+            state_attr="_options_other_device",
+            step_id="device",
+            user_input=user_input,
+        )
+
+    async def async_step_battery(self, user_input: dict = None) -> FlowResult:
+        """Edit the configured battery device (prefix, slave, model, modules)."""
+        batteries = self._devices_with_role("battery")
+        if batteries:
+            return await self._async_pick_or_edit_device(
+                batteries,
+                state_attr="_options_battery_device",
+                step_id="battery",
+                user_input=user_input,
+            )
+        return await self.async_step_battery_options_selection()
+
+    async def async_step_battery_template(self, user_input: dict = None) -> FlowResult:
+        """Add, replace, or remove the battery template on this hub."""
+        return await self.async_step_battery_options_selection()
+
+    async def async_step_reload_template(self, user_input: dict = None) -> FlowResult:
+        """Reload YAML register templates for this hub."""
+        return await self.async_step_update_template()
+
+    async def async_step_connection(self, user_input: dict = None) -> FlowResult:
+        """Manage hub-level connection options."""
         if (
             self.config_entry.data.get(CONF_ENTRY_TYPE, ENTRY_TYPE_HUB)
             == ENTRY_TYPE_COMBINED_DEVICE
@@ -4193,11 +4517,19 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                         new_port,
                     )
 
-                entry_title = f"Modbus Hub ({new_host}:{new_port})"
+                entry_title = updated_hub_entry_title(
+                    self.config_entry.title,
+                    current_host,
+                    current_port,
+                    new_host,
+                    new_port,
+                )
+                update_kwargs: dict[str, Any] = {"data": new_data}
+                if entry_title is not None:
+                    update_kwargs["title"] = entry_title
                 self.hass.config_entries.async_update_entry(
                     self.config_entry,
-                    data=new_data,
-                    title=entry_title,
+                    **update_kwargs,
                 )
 
                 await self.hass.config_entries.async_reload(self.config_entry.entry_id)
@@ -4231,186 +4563,112 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         }
 
         return self.async_show_form(
-            step_id="init",
+            step_id="connection",
             data_schema=vol.Schema(schema_fields),
             errors=errors,
         )
 
-    async def async_step_update_template(self, user_input: dict = None) -> FlowResult:
-        """Update the template to the latest version or reload for changes."""
-        try:
-            pending_update = getattr(self, "_pending_options_update", None)
+    async def _async_build_template_reload_plan(self) -> list[dict[str, Any]]:
+        """Load current YAML for every hub device and collect version/count rows."""
+        invalidate_template_cache()
+        pending_update = getattr(self, "_pending_options_update", None) or {}
+        devices = self._get_editable_devices()
+        if not devices:
+            devices = [
+                _normalize_stored_device(
+                    _apply_entry_data_fallbacks_to_device(
+                        {
+                            "type": "inverter",
+                            "template": self.config_entry.data.get("template"),
+                            "prefix": self.config_entry.data.get("prefix", "unknown"),
+                            "slave_id": self.config_entry.data.get("slave_id", 1),
+                        },
+                        self.config_entry.data,
+                    )
+                )
+            ]
 
-            # Get current template information
-            template_name = self.config_entry.data.get("template", "Unknown")
-            stored_version = self.config_entry.data.get("template_version", 1)
-
-            # Load new template
+        rows: list[dict[str, Any]] = []
+        for device in devices:
+            merged = dict(device)
+            if pending_update and resolve_device_role_type(merged) == "inverter":
+                merged.update(pending_update)
+            template_name = merged.get("template")
+            if not template_name:
+                continue
             template_data = await get_template_by_name(template_name)
-            if not template_data:
+            if not template_data or isinstance(template_data, str):
+                _LOGGER.error(
+                    "Template %s could not be loaded for reload", template_name
+                )
+                continue
+
+            stored_version = merged.get("template_version")
+            if (
+                stored_version is None
+                and resolve_device_role_type(merged) == "inverter"
+            ):
+                stored_version = self.config_entry.data.get("template_version", 1)
+            if stored_version is None:
+                stored_version = 1
+            current_version = template_data.get("version", 1)
+
+            try:
+                processed = self._process_dynamic_config(
+                    _dynamic_input_for_device(
+                        merged, template_data, self.config_entry.data
+                    ),
+                    copy.deepcopy(template_data),
+                )
+            except Exception as err:
+                _LOGGER.warning(
+                    "Dynamic config failed while planning template reload for %s: %s",
+                    template_name,
+                    err,
+                )
+                processed = {
+                    "sensors": template_data.get("sensors", []),
+                    "calculated": template_data.get("calculated", []),
+                    "controls": template_data.get("controls", []),
+                    "binary_sensors": template_data.get("binary_sensors", []),
+                }
+
+            rows.append(
+                {
+                    "device_entry_id": merged.get("device_entry_id"),
+                    "role": resolve_device_role_type(merged),
+                    "title": _device_display_title(merged),
+                    "template_name": template_name,
+                    "stored_version": stored_version,
+                    "current_version": current_version,
+                    "sensors": len(processed.get("sensors", [])),
+                    "calculated": len(processed.get("calculated", [])),
+                    "controls": len(processed.get("controls", [])),
+                    "processed": processed,
+                }
+            )
+        return rows
+
+    async def async_step_update_template(self, user_input: dict = None) -> FlowResult:
+        """Reload YAML register maps for every device on this hub."""
+        try:
+            plan = getattr(self, "_template_reload_plan", None)
+            if user_input is None or not plan:
+                plan = await self._async_build_template_reload_plan()
+                self._template_reload_plan = plan
+
+            if not plan:
                 return self.async_abort(
                     reason="template_not_found",
-                    description_placeholders={"template_name": template_name},
+                    description_placeholders={
+                        "template_name": self.config_entry.data.get(
+                            "template", "Unknown"
+                        )
+                    },
                 )
-
-            # Debug: Check template data type
-            _LOGGER.debug("Template data type: %s", type(template_data))
-            if isinstance(template_data, str):
-                _LOGGER.error(
-                    "Template data is string, expected dict: %s", template_data[:100]
-                )
-                return self.async_abort(
-                    reason="template_format_error",
-                    description_placeholders={"template_name": template_name},
-                )
-
-            # Extract template version and registers
-            if isinstance(template_data, dict):
-                current_version = template_data.get("version", 1)
-                original_sensors = template_data.get("sensors", [])
-                original_calculated = template_data.get("calculated", [])
-                original_controls = template_data.get("controls", [])
-                original_binary_sensors = template_data.get("binary_sensors", [])
-                dynamic_config = template_data.get("dynamic_config", {})
-            else:
-                current_version = 1
-                original_sensors = template_data
-                original_calculated = []
-                original_controls = []
-                original_binary_sensors = []
-                dynamic_config = {}
-
-            if not (
-                original_sensors
-                or original_calculated
-                or original_controls
-                or original_binary_sensors
-            ):
-                return self.async_abort(
-                    reason="no_registers",
-                    description_placeholders={"template_name": template_name},
-                )
-
-            # Build effective data (config entry + pending options updates)
-            effective_data = dict(self.config_entry.data)
-            if pending_update:
-                effective_data.update(pending_update)
-                if "battery_config" in pending_update:
-                    effective_data["battery_enabled"] = (
-                        pending_update["battery_config"] != "none"
-                    )
-
-            # Apply dynamic configuration (important for MPPT filtering!)
-            if dynamic_config:
-                try:
-                    # Build user_input dict with ALL dynamic config values from config entry
-                    # This ensures all fields like dual_channel_meter are included
-                    user_input_for_processing = {}
-
-                    # Read all dynamic config fields from config entry
-                    for field_name, field_config in dynamic_config.items():
-                        if field_name in [
-                            "valid_models",
-                            "firmware_version",
-                            "connection_type",
-                            "battery_slave_id",
-                        ]:
-                            # These are handled separately or don't need to be read
-                            continue
-
-                        # Get value from config entry, or use default from field_config
-                        if isinstance(field_config, dict) and "default" in field_config:
-                            default_value = field_config.get("default")
-                            current_value = effective_data.get(
-                                field_name, default_value
-                            )
-                            user_input_for_processing[field_name] = current_value
-                        elif (
-                            isinstance(field_config, dict) and "options" in field_config
-                        ):
-                            # Field with options - get current value or use first option as default
-                            options = field_config.get("options", [])
-                            default_value = _first_dynamic_option_value(options)
-                            current_value = effective_data.get(
-                                field_name, default_value
-                            )
-                            user_input_for_processing[field_name] = current_value
-
-                    # Add explicitly handled fields
-                    user_input_for_processing["phases"] = effective_data.get(
-                        "phases", 1
-                    )
-                    user_input_for_processing["mppt_count"] = effective_data.get(
-                        "mppt_count", 2
-                    )
-                    user_input_for_processing["string_count"] = effective_data.get(
-                        "string_count", 0
-                    )
-                    user_input_for_processing["battery_config"] = effective_data.get(
-                        "battery_config", "none"
-                    )
-                    user_input_for_processing["battery_slave_id"] = effective_data.get(
-                        "battery_slave_id", 200
-                    )
-                    user_input_for_processing["firmware_version"] = effective_data.get(
-                        "firmware_version", "1.0.0"
-                    )
-                    user_input_for_processing["connection_type"] = effective_data.get(
-                        "connection_type", "LAN"
-                    )
-                    user_input_for_processing["meter_type"] = effective_data.get(
-                        "meter_type", "DTSU666"
-                    )
-                    user_input_for_processing["selected_model"] = effective_data.get(
-                        "selected_model"
-                    )
-
-                    _LOGGER.info(
-                        "Applying dynamic config during template update: %s",
-                        ", ".join(
-                            [f"{k}={v}" for k, v in user_input_for_processing.items()]
-                        ),
-                    )
-
-                    # Process template with current configuration
-                    # Use the same logic as in _process_dynamic_config
-                    processed_data = self._process_dynamic_config(
-                        user_input_for_processing,
-                        template_data,
-                    )
-
-                    template_registers = processed_data["sensors"]
-                    calculated_entities = processed_data["calculated"]
-                    template_controls = processed_data["controls"]
-                    template_binary_sensors = processed_data.get("binary_sensors", [])
-
-                    _LOGGER.info(
-                        "Template processing completed: %d sensors, %d calculated, %d controls, %d binary_sensors",
-                        len(template_registers),
-                        len(calculated_entities),
-                        len(template_controls),
-                        len(template_binary_sensors),
-                    )
-
-                except Exception as e:
-                    _LOGGER.warning(
-                        "Error applying dynamic config during template update, using original: %s",
-                        str(e),
-                    )
-                    # Fallback: Use original template without dynamic filtering
-                    template_registers = original_sensors
-                    calculated_entities = original_calculated
-                    template_controls = original_controls
-                    template_binary_sensors = original_binary_sensors
-            else:
-                # No dynamic configuration - use original
-                template_registers = original_sensors
-                calculated_entities = original_calculated
-                template_controls = original_controls
-                template_binary_sensors = original_binary_sensors
 
             if user_input is not None:
-                # Update template
+                pending_update = getattr(self, "_pending_options_update", None)
                 new_data = dict(self.config_entry.data)
                 if pending_update:
                     new_data.update(pending_update)
@@ -4418,136 +4676,86 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                         new_data["battery_enabled"] = (
                             pending_update["battery_config"] != "none"
                         )
-                new_data["template_version"] = current_version
 
-                # Only update registers if they exist
-                if template_registers:
-                    new_data["registers"] = template_registers
-                    _LOGGER.info(
-                        "Updated registers: %d sensors", len(template_registers)
-                    )
-                else:
-                    _LOGGER.warning(
-                        "No template_registers found, keeping existing registers"
-                    )
-                    # Fallback: Try to load directly from template_data
-                    if isinstance(template_data, dict) and template_data.get("sensors"):
-                        new_data["registers"] = template_data["sensors"]
-                        _LOGGER.info(
-                            "Used fallback: loaded %d sensors directly from template",
-                            len(template_data["sensors"]),
-                        )
+                devices = list(new_data.get("devices") or [])
+                versions = {
+                    row.get("device_entry_id"): row.get("current_version")
+                    for row in plan
+                    if row.get("device_entry_id")
+                }
+                for device in devices:
+                    device_id = device.get("device_entry_id")
+                    if device_id in versions:
+                        device["template_version"] = versions[device_id]
+                if devices:
+                    new_data["devices"] = devices
 
-                # Update calculated entities if the new template has them
-                if calculated_entities:
-                    new_data["calculated_entities"] = calculated_entities
+                snapshot = next(
+                    (row for row in plan if row.get("role") == "inverter"),
+                    plan[0],
+                )
+                processed = snapshot.get("processed") or {}
+                new_data["template_version"] = snapshot.get("current_version", 1)
+                if snapshot.get("template_name"):
+                    new_data["template"] = snapshot["template_name"]
+                if processed.get("sensors"):
+                    new_data["registers"] = processed["sensors"]
+                if processed.get("calculated"):
+                    new_data["calculated_entities"] = processed["calculated"]
+                if processed.get("controls"):
+                    new_data["controls"] = processed["controls"]
+                if processed.get("binary_sensors"):
+                    new_data["binary_sensors"] = processed["binary_sensors"]
 
-                # Update controls if the new template has them
-                if template_controls:
-                    new_data["controls"] = template_controls
-
-                # Update binary sensors if present
-                if template_binary_sensors:
-                    new_data["binary_sensors"] = template_binary_sensors
-
-                # Add template update timestamp
                 import time
 
                 new_data["template_last_updated"] = int(time.time())
-
-                # Keep device-specific dynamic config in sync with options updates
-                if dynamic_config:
-                    dynamic_config_fields = [
-                        key
-                        for key in dynamic_config.keys()
-                        if key
-                        not in [
-                            "valid_models",
-                            "firmware_version",
-                            "connection_type",
-                            "battery_slave_id",
-                        ]
-                    ]
-                else:
-                    dynamic_config_fields = []
-
-                dynamic_params = [
-                    "phases",
-                    "mppt_count",
-                    "battery_config",
-                    "battery_slave_id",
-                    "connection_type",
-                    "meter_type",
-                    "firmware_version",
-                    "selected_model",
-                ] + dynamic_config_fields
-
-                devices = new_data.get("devices")
-                if isinstance(devices, list) and template_name:
-                    for device in devices:
-                        if device.get("template") != template_name:
-                            continue
-                        for key in dynamic_params:
-                            if key in new_data:
-                                device[key] = new_data[key]
-
-                # Update config entry
                 self.hass.config_entries.async_update_entry(
                     self.config_entry, data=new_data
                 )
-
+                self._pending_options_update = None
+                self._template_reload_plan = None
                 _LOGGER.info(
-                    "Template %s updated: v%s → v%s (%d sensors, %d calculated, %d controls, %d binary_sensors)",
-                    template_name,
-                    stored_version,
-                    current_version,
-                    len(template_registers),
-                    len(calculated_entities),
-                    len(template_controls),
-                    len(template_binary_sensors),
+                    "Reloaded %d hub template(s): %s",
+                    len(plan),
+                    ", ".join(
+                        f"{row.get('template_name')} v{row.get('current_version')}"
+                        for row in plan
+                    ),
                 )
-
-                # Clear pending updates after successful application
-                if pending_update:
-                    self._pending_options_update = None
-
-                # Reload integration to apply changes
                 await self.hass.config_entries.async_reload(self.config_entry.entry_id)
-
-                # Return to main view
                 return self.async_create_entry(title="", data={})
 
-            # Show confirmation dialog
-            # Check if anything has changed
-            current_sensors_count = len(template_registers)
-            current_calculated_count = len(calculated_entities)
-            current_controls_count = len(template_controls)
-
-            stored_sensors_count = len(self.config_entry.data.get("registers", []))
-            stored_calculated_count = len(
-                self.config_entry.data.get("calculated_entities", [])
-            )
-            stored_controls_count = len(self.config_entry.data.get("controls", []))
-
-            version_changed = current_version != stored_version
-            content_changed = (
-                current_sensors_count != stored_sensors_count
-                or current_calculated_count != stored_calculated_count
-                or current_controls_count != stored_controls_count
-            )
-
+            language = str(getattr(self.hass.config, "language", "en") or "en")
+            names = ", ".join(str(row.get("template_name") or "") for row in plan)
             return self.async_show_form(
                 step_id="update_template",
                 data_schema=vol.Schema({}),
                 description_placeholders={
-                    "template_name": template_name,
-                    "stored_version": str(stored_version),
-                    "current_version": str(current_version),
-                    "version_changed": "Ja" if version_changed else "Nein",
-                    "content_changed": "Ja" if content_changed else "Nein",
-                    "current_sensors": str(current_sensors_count),
-                    "current_calculated": str(current_calculated_count),
-                    "current_controls": str(current_controls_count),
+                    "template_summary": _format_template_reload_summary(plan, language),
+                    "template_name": names,
+                    "stored_version": ", ".join(
+                        str(row.get("stored_version")) for row in plan
+                    ),
+                    "current_version": ", ".join(
+                        str(row.get("current_version")) for row in plan
+                    ),
+                    "version_changed": (
+                        "yes"
+                        if any(
+                            row.get("stored_version") != row.get("current_version")
+                            for row in plan
+                        )
+                        else "no"
+                    ),
+                    "content_changed": "yes",
+                    "current_sensors": str(sum(row.get("sensors", 0) for row in plan)),
+                    "current_calculated": str(
+                        sum(row.get("calculated", 0) for row in plan)
+                    ),
+                    "current_controls": str(
+                        sum(row.get("controls", 0) for row in plan)
+                    ),
                 },
             )
 
@@ -4701,9 +4909,20 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             "other": "Other (no template)",
         }
 
-        current_selection = self.config_entry.data.get("battery_config", "none")
-        if current_selection not in battery_templates:
-            current_selection = "none"
+        battery_devices = self._devices_with_role("battery")
+        current_selection = "none"
+        if battery_devices:
+            current_template = str(battery_devices[0].get("template") or "").strip()
+            if current_template in battery_templates:
+                current_selection = current_template
+            else:
+                current_selection = "other"
+        else:
+            stored = self.config_entry.data.get("battery_config", "none")
+            if stored in battery_templates:
+                current_selection = stored
+            elif stored in ("none", "other"):
+                current_selection = stored
 
         return self.async_show_form(
             step_id="battery_options_selection",
@@ -4719,11 +4938,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
     async def async_step_battery_config(self, user_input: dict = None) -> FlowResult:
         """Handle battery configuration step for options flow."""
         if user_input is not None:
-            battery_devices = [
-                d
-                for d in self._get_editable_devices()
-                if str(d.get("type", "")).lower() == "battery"
-            ]
+            battery_devices = self._devices_with_role("battery")
             current_battery_device_id = (
                 battery_devices[0].get("device_entry_id") if battery_devices else None
             )
@@ -4787,12 +5002,17 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
 
         # Prefer a stored slave id; otherwise LAN/RS485 → 200, WiNet-S → 2
         config_flow_note = ""
+        battery_device: dict[str, Any] = {}
         if battery_template_data and isinstance(battery_template_data, dict):
+            battery_devices = self._devices_with_role("battery")
+            battery_device = battery_devices[0] if battery_devices else {}
             template_default_slave_id = battery_template_data.get("default_slave_id")
             template_default_prefix = battery_template_data.get("default_prefix")
             config_flow_note = battery_template_data.get("config_flow_note", "") or ""
 
-            stored_slave_id = self.config_entry.data.get("battery_slave_id")
+            stored_slave_id = battery_device.get("slave_id")
+            if stored_slave_id is None:
+                stored_slave_id = self.config_entry.data.get("battery_slave_id")
             if stored_slave_id is not None:
                 try:
                     default_slave_id = int(stored_slave_id)
@@ -4807,9 +5027,10 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     self.config_entry.data.get("connection_type", "LAN"),
                 )
             default_prefix = (
-                template_default_prefix
-                if template_default_prefix
-                else self.config_entry.data.get("battery_prefix", "SBR")
+                battery_device.get("prefix")
+                or self.config_entry.data.get("battery_prefix")
+                or template_default_prefix
+                or "SBR"
             )
 
             _LOGGER.debug(
@@ -4834,7 +5055,9 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         ).get("valid_models"):
             valid_models = battery_template_data["dynamic_config"]["valid_models"]
             model_options = list(valid_models.keys())
-            current_model = self.config_entry.data.get("battery_model")
+            current_model = battery_device.get(
+                "selected_model"
+            ) or self.config_entry.data.get("battery_model")
             default_model = (
                 current_model if current_model in model_options else model_options[0]
             )

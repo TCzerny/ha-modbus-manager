@@ -232,7 +232,19 @@
     "options": {
         "step": {
             "init": {
-                "title": "Hub Options",
+                "title": "Modbus Manager options",
+                "description": "What would you like to change?",
+                "menu_options": {
+                    "connection": "Connection — host, port, and request timing",
+                    "inverter": "Inverter — model, MPPT, and connection",
+                    "device": "Device — heating, wallbox, and other options",
+                    "battery": "Battery — model, prefix, and slave",
+                    "battery_template": "Battery — add, change, or remove template",
+                    "reload_template": "Reload register templates"
+                }
+            },
+            "connection": {
+                "title": "Connection",
                 "description": "Update Modbus TCP endpoint and communication settings. Dependent combined-device entries reload automatically when the endpoint changes.",
                 "data": {
                     "host": "IP address / hostname",
@@ -243,9 +255,71 @@
                     "post_write_settle_milliseconds": "Delay after Control Writes (milliseconds, 0 = off)"
                 }
             },
+            "inverter": {
+                "title": "Inverter options",
+                "description": "Edit inverter settings for: {device}",
+                "data": {
+                    "device_entry_id": "Device",
+                    "prefix": "Device Prefix",
+                    "slave_id": "Slave ID",
+                    "selected_model": "Select Model",
+                    "phases": "Number of Phases",
+                    "mppt_count": "Number of MPPT Trackers",
+                    "string_count": "Number of Strings",
+                    "modules": "Number of Modules",
+                    "firmware_version": "Register mapping (firmware profile)",
+                    "connection_type": "Connection Type",
+                    "meter_type": "Meter Type",
+                    "wallbox_connected": "Wallbox Connected",
+                    "entity_ids_without_prefix": "Entity IDs without prefix",
+                    "entity_id_strategy": "Entity ID strategy",
+                    "battery_config": "Battery Configuration",
+                    "battery_slave_id": "Battery Slave ID",
+                    "channel_2_enabled": "Enable PROD.CT channel 2 registers",
+                    "charger_enabled": "Enable charger-related registers",
+                    "charger_phases": "EV charger phase count",
+                    "charger_region": "EV charger regional mode map",
+                    "protocol_version": "iHomeManager Modbus protocol version"
+                }
+            },
+            "battery": {
+                "title": "Battery options",
+                "description": "Edit battery settings for: {device}",
+                "data": {
+                    "device_entry_id": "Device",
+                    "prefix": "Device Prefix",
+                    "slave_id": "Slave ID",
+                    "selected_model": "Select Model",
+                    "modules": "Number of Modules",
+                    "firmware_version": "Register mapping (firmware profile)",
+                    "battery_config": "Battery Configuration",
+                    "entity_ids_without_prefix": "Entity IDs without prefix",
+                    "entity_id_strategy": "Entity ID strategy"
+                }
+            },
+            "device": {
+                "title": "Device options",
+                "description": "Edit device settings for: {device}",
+                "data": {
+                    "device_entry_id": "Device",
+                    "prefix": "Device Prefix",
+                    "slave_id": "Slave ID",
+                    "selected_model": "Select Model",
+                    "firmware_version": "Register mapping (firmware profile)",
+                    "connection_type": "Connection Type",
+                    "hkr2_enabled": "Enable heating circuit 2 (HKR2)",
+                    "hkr3_enabled": "Enable heating circuit 3 (HKR3)",
+                    "solar_enabled": "Enable solar collector registers",
+                    "heat_pump_enabled": "Enable heat pump registers",
+                    "pv2heat_enabled": "Enable PV2Heat registers",
+                    "heat_meter_enabled": "Enable heat-meter power register",
+                    "entity_ids_without_prefix": "Entity IDs without prefix",
+                    "entity_id_strategy": "Entity ID strategy"
+                }
+            },
             "update_template": {
-                "title": "Reload Template",
-                "description": "Reload template {template_name}:\n\nVersion: {stored_version} → {current_version} (Changed: {version_changed})\nContent changed: {content_changed}\n\nNew Entities: {current_sensors} sensors, {current_calculated} calculated, {current_controls} controls\n\nThe integration will be automatically reloaded after the update."
+                "title": "Reload register templates",
+                "description": "Reload YAML register maps for every device on this hub:\n\n{template_summary}\n\nThe integration will reload after you submit."
             },
             "battery_config": {
                 "title": "Battery Configuration",
@@ -268,10 +342,14 @@
         "error": {
             "endpoint_in_use": "Another Modbus Manager hub already uses this host and port.",
             "invalid_host": "Host is required.",
-            "invalid_port": "Port must be a valid number."
+            "invalid_port": "Port must be a valid number.",
+            "already_configured": "This prefix is already used by another device."
         },
         "abort": {
-            "combined_device": "Combined devices have no Modbus connection. Change IP/port on the source hub entries instead."
+            "combined_device": "Combined devices have no Modbus connection. Change IP/port on the source hub entries instead.",
+            "config_error": "This hub has no matching device to configure.",
+            "template_not_found": "Template {template_name} not found.",
+            "update_error": "Error updating templates: {error}"
         }
     },
     "config_subentries": {
@@ -331,7 +409,9 @@
             "already_configured": "No additional device subentry can be created.",
             "invalid_config": "Invalid configuration. {error}",
             "no_available_devices_for_subentry": "All devices already have a subentry.",
-            "config_error": "Configuration error."
+            "config_error": "Configuration error.",
+            "nested_device_attached": "Device added under the inverter. It does not get its own hub row.",
+            "device_attached": "Device added to the hub."
         },
         "device": {
             "step": {
@@ -390,7 +470,9 @@
                 "already_configured": "No additional device subentry can be created.",
                 "invalid_config": "Invalid configuration. {error}",
                 "no_available_devices_for_subentry": "All devices already have a subentry.",
-                "config_error": "Configuration error."
+                "config_error": "Configuration error.",
+                "nested_device_attached": "Device added under the inverter. It does not get its own hub row.",
+                "device_attached": "Device added to the hub."
             }
         }
     },

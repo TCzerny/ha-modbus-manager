@@ -40,6 +40,7 @@ from .device_utils import (
     resolve_device_role_type,
     resolve_entity_id_strategy,
     resolve_firmware_profile_version,
+    via_device_tuple,
 )
 from .logger import ModbusManagerLogger
 from .modbus_utils import is_valid_modbus_address, registers_to_bytes
@@ -624,6 +625,10 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     )
                     break
 
+            hub_config = self.entry.data.get("hub", {})
+            host = hub_config.get("host") or self.entry.data.get("host", "unknown")
+            port = hub_config.get("port") or self.entry.data.get("port", 502)
+
             device_count = len(devices)
             for device in devices:
                 device_type = device.get("type", "inverter")
@@ -1001,21 +1006,10 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 )
 
                 # Create device info dict for this device
-                hub_config = self.entry.data.get("hub", {})
-                host = hub_config.get("host") or self.entry.data.get("host", "unknown")
-                port = hub_config.get("port") or self.entry.data.get("port", 502)
                 device_entry_id = device.get(
                     "device_entry_id"
                 ) or build_device_entry_id(device)
                 config_subentry_id = None
-                if device_entry_id:
-                    for subentry in self.entry.subentries.values():
-                        if (
-                            subentry.subentry_type == "device"
-                            and subentry.unique_id == device_entry_id
-                        ):
-                            config_subentry_id = subentry.subentry_id
-                            break
 
                 # Get firmware version from device config (fallback to template default)
                 device_firmware_version = firmware_version or template.get(
@@ -1032,6 +1026,9 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     device_entry_id=device_entry_id,
                     firmware_version=device_firmware_version,
                     config_entry_id=self.entry.entry_id,
+                    manufacturer=template.get("manufacturer"),
+                    model=selected_model,
+                    via_device=via_device_tuple(device, devices, host, port),
                 )
 
                 # Add type field, device info, and categorize entities

@@ -252,7 +252,19 @@
     "options": {
         "step": {
             "init": {
-                "title": "Hub-Optionen",
+                "title": "Modbus-Manager-Optionen",
+                "description": "Was möchten Sie ändern?",
+                "menu_options": {
+                    "connection": "Verbindung — Host, Port und Timing",
+                    "inverter": "Wechselrichter — Modell, MPPT und Verbindung",
+                    "device": "Gerät — Heizkreis, Wallbox und Optionen",
+                    "battery": "Batterie — Modell, Prefix und Slave",
+                    "battery_template": "Batterie — Template hinzufügen, wechseln oder entfernen",
+                    "reload_template": "Register-Templates neu laden"
+                }
+            },
+            "connection": {
+                "title": "Verbindung",
                 "description": "Modbus-TCP-Endpunkt und Kommunikationseinstellungen ändern. Abhängige Combined-Device-Einträge werden bei Endpunktänderung automatisch neu geladen.",
                 "data": {
                     "host": "IP-Adresse / Hostname",
@@ -263,9 +275,71 @@
                     "post_write_settle_milliseconds": "Pause nach Schreibbefehlen (Millisekunden, 0 = aus)"
                 }
             },
+            "inverter": {
+                "title": "Wechselrichter-Optionen",
+                "description": "Geräteeinstellungen bearbeiten für: {device}",
+                "data": {
+                    "device_entry_id": "Gerät",
+                    "prefix": "Geräte-Prefix",
+                    "slave_id": "Slave ID",
+                    "selected_model": "Modell auswählen",
+                    "phases": "Anzahl Phasen",
+                    "mppt_count": "Anzahl MPPT-Tracker",
+                    "string_count": "Anzahl Strings",
+                    "modules": "Anzahl Module",
+                    "firmware_version": "Register-Mapping (Firmware-Profil)",
+                    "connection_type": "Verbindungstyp",
+                    "meter_type": "Zählertyp",
+                    "wallbox_connected": "Wallbox angeschlossen",
+                    "entity_ids_without_prefix": "Entity-IDs ohne Präfix",
+                    "entity_id_strategy": "Entity-ID-Strategie",
+                    "battery_config": "Batterie-Konfiguration",
+                    "battery_slave_id": "Batterie Slave ID",
+                    "channel_2_enabled": "PROD.CT Kanal 2 Register aktivieren",
+                    "charger_enabled": "Lade-Register aktivieren",
+                    "charger_phases": "Anzahl EV-Lader-Phasen",
+                    "charger_region": "Regionale EV-Lader-Modi",
+                    "protocol_version": "iHomeManager Modbus-Protokollversion"
+                }
+            },
+            "battery": {
+                "title": "Batterie-Optionen",
+                "description": "Geräteeinstellungen bearbeiten für: {device}",
+                "data": {
+                    "device_entry_id": "Gerät",
+                    "prefix": "Geräte-Prefix",
+                    "slave_id": "Slave ID",
+                    "selected_model": "Modell auswählen",
+                    "modules": "Anzahl Module",
+                    "firmware_version": "Register-Mapping (Firmware-Profil)",
+                    "battery_config": "Batterie-Konfiguration",
+                    "entity_ids_without_prefix": "Entity-IDs ohne Präfix",
+                    "entity_id_strategy": "Entity-ID-Strategie"
+                }
+            },
+            "device": {
+                "title": "Geräte-Optionen",
+                "description": "Geräteeinstellungen bearbeiten für: {device}",
+                "data": {
+                    "device_entry_id": "Gerät",
+                    "prefix": "Geräte-Prefix",
+                    "slave_id": "Slave ID",
+                    "selected_model": "Modell auswählen",
+                    "firmware_version": "Register-Mapping (Firmware-Profil)",
+                    "connection_type": "Verbindungstyp",
+                    "hkr2_enabled": "Heizkreis 2 (HKR2) aktivieren",
+                    "hkr3_enabled": "Heizkreis 3 (HKR3) aktivieren",
+                    "solar_enabled": "Solarkollektor-Register aktivieren",
+                    "heat_pump_enabled": "Wärmepumpen-Register aktivieren",
+                    "pv2heat_enabled": "PV2Heat-Register aktivieren",
+                    "heat_meter_enabled": "Wärmemengenzähler-Register aktivieren",
+                    "entity_ids_without_prefix": "Entity-IDs ohne Präfix",
+                    "entity_id_strategy": "Entity-ID-Strategie"
+                }
+            },
             "update_template": {
-                "title": "Template neu laden",
-                "description": "Template {template_name} neu laden:\n\nVersion: {stored_version} → {current_version} (Geändert: {version_changed})\nInhalt geändert: {content_changed}\n\nNeue Entitäten: {current_sensors} Sensoren, {current_calculated} berechnete, {current_controls} Controls\n\nDie Integration wird nach der Aktualisierung automatisch neu geladen."
+                "title": "Register-Templates neu laden",
+                "description": "YAML-Registerkarten für alle Geräte an diesem Hub neu laden:\n\n{template_summary}\n\nDie Integration wird nach dem Bestätigen neu geladen."
             },
             "battery_config": {
                 "title": "Batterie-Konfiguration",
@@ -288,10 +362,14 @@
         "error": {
             "endpoint_in_use": "Ein anderer Modbus-Manager-Hub nutzt diese IP und diesen Port bereits.",
             "invalid_host": "Host ist erforderlich.",
-            "invalid_port": "Port muss eine gültige Zahl sein."
+            "invalid_port": "Port muss eine gültige Zahl sein.",
+            "already_configured": "Dieses Prefix wird bereits von einem anderen Gerät verwendet."
         },
         "abort": {
-            "combined_device": "Combined Devices haben keine Modbus-Verbindung. IP/Port an den Quell-Hub-Einträgen ändern."
+            "combined_device": "Combined Devices haben keine Modbus-Verbindung. IP/Port an den Quell-Hub-Einträgen ändern.",
+            "config_error": "Dieser Hub hat kein passendes Gerät zum Konfigurieren.",
+            "template_not_found": "Template {template_name} nicht gefunden.",
+            "update_error": "Fehler beim Aktualisieren der Templates: {error}"
         }
     },
     "config_subentries": {
@@ -351,7 +429,9 @@
             "already_configured": "Es kann kein zusätzliches Geräte-Subentry erstellt werden.",
             "invalid_config": "Ungültige Konfiguration. {error}",
             "no_available_devices_for_subentry": "Alle Geräte haben bereits ein Subentry.",
-            "config_error": "Konfigurationsfehler."
+            "config_error": "Konfigurationsfehler.",
+            "nested_device_attached": "Gerät unter dem Wechselrichter hinzugefügt. Es gibt keine eigene Hub-Zeile.",
+            "device_attached": "Gerät zum Hub hinzugefügt."
         },
         "device": {
             "step": {
@@ -410,7 +490,9 @@
                 "already_configured": "Es kann kein zusätzliches Geräte-Subentry erstellt werden.",
                 "invalid_config": "Ungültige Konfiguration. {error}",
                 "no_available_devices_for_subentry": "Alle Geräte haben bereits ein Subentry.",
-                "config_error": "Konfigurationsfehler."
+                "config_error": "Konfigurationsfehler.",
+                "nested_device_attached": "Gerät unter dem Wechselrichter hinzugefügt. Es gibt keine eigene Hub-Zeile.",
+                "device_attached": "Gerät zum Hub hinzugefügt."
             }
         }
     },

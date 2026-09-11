@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### ✨ Added
 
 - **Dual Modbus I/O path**: On Home Assistant **2026.9+** the coordinator and FC43 probes use Core `async_get_unit` / `async_get_temporary_unit` (shared serialized connection, no second pymodbus socket). Older cores keep the `ModbusHub` fallback until **HA 2026.12**, then the hub path can be removed. `unique_id` / `entity_id` are unchanged.
+- **Hub presentation**: New hubs title from the selected inverter model (host:port kept in the title). Battery/wallbox devices nest under the inverter (`via_device`). Device manufacturer/model come from the template. Options are a menu (Connection / Inverter / Device / Battery / Battery template / Reload templates). Template reload applies to every device on the hub (inverter, battery, heating, wallbox), not only the inverter YAML. Device settings live in that menu — hub config subentry rows are not used. Existing entry titles and device identifiers are unchanged.
 
 ### 🐛 Fixed
 

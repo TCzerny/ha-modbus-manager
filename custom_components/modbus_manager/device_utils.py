@@ -29,6 +29,32 @@ def device_subentry_ids_for_entry(
     return device_entry.config_entries_subentries.get(config_entry_id, set())
 
 
+def async_move_device_to_subentry(
+    device_registry: dr.DeviceRegistry,
+    device_id: str,
+    config_entry_id: str,
+    subentry_id: str | None,
+) -> None:
+    """Move a registry device onto a config entry, optionally a subentry.
+
+    Home Assistant 2026.8+ wants ``new_config_entry_id`` /
+    ``new_config_subentry_id`` (one device, one subentry). Older cores still
+    use ``add_config_entry_id`` / ``add_config_subentry_id``. ``subentry_id``
+    None attaches the device to the hub entry itself.
+    """
+    try:
+        device_registry.async_update_device(
+            device_id,
+            new_config_entry_id=config_entry_id,
+            new_config_subentry_id=subentry_id,
+        )
+    except TypeError:
+        kwargs: dict[str, Any] = {"add_config_entry_id": config_entry_id}
+        if subentry_id is not None:
+            kwargs["add_config_subentry_id"] = subentry_id
+        device_registry.async_update_device(device_id, **kwargs)
+
+
 def async_get_registry_device(
     device_registry: dr.DeviceRegistry,
     identifier: str,
@@ -55,6 +81,10 @@ KNOWN_TEMPLATE_DEVICE_TYPES: dict[str, str] = {
 
 # Template YAML types that represent an inverter for combined-device pairing.
 _INVERTER_ROLE_ALIASES = frozenset({"inverter", "pv_inverter", "pv_hybrid_inverter"})
+
+# Nested under the hub inverter (or energy manager) in the device registry.
+_VIA_CHILD_ROLES = frozenset({"battery", "wallbox", "ev_charger"})
+_VIA_PARENT_ROLES = ("inverter", "energy_manager")
 
 
 def connection_type_allowed(actual: Any, required: Any) -> bool:
@@ -758,6 +788,121 @@ def hub_device_identifier(host: str, port: int, device_entry_id: str) -> str:
     return f"modbus_manager_{host}_{port}_{device_entry_id}"
 
 
+def via_parent_device(devices: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """Inverter (else energy manager) dict from a hub ``devices[]`` list."""
+    ranked: dict[str, dict[str, Any]] = {}
+    for device in devices:
+        if not isinstance(device, dict):
+            continue
+        role = resolve_device_role_type(device)
+        if role not in _VIA_PARENT_ROLES:
+            continue
+        ranked[role] = device
+    for role in _VIA_PARENT_ROLES:
+        if role in ranked:
+            return ranked[role]
+    return None
+
+
+def via_parent_hub_identifier(
+    devices: list[dict[str, Any]], host: str, port: int
+) -> str | None:
+    """Registry identifier of the inverter (else energy manager) on this hub."""
+    parent = via_parent_device(devices)
+    if parent is None:
+        return None
+    entry_id = parent.get("device_entry_id") or build_device_entry_id(parent)
+    return hub_device_identifier(host, port, entry_id)
+
+
+def _logical_device_id(device: dict[str, Any]) -> str:
+    """Stable logical id; same formula as ``build_device_entry_id`` when missing."""
+    return device.get("device_entry_id") or build_device_entry_id(device)
+
+
+def logical_device_for_registry_entry(
+    entry: ConfigEntry, device_entry: dr.DeviceEntry | None
+) -> dict[str, Any] | None:
+    """Match a device-registry entry to one ``devices[]`` record on this hub."""
+    if device_entry is None:
+        return None
+    devices = entry.data.get("devices", [])
+    if not isinstance(devices, list):
+        return None
+    host, port = entry_host_port(entry)
+    idents = {
+        ident[1] for ident in device_entry.identifiers if ident and ident[0] == DOMAIN
+    }
+    if not idents:
+        return None
+    for device in devices:
+        if not isinstance(device, dict):
+            continue
+        if hub_device_identifier(host, port, _logical_device_id(device)) in idents:
+            return device
+    return None
+
+
+def via_device_tuple(
+    device: dict[str, Any],
+    devices: list[dict[str, Any]],
+    host: str,
+    port: int,
+) -> tuple[str, str] | None:
+    """Return ``(domain, identifier)`` so battery/wallbox nest under the inverter."""
+    parent_ident = via_parent_hub_identifier(devices, host, port)
+    if not parent_ident:
+        return None
+    if resolve_device_role_type(device) not in _VIA_CHILD_ROLES:
+        return None
+    child_id = device.get("device_entry_id") or build_device_entry_id(device)
+    child_ident = hub_device_identifier(host, port, child_id)
+    if child_ident == parent_ident:
+        return None
+    return (DOMAIN, parent_ident)
+
+
+def hub_entry_title_for_new_entry(
+    devices: list[dict[str, Any]], host: str, port: int
+) -> str:
+    """Title for a newly created hub; host:port kept so two plants stay distinct."""
+    identity = None
+    for device in devices:
+        if isinstance(device, dict) and resolve_device_role_type(device) == "inverter":
+            identity = device.get("selected_model") or device.get("prefix")
+            break
+    if not identity:
+        for device in devices:
+            if not isinstance(device, dict):
+                continue
+            identity = device.get("selected_model") or device.get("prefix")
+            if identity:
+                break
+    if identity:
+        return f"{identity} ({host}:{port})"
+    return f"Modbus Hub ({host}:{port})"
+
+
+def updated_hub_entry_title(
+    current_title: str,
+    old_host: str,
+    old_port: int,
+    new_host: str,
+    new_port: int,
+) -> str | None:
+    """New title when the endpoint changes; None means leave the stored title."""
+    if (str(old_host), int(old_port)) == (str(new_host), int(new_port)):
+        return None
+    old_default = f"Modbus Hub ({old_host}:{old_port})"
+    new_default = f"Modbus Hub ({new_host}:{new_port})"
+    if current_title == old_default:
+        return new_default
+    old_suffix = f" ({old_host}:{old_port})"
+    if current_title.endswith(old_suffix):
+        return current_title[: -len(old_suffix)] + f" ({new_host}:{new_port})"
+    return None
+
+
 def create_device_info_dict(
     hass: HomeAssistant,
     host: str,
@@ -768,6 +913,10 @@ def create_device_info_dict(
     device_entry_id: str,
     firmware_version: str = None,
     config_entry_id: str = None,
+    *,
+    manufacturer: str | None = None,
+    model: str | None = None,
+    via_device: tuple[str, str] | None = None,
 ) -> Dict[str, Any]:
     """Create device info dict using the device factory.
 
@@ -776,29 +925,36 @@ def create_device_info_dict(
     can be used by all platforms.
 
     Args:
-        device_entry_id: Stable logical device id (matches config subentry unique_id).
+        device_entry_id: Stable logical device id (device-registry identifier).
+                         Nested battery/wallbox share the parent config subentry.
         firmware_version: Firmware version from config entry or register.
                          If None, defaults to "1.0.0".
+        manufacturer: Template manufacturer; defaults to "Modbus Manager".
+        model: Selected model or template display name.
+        via_device: Parent ``(domain, identifier)`` for battery/wallbox nesting.
     """
     device_identifier = hub_device_identifier(host, port, device_entry_id)
 
-    # Don't create a separate hub device - just use the hub identifier for linking
-    # The hub is managed by the Modbus connection in __init__.py
-
-    # Use firmware version from config or default
     if firmware_version is None:
         firmware_version = "1.0.0"
 
-    # Return device info as dict - no separate hub device needed
-    # Device name is set to prefix only, so with has_entity_name=True,
-    # friendly_name will be "{prefix} {entity.name}" instead of "{prefix} ({template_name}) {entity.name}"
-    return {
+    selected = (model or "").strip()
+    display_model = selected or template_name
+    display_manufacturer = (manufacturer or "").strip() or "Modbus Manager"
+    # Prefer the probed/selected model as the device name; otherwise keep prefix
+    # so entity friendly names stay short on templates without valid_models.
+    display_name = selected or prefix
+
+    info: Dict[str, Any] = {
         "identifiers": {(DOMAIN, device_identifier)},
-        "name": prefix,  # Use prefix only to keep friendly_name short: "Prefix Entityname"
-        "manufacturer": "Modbus Manager",
-        "model": f"{template_name} (Slave {slave_id})",
+        "name": display_name,
+        "manufacturer": display_manufacturer,
+        "model": f"{display_model} (Slave {slave_id})",
         "sw_version": clean_firmware_version_string(firmware_version),
     }
+    if via_device:
+        info["via_device"] = via_device
+    return info
 
 
 def create_base_extra_state_attributes(
