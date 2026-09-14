@@ -6,7 +6,7 @@ display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters: RS, RT, T, MG*RL, SH*RL. SH50–125CX not included yet."
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.2.19
+version: 1.2.21
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -175,6 +175,8 @@ dynamic_config:
     # standard_battery (inverter slave 1) works on LAN, RS485, and WiNet-S.
     # sbr_battery is the separate pack template: unit 200 on LAN/RS485, forwarded id (often 2) on WiNet-S.
 
+# Scan groups (coordinator batches by value): 10 live telemetry, 30 settings/diagnostics, 600 totals/identity.
+# Raw + control on the same holding share the same group. Writes still read back immediately.
 # Base sensors (will be filtered based on configuration)
 sensors:
   # Debug: Master/Slave mode raw (holding, read - mirror of controls for availability test)
@@ -183,7 +185,7 @@ sensors:
     address: 33499
     input_type: holding
     data_type: uint16
-    scan_interval: 10
+    scan_interval: 30
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
     map:
@@ -195,7 +197,7 @@ sensors:
     address: 33500
     input_type: holding
     data_type: uint16
-    scan_interval: 10
+    scan_interval: 30
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
     map:
@@ -211,7 +213,7 @@ sensors:
     input_type: holding
     data_type: uint16
     precision: 0
-    scan_interval: 10
+    scan_interval: 30
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
@@ -315,7 +317,7 @@ sensors:
     input_type: input
     data_type: string
     count: 15
-    scan_interval: 3600
+    scan_interval: 600
     mm_group: "PV_device_info"
     icon: "mdi:certificate"
     entity_category: "diagnostic"
@@ -327,7 +329,7 @@ sensors:
     input_type: input
     data_type: string
     count: 15
-    scan_interval: 3600
+    scan_interval: 600
     mm_group: "PV_device_info"
     icon: "mdi:certificate"
     entity_category: "diagnostic"
@@ -343,7 +345,7 @@ sensors:
     unit_of_measurement: kW
     device_class: "power"
     state_class: measurement
-    scan_interval: 3600
+    scan_interval: 600
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
@@ -352,7 +354,7 @@ sensors:
     address: 5001 # reg 5002
     input_type: input
     data_type: uint16
-    scan_interval: 3600
+    scan_interval: 600
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
     # Protocol Table 3: 0=Single, 1=3P4L, 2=3P3L
@@ -369,7 +371,7 @@ sensors:
     input_type: input
     data_type: string
     count: 15
-    scan_interval: 3600
+    scan_interval: 600
     mm_group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
@@ -381,7 +383,7 @@ sensors:
     input_type: input
     data_type: string
     count: 15
-    scan_interval: 3600
+    scan_interval: 600
     mm_group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
@@ -393,7 +395,7 @@ sensors:
     input_type: input
     data_type: string
     count: 15
-    scan_interval: 3600
+    scan_interval: 600
     mm_group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
@@ -1820,7 +1822,7 @@ sensors:
     address: 13001
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 10
+    scan_interval: 30
     state_class: measurement
     # Appendix 5: Load Control Mode
     options:
@@ -1914,7 +1916,7 @@ sensors:
     address: 13010 # reg 13011
     input_type: holding
     data_type: uint16
-    scan_interval: 10
+    scan_interval: 30
     state_class: measurement
     # Parameter Setting Table 4: Load ON/OFF mode - 0xAA=ON, 0x55=OFF
     options:
@@ -2023,7 +2025,7 @@ sensors:
     device_class: "battery"
     state_class: measurement
     scale: 0.1
-    scan_interval: 60
+    scan_interval: 10
     condition: "battery_enabled == true"
 
   - name: Battery state of health
@@ -2062,7 +2064,7 @@ sensors:
     device_class: "temperature"
     state_class: measurement
     scale: 0.1
-    scan_interval: 60
+    scan_interval: 10
     mm_group: "PV_battery_temperature"
     condition: "battery_enabled == true"
 
@@ -2662,7 +2664,7 @@ sensors:
     address: 13049
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 10
+    scan_interval: 30
     # Appendix 6: Energy Management Mode
     map:
       0: "Self-consumption (default)"
@@ -2679,7 +2681,7 @@ sensors:
     data_type: uint16
     precision: 0
     state_class: measurement
-    scan_interval: 10
+    scan_interval: 30
     # Parameter Setting Table 4: Charge/discharge command
     options:
       0xAA: "Charge"
@@ -2697,7 +2699,7 @@ sensors:
     unit_of_measurement: W
     device_class: "power"
     state_class: measurement
-    scan_interval: 10
+    scan_interval: 30
     condition: "battery_enabled == true"
 
   - name: Global mpp scan manual raw
@@ -2707,7 +2709,10 @@ sensors:
     data_type: uint16
     precision: 0
     state_class: measurement
-    scan_interval: 10
+    scan_interval: 30
+    options:
+      0xAA: "Start"
+      0x55: "Off"
 
   # mkaiser issue #444 SH10RT no standby mode after latest firmware update
   - name: Forced Startup Under Low SoC Standby raw
@@ -2717,7 +2722,7 @@ sensors:
     data_type: uint16
     precision: 0
     state_class: measurement
-    scan_interval: 10
+    scan_interval: 30
     options:
       0x55: "Disabled"
       0xAA: "Enabled"
@@ -2824,11 +2829,25 @@ controls:
     address: 12999 # reg 13000
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 10
+    scan_interval: 30
     # Parameter Setting Table 4: Start/Stop - 0xCF=Boot, 0xCE=Shutdown
     options:
       0xCF: "Enabled"
       0xCE: "Shutdown"
+    mm_group: "PV_control"
+
+  - type: "select"
+    name: "Global MPP scan manual"
+    unique_id: "global_mpp_scan_manual"
+    address: 30229 # reg 30230
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    # 0xAA starts one global MPPT scan while the inverter is running; 0x55 is idle.
+    # A second Start while a scan is already running is ignored by the inverter.
+    options:
+      0x55: "Off"
+      0xAA: "Start"
     mm_group: "PV_control"
 
   - type: "select"
@@ -2852,7 +2871,7 @@ controls:
     address: 13050
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 10
+    scan_interval: 30
     options:
       0xAA: "Charge"
       0xBB: "Discharge"
@@ -2873,7 +2892,7 @@ controls:
     min_value: 0
     max_value: "{{max(max_charge_power, max_discharge_power)}}"
     step: 100
-    scan_interval: 10
+    scan_interval: 30
     mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
     # Placeholder will be replaced with maximum of model-specific max_charge_power and max_discharge_power
@@ -3086,7 +3105,7 @@ controls:
     min_value: 0
     max_value: "{{max_charge_power}}"
     step: 0.01
-    scan_interval: 10
+    scan_interval: 30
     mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
     # Placeholder will be replaced with model-specific value from dynamic_config.valid_models
@@ -3104,7 +3123,7 @@ controls:
     min_value: 0
     max_value: "{{max_discharge_power}}"
     step: 0.01
-    scan_interval: 10
+    scan_interval: 30
     mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
     # Placeholder will be replaced with model-specific value from dynamic_config.valid_models
@@ -3142,7 +3161,7 @@ controls:
     device_class: "power"
     state_class: measurement
     scale: 10
-    scan_interval: 10
+    scan_interval: 30
     mm_group: "PV_battery_control"
     condition: "battery_enabled == true and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
     # Placeholder will be replaced with 50% of model-specific max_charge_power
@@ -3163,7 +3182,7 @@ controls:
     device_class: "power"
     state_class: measurement
     scale: 10
-    scan_interval: 10
+    scan_interval: 30
     mm_group: "PV_battery_control"
     condition: "battery_enabled == true and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
     # Placeholder will be replaced with 50% of model-specific max_discharge_power
@@ -3208,7 +3227,7 @@ controls:
     address: 33540
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 10
+    scan_interval: 30
     options:
       160: "Fast Charge"
       161: "PV Surplus"
@@ -3226,7 +3245,7 @@ controls:
     scale: 0.1
     precision: 0
     unit_of_measurement: "kWh"
-    scan_interval: 0
+    scan_interval: 30
     mm_group: "EV_control"
     condition: "wallbox_connected == 'yes'"
 
@@ -3239,7 +3258,7 @@ controls:
     scale: 0.1
     precision: 0
     unit_of_measurement: "A"
-    scan_interval: 10
+    scan_interval: 30
     mm_group: "EV_control"
     condition: "wallbox_connected == 'yes'"
 
@@ -3249,7 +3268,7 @@ controls:
     address: 33549
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 10
+    scan_interval: 30
     options:
       85: "PV Surplus with out Grid Power"
       170: "PV Surplus with Grid Power"
