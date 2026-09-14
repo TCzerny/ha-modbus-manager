@@ -76,11 +76,11 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 - **[Compleo eBox Professional](docs/README_compleo_ebox_professional.md)** – EV charger, 3-phase charging
 - **[Victron EV Charging Station](docs/README_victron_ev_charging_station.md)** – EV Charging Station & EV Charging Station NS, Modbus TCP (register list v3.8)
 - **[Sungrow AC011E Wallbox](docs/README_sungrow_ac011e_wallbox.md)** – EV wallbox (AC007-00, AC011E-01, AC22E-01); [connection with/without iHM](docs/README_sungrow_wallbox_connection.md)
+- **[Sungrow iHomeManager EMS](docs/README_iHomeManager.md)** – Standalone EMS (unit **247**, TCP **502/503**); Combined Device with inverter; EV charger via **`charger_enabled`**
 
 ### ⚠️ Needs Testing
 *Template and register map present; limited or no field validation on real hardware — please report issues.*
 
-- **[Sungrow iHomeManager EMS](docs/README_iHomeManager.md)** – Standalone EMS template; fixes in 1.0.22+ ([#79](https://github.com/TCzerny/ha-modbus-manager/issues/79)); Combined Device with inverter tested ([#50](https://github.com/TCzerny/ha-modbus-manager/issues/50), [#78](https://github.com/TCzerny/ha-modbus-manager/issues/78)) — full standalone hardware validation still welcome
 - **[Heidelberg Energy Control](docs/README_heidelberg_energy_control.md)** – EV charger (Modbus RTU via proxy)
 - **[BYD Battery Box](docs/README_byd_battery_box.md)** – HVS/HVM/HVL/LVS series
 - **[Fronius GEN24](docs/README_fronius_dynamic.md)** – SunSpec-capable

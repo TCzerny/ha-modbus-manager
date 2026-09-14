@@ -61,7 +61,7 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 - 🔌 **Heidelberg Energy Control**: EV charger (Modbus RTU via proxy) – *needs testing*
 
 **Needs testing on hardware**
-Templates present with limited field validation — please report issues: **Sungrow iHomeManager EMS** (standalone), **Heidelberg Energy Control**, **Fronius GEN24**, **Growatt MIN/MOD/MAX**, **SMA Sunny Tripower/Boy**, **SolaX Inverter Series**, **BYD Battery Box**. See [Documentation](https://github.com/TCzerny/ha-modbus-manager/wiki) and `docs/` for per-template docs.
+Templates present with limited field validation — please report issues: **Heidelberg Energy Control**, **Fronius GEN24**, **Growatt MIN/MOD/MAX**, **SMA Sunny Tripower/Boy**, **SolaX Inverter Series**, **BYD Battery Box**. See [Documentation](https://github.com/TCzerny/ha-modbus-manager/wiki) and `docs/` for per-template docs.
 
 
 ## 📋 Configuration
@@ -91,7 +91,6 @@ Templates present with limited field validation — please report issues: **Sung
 - **Sungrow iHomeManager EMS**: Grid/EMS + optional charger (`charger_enabled`)
 
 ### Needs Testing
-- **Sungrow iHomeManager EMS** — template + Combined Device fixes; standalone validation ongoing
 - **Heidelberg Energy Control**, **BYD Battery Box**, **Fronius GEN24**, **Growatt MIN/MOD/MAX**, **SMA**, **SolaX**
 
 
@@ -123,7 +122,7 @@ Templates present with limited field validation — please report issues: **Sung
 - ✅ Calculated sensors with Jinja2
 - ✅ Full float conversion support (IEEE 754)
 - ✅ SBH battery base metrics (community tested on WiNet-S/LAN)
-- ✅ iHomeManager EMS template (community beta — standalone validation ongoing)
+- ✅ iHomeManager EMS template (supported)
 - ✅ Modbus TCP connection lifecycle fixes (v1.1.1)
 - ✅ Home Assistant Entity guidelines compliance (has_entity_name, EntityCategory, etc.)
 
@@ -155,7 +154,7 @@ If you find this integration useful, please consider:
 
 ---
 
-**Version**: 1.1.6
+**Version**: 1.2.0
 **Status**: Stable - Active Development
 **Home Assistant**: 2025.4.0+
 **Last Updated**: September 2026

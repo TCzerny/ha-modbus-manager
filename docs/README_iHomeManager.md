@@ -12,7 +12,7 @@ template: `sungrow_ihomemanager.yaml`.
 - **Default prefix**: `IHM`
 - **Default slave ID**: `247`
 - **Firmware**: `iHomeManager`
-- **Template version**: 1.0.15
+- **Template version**: 1.0.17
 
 ### Dynamic Configuration
 
