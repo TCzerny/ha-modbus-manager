@@ -11,23 +11,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### ✨ Added
 
-- **Identify on a known host**: New hub setup starts with a menu (detect / pick template / Combined Device). Detect asks host/port, then **two steps**: (1) the template’s existing type-code entity (`sungrow_device_type_code` / `device_type_code` + `valid_models.type_code`; iHM unit **247**), (2) after an inverter hit, register **6100** for LAN vs WiNet, then SBR (`detect_slave_ids` **200/2**) and AC011E (**3/2/4/5**, skip inverter and the SBR slave). iHM extras stay on **247** (`battery_config` / `charger_enabled`) — no RS485 wallbox sweep. Confirm omits empty serial/battery/wallbox lines and pre-fills the model. Connection type stays changeable in Options. Battery/wallbox setup forms and the wallbox-connected question are skipped when the probe already decided. Solvis has no type-code entity (manual picker). Existing entries are not overwritten. Probe miss falls back to the template picker.
-
-- **Dual Modbus I/O path**: On Home Assistant **2026.9+** the coordinator and FC43 probes use Core `async_get_unit` / `async_get_temporary_unit` (shared serialized connection, no second pymodbus socket). Older cores keep the `ModbusHub` fallback until **HA 2026.12**, then the hub path can be removed. `unique_id` / `entity_id` are unchanged.
-- **Hub presentation**: New hubs title from the selected inverter model (host:port kept in the title). Battery/wallbox devices nest under the inverter (`via_device`). Device manufacturer/model come from the template. Options are a menu (Connection / Inverter / Device / Battery / Battery template / Reload templates). Template reload applies to every device on the hub (inverter, battery, heating, wallbox), not only the inverter YAML. Device settings live in that menu — hub config subentry rows are not used. Existing entry titles and device identifiers are unchanged.
+- **Identify on a known host**: Setup menu (detect / template / Combined Device). Detect reads the type-code entity, then after an inverter hit probes SBR (`200`/`2`) and AC011E (`3`/`2`/`4`/`5`). iHM extras stay on unit **247**. Confirm pre-fills; existing entries are not overwritten. Solvis has no type-code (manual picker).
+- **Dual Modbus I/O**: Home Assistant **2026.9+** uses Core `async_get_unit` / `async_get_temporary_unit`. Older cores keep the `ModbusHub` fallback until **HA 2026.12**. `unique_id` / `entity_id` unchanged.
+- **Hub presentation**: New hubs title from the inverter model. Battery/wallbox nest under the inverter (`via_device`). Options are a menu; no hub subentry rows. Existing titles and identifiers stay.
 
 ### 🔧 Changed
 
-- **Dynamic template processing**: Setup and options share one `process_dynamic_config` path (`dynamic_processing.py`). The unused options `firmware_update` step is removed; firmware profile stays on the inverter options form.
-- **Hub detect templates**: Dropped YAML `identify:` from SHx (v1.2.19), iHomeManager (v1.0.17), and Solvis SC3 (v1.0.5). SBR v1.2.3 and AC011E v1.1.3 declare `detect_slave_ids` for step-2 probes.
-- **Docs**: Sungrow iHomeManager EMS is listed as **supported** (no longer “needs testing”).
+- **Dynamic config**: Setup and options share one `process_dynamic_config` path. Firmware profile stays on the inverter form.
+- **Detect templates**: Dropped YAML `identify:` (SHx v1.2.19, iHomeManager v1.0.17, Solvis v1.0.5). SBR/AC011E declare `detect_slave_ids`.
+- **Docs**: iHomeManager listed as **supported**.
 
 ### 🐛 Fixed
 
-- **Number writes ([#98](https://github.com/TCzerny/ha-modbus-manager/issues/98))**: `number.set_value` raises `HomeAssistantError` when the Modbus write fails or the register does not match after read-back. A missed read marks the number unavailable instead of keeping last-good. The unused battery 0.5C/1C write clamp is removed so the setpoint is not silently changed.
-- **Add device (+)**: The Integrations button is labelled **Add device**. With more than one hub the picker title uses the same string. Combined Device entries cannot start that flow (no Modbus I/O). The add form states that the device uses the selected hub connection.
-
-- **Sungrow SBR/SBH — WiNet-S offer ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77))**: The pack template is offered on **WINET** as well as LAN/RS485. Setup note tells WiNet-S users to use the **forwarded Modbus ID** (often **2**, not **200**). Cell diagnostics **10756+** stay hidden on WiNet-S. Template v1.2.2.
+- **Number writes ([#98](https://github.com/TCzerny/ha-modbus-manager/issues/98))**: Failed or ignored `number.set_value` now raises. A mismatched or missed read-back marks the number unavailable instead of last-good.
+- **Add device (+)**: Integrations button and multi-hub picker use **Add device**. Combined Device entries cannot start that flow.
+- **SBR/SBH on WiNet-S ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77))**: Pack template offered on WINET; use the forwarded Modbus ID (often **2**). Cell diagnostics **10756+** stay hidden. Template v1.2.2.
 
 ## [1.1.6] - 2026-09-07
 
