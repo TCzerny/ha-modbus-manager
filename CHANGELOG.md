@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🐛 Fixed
 
+- **Number writes ([#98](https://github.com/TCzerny/ha-modbus-manager/issues/98))**: `number.set_value` raises `HomeAssistantError` when the Modbus write fails or the register does not match after read-back. A missed read marks the number unavailable instead of keeping last-good. The unused battery 0.5C/1C write clamp is removed so the setpoint is not silently changed.
 - **Add device (+)**: The Integrations button is labelled **Add device**. With more than one hub the picker title uses the same string. Combined Device entries cannot start that flow (no Modbus I/O). The add form states that the device uses the selected hub connection.
 
 - **Sungrow SBR/SBH — WiNet-S offer ([#77](https://github.com/TCzerny/ha-modbus-manager/issues/77))**: The pack template is offered on **WINET** as well as LAN/RS485. Setup note tells WiNet-S users to use the **forwarded Modbus ID** (often **2**, not **200**). Cell diagnostics **10756+** stay hidden on WiNet-S. Template v1.2.2.

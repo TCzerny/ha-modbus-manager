@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import asyncio
+import math
 from typing import Any, Optional
 
 from homeassistant.components.number import NumberEntity, NumberMode
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -15,7 +18,6 @@ from .const import DOMAIN
 from .coordinator import ModbusCoordinator
 from .device_utils import (
     create_base_extra_state_attributes,
-    generate_entity_id,
     get_entity_mm_group,
     is_coordinator_connected,
     is_register_dependency_met,
@@ -173,6 +175,10 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
 
         # Create register key for data lookup
         self.register_key = self._create_register_key(register_config)
+        # True when the last write/read-back (or a None processed value) missed.
+        # Ignore coordinator last-good until a newer timestamp arrives.
+        self._register_value_missing = False
+        self._stale_before_ts: float | None = None
 
     def _create_register_key(self, register_config: dict[str, Any]) -> str:
         """Create unique key for register data lookup."""
@@ -232,11 +238,21 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                 numeric_value = register_data.get("numeric_value")
 
                 if processed_value is not None:
-                    # Convert to float for number entities
-                    try:
-                        self._attr_native_value = float(processed_value)
-                    except (ValueError, TypeError):
+                    data_ts = register_data.get("timestamp")
+                    if (
+                        self._register_value_missing
+                        and self._stale_before_ts is not None
+                        and (data_ts is None or data_ts <= self._stale_before_ts)
+                    ):
                         self._attr_native_value = None
+                    else:
+                        try:
+                            self._attr_native_value = float(processed_value)
+                            self._register_value_missing = False
+                            self._stale_before_ts = None
+                        except (ValueError, TypeError):
+                            self._attr_native_value = None
+                            self._register_value_missing = True
 
                     # Update extra_state_attributes with raw/processed/numeric values
                     self._attr_extra_state_attributes = {
@@ -251,7 +267,8 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
 
                 else:
                     self._attr_native_value = None
-            else:
+                    self._register_value_missing = True
+            elif not self._register_value_missing:
                 self._attr_native_value = None
 
             # Update dynamic max_value from referenced register (e.g. battery limit)
@@ -293,91 +310,50 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
         except Exception as e:
             _LOGGER.error("Error updating number %s: %s", self._attr_name, str(e))
             self._attr_native_value = None
+            self._register_value_missing = True
+
+    def _display_values_match(self, requested: float, actual: float) -> bool:
+        """Compare display units after a write, allowing one scale/step tick."""
+        try:
+            requested_f = float(requested)
+            actual_f = float(actual)
+        except (TypeError, ValueError):
+            return False
+        abs_tol = abs(float(self._scale or 0)) or 1e-6
+        step = self._attr_native_step
+        if step is not None:
+            try:
+                abs_tol = max(abs_tol, abs(float(step)))
+            except (TypeError, ValueError):
+                pass
+        return math.isclose(requested_f, actual_f, rel_tol=0.0, abs_tol=abs_tol + 1e-9)
+
+    def _mark_register_unavailable(self) -> None:
+        """Stop showing last-good when the live register cannot be trusted."""
+        self._register_value_missing = True
+        try:
+            self._stale_before_ts = asyncio.get_running_loop().time()
+        except RuntimeError:
+            self._stale_before_ts = None
+        self._attr_native_value = None
+        if self.hass is not None:
+            self.async_write_ha_state()
+
+    def _write_error(
+        self, translation_key: str, placeholders: dict[str, str]
+    ) -> HomeAssistantError:
+        return HomeAssistantError(
+            translation_domain=DOMAIN,
+            translation_key=translation_key,
+            translation_placeholders=placeholders,
+        )
 
     async def async_set_native_value(self, value: float) -> None:
-        """Set the value of the number."""
+        """Write the number and confirm the device accepted it."""
+        name = str(self.name or self._attr_unique_id)
+        requested = float(value)
+        failed_placeholders = {"name": name, "value": str(requested)}
         try:
-            # Safety check: Validate battery power limits against battery capacity
-            unique_id = self.register_config.get("unique_id", "")
-            if "battery_max" in unique_id.lower() and "power" in unique_id.lower():
-                # Try to get battery capacity from coordinator's hass state
-                try:
-                    from homeassistant.core import State
-                    from homeassistant.helpers import entity_registry as er
-
-                    # Get device identifier to find battery capacity sensor
-                    device_id = self._attr_device_info.get("identifiers")
-                    if device_id:
-                        # Find battery capacity sensor for this device
-                        entity_registry = er.async_get(self.coordinator.hass)
-                        device_entities = er.async_entries_for_device(
-                            entity_registry, list(device_id)[0][1]
-                        )
-
-                        battery_capacity_entity = None
-                        for entity in device_entities:
-                            if (
-                                entity.unique_id
-                                and "battery_capacity" in entity.unique_id.lower()
-                            ):
-                                battery_capacity_entity = entity.entity_id
-                                break
-
-                        if battery_capacity_entity:
-                            battery_capacity_state = self.coordinator.hass.states.get(
-                                battery_capacity_entity
-                            )
-                            if (
-                                battery_capacity_state
-                                and battery_capacity_state.state
-                                not in ["unknown", "unavailable", None]
-                            ):
-                                try:
-                                    battery_capacity_kwh = float(
-                                        battery_capacity_state.state
-                                    )
-                                    # Calculate safe limit: 0.5C rate for charging, 1C for discharging
-                                    if "charge" in unique_id.lower():
-                                        max_safe_power_kw = (
-                                            battery_capacity_kwh * 0.5
-                                        )  # 0.5C charging rate
-                                    else:  # discharging
-                                        max_safe_power_kw = (
-                                            battery_capacity_kwh * 1.0
-                                        )  # 1C discharging rate
-
-                                    # Convert to same unit as value (W or kW)
-                                    if self._attr_native_unit_of_measurement == "kW":
-                                        max_safe_power = max_safe_power_kw
-                                    else:  # W
-                                        max_safe_power = max_safe_power_kw * 1000
-
-                                    if value > max_safe_power:
-                                        _LOGGER.warning(
-                                            "⚠️ SAFETY WARNING: Attempted to set %s to %.1f %s, but battery capacity (%.2f kWh) limits safe maximum to %.1f %s (0.5C/1C rate). Value will be limited.",
-                                            self._attr_name,
-                                            value,
-                                            self._attr_native_unit_of_measurement,
-                                            battery_capacity_kwh,
-                                            max_safe_power,
-                                            self._attr_native_unit_of_measurement,
-                                        )
-                                        value = min(value, max_safe_power)
-                                except (ValueError, TypeError):
-                                    # Ignore if battery capacity cannot be parsed
-                                    _LOGGER.debug(
-                                        "Could not parse battery capacity for %s",
-                                        self._attr_name,
-                                    )
-                except Exception as e:
-                    # Ignore any errors when trying to validate battery power limits
-                    _LOGGER.debug(
-                        "Error validating battery power limits for %s: %s",
-                        self._attr_name,
-                        str(e),
-                    )
-
-            # Get register configuration
             address = self.register_config.get("address")
             slave_id = self.register_config.get("slave_id", 1)
 
@@ -389,7 +365,6 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             scale = self.register_config.get("scale")
             multiplier = self.register_config.get("multiplier")
 
-            # Use scale if available, otherwise use multiplier (default: 1.0)
             if scale is not None:
                 scale_factor = scale
             elif multiplier is not None:
@@ -398,20 +373,18 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                 scale_factor = 1.0
 
             offset = self.register_config.get("offset", 0.0)
-            scaled_value = (value - offset) / scale_factor
+            scaled_value = (requested - offset) / scale_factor
 
-            # Encode to Modbus register format based on data type/endian settings
-            from .modbus_utils import encode_register_write_value
+            from .modbus_utils import encode_register_write_value, get_write_call_type
 
             write_value, count = encode_register_write_value(
                 scaled_value, self.register_config
             )
-
-            # Write to Modbus register
-            from .modbus_utils import get_write_call_type
-
             write_function_code = self.register_config.get("write_function_code")
             call_type = get_write_call_type(count, write_function_code)
+
+            before = self.coordinator.get_register_data(self.register_key)
+            before_ts = (before or {}).get("timestamp")
 
             result = await self.coordinator.async_pb_write(
                 slave_id,
@@ -421,12 +394,56 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             )
 
             if not result:
-                _LOGGER.error("Failed to set %s to %s", self._attr_name, value)
+                _LOGGER.error("Failed to set %s to %s", name, requested)
+                self._mark_register_unavailable()
+                raise self._write_error("number_write_failed", failed_placeholders)
 
-        except Exception as e:
+            after = self.coordinator.get_register_data(self.register_key)
+            after_ts = (after or {}).get("timestamp")
+            actual = (after or {}).get("processed_value")
+            if after is None or after_ts == before_ts or actual is None:
+                _LOGGER.error(
+                    "Wrote %s to %s but could not read the register back",
+                    name,
+                    requested,
+                )
+                self._mark_register_unavailable()
+                raise self._write_error(
+                    "number_write_verify_unread", failed_placeholders
+                )
+
+            try:
+                actual_f = float(actual)
+            except (TypeError, ValueError):
+                self._mark_register_unavailable()
+                raise self._write_error(
+                    "number_write_verify_unread", failed_placeholders
+                ) from None
+
+            if not self._display_values_match(requested, actual_f):
+                _LOGGER.error(
+                    "Device rejected %s write: requested %s, register is %s",
+                    name,
+                    requested,
+                    actual_f,
+                )
+                raise self._write_error(
+                    "number_write_verify_mismatch",
+                    {
+                        "name": name,
+                        "requested": str(requested),
+                        "actual": str(actual_f),
+                    },
+                )
+
+        except HomeAssistantError:
+            raise
+        except Exception as err:
             _LOGGER.error(
-                "Error setting number %s to %s: %s", self._attr_name, value, str(e)
+                "Error setting number %s to %s: %s", name, requested, str(err)
             )
+            self._mark_register_unavailable()
+            raise self._write_error("number_write_failed", failed_placeholders) from err
 
     @property
     def should_poll(self) -> bool:
@@ -436,6 +453,8 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
     @property
     def available(self) -> bool:
         """Return if the entity is available."""
+        if self._register_value_missing:
+            return False
         if not is_coordinator_connected(self.coordinator) or not super().available:
             return False
         return is_register_dependency_met(
