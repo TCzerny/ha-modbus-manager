@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### 🐛 Fixed
+
+- **Entity icons**: Switches, buttons, text entities, binary sensors, and calculated binary sensors now use the template `icon`. An explicit icon overrides the `device_class` icon. `unique_id` unchanged.
+
 ## [1.3.1] - 2026-10-12
 
 ### ✨ Added
