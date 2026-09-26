@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **String sensors — hex encoding**: `data_type: string` with `encoding: hex` publishes the register bytes as lowercase hex (`123456789012` for bytes `\x12\x34\x56\x78\x90\x12`). Hex is read-only; a control that uses it raises an error.
 
+### 🐛 Fixed
+
+- **Core unit writes (FC16)**: This integration's `async_get_unit` adapter now honours `write_registers` / `write_coils` even for a single uint16/coil. Previously a scalar payload called `write_register` (FC06), so devices that only accept FC16 (e.g. EM2GO / AEFA wallboxes) timed out, held the I/O lock, and marked the charger unavailable.
+
 ## [1.2.0] - 2026-09-14
 
 ### ✨ Added
