@@ -179,7 +179,7 @@ OPTIONAL_FIELDS = {
     "bit_range": None,  # Bereich von Bits extrahieren [start, end]
     "float": False,
     "string": False,
-    "encoding": "utf-8",  # String-Encoding (utf-8, ascii, latin1, etc.)
+    "encoding": "utf-8",  # String encoding (utf-8, ascii, latin1, or read-only hex)
     "max_length": None,  # Maximale String-Länge (None = unbegrenzt)
     "control": "none",
     "min_value": DEFAULT_MIN_VALUE,

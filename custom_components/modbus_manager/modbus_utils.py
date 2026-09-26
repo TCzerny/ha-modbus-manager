@@ -118,6 +118,36 @@ def registers_to_bytes(
     return bytes(byte_values)
 
 
+def _is_hex_encoding(encoding: object) -> bool:
+    """Return True when a string register should be shown as hex digits."""
+    return str(encoding).strip().lower() == "hex"
+
+
+def reject_hex_encoding_for_control(encoding: object) -> None:
+    """Raise when a writable control is configured with read-only hex encoding."""
+    if _is_hex_encoding(encoding):
+        raise ValueError("encoding 'hex' is read-only and cannot be used on a control")
+
+
+def decode_string_registers(
+    registers: list[int],
+    *,
+    encoding: str = "utf-8",
+    byte_order: str = "big",
+    swap: str | bool = "none",
+) -> str:
+    """Decode Modbus registers to a string.
+
+    ``encoding: hex`` returns the lowercase hex of the full byte buffer
+    (``bytes.hex()``), including ``00`` bytes. Other encodings are decoded as
+    text and cut at the first null terminator.
+    """
+    data = registers_to_bytes(registers, byte_order=byte_order, swap=swap)
+    if _is_hex_encoding(encoding):
+        return data.hex()
+    return data.decode(encoding, errors="ignore").split("\x00", 1)[0].strip()
+
+
 def bytes_to_registers(
     data: bytes,
     byte_order: str = "big",
@@ -180,6 +210,7 @@ def encode_register_write_value(
     if data_type == "string":
         raw_value = value if isinstance(value, str) else str(value)
         encoding = register_config.get("encoding", "utf-8")
+        reject_hex_encoding_for_control(encoding)
         encoded = raw_value.encode(encoding, errors="ignore")
 
         max_length = register_config.get("max_length")

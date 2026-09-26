@@ -43,7 +43,11 @@ from .device_utils import (
     via_device_tuple,
 )
 from .logger import ModbusManagerLogger
-from .modbus_utils import is_valid_modbus_address, registers_to_bytes
+from .modbus_utils import (
+    decode_string_registers,
+    is_valid_modbus_address,
+    registers_to_bytes,
+)
 from .performance_monitor import PerformanceMonitor
 from .register_optimizer import RegisterOptimizer
 from .sunspec_utils import (
@@ -2221,20 +2225,11 @@ class ModbusCoordinator(DataUpdateCoordinator):
                         processed_value = float(raw_value[0]) if raw_value else 0.0
 
                 elif data_type == "string":
-                    # String conversion - use registers_to_bytes to respect byte_order and swap
-                    bytes_data = registers_to_bytes(
+                    processed_value = decode_string_registers(
                         raw_value,
+                        encoding=register.get("encoding", "utf-8"),
                         byte_order=register.get("byte_order", "big"),
                         swap=register.get("swap", "none"),
-                    )
-                    encoding = register.get("encoding", "utf-8")
-                    # Treat as a null-terminated string: some devices leave stray bytes
-                    # in the buffer after the terminator, so cut at the first \x00
-                    # rather than just stripping trailing nulls or removing all of them.
-                    processed_value = (
-                        bytes_data.decode(encoding, errors="ignore")
-                        .split("\x00", 1)[0]
-                        .strip()
                     )
 
                 else:
@@ -2259,8 +2254,12 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     processed_value = float(raw_value)
 
                 elif data_type == "string":
-                    # String conversion
-                    processed_value = str(raw_value)
+                    processed_value = decode_string_registers(
+                        [raw_value],
+                        encoding=register.get("encoding", "utf-8"),
+                        byte_order=register.get("byte_order", "big"),
+                        swap=register.get("swap", "none"),
+                    )
 
                 else:
                     # Default: return as-is
