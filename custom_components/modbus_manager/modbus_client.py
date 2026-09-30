@@ -271,13 +271,21 @@ class ModbusTransport:
             if call_type == CALL_TYPE_DISCRETE:
                 bits = await unit.read_discrete_inputs(int(address), int(value))
                 return SimpleNamespace(bits=list(bits), registers=[])
-            if call_type in (CALL_TYPE_WRITE_REGISTER, CALL_TYPE_WRITE_REGISTERS):
+            if call_type == CALL_TYPE_WRITE_REGISTERS:
+                values = value if isinstance(value, list) else [value]
+                await unit.write_registers(int(address), [int(v) for v in values])
+                return True
+            if call_type == CALL_TYPE_WRITE_REGISTER:
                 if isinstance(value, list):
                     await unit.write_registers(int(address), [int(v) for v in value])
                 else:
                     await unit.write_register(int(address), int(value))
                 return True
-            if call_type in (CALL_TYPE_WRITE_COIL, CALL_TYPE_WRITE_COILS):
+            if call_type == CALL_TYPE_WRITE_COILS:
+                bits = value if isinstance(value, list) else [value]
+                await unit.write_coils(int(address), [bool(v) for v in bits])
+                return True
+            if call_type == CALL_TYPE_WRITE_COIL:
                 if isinstance(value, list):
                     await unit.write_coils(int(address), [bool(v) for v in value])
                 else:
