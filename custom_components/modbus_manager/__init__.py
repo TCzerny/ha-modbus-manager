@@ -37,8 +37,10 @@ from .device_utils import (
     apply_device_entry_id_remap,
     async_get_registry_device,
     async_move_device_to_subentry,
+    async_register_entry_devices,
     build_device_entry_id,
     device_subentry_ids_for_entry,
+    devices_for_config_entry,
     get_entity_mm_group,
     hub_device_identifier,
     logical_device_for_registry_entry,
@@ -103,12 +105,7 @@ async def _detach_device_subentries(hass: HomeAssistant, entry: ConfigEntry) -> 
             )
 
     moved_devices = 0
-    for device_entry in list(device_registry.devices.values()):
-        linked = entry.entry_id in getattr(device_entry, "config_entries", set())
-        if getattr(device_entry, "config_entry_id", None) == entry.entry_id:
-            linked = True
-        if not linked:
-            continue
+    for device_entry in devices_for_config_entry(device_registry, entry.entry_id):
         sub_ids = device_subentry_ids_for_entry(device_entry, entry.entry_id)
         has_sub = bool(getattr(device_entry, "config_subentry_id", None)) or any(
             sid for sid in sub_ids if sid
@@ -313,6 +310,10 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
             "performance_monitor": coordinator.performance_monitor,
         }
 
+        # Registry devices before platforms so the config-flow finish screen
+        # can offer name and area for inverter, battery, and wallbox.
+        await async_register_entry_devices(hass, entry)
+
         # Start coordinator refresh fully in background (Option A).
         # Do not block entry setup on initial Modbus roundtrips.
         initial_refresh_task = asyncio.create_task(
@@ -446,6 +447,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 "combination_type": entry.data.get("combination_type"),
                 "coordinator": coordinator,
             }
+            await async_register_entry_devices(hass, entry)
             initial_refresh_task = asyncio.create_task(
                 coordinator.async_config_entry_first_refresh()
             )

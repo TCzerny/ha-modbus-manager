@@ -167,6 +167,18 @@ After you change a **select**, **number**, **switch**, or similar control:
 
 **Typical UI update:** about **1–2 seconds** after a successful write.
 
+### Polling (`scan_interval`)
+
+SHx uses three groups (template v1.2.21):
+
+| Seconds | Group | Typical entities |
+|---------|--------|------------------|
+| **10** | Live telemetry | Power, voltage, current, SoC, temperature, running state |
+| **30** | Settings / diagnostics | EMS, limits, MPP scan, master/slave, wallbox setpoints |
+| **600** | Totals / identity | Energy counters, serial, firmware, protocol |
+
+Raw and writable entities that share a holding register use the **same** group. A write still read-backs immediately (see above).
+
 **If it takes longer:** the inverter may not yet reflect the new value in the register (device-side delay). The state history shows when Home Assistant **read back** the new value, not necessarily the exact moment you clicked.
 
 Examples: **EMS Mode Selection** (register 13049), export limits, battery forced charge/discharge controls.
@@ -249,6 +261,7 @@ Undocumented holding registers for Master/Slave cascade configuration. Available
 - **Battery Discharging Start Power** - Power threshold to start battery discharging
 
 ### 🔄 System Control
+- **Global MPP scan manual** - Start one global MPPT scan (shadow / multi-peak). Holding **30229** (register **30230**): **0xAA** Start / **0x55** Off. Only runs while the inverter is in normal operation; a second Start during an active scan is ignored.
 - **Forced Startup Under Low SoC Standby** - Enable/disable forced startup when battery is in low SoC standby mode
   - **Address:** 13016 (register 13017)
   - **Values:** 0xAA (Enabled) / 0x55 (Disabled)
@@ -533,6 +546,7 @@ This section contains all entities that will be created by this template, includ
 | 13088 | Active Power Limitation (SHT only) | active_power_limitation |
 | 13089 | Active Power Limit Ratio | active_power_limit_ratio |
 | 13099 | Reserved SoC for Backup | reserved_soc_for_backup |
+| 30229 | Global MPP scan manual | global_mpp_scan_manual |
 | 31221 | Export Power Limit Value Wide Range | export_power_limit_value_wide_range |
 | 33046 | Battery Max Charging Power | battery_max_charging_power | kW (scale 0.01; was W in many mkaiser setups |
 | 33047 | Battery Max Discharging Power | battery_max_discharging_power | kW (scale 0.01; mkaiser used `battery_max_discharge_power` in W) |

@@ -74,6 +74,45 @@ def async_get_registry_device(
     return device_registry.async_get_device(identifiers={ident})
 
 
+def devices_for_config_entry(
+    device_registry: dr.DeviceRegistry, config_entry_id: str
+) -> list[dr.DeviceEntry]:
+    """Devices owned by one config entry (avoids deprecated ``devices.values()``)."""
+    return list(dr.async_entries_for_config_entry(device_registry, config_entry_id))
+
+
+def resolve_via_device_id(
+    hass: HomeAssistant,
+    identifier: tuple[str, str],
+    config_entry_id: str,
+) -> str | None:
+    """Return the parent device id for ``via_device_id``, or None on older cores."""
+    getter = getattr(dr, "async_get_device_id_by_identifier", None)
+    if getter is None:
+        return None
+    try:
+        return getter(hass, identifier, config_entry_id=config_entry_id)
+    except (TypeError, ValueError):
+        return None
+
+
+def via_device_info_fields(
+    hass: HomeAssistant | None,
+    via_device: tuple[str, str] | None,
+    config_entry_id: str | None,
+) -> dict[str, Any]:
+    """``via_device_id`` on HA 2026.8+; ``via_device`` on older cores."""
+    if not via_device:
+        return {}
+    if hass is not None and config_entry_id:
+        via_id = resolve_via_device_id(hass, via_device, config_entry_id)
+        if via_id:
+            return {"via_device_id": via_id}
+        if getattr(dr, "async_get_device_id_by_identifier", None) is not None:
+            return {}
+    return {"via_device": via_device}
+
+
 # Template file stem -> device role for combined-device pairing and filtering.
 KNOWN_TEMPLATE_DEVICE_TYPES: dict[str, str] = {
     "sungrow_ihomemanager": "energy_manager",
@@ -932,6 +971,7 @@ def create_device_info_dict(
         manufacturer: Template manufacturer; defaults to "Modbus Manager".
         model: Selected model or template display name.
         via_device: Parent ``(domain, identifier)`` for battery/wallbox nesting.
+            Resolved to ``via_device_id`` on HA 2026.8+.
     """
     device_identifier = hub_device_identifier(host, port, device_entry_id)
 
@@ -952,9 +992,87 @@ def create_device_info_dict(
         "model": f"{display_model} (Slave {slave_id})",
         "sw_version": clean_firmware_version_string(firmware_version),
     }
-    if via_device:
-        info["via_device"] = via_device
+    info.update(via_device_info_fields(hass, via_device, config_entry_id))
     return info
+
+
+async def async_register_entry_devices(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Create registry devices before platforms so the flow can assign name/area.
+
+    Uses the same identifiers as ``create_device_info_dict``. ``name`` /
+    ``manufacturer`` / ``model`` replace deprecated ``default_*`` (HA 2027.9).
+    User-renamed devices keep ``name_by_user``.
+    """
+    device_registry = dr.async_get(hass)
+    if entry.data.get(CONF_ENTRY_TYPE, ENTRY_TYPE_HUB) == ENTRY_TYPE_COMBINED_DEVICE:
+        prefix = str(entry.data.get("combined_prefix") or entry.entry_id).strip()
+        device_registry.async_get_or_create(
+            config_entry_id=entry.entry_id,
+            identifiers={(DOMAIN, f"combined_{entry.entry_id}")},
+            name=f"Combined {prefix}",
+            manufacturer="Modbus Manager",
+            model="Cross-hub Combined Device",
+        )
+        return
+
+    devices = entry.data.get("devices", [])
+    if not isinstance(devices, list) or not devices:
+        return
+
+    host, port = entry_host_port(entry)
+    from .template_loader import get_template_by_name
+
+    ordered = sorted(
+        (d for d in devices if isinstance(d, dict)),
+        key=lambda d: (
+            0 if resolve_device_role_type(d) in _VIA_PARENT_ROLES else 1,
+            str(d.get("prefix", "")),
+        ),
+    )
+    created_ids: dict[str, str] = {}
+    use_via_device_id = (
+        getattr(dr, "async_get_device_id_by_identifier", None) is not None
+    )
+    for device in ordered:
+        template_name = str(device.get("template") or "template")
+        manufacturer = None
+        try:
+            template = await get_template_by_name(template_name)
+        except Exception:
+            template = None
+        if isinstance(template, dict):
+            manufacturer = template.get("manufacturer")
+        via_tuple = via_device_tuple(device, devices, host, port)
+        info = create_device_info_dict(
+            hass=hass,
+            host=host,
+            port=port,
+            slave_id=int(device.get("slave_id", 1) or 1),
+            prefix=str(device.get("prefix") or "device"),
+            template_name=template_name,
+            device_entry_id=_logical_device_id(device),
+            config_entry_id=entry.entry_id,
+            manufacturer=manufacturer,
+            model=device.get("selected_model"),
+            via_device=via_tuple,
+        )
+        kwargs: dict[str, Any] = {
+            "config_entry_id": entry.entry_id,
+            "identifiers": info["identifiers"],
+            "name": info["name"],
+            "manufacturer": info["manufacturer"],
+            "model": info["model"],
+        }
+        if via_tuple:
+            if use_via_device_id:
+                parent_id = created_ids.get(via_tuple[1]) or info.get("via_device_id")
+                if parent_id:
+                    kwargs["via_device_id"] = parent_id
+            else:
+                kwargs["via_device"] = via_tuple
+        created = device_registry.async_get_or_create(**kwargs)
+        ident = next(iter(info["identifiers"]))
+        created_ids[ident[1]] = created.id
 
 
 def create_base_extra_state_attributes(
@@ -1177,9 +1295,7 @@ def _find_device_registry_entry_for_logical_device(
     if not target_subentry_id:
         return None
 
-    for candidate in device_registry.devices.values():
-        if entry.entry_id not in candidate.config_entries:
-            continue
+    for candidate in devices_for_config_entry(device_registry, entry.entry_id):
         if target_subentry_id in device_subentry_ids_for_entry(
             candidate, entry.entry_id
         ):
@@ -1356,11 +1472,9 @@ def apply_device_entry_id_remap(
                 device_registry, new_identifier, entry.entry_id
             )
         if device_entry is None and subentry is not None:
-            for candidate in device_registry.devices.values():
-                if (
-                    entry.entry_id in candidate.config_entries
-                    and subentry.subentry_id
-                    in device_subentry_ids_for_entry(candidate, entry.entry_id)
+            for candidate in devices_for_config_entry(device_registry, entry.entry_id):
+                if subentry.subentry_id in device_subentry_ids_for_entry(
+                    candidate, entry.entry_id
                 ):
                     device_entry = candidate
                     break
