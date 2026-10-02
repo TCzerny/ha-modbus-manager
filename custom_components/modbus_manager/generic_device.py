@@ -301,6 +301,20 @@ def normalize_generic_register(row: dict[str, Any]) -> dict[str, Any]:
         press = _optional_int(row.get("button_press_value"))
         normalized["button_press_value"] = 1 if press is None else press
 
+    if entity_type == "sensor":
+        if "map_text" in row:
+            value_map = parse_value_map(row.get("map_text"))
+        else:
+            value_map = parse_value_map(row.get("map"))
+        if value_map:
+            normalized["map"] = value_map
+        if "flags_text" in row:
+            flags = parse_value_map(row.get("flags_text"))
+        else:
+            flags = parse_value_map(row.get("flags"))
+        if flags:
+            normalized["flags"] = flags
+
     if entity_type == "select":
         options = parse_value_map(row.get("options_text") or row.get("options"))
         if not options:
@@ -405,6 +419,8 @@ _ROW_KEY_ORDER = (
     "off_value",
     "button_press_value",
     "options",
+    "map",
+    "flags",
     "force_update",
     "never_resets",
 )
@@ -638,6 +654,10 @@ def generic_row_form_defaults(row: dict[str, Any]) -> dict[str, Any]:
     defaults["state_class"] = row.get("state_class") or ""
     if "options" in row and "options_text" not in row:
         defaults["options_text"] = format_options_text(row.get("options"))
+    if "map" in row and "map_text" not in row:
+        defaults["map_text"] = format_options_text(row.get("map"))
+    if "flags" in row and "flags_text" not in row:
+        defaults["flags_text"] = format_options_text(row.get("flags"))
     return defaults
 
 
@@ -761,6 +781,11 @@ def generic_entity_extras_schema(
             fields[vol.Optional("bit_position", default=int(d["bit_position"]))] = int
         else:
             fields[vol.Optional("bit_position")] = int
+    if entity_type == "sensor" and numeric:
+        map_text = str(d.get("map_text") or format_options_text(d.get("map")))
+        flags_text = str(d.get("flags_text") or format_options_text(d.get("flags")))
+        fields[vol.Optional("map_text", default=map_text)] = str
+        fields[vol.Optional("flags_text", default=flags_text)] = str
     if wide:
         byte_order = str(d.get("byte_order") or "big")
         swap = str(d.get("swap") or "none")

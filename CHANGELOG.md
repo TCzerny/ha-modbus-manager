@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Generic Device — options**: Add / edit / remove registers on an existing generic device. Edit keeps `unique_id`. Remove does not purge the entity registry. Prefix/slave sit under **Device options**. YAML template reload is hidden when the hub has only generic devices.
 - **Generic Device — add on an existing hub**: **Add device** offers **Generic Modbus Device** (same sentinel). Prefix/slave, then the entity loop, on the hub connection. A second generic device on the same hub is a new `devices[]` row.
 - **Generic Device — select options**: One comma-separated line (`0xCF: Enabled, 0xCE: Shutdown`). Hex keys store as integers like YAML (`0xCF` → 207). Quotes around labels are optional.
+- **Generic Device — sensor map**: Numeric sensors have **Map** (`0xAA: Enabled, 0x55: Disabled` or `170: Enabled, 85: Disabled`). Stored as YAML `map` with integer keys. Bitmask stays a separate field.
+- **Generic Device — sensor flags**: Numeric sensors have **Flags** (`0: PV Generating, 1: Battery charging`). Keys are bit positions, not register values. Stored as YAML `flags`.
 - **Generic Device — YAML export**: Options **Export YAML template** (or `modbus_manager.export_generic_device`) writes a normal MM template (same `unique_id` suffixes) to `config/modbus_manager/templates/`. Download is a **signed** `/api/modbus_manager/generic_export/…` link in a persistent notification (valid 1 hour). Unsigned `/api/` clicks look like a failed login; `/local/` is not used. No GitHub push.
 
 ## [1.2.2] - 2026-10-02
