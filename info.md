@@ -154,7 +154,7 @@ If you find this integration useful, please consider:
 
 ---
 
-**Version**: 1.2.1
+**Version**: 1.2.2
 **Status**: Stable - Active Development
 **Home Assistant**: 2025.4.0+
 **Last Updated**: September 2026
