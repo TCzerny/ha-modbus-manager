@@ -6,6 +6,8 @@ from datetime import datetime
 from typing import Any
 
 import yaml
+from aiohttp import web
+from homeassistant.components.http import HomeAssistantView
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
@@ -22,6 +24,7 @@ from .const import (
     ENTRY_TYPE_COMBINED_DEVICE,
     ENTRY_TYPE_HUB,
     PLATFORMS,
+    SERVICE_EXPORT_GENERIC_DEVICE,
     SERVICE_READ_DEVICE_IDENTIFICATION,
     EntityIdStrategy,
 )
@@ -256,6 +259,44 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         return False
 
 
+class GenericExportDownloadView(HomeAssistantView):
+    """Serve a Generic Device YAML export.
+
+    ``requires_auth`` stays True. Notification links carry a short-lived
+    ``authSig`` from ``async_sign_path`` so the browser does not need a
+    stored token. An unsigned ``/api/...`` click is a failed login.
+    """
+
+    url = "/api/modbus_manager/generic_export/{filename}"
+    name = "api:modbus_manager:generic_export"
+    requires_auth = True
+
+    def __init__(self, hass: HomeAssistant) -> None:
+        self.hass = hass
+
+    async def get(self, request: web.Request, filename: str) -> web.StreamResponse:
+        from .generic_device import GENERIC_EXPORT_FILENAME_RE
+
+        if not GENERIC_EXPORT_FILENAME_RE.match(filename):
+            return web.Response(status=400, text="Invalid filename")
+        path = os.path.join(
+            self.hass.config.config_dir, "modbus_manager", "templates", filename
+        )
+        real_path = os.path.realpath(path)
+        root = os.path.realpath(
+            os.path.join(self.hass.config.config_dir, "modbus_manager", "templates")
+        )
+        if not real_path.startswith(root + os.sep) or not os.path.isfile(real_path):
+            return web.Response(status=404, text="Export not found")
+        return web.FileResponse(
+            real_path,
+            headers={
+                "Content-Type": "text/yaml; charset=utf-8",
+                "Content-Disposition": f'attachment; filename="{filename}"',
+            },
+        )
+
+
 async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
     """Set up the Modbus Manager component."""
     hass.data.setdefault(DOMAIN, {})
@@ -265,6 +306,7 @@ async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
 
     # Set up services
     await async_setup_services(hass)
+    hass.http.register_view(GenericExportDownloadView(hass))
 
     # Note: get_performance, reset_performance, and get_devices removed
     # - Use performance_monitor instead of get_performance
@@ -1337,6 +1379,61 @@ async def async_setup_services(hass: HomeAssistant) -> None:
             )
             return {"error": str(exc)}
 
+    async def export_generic_device_service(call):
+        """Write a Generic Device as a YAML template (custom dir + signed download)."""
+        from .device_utils import build_device_entry_id
+        from .generic_device import (
+            async_export_generic_device,
+            async_notify_generic_export,
+            is_generic_device_template,
+        )
+
+        entry_id = call.data.get("entry_id")
+        device_entry_id = call.data.get("device_entry_id")
+        prefix_filter = str(call.data.get("prefix") or "").strip()
+
+        matches: list[tuple[Any, dict[str, Any]]] = []
+        for entry in hass.config_entries.async_entries(DOMAIN):
+            if entry_id and entry.entry_id != entry_id:
+                continue
+            devices = entry.data.get("devices") or []
+            if not isinstance(devices, list):
+                continue
+            for device in devices:
+                if not isinstance(device, dict):
+                    continue
+                if not is_generic_device_template(device.get("template")):
+                    continue
+                if (
+                    prefix_filter
+                    and str(device.get("prefix") or "").strip() != prefix_filter
+                ):
+                    continue
+                did = device.get("device_entry_id") or build_device_entry_id(device)
+                if device_entry_id and did != device_entry_id:
+                    continue
+                matches.append((entry, device))
+
+        if not matches:
+            return {"error": "No matching generic device found"}
+        if len(matches) > 1:
+            return {
+                "error": (
+                    "Several generic devices match; pass entry_id, "
+                    "device_entry_id, or prefix"
+                )
+            }
+        _entry, device = matches[0]
+        try:
+            result = await async_export_generic_device(hass, device)
+            await async_notify_generic_export(
+                hass, result, str(device.get("prefix") or "generic")
+            )
+            return result
+        except Exception as exc:
+            _LOGGER.error("Generic YAML export failed: %s", exc, exc_info=True)
+            return {"error": str(exc)}
+
     # Register services
     hass.services.async_register(
         DOMAIN, "performance_monitor", performance_monitor_service
@@ -1349,6 +1446,11 @@ async def async_setup_services(hass: HomeAssistant) -> None:
         DOMAIN,
         SERVICE_READ_DEVICE_IDENTIFICATION,
         read_device_identification_service,
+    )
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_EXPORT_GENERIC_DEVICE,
+        export_generic_device_service,
     )
 
     _LOGGER.debug("Modbus Manager services registered successfully")

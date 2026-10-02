@@ -9,13 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### ✨ Added
 
-- **Generic Device (PoC, [Discussion #100](https://github.com/TCzerny/ha-modbus-manager/discussions/100))**: Hub menu **Create a generic device**, then connection, then a loop for **sensor / binary_sensor / number / switch / select / text / button** (holding/input only). Device registry shows **Generic Modbus Device**. Rows persist on `devices[].generic_registers`. `unique_id` is the history key. Coils and YAML export are later.
+- **Generic Device (PoC, [Discussion #100](https://github.com/TCzerny/ha-modbus-manager/discussions/100))**: Hub menu **Create a generic device**, then connection, then a loop for **sensor / binary_sensor / number / switch / select / text / button** (holding/input only). Device registry shows **Generic Modbus Device**. Rows persist on `devices[].generic_registers`. `unique_id` is the history key. Coils stay later.
 
 ### 🔧 Changed
 
 - **Generic Device — address and form fields**: Form `address` is the same number as YAML `address:` (the Modbus address we read, no −1). Extra fields follow `data_type` (e.g. encoding/word-swap/count only when they apply). Signed vs unsigned is the user’s choice (`int32` vs `uint32`); word swap matches YAML where the template uses it.
 - **Generic Device — options**: Add / edit / remove registers on an existing generic device. Edit keeps `unique_id`. Remove does not purge the entity registry. Prefix/slave sit under **Device options**. YAML template reload is hidden when the hub has only generic devices.
 - **Generic Device — add on an existing hub**: **Add device** offers **Generic Modbus Device** (same sentinel). Prefix/slave, then the entity loop, on the hub connection. A second generic device on the same hub is a new `devices[]` row.
+- **Generic Device — YAML export**: Options **Export YAML template** (or `modbus_manager.export_generic_device`) writes a normal MM template (same `unique_id` suffixes) to `config/modbus_manager/templates/`. Download is a **signed** `/api/modbus_manager/generic_export/…` link in a persistent notification (valid 1 hour). Unsigned `/api/` clicks look like a failed login; `/local/` is not used. No GitHub push.
 
 ## [1.2.2] - 2026-10-02
 

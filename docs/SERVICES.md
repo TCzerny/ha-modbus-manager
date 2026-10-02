@@ -183,7 +183,29 @@ data:
 
 ---
 
-### 5. `modbus_manager.read_device_identification`
+### 5. `modbus_manager.export_generic_device`
+
+**Description:** Write a Generic Device as a normal Modbus Manager YAML template. `unique_id` suffixes are unchanged. The file is stored in `config/modbus_manager/templates/`. A persistent notification includes a **signed** download link (`/api/modbus_manager/generic_export/<file>.yaml?authSig=…`, valid 1 hour). Does **not** push to GitHub.
+
+**Service Call:**
+```yaml
+service: modbus_manager.export_generic_device
+data:
+  prefix: "gen"
+```
+
+**Parameters:**
+- `entry_id` (optional): Hub config entry ID
+- `device_entry_id` (optional): Generic device id on a multi-device hub
+- `prefix` (optional): Device prefix
+
+If several generic devices exist, pass one of these so the service can pick one.
+
+**When to use:** After configuring registers in the Generic Device UI, before turning the map into a YAML template (reload templates, then add that template as a device).
+
+---
+
+### 6. `modbus_manager.read_device_identification`
 
 **Description:** Standalone diagnostic for **Modbus FC43** (function code **0x2B**, MEI *Read Device Identification*). The service opens a **short-lived connection** (Modbus **TCP**, **RTU over TCP**, or **serial RTU**), asks the device for identification strings (vendor, product code, firmware version, and more), then closes the connection.
 

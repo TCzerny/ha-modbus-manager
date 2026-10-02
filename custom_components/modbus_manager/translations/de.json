@@ -372,7 +372,8 @@
                     "battery": "Batterie — Modell, Prefix und Slave",
                     "battery_template": "Batterie — Template hinzufügen, wechseln oder entfernen",
                     "reload_template": "Register-Templates neu laden",
-                    "generic_registers": "Generisches Gerät — Register hinzufügen oder bearbeiten"
+                    "generic_registers": "Generisches Gerät — Register hinzufügen oder bearbeiten",
+                    "generic_export": "Generisches Gerät — YAML-Template exportieren"
                 }
             },
             "connection": {
@@ -545,6 +546,19 @@
                     "options_text": "Optionen (eine Zeile: 0: Off)",
                     "max_length": "Max. Länge (Bytes)"
                 }
+            },
+            "generic_export": {
+                "title": "YAML-Template exportieren",
+                "description": "Gerät: {device}. Schreibt ein normales Modbus-Manager-Template (gleiche unique_id-Suffixe) nach config/modbus_manager/templates/. Download ist ein signierter Link in der Benachrichtigung (1 Stunde gültig).",
+                "data": {
+                    "device_entry_id": "Gerät",
+                    "confirm": "YAML schreiben und benachrichtigen"
+                },
+                "menu_options": {
+                    "generic_export_write": "YAML schreiben und benachrichtigen",
+                    "generic_export_cancel": "Abbrechen",
+                    "generic_export_close": "Fertig — YAML geschrieben. Download YAML in der Benachrichtigung (Link 1 Stunde gültig)."
+                }
             }
         },
         "error": {
@@ -554,13 +568,16 @@
             "already_configured": "Dieses Prefix wird bereits von einem anderen Gerät verwendet.",
             "invalid_generic_register": "Ungültiges Register. unique_id (Buchstabe + a-z/0-9/_) und nur Holding/Input.",
             "duplicate_generic_unique_id": "Diese unique_id ist auf diesem Gerät schon vergeben.",
-            "last_generic_register": "Ein generisches Gerät braucht mindestens ein Register."
+            "last_generic_register": "Ein generisches Gerät braucht mindestens ein Register.",
+            "generic_export_failed": "YAML-Dateien konnten nicht geschrieben werden."
         },
         "abort": {
             "combined_device": "Combined Devices haben keine Modbus-Verbindung. IP/Port an den Quell-Hub-Einträgen ändern.",
             "config_error": "Dieser Hub hat kein passendes Gerät zum Konfigurieren.",
             "template_not_found": "Template {template_name} nicht gefunden.",
-            "update_error": "Fehler beim Aktualisieren der Templates: {error}"
+            "update_error": "Fehler beim Aktualisieren der Templates: {error}",
+            "generic_export_done": "YAML geschrieben. Download YAML in der Benachrichtigung (Link 1 Stunde gültig). Templates neu laden, um es als YAML-Gerät zu nutzen.",
+            "generic_export_failed": "YAML-Dateien konnten nicht geschrieben werden."
         }
     },
     "config_subentries": {
@@ -1183,6 +1200,24 @@
                 "notify": {
                     "name": "Benachrichtigung",
                     "description": "Ergebnis als Text in persistenter Benachrichtigung"
+                }
+            }
+        },
+        "export_generic_device": {
+            "name": "Generisches Gerät als YAML exportieren",
+            "description": "Generic Device als YAML-Template schreiben (Custom-Templates) und einen signierten Download-Link in der Benachrichtigung zeigen.",
+            "fields": {
+                "entry_id": {
+                    "name": "Config-Entry-ID",
+                    "description": "Hub-Entry-ID (optional, wenn nur ein Generic Device existiert)"
+                },
+                "device_entry_id": {
+                    "name": "Device-Entry-ID",
+                    "description": "unique_id des Generic Device an einem Multi-Device-Hub (optional)"
+                },
+                "prefix": {
+                    "name": "Prefix",
+                    "description": "Prefix des Generic Device (optional)"
                 }
             }
         }

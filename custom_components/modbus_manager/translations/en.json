@@ -352,7 +352,8 @@
                     "battery": "Battery — model, prefix, and slave",
                     "battery_template": "Battery — add, change, or remove template",
                     "reload_template": "Reload register templates",
-                    "generic_registers": "Generic device — add or edit registers"
+                    "generic_registers": "Generic device — add or edit registers",
+                    "generic_export": "Generic device — export YAML template"
                 }
             },
             "connection": {
@@ -525,6 +526,19 @@
                     "options_text": "Options (one per line: 0: Off)",
                     "max_length": "Max length (bytes)"
                 }
+            },
+            "generic_export": {
+                "title": "Export YAML template",
+                "description": "Device: {device}. Writes a normal Modbus Manager template (same unique_id suffixes) to config/modbus_manager/templates/. Download is a signed link in the notification (valid 1 hour).",
+                "data": {
+                    "device_entry_id": "Device",
+                    "confirm": "Write YAML files and notify"
+                },
+                "menu_options": {
+                    "generic_export_write": "Write YAML and notify",
+                    "generic_export_cancel": "Cancel",
+                    "generic_export_close": "Done — YAML written. Download YAML in the notification (link valid 1 hour)."
+                }
             }
         },
         "error": {
@@ -534,13 +548,16 @@
             "already_configured": "This prefix is already used by another device.",
             "invalid_generic_register": "This register is invalid. Check unique_id (letter + a-z/0-9/_) and holding/input only.",
             "duplicate_generic_unique_id": "This unique_id is already used on this device.",
-            "last_generic_register": "A generic device needs at least one register."
+            "last_generic_register": "A generic device needs at least one register.",
+            "generic_export_failed": "Could not write the YAML files."
         },
         "abort": {
             "combined_device": "Combined devices have no Modbus connection. Change IP/port on the source hub entries instead.",
             "config_error": "This hub has no matching device to configure.",
             "template_not_found": "Template {template_name} not found.",
-            "update_error": "Error updating templates: {error}"
+            "update_error": "Error updating templates: {error}",
+            "generic_export_done": "YAML written. Use Download YAML in the notification (link valid 1 hour). Reload templates to use it as a YAML device.",
+            "generic_export_failed": "Could not write the YAML files."
         }
     },
     "config_subentries": {
@@ -1034,6 +1051,24 @@
                 "notify": {
                     "name": "Show notification",
                     "description": "Show result text in a persistent notification"
+                }
+            }
+        },
+        "export_generic_device": {
+            "name": "Export generic device YAML",
+            "description": "Write a Generic Device as a YAML template (custom templates folder) and show a signed download link in a notification.",
+            "fields": {
+                "entry_id": {
+                    "name": "Config Entry ID",
+                    "description": "Hub entry ID (optional if only one generic device exists)"
+                },
+                "device_entry_id": {
+                    "name": "Device Entry ID",
+                    "description": "Generic device unique_id on a multi-device hub (optional)"
+                },
+                "prefix": {
+                    "name": "Prefix",
+                    "description": "Generic device prefix (optional)"
                 }
             }
         }

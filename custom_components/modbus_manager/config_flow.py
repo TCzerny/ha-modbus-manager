@@ -60,6 +60,8 @@ from .dynamic_processing import process_dynamic_config
 from .generic_device import (
     GENERIC_OPT_ACTIONS,
     GenericRegisterError,
+    async_export_generic_device,
+    async_notify_generic_export,
     generic_entity_core_schema,
     generic_entity_extras_schema,
     generic_entity_type_schema,
@@ -4143,6 +4145,10 @@ _OPTIONS_MENU_LABELS = {
         "battery_template": "Battery — add, change, or remove template",
         "reload_template": "Reload register templates",
         "generic_registers": "Generic device — add or edit registers",
+        "generic_export": "Generic device — export YAML template",
+        "generic_export_write": "Write YAML and notify",
+        "generic_export_cancel": "Cancel",
+        "generic_export_close": "Done — YAML written. Download YAML in the notification (link valid 1 hour).",
     },
     "de": {
         "connection": "Verbindung — Host, Port und Timing",
@@ -4152,6 +4158,10 @@ _OPTIONS_MENU_LABELS = {
         "battery_template": "Batterie — Template hinzufügen, wechseln oder entfernen",
         "reload_template": "Register-Templates neu laden",
         "generic_registers": "Generisches Gerät — Register hinzufügen oder bearbeiten",
+        "generic_export": "Generisches Gerät — YAML-Template exportieren",
+        "generic_export_write": "YAML schreiben und benachrichtigen",
+        "generic_export_cancel": "Abbrechen",
+        "generic_export_close": "Fertig — YAML geschrieben. Download YAML in der Benachrichtigung (Link 1 Stunde gültig).",
     },
 }
 
@@ -4286,6 +4296,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         options = ["connection"]
         if self._generic_option_devices():
             options.append("generic_registers")
+            options.append("generic_export")
         devices = self._get_editable_devices()
         roles = {resolve_device_role_type(device) for device in devices}
         if "inverter" in roles:
@@ -4769,6 +4780,86 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 "unique_id": edit_uid or str(core.get("unique_id") or ""),
             },
         )
+
+    async def async_step_generic_export(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Write YAML to custom templates and www; notify with a download link."""
+        devices = self._generic_option_devices()
+        if not devices:
+            return self.async_abort(reason="config_error")
+
+        stored = getattr(self, "_generic_export_device", None)
+        picking = stored is None and len(devices) > 1
+        if picking:
+            if user_input and user_input.get("device_entry_id"):
+                chosen = next(
+                    (
+                        device
+                        for device in devices
+                        if device.get("device_entry_id")
+                        == user_input.get("device_entry_id")
+                    ),
+                    None,
+                )
+                if not chosen:
+                    return self.async_abort(reason="config_error")
+                self._generic_export_device = chosen
+                return await self.async_step_generic_export()
+            choices = {
+                device.get("device_entry_id"): _device_display_title(device)
+                for device in devices
+            }
+            return self.async_show_form(
+                step_id="generic_export",
+                data_schema=vol.Schema(
+                    {vol.Required("device_entry_id"): vol.In(choices)}
+                ),
+            )
+
+        device = stored or devices[0]
+        self._generic_export_device = device
+        return self.async_show_menu(
+            step_id="generic_export",
+            menu_options=self._options_menu_labels(
+                ["generic_export_write", "generic_export_cancel"]
+            ),
+        )
+
+    async def async_step_generic_export_write(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Write YAML files and notify with a signed download link."""
+        device = getattr(self, "_generic_export_device", None)
+        if not isinstance(device, dict):
+            devices = self._generic_option_devices()
+            if not devices:
+                return self.async_abort(reason="config_error")
+            device = devices[0]
+        try:
+            result = await async_export_generic_device(self.hass, device)
+            await async_notify_generic_export(
+                self.hass, result, str(device.get("prefix") or "generic")
+            )
+            return self.async_show_menu(
+                step_id="generic_export",
+                menu_options=self._options_menu_labels(["generic_export_close"]),
+            )
+        except Exception as err:
+            _LOGGER.error("Generic YAML export failed: %s", err)
+            return self.async_abort(reason="generic_export_failed")
+
+    async def async_step_generic_export_close(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Return to the options menu after a successful export."""
+        return await self.async_step_init()
+
+    async def async_step_generic_export_cancel(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Return to the options menu without exporting."""
+        return await self.async_step_init()
 
     async def async_step_connection(self, user_input: dict = None) -> FlowResult:
         """Manage hub-level connection options."""

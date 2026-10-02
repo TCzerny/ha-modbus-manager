@@ -180,3 +180,26 @@ read_device_identification:
       default: true
       selector:
         boolean:
+
+export_generic_device:
+  name: "Export generic device YAML"
+  description: "Write a Generic Device as a YAML template (custom templates folder) and show a signed download link in a notification"
+  fields:
+    entry_id:
+      name: "Config Entry ID"
+      description: "Hub entry ID (optional if only one generic device exists)"
+      required: false
+      selector:
+        text:
+    device_entry_id:
+      name: "Device Entry ID"
+      description: "Generic device unique_id on a multi-device hub (optional)"
+      required: false
+      selector:
+        text:
+    prefix:
+      name: "Prefix"
+      description: "Generic device prefix (optional)"
+      required: false
+      selector:
+        text:

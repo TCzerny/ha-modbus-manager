@@ -2,15 +2,21 @@
 
 from __future__ import annotations
 
+import json
+import os
 import re
+from datetime import datetime, timezone
 from typing import Any
 
 import voluptuous as vol
+from homeassistant.components.http.auth import async_sign_path
 
 from .const import (
     CONF_GENERIC_REGISTERS,
     DEFAULT_PRECISION,
     DEFAULT_UPDATE_INTERVAL,
+    GENERIC_EXPORT_API_PATH,
+    GENERIC_EXPORT_LINK_VALID,
     GENERIC_TEMPLATE_SENTINEL,
 )
 from .modbus_utils import is_valid_modbus_address, reject_hex_encoding_for_control
@@ -342,6 +348,248 @@ def template_from_generic_device(device: dict[str, Any]) -> dict[str, Any]:
         "version": "0.1.0",
         **buckets,
     }
+
+
+_ROW_KEY_ORDER = (
+    "type",
+    "name",
+    "unique_id",
+    "address",
+    "input_type",
+    "data_type",
+    "count",
+    "scale",
+    "offset",
+    "precision",
+    "unit_of_measurement",
+    "device_class",
+    "state_class",
+    "scan_interval",
+    "swap",
+    "byte_order",
+    "encoding",
+    "entity_category",
+    "icon",
+    "mm_group",
+    "bitmask",
+    "bit_position",
+    "max_length",
+    "read_function_code",
+    "write_function_code",
+    "min_value",
+    "max_value",
+    "step",
+    "write_value",
+    "write_value_off",
+    "on_value",
+    "off_value",
+    "button_press_value",
+    "options",
+    "force_update",
+    "never_resets",
+)
+
+
+def generic_export_filename(prefix: str, when: datetime | None = None) -> str:
+    """Return a unique YAML filename for one generic device export."""
+    stamp = (when or datetime.now(timezone.utc)).strftime("%Y%m%d_%H%M%S")
+    slug = slug_unique_id(prefix) or "generic"
+    return f"generic_{slug}_{stamp}.yaml"
+
+
+GENERIC_EXPORT_FILENAME_RE = re.compile(r"^generic_[a-z0-9_]+_\d{8}_\d{6}\.yaml$")
+
+
+def _yaml_scalar(value: Any) -> str:
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, int) and not isinstance(value, bool):
+        return str(value)
+    if isinstance(value, float):
+        return str(value)
+    text = str(value)
+    needs_quote = (
+        not text
+        or text.lower() in {"true", "false", "null", "yes", "no", "on", "off"}
+        or any(ch in text for ch in ":#{}[]&*!?|>%@`'")
+        or text[0].isspace()
+        or text[-1].isspace()
+        or "\n" in text
+        or " " in text
+    )
+    if needs_quote:
+        return json.dumps(text, ensure_ascii=False)
+    return text
+
+
+def _omit_row_value(key: str, value: Any, data_type: str) -> bool:
+    if value is None or value == "":
+        return True
+    if key == "swap" and value == "none":
+        return True
+    if key == "byte_order" and value == "big":
+        return True
+    if key == "encoding" and value == "utf-8" and data_type != "string":
+        return True
+    if key in ("force_update", "never_resets") and value is False:
+        return True
+    if key == "scale" and float(value) == 1.0:
+        return True
+    if key == "offset" and float(value) == 0.0:
+        return True
+    if key == "count":
+        expected = _COUNT_BY_DATA_TYPE.get(data_type, 1)
+        try:
+            return int(value) == expected
+        except (TypeError, ValueError):
+            return False
+    return False
+
+
+def _row_for_yaml_bucket(row: dict[str, Any], *, include_type: bool) -> dict[str, Any]:
+    data_type = str(row.get("data_type") or "uint16")
+    exported: dict[str, Any] = {}
+    if include_type:
+        exported["type"] = row.get("entity_type") or row.get("type") or "sensor"
+    for key in _ROW_KEY_ORDER:
+        if key == "type":
+            continue
+        if key not in row:
+            continue
+        value = row[key]
+        if _omit_row_value(key, value, data_type):
+            continue
+        exported[key] = value
+    return exported
+
+
+def _dump_mapping_lines(mapping: dict[str, Any], indent: int) -> list[str]:
+    pad = " " * indent
+    lines: list[str] = []
+    for key, value in mapping.items():
+        if isinstance(value, dict):
+            lines.append(f"{pad}{key}:")
+            for nested_key, nested_value in value.items():
+                lines.append(
+                    f"{pad}  {_yaml_scalar(nested_key)}: {_yaml_scalar(nested_value)}"
+                )
+            continue
+        if key == "address":
+            try:
+                address = int(value)
+            except (TypeError, ValueError):
+                lines.append(f"{pad}{key}: {_yaml_scalar(value)}")
+            else:
+                lines.append(f"{pad}{key}: {address}  # reg {address + 1}")
+            continue
+        lines.append(f"{pad}{key}: {_yaml_scalar(value)}")
+    return lines
+
+
+def render_generic_template_yaml(device: dict[str, Any]) -> tuple[str, str]:
+    """Build a device-template YAML string and filename from a generic device."""
+    prefix = str(device.get("prefix") or "generic").strip() or "generic"
+    slave_id = int(device.get("slave_id") or 1)
+    template = template_from_generic_device(device)
+    filename = generic_export_filename(prefix)
+    display = f"Generic Modbus Device ({prefix})"
+    lines = [
+        "# Exported from HA Modbus Manager (Generic Device).",
+        "# unique_id values are unchanged so recorder history stays if you load this as a template.",
+        "# Copy lives in config/modbus_manager/templates/ (custom templates).",
+        f"name: {_yaml_scalar(display)}",
+        f"display_name: {_yaml_scalar(display)}",
+        'manufacturer: "Generic"',
+        'type: "generic"',
+        'version: "0.1.0"',
+        f"default_prefix: {_yaml_scalar(prefix)}",
+        f"default_slave_id: {slave_id}",
+        "",
+    ]
+    bucket_specs = (
+        ("sensors", False),
+        ("controls", True),
+        ("binary_sensors", True),
+    )
+    for bucket, include_type in bucket_specs:
+        rows = template.get(bucket) or []
+        if not rows:
+            continue
+        lines.append(f"{bucket}:")
+        for row in rows:
+            exported = _row_for_yaml_bucket(row, include_type=include_type)
+            keys = list(exported.keys())
+            if not keys:
+                continue
+            first = keys[0]
+            rest = {key: exported[key] for key in keys[1:]}
+            first_line = _dump_mapping_lines({first: exported[first]}, 0)[0]
+            lines.append(f"  - {first_line}")
+            lines.extend(_dump_mapping_lines(rest, 4))
+            lines.append("")
+    text = "\n".join(lines).rstrip() + "\n"
+    return filename, text
+
+
+def write_generic_export_files(
+    config_dir: str, filename: str, content: str
+) -> dict[str, str]:
+    """Write YAML to the custom templates folder."""
+    template_dir = os.path.join(config_dir, "modbus_manager", "templates")
+    template_path = os.path.join(template_dir, filename)
+    os.makedirs(template_dir, exist_ok=True)
+    with open(template_path, "w", encoding="utf-8") as handle:
+        handle.write(content)
+    return {
+        "filename": filename,
+        "template_path": template_path,
+        "api_url": GENERIC_EXPORT_API_PATH.format(filename=filename),
+    }
+
+
+def signed_generic_export_url(hass: Any, filename: str) -> str:
+    """Return a short-lived signed path so a notification link can download."""
+    return async_sign_path(
+        hass,
+        GENERIC_EXPORT_API_PATH.format(filename=filename),
+        expiration=GENERIC_EXPORT_LINK_VALID,
+    )
+
+
+async def async_export_generic_device(
+    hass: Any, device: dict[str, Any]
+) -> dict[str, str]:
+    """Render YAML and write the custom-template copy."""
+    filename, content = render_generic_template_yaml(device)
+    config_dir = str(hass.config.config_dir)
+    result = await hass.async_add_executor_job(
+        write_generic_export_files, config_dir, filename, content
+    )
+    result["api_url"] = signed_generic_export_url(hass, filename)
+    return result
+
+
+async def async_notify_generic_export(
+    hass: Any, result: dict[str, str], prefix: str
+) -> None:
+    """Tell the user where the YAML is and link the signed download."""
+    message = (
+        f"Exported Generic Device **{prefix}**.\n\n"
+        f"Custom template: `{result['template_path']}`\n\n"
+        f"[Download YAML]({result['api_url']})\n\n"
+        "The download link is valid for 1 hour. "
+        "Reload register templates so it appears as a YAML device. "
+        "unique_id suffixes are unchanged."
+    )
+    await hass.services.async_call(
+        "persistent_notification",
+        "create",
+        {
+            "title": "Modbus Manager — Generic YAML export",
+            "message": message,
+            "notification_id": "modbus_generic_export",
+        },
+    )
 
 
 GENERIC_OPT_ACTIONS = {
