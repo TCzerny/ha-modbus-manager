@@ -4,10 +4,11 @@
         "step": {
             "user": {
                 "title": "Modbus Manager",
-                "description": "Identify a device at a known address, pick a template yourself, or create a Combined Device (no Modbus I/O).",
+                "description": "Identify a device at a known address, pick a template, create a generic device, or create a Combined Device (no Modbus I/O).",
                 "menu_options": {
                     "detect": "Identify a device at a known address",
                     "template": "Choose a template myself",
+                    "generic_device": "Create a generic device",
                     "combined_device": "Combined Device (cross-hub)"
                 },
                 "data": {
@@ -36,6 +37,76 @@
                 "description": "No automatic match, or you chose to pick the template. The address from the previous step is kept.",
                 "data": {
                     "template": "Device template"
+                }
+            },
+            "generic_entity": {
+                "title": "Generic entity type",
+                "description": "Entities added so far: {entity_count}. Holding and input registers only (no coils).",
+                "data": {
+                    "entity_type": "Entity type"
+                }
+            },
+            "generic_entity_core": {
+                "title": "Generic register",
+                "description": "Type: {entity_type}. Address is the same number as YAML `address:` — the Modbus address we read, with no offset. unique_id is the history key and must not change later.",
+                "data": {
+                    "unique_id": "unique_id (stable slug)",
+                    "name": "Display name",
+                    "address": "Modbus address (same as YAML address:)",
+                    "input_type": "Register type",
+                    "data_type": "Data type",
+                    "scan_interval": "Scan interval (seconds)",
+                    "entity_category": "Entity category",
+                    "icon": "Icon",
+                    "mm_group": "mm_group"
+                }
+            },
+            "generic_entity_fields": {
+                "title": "Register extras",
+                "description": "Type: {entity_type}, data type: {data_type}. Only fields that apply to this combination are shown.",
+                "data": {
+                    "unique_id": "unique_id (stable slug)",
+                    "name": "Display name",
+                    "address": "Modbus address (same as YAML address:)",
+                    "input_type": "Register type",
+                    "data_type": "Data type",
+                    "count": "Register count",
+                    "scale": "Scale",
+                    "offset": "Offset",
+                    "precision": "Precision",
+                    "unit_of_measurement": "Unit",
+                    "device_class": "Device class",
+                    "state_class": "State class",
+                    "scan_interval": "Scan interval (seconds)",
+                    "encoding": "String encoding (utf-8 or hex)",
+                    "byte_order": "Byte order",
+                    "swap": "Word swap",
+                    "entity_category": "Entity category",
+                    "icon": "Icon",
+                    "mm_group": "mm_group",
+                    "bitmask": "Bitmask",
+                    "bit_position": "Bit position",
+                    "read_function_code": "Read function code (3 or 4)",
+                    "write_function_code": "Write function code (6 or 16)",
+                    "never_resets": "Never resets",
+                    "force_update": "Force update",
+                    "min_value": "Minimum",
+                    "max_value": "Maximum",
+                    "step": "Step",
+                    "write_value": "ON write value",
+                    "write_value_off": "OFF write value",
+                    "on_value": "ON state value",
+                    "off_value": "OFF state value",
+                    "button_press_value": "Button press value",
+                    "options_text": "Options (one per line: 0: Off)",
+                    "max_length": "Max length (bytes)"
+                }
+            },
+            "generic_entity_confirm": {
+                "title": "Add another entity?",
+                "description": "{entity_count} entit(y/ies) ready. Add another or create the hub.",
+                "data": {
+                    "action": "Next"
                 }
             },
             "identify_confirm": {
@@ -248,7 +319,8 @@
             "no_device_definitions": "No device definitions found",
             "same_source_selected": "Source A and Source B must be different",
             "source_not_found": "Selected source entry no longer exists",
-            "invalid_pair": "This source pair type is not supported"
+            "invalid_pair": "This source pair type is not supported",
+            "invalid_generic_register": "This register is invalid. Check unique_id (letter + a-z/0-9/_), register >= 1, and holding/input only."
         },
         "abort": {
             "no_device_definitions": "No device definitions found. Please make sure at least one YAML file exists in the device_definitions directory.",
@@ -258,6 +330,7 @@
             "no_available_devices_for_subentry": "All devices are already configured.",
             "template_not_found": "Template {template_name} not found.",
             "no_registers": "Template {template_name} has no entities defined.",
+            "generic_no_registers": "Generic device needs at least one valid register. {error}",
             "update_error": "Error updating template: {error}",
             "no_template_selected": "No template selected",
             "device_added_to_existing_hub": "Device successfully added to existing hub. A restart is required to activate the new device.",
@@ -275,10 +348,11 @@
                 "menu_options": {
                     "connection": "Connection — host, port, and request timing",
                     "inverter": "Inverter — model, MPPT, and connection",
-                    "device": "Device — heating, wallbox, and other options",
+                    "device": "Device options",
                     "battery": "Battery — model, prefix, and slave",
                     "battery_template": "Battery — add, change, or remove template",
-                    "reload_template": "Reload register templates"
+                    "reload_template": "Reload register templates",
+                    "generic_registers": "Generic device — add or edit registers"
                 }
             },
             "connection": {
@@ -375,13 +449,92 @@
                 "data": {
                     "battery_selection": "Battery Selection"
                 }
+            },
+            "generic_registers": {
+                "title": "Generic registers",
+                "description": "Device: {device}. Entities in this draft: {entity_count}. Add, edit, or remove, then save to reload. unique_id does not change on edit. Remove does not delete the registry row (history stays).",
+                "data": {
+                    "device_entry_id": "Device",
+                    "action": "Next"
+                }
+            },
+            "generic_opt_pick": {
+                "title": "Select entity",
+                "description": "Mode: {mode}. unique_id is the history key.",
+                "data": {
+                    "unique_id": "Entity (unique_id)"
+                }
+            },
+            "generic_opt_remove": {
+                "title": "Remove register?",
+                "description": "Drop {unique_id} from this generic device. The entity registry row is not deleted; the entity will become unavailable so history is not split.",
+                "data": {
+                    "confirm": "Remove from this device"
+                }
+            },
+            "generic_opt_entity": {
+                "title": "Generic entity type",
+                "description": "Entities in this draft: {entity_count}. Holding and input registers only (no coils).",
+                "data": {
+                    "entity_type": "Entity type"
+                }
+            },
+            "generic_opt_core": {
+                "title": "Generic register",
+                "description": "Type: {entity_type}. unique_id on edit is {unique_id} and cannot change. Address is the same number as YAML address: — the Modbus address we read.",
+                "data": {
+                    "unique_id": "unique_id (stable slug)",
+                    "name": "Display name",
+                    "address": "Modbus address (same as YAML address:)",
+                    "input_type": "Register type",
+                    "data_type": "Data type",
+                    "scan_interval": "Scan interval (seconds)",
+                    "entity_category": "Entity category",
+                    "icon": "Icon",
+                    "mm_group": "mm_group"
+                }
+            },
+            "generic_opt_fields": {
+                "title": "Register extras",
+                "description": "Type: {entity_type}, data type: {data_type}, unique_id: {unique_id}. Only fields that apply to this combination are shown.",
+                "data": {
+                    "count": "Register count",
+                    "scale": "Scale",
+                    "offset": "Offset",
+                    "precision": "Precision",
+                    "unit_of_measurement": "Unit",
+                    "device_class": "Device class",
+                    "state_class": "State class",
+                    "encoding": "String encoding (utf-8 or hex)",
+                    "byte_order": "Byte order",
+                    "swap": "Word swap",
+                    "bitmask": "Bitmask",
+                    "bit_position": "Bit position",
+                    "read_function_code": "Read function code (3 or 4)",
+                    "write_function_code": "Write function code (6 or 16)",
+                    "never_resets": "Never resets",
+                    "force_update": "Force update",
+                    "min_value": "Minimum",
+                    "max_value": "Maximum",
+                    "step": "Step",
+                    "write_value": "ON write value",
+                    "write_value_off": "OFF write value",
+                    "on_value": "ON state value",
+                    "off_value": "OFF state value",
+                    "button_press_value": "Button press value",
+                    "options_text": "Options (one per line: 0: Off)",
+                    "max_length": "Max length (bytes)"
+                }
             }
         },
         "error": {
             "endpoint_in_use": "Another Modbus Manager hub already uses this host and port.",
             "invalid_host": "Host is required.",
             "invalid_port": "Port must be a valid number.",
-            "already_configured": "This prefix is already used by another device."
+            "already_configured": "This prefix is already used by another device.",
+            "invalid_generic_register": "This register is invalid. Check unique_id (letter + a-z/0-9/_) and holding/input only.",
+            "duplicate_generic_unique_id": "This unique_id is already used on this device.",
+            "last_generic_register": "A generic device needs at least one register."
         },
         "abort": {
             "combined_device": "Combined devices have no Modbus connection. Change IP/port on the source hub entries instead.",

@@ -1041,6 +1041,15 @@ async def async_setup_services(hass: HomeAssistant) -> None:
             template_name = entry_data.get("template")
             prefix = entry_data.get("prefix", "unknown")
 
+            from .generic_device import is_generic_device_template
+
+            if is_generic_device_template(template_name):
+                _LOGGER.debug(
+                    "Skipping YAML template reload for generic device prefix '%s'",
+                    prefix,
+                )
+                continue
+
             _LOGGER.info(
                 "🔄 Reloading template '%s' for prefix '%s'", template_name, prefix
             )

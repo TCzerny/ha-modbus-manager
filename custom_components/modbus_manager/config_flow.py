@@ -18,6 +18,7 @@ from homeassistant.helpers import entity_registry as er
 from .combined_specs import resolve_combination_type
 from .const import (
     CONF_ENTRY_TYPE,
+    CONF_GENERIC_REGISTERS,
     DEFAULT_DELAY,
     DEFAULT_MESSAGE_WAIT_MS,
     DEFAULT_PORT,
@@ -27,6 +28,7 @@ from .const import (
     DOMAIN,
     ENTRY_TYPE_COMBINED_DEVICE,
     ENTRY_TYPE_HUB,
+    GENERIC_TEMPLATE_SENTINEL,
     MAX_POST_WRITE_SETTLE_MS,
     MIN_DELAY,
     MIN_MESSAGE_WAIT_MS,
@@ -55,6 +57,17 @@ from .device_utils import (
     updated_hub_entry_title,
 )
 from .dynamic_processing import process_dynamic_config
+from .generic_device import (
+    GENERIC_OPT_ACTIONS,
+    GenericRegisterError,
+    generic_entity_core_schema,
+    generic_entity_extras_schema,
+    generic_entity_type_schema,
+    generic_row_form_defaults,
+    is_generic_device_template,
+    normalize_generic_register,
+    normalize_generic_registers,
+)
 from .hub_identify import IdentifyHit, async_identify_hub
 from .logger import ModbusManagerLogger
 from .template_loader import (
@@ -796,6 +809,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._selected_template = template_name
         if template_name == COMBINED_TEMPLATE_SENTINEL:
             return await self.async_step_combined_device()
+        if template_name == GENERIC_TEMPLATE_SENTINEL:
+            return await self.async_step_generic_device()
         template_data = self._templates.get(template_name, {})
         if template_data.get("dynamic_config"):
             return await self.async_step_connection()
@@ -814,13 +829,220 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 )
             return self.async_show_menu(
                 step_id="user",
-                menu_options=["detect", "template", "combined_device"],
+                menu_options=[
+                    "detect",
+                    "template",
+                    "generic_device",
+                    "combined_device",
+                ],
             )
         except Exception as e:
             _LOGGER.error("Error in Config Flow: %s", str(e))
             return self.async_abort(
                 reason="unknown_error", description_placeholders={"error": str(e)}
             )
+
+    async def async_step_generic_device(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Start a generic device hub: connection first, then entity loop."""
+        abort = await self._async_load_templates()
+        if abort is not None:
+            return abort
+        self._selected_template = GENERIC_TEMPLATE_SENTINEL
+        if not hasattr(self, "_generic_registers") or self._generic_registers is None:
+            self._generic_registers = []
+        return await self.async_step_connection()
+
+    async def async_step_generic_entity(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Pick entity platform, then type-specific fields."""
+        if user_input is not None:
+            self._generic_entity_type = user_input.get("entity_type", "sensor")
+            return await self.async_step_generic_entity_core()
+        return self.async_show_form(
+            step_id="generic_entity",
+            data_schema=generic_entity_type_schema(),
+            description_placeholders={
+                "entity_count": str(len(getattr(self, "_generic_registers", []) or [])),
+            },
+        )
+
+    async def async_step_generic_entity_core(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Identity, YAML address, and data type (drives extra fields)."""
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            self._generic_entity_core = dict(user_input)
+            self._generic_entity_core["entity_type"] = getattr(
+                self, "_generic_entity_type", "sensor"
+            )
+            return await self.async_step_generic_entity_fields()
+        return self.async_show_form(
+            step_id="generic_entity_core",
+            data_schema=generic_entity_core_schema(),
+            errors=errors,
+            description_placeholders={
+                "entity_type": getattr(self, "_generic_entity_type", "sensor"),
+            },
+        )
+
+    async def async_step_generic_entity_fields(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Type-specific extras after identity and data_type are known."""
+        errors: dict[str, str] = {}
+        entity_type = getattr(self, "_generic_entity_type", "sensor")
+        core = dict(getattr(self, "_generic_entity_core", {}) or {})
+        data_type = str(core.get("data_type") or "uint16")
+        if user_input is not None:
+            try:
+                row = {**core, **user_input}
+                row["entity_type"] = entity_type
+                normalize_generic_register(row)
+                existing = list(getattr(self, "_generic_registers", []) or [])
+                existing.append(row)
+                normalize_generic_registers(existing)
+                self._generic_registers = existing
+                return await self.async_step_generic_entity_confirm()
+            except GenericRegisterError as err:
+                _LOGGER.debug("Generic register rejected: %s", err)
+                errors["base"] = "invalid_generic_register"
+            except ValueError:
+                errors["base"] = "invalid_generic_register"
+        return self.async_show_form(
+            step_id="generic_entity_fields",
+            data_schema=generic_entity_extras_schema(entity_type, data_type),
+            errors=errors,
+            description_placeholders={
+                "entity_type": entity_type,
+                "data_type": data_type,
+            },
+        )
+
+    async def async_step_generic_entity_confirm(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Add another entity or create the hub."""
+        if user_input is not None:
+            if user_input.get("action") == "add":
+                return await self.async_step_generic_entity()
+            return await self._async_create_generic_hub_entry()
+        count = len(getattr(self, "_generic_registers", []) or [])
+        return self.async_show_form(
+            step_id="generic_entity_confirm",
+            data_schema=vol.Schema(
+                {
+                    vol.Required("action", default="finish"): vol.In(
+                        {
+                            "add": "Add another entity",
+                            "finish": "Create hub",
+                        }
+                    )
+                }
+            ),
+            description_placeholders={"entity_count": str(count)},
+        )
+
+    async def _async_create_generic_hub_entry(self) -> FlowResult:
+        """Persist hub + one generic devices[] row and finish the flow."""
+        try:
+            rows = normalize_generic_registers(
+                getattr(self, "_generic_registers", None)
+            )
+        except GenericRegisterError as err:
+            return self.async_abort(
+                reason="generic_no_registers",
+                description_placeholders={"error": str(err)},
+            )
+        user_input = dict(getattr(self, "_connection_params", {}) or {})
+        if not self._validate_config(user_input):
+            return self.async_abort(
+                reason="invalid_config",
+                description_placeholders={"error": "Invalid configuration"},
+            )
+        prefix = user_input["prefix"]
+        if not _is_prefix_unique_across_hubs(self.hass, prefix):
+            return self.async_abort(
+                reason="invalid_config",
+                description_placeholders={
+                    "error": (
+                        f"Prefix '{prefix}' already exists. "
+                        "Please choose a unique prefix."
+                    )
+                },
+            )
+        device = self._normalize_device_record(
+            {
+                "type": "generic",
+                "template": GENERIC_TEMPLATE_SENTINEL,
+                "prefix": prefix,
+                "slave_id": user_input.get("slave_id", DEFAULT_SLAVE),
+                "template_version": "0.1.0",
+                CONF_GENERIC_REGISTERS: rows,
+            }
+        )
+        config_data = {
+            "hub": {
+                "host": user_input["host"],
+                "port": user_input.get("port", DEFAULT_PORT),
+                "timeout": user_input.get("timeout", DEFAULT_TIMEOUT),
+                "delay": user_input.get("delay", DEFAULT_DELAY),
+                "message_wait_milliseconds": user_input.get(
+                    "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
+                ),
+                "post_write_settle_milliseconds": user_input.get(
+                    "post_write_settle_milliseconds",
+                    DEFAULT_POST_WRITE_SETTLE_MS,
+                ),
+            },
+            "devices": [device],
+            "template": GENERIC_TEMPLATE_SENTINEL,
+            "prefix": prefix,
+            "modbus_type": user_input.get("modbus_type", "tcp"),
+            "host": user_input["host"],
+            "port": user_input.get("port", DEFAULT_PORT),
+            "slave_id": user_input.get("slave_id", DEFAULT_SLAVE),
+            "timeout": user_input.get("timeout", DEFAULT_TIMEOUT),
+            "delay": user_input.get("delay", DEFAULT_DELAY),
+            "message_wait_milliseconds": user_input.get(
+                "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
+            ),
+            "post_write_settle_milliseconds": user_input.get(
+                "post_write_settle_milliseconds",
+                DEFAULT_POST_WRITE_SETTLE_MS,
+            ),
+            "template_version": "0.1.0",
+            CONF_GENERIC_REGISTERS: rows,
+        }
+        config_data["devices"] = [
+            self._normalize_device_record(
+                _apply_entry_data_fallbacks_to_device(device, config_data)
+            )
+            for device in config_data["devices"]
+        ]
+        host = config_data.get("host", "unknown")
+        port = config_data.get("port", 502)
+        title = hub_entry_title_for_new_entry(config_data["devices"], host, port)
+        existing_entry = None
+        for entry in self.hass.config_entries.async_entries(DOMAIN):
+            if entry.data.get("host") == host and entry.data.get("port", 502) == port:
+                existing_entry = entry
+                break
+        if existing_entry:
+            existing_devices = [
+                self._normalize_device_record(d)
+                for d in existing_entry.data.get("devices", [])
+            ]
+            existing_devices.append(config_data["devices"][0])
+            new_data = dict(existing_entry.data)
+            new_data["devices"] = existing_devices
+            self.hass.config_entries.async_update_entry(existing_entry, data=new_data)
+            await self.hass.config_entries.async_reload(existing_entry.entry_id)
+            return self.async_abort(reason="device_added_to_existing_hub")
+        return self.async_create_entry(title=title, data=config_data)
 
     async def async_step_template(self, user_input: dict | None = None) -> FlowResult:
         """Manual template picker (probe miss, or user skipped detect)."""
@@ -1234,6 +1456,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         default_prefix = stored.get("prefix") or template_data.get(
             "default_prefix", "SG"
         )
+        if self._selected_template == GENERIC_TEMPLATE_SENTINEL:
+            default_prefix = stored.get("prefix") or "GEN"
         default_slave_id = stored.get("slave_id")
         if default_slave_id is None:
             default_slave_id = template_data.get("default_slave_id", DEFAULT_SLAVE)
@@ -1250,6 +1474,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
         # Show config_flow_note when selected template has one (e.g. SBR slave-id hint)
         config_flow_note = template_data.get("config_flow_note", "") or ""
+        if self._selected_template == GENERIC_TEMPLATE_SENTINEL:
+            config_flow_note = (
+                "Protocol register numbers are 1-based (PDF style) and stored "
+                "as 0-based addresses like YAML templates."
+            )
 
         # Show connection parameters form
         return self.async_show_form(
@@ -1762,6 +1991,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _route_after_connection_setup(self) -> FlowResult:
         """Proceed to model selection or dynamic params after connection step."""
+        if self._selected_template == GENERIC_TEMPLATE_SENTINEL:
+            return await self.async_step_generic_entity()
         template_data = self._templates.get(self._selected_template, {})
         if self._template_has_model_selection(template_data):
             if getattr(self, "_selected_model", None) or self.context.get(
@@ -3811,18 +4042,20 @@ _OPTIONS_MENU_LABELS = {
     "en": {
         "connection": "Connection — host, port, and request timing",
         "inverter": "Inverter — model, MPPT, and connection",
-        "device": "Device — heating, wallbox, and other options",
+        "device": "Device options",
         "battery": "Battery — model, prefix, and slave",
         "battery_template": "Battery — add, change, or remove template",
         "reload_template": "Reload register templates",
+        "generic_registers": "Generic device — add or edit registers",
     },
     "de": {
         "connection": "Verbindung — Host, Port und Timing",
         "inverter": "Wechselrichter — Modell, MPPT und Verbindung",
-        "device": "Gerät — Heizkreis, Wallbox und Optionen",
+        "device": "Geräte Optionen",
         "battery": "Batterie — Modell, Prefix und Slave",
         "battery_template": "Batterie — Template hinzufügen, wechseln oder entfernen",
         "reload_template": "Register-Templates neu laden",
+        "generic_registers": "Generisches Gerät — Register hinzufügen oder bearbeiten",
     },
 }
 
@@ -3869,6 +4102,14 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             device
             for device in self._get_editable_devices()
             if resolve_device_role_type(device) not in {"inverter", "battery"}
+        ]
+
+    def _generic_option_devices(self) -> list[dict[str, Any]]:
+        """Hub devices that store generic_registers."""
+        return [
+            device
+            for device in self._get_editable_devices()
+            if is_generic_device_template(device.get("template"))
         ]
 
     async def _remove_battery_devices_from_registry(
@@ -3947,6 +4188,8 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
     def _options_menu_options(self) -> list[str]:
         """Connection always; device forms and template reload when applicable."""
         options = ["connection"]
+        if self._generic_option_devices():
+            options.append("generic_registers")
         devices = self._get_editable_devices()
         roles = {resolve_device_role_type(device) for device in devices}
         if "inverter" in roles:
@@ -3957,7 +4200,9 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             options.append("battery")
         if "inverter" in roles or "battery" in roles:
             options.append("battery_template")
-        if devices:
+        if any(
+            not is_generic_device_template(device.get("template")) for device in devices
+        ):
             options.append("reload_template")
         return options
 
@@ -4131,6 +4376,303 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
     async def async_step_reload_template(self, user_input: dict = None) -> FlowResult:
         """Reload YAML register templates for this hub."""
         return await self.async_step_update_template()
+
+    def _generic_row_choices(self) -> dict[str, str]:
+        """unique_id → label for edit/remove pickers."""
+        choices: dict[str, str] = {}
+        for row in getattr(self, "_generic_opt_rows", []) or []:
+            uid = str(row.get("unique_id") or "")
+            if not uid:
+                continue
+            name = str(row.get("name") or uid)
+            address = row.get("address", "?")
+            choices[uid] = f"{name} ({uid}, {address})"
+        return choices
+
+    def _bind_generic_option_device(self, device: dict[str, Any]) -> None:
+        """Load working copy of generic_registers for one hub device."""
+        self._generic_opt_device = device
+        raw = list(device.get(CONF_GENERIC_REGISTERS) or [])
+        try:
+            self._generic_opt_rows = normalize_generic_registers(raw)
+        except GenericRegisterError:
+            self._generic_opt_rows = [dict(row) for row in raw if isinstance(row, dict)]
+
+    async def _async_finish_generic_options(self) -> FlowResult:
+        """Persist working rows onto the hub device and reload."""
+        device = getattr(self, "_generic_opt_device", None)
+        if not isinstance(device, dict):
+            return self.async_abort(reason="config_error")
+        try:
+            rows = normalize_generic_registers(getattr(self, "_generic_opt_rows", None))
+        except GenericRegisterError:
+            return self.async_abort(reason="config_error")
+        device_id = device.get("device_entry_id")
+        new_data = dict(self.config_entry.data)
+        devices = []
+        generic_count = 0
+        for existing in new_data.get("devices", []):
+            if not isinstance(existing, dict):
+                continue
+            updated = dict(existing)
+            if is_generic_device_template(updated.get("template")):
+                generic_count += 1
+            if updated.get("device_entry_id") == device_id:
+                updated[CONF_GENERIC_REGISTERS] = rows
+            devices.append(updated)
+        new_data["devices"] = devices
+        if generic_count <= 1:
+            new_data[CONF_GENERIC_REGISTERS] = rows
+        self.hass.config_entries.async_update_entry(self.config_entry, data=new_data)
+        await self.hass.config_entries.async_reload(self.config_entry.entry_id)
+        return self.async_create_entry(title="", data={})
+
+    async def async_step_generic_registers(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Pick a generic device (if needed), then add / edit / remove / save."""
+        devices = self._generic_option_devices()
+        if not devices:
+            return self.async_abort(reason="config_error")
+
+        stored = getattr(self, "_generic_opt_device", None)
+        picking = stored is None and len(devices) > 1
+        if picking:
+            if user_input and user_input.get("device_entry_id"):
+                chosen = next(
+                    (
+                        device
+                        for device in devices
+                        if device.get("device_entry_id")
+                        == user_input.get("device_entry_id")
+                    ),
+                    None,
+                )
+                if not chosen:
+                    return self.async_abort(reason="config_error")
+                self._bind_generic_option_device(chosen)
+                return await self.async_step_generic_registers()
+            choices = {
+                device.get("device_entry_id"): _device_display_title(device)
+                for device in devices
+            }
+            return self.async_show_form(
+                step_id="generic_registers",
+                data_schema=vol.Schema(
+                    {vol.Required("device_entry_id"): vol.In(choices)}
+                ),
+            )
+
+        if stored is None:
+            self._bind_generic_option_device(devices[0])
+
+        if user_input is not None and "action" in user_input:
+            action = user_input.get("action")
+            if action == "add":
+                self._generic_opt_mode = "add"
+                self._generic_opt_edit_uid = None
+                return await self.async_step_generic_opt_entity()
+            if action == "edit":
+                self._generic_opt_mode = "edit"
+                return await self.async_step_generic_opt_pick()
+            if action == "remove":
+                self._generic_opt_mode = "remove"
+                return await self.async_step_generic_opt_pick()
+            if action == "save":
+                return await self._async_finish_generic_options()
+
+        count = len(getattr(self, "_generic_opt_rows", []) or [])
+        device = getattr(self, "_generic_opt_device", devices[0])
+        return self.async_show_form(
+            step_id="generic_registers",
+            data_schema=vol.Schema(
+                {vol.Required("action", default="save"): vol.In(GENERIC_OPT_ACTIONS)}
+            ),
+            description_placeholders={
+                "device": _device_display_title(device),
+                "entity_count": str(count),
+            },
+        )
+
+    async def async_step_generic_opt_pick(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Choose unique_id to edit or remove."""
+        choices = self._generic_row_choices()
+        if not choices:
+            return await self.async_step_generic_registers()
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            uid = str(user_input.get("unique_id") or "")
+            if uid not in choices:
+                errors["unique_id"] = "invalid_generic_register"
+            elif getattr(self, "_generic_opt_mode", "") == "remove":
+                if len(getattr(self, "_generic_opt_rows", []) or []) <= 1:
+                    errors["unique_id"] = "last_generic_register"
+                else:
+                    self._generic_opt_edit_uid = uid
+                    return await self.async_step_generic_opt_remove()
+            else:
+                self._generic_opt_edit_uid = uid
+                row = next(
+                    (
+                        item
+                        for item in self._generic_opt_rows
+                        if item.get("unique_id") == uid
+                    ),
+                    None,
+                )
+                self._generic_entity_type = str(
+                    (row or {}).get("entity_type") or "sensor"
+                )
+                return await self.async_step_generic_opt_core()
+        return self.async_show_form(
+            step_id="generic_opt_pick",
+            data_schema=vol.Schema({vol.Required("unique_id"): vol.In(choices)}),
+            errors=errors,
+            description_placeholders={
+                "mode": getattr(self, "_generic_opt_mode", "edit"),
+            },
+        )
+
+    async def async_step_generic_opt_remove(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Confirm drop from generic_registers; do not purge the entity registry."""
+        uid = str(getattr(self, "_generic_opt_edit_uid", "") or "")
+        if user_input is not None:
+            if user_input.get("confirm"):
+                self._generic_opt_rows = [
+                    row
+                    for row in (getattr(self, "_generic_opt_rows", []) or [])
+                    if row.get("unique_id") != uid
+                ]
+            return await self.async_step_generic_registers()
+        return self.async_show_form(
+            step_id="generic_opt_remove",
+            data_schema=vol.Schema({vol.Required("confirm", default=False): bool}),
+            description_placeholders={"unique_id": uid},
+        )
+
+    async def async_step_generic_opt_entity(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Pick platform when adding a generic register in options."""
+        if user_input is not None:
+            self._generic_entity_type = user_input.get("entity_type", "sensor")
+            self._generic_entity_core = {}
+            return await self.async_step_generic_opt_core()
+        return self.async_show_form(
+            step_id="generic_opt_entity",
+            data_schema=generic_entity_type_schema(),
+            description_placeholders={
+                "entity_count": str(len(getattr(self, "_generic_opt_rows", []) or [])),
+            },
+        )
+
+    async def async_step_generic_opt_core(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Identity + address; unique_id is locked when editing."""
+        errors: dict[str, str] = {}
+        editing = getattr(self, "_generic_opt_mode", "") == "edit"
+        edit_uid = str(getattr(self, "_generic_opt_edit_uid", "") or "")
+        existing = {}
+        if editing:
+            existing = next(
+                (
+                    row
+                    for row in (getattr(self, "_generic_opt_rows", []) or [])
+                    if row.get("unique_id") == edit_uid
+                ),
+                {},
+            )
+            self._generic_entity_type = str(
+                existing.get("entity_type")
+                or getattr(self, "_generic_entity_type", "sensor")
+            )
+        if user_input is not None:
+            core = dict(user_input)
+            core["entity_type"] = getattr(self, "_generic_entity_type", "sensor")
+            if editing:
+                core["unique_id"] = edit_uid
+            else:
+                new_uid = str(core.get("unique_id") or "")
+                taken = {
+                    str(row.get("unique_id"))
+                    for row in (getattr(self, "_generic_opt_rows", []) or [])
+                }
+                if new_uid in taken:
+                    errors["unique_id"] = "duplicate_generic_unique_id"
+            if not errors:
+                self._generic_entity_core = core
+                return await self.async_step_generic_opt_fields()
+        defaults = generic_row_form_defaults(existing) if existing else None
+        return self.async_show_form(
+            step_id="generic_opt_core",
+            data_schema=generic_entity_core_schema(
+                defaults, include_unique_id=not editing
+            ),
+            errors=errors,
+            description_placeholders={
+                "entity_type": getattr(self, "_generic_entity_type", "sensor"),
+                "unique_id": edit_uid or "—",
+            },
+        )
+
+    async def async_step_generic_opt_fields(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Type-specific extras for add/edit in options."""
+        errors: dict[str, str] = {}
+        entity_type = getattr(self, "_generic_entity_type", "sensor")
+        core = dict(getattr(self, "_generic_entity_core", {}) or {})
+        data_type = str(core.get("data_type") or "uint16")
+        editing = getattr(self, "_generic_opt_mode", "") == "edit"
+        edit_uid = str(getattr(self, "_generic_opt_edit_uid", "") or "")
+        existing = {}
+        if editing:
+            existing = next(
+                (
+                    row
+                    for row in (getattr(self, "_generic_opt_rows", []) or [])
+                    if row.get("unique_id") == edit_uid
+                ),
+                {},
+            )
+        if user_input is not None:
+            try:
+                row = {**existing, **core, **user_input}
+                row["entity_type"] = entity_type
+                if editing:
+                    row["unique_id"] = edit_uid
+                normalized = normalize_generic_register(row)
+                working = list(getattr(self, "_generic_opt_rows", []) or [])
+                if editing:
+                    working = [
+                        normalized if item.get("unique_id") == edit_uid else item
+                        for item in working
+                    ]
+                else:
+                    working.append(normalized)
+                self._generic_opt_rows = normalize_generic_registers(working)
+                return await self.async_step_generic_registers()
+            except GenericRegisterError as err:
+                _LOGGER.debug("Generic options register rejected: %s", err)
+                errors["base"] = "invalid_generic_register"
+            except ValueError:
+                errors["base"] = "invalid_generic_register"
+        defaults = generic_row_form_defaults(existing) if existing else None
+        return self.async_show_form(
+            step_id="generic_opt_fields",
+            data_schema=generic_entity_extras_schema(entity_type, data_type, defaults),
+            errors=errors,
+            description_placeholders={
+                "entity_type": entity_type,
+                "data_type": data_type,
+                "unique_id": edit_uid or str(core.get("unique_id") or ""),
+            },
+        )
 
     async def async_step_connection(self, user_input: dict = None) -> FlowResult:
         """Manage hub-level connection options."""

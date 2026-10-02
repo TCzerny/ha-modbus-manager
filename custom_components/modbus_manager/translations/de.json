@@ -4,10 +4,11 @@
         "step": {
             "user": {
                 "title": "Modbus Manager",
-                "description": "Gerät an bekannter Adresse erkennen, Template selbst wählen oder Combined Device anlegen (kein Modbus-I/O).",
+                "description": "Gerät an bekannter Adresse erkennen, Template selbst wählen, generisches Gerät anlegen oder Combined Device anlegen (kein Modbus-I/O).",
                 "menu_options": {
                     "detect": "Gerät an bekannter Adresse erkennen",
                     "template": "Template selbst wählen",
+                    "generic_device": "Generisches Gerät anlegen",
                     "combined_device": "Combined Device (über Hub-Grenzen)"
                 },
                 "data": {
@@ -36,6 +37,76 @@
                 "description": "Keine automatische Erkennung, oder Sie wählen selbst. Die Adresse aus dem vorherigen Schritt bleibt erhalten.",
                 "data": {
                     "template": "Geräte-Template"
+                }
+            },
+            "generic_entity": {
+                "title": "Generischer Entitätstyp",
+                "description": "Bisher angelegt: {entity_count}. Nur Holding- und Input-Register (keine Coils).",
+                "data": {
+                    "entity_type": "Entitätstyp"
+                }
+            },
+            "generic_entity_core": {
+                "title": "Generisches Register",
+                "description": "Typ: {entity_type}. Adresse ist dieselbe Zahl wie YAML `address:` — das Modbus-Register, das gelesen wird, ohne Offset. unique_id ist der History-Schlüssel und darf später nicht wechseln.",
+                "data": {
+                    "unique_id": "unique_id (stabiler Slug)",
+                    "name": "Anzeigename",
+                    "address": "Modbus-Adresse (wie YAML address:)",
+                    "input_type": "Registertyp",
+                    "data_type": "Datentyp",
+                    "scan_interval": "Scan-Intervall (Sekunden)",
+                    "entity_category": "Entity-Kategorie",
+                    "icon": "Icon",
+                    "mm_group": "mm_group"
+                }
+            },
+            "generic_entity_fields": {
+                "title": "Register-Zusatzfelder",
+                "description": "Typ: {entity_type}, Datentyp: {data_type}. Es erscheinen nur Felder, die zu dieser Kombination passen.",
+                "data": {
+                    "unique_id": "unique_id (stabiler Slug)",
+                    "name": "Anzeigename",
+                    "address": "Modbus-Adresse (wie YAML address:)",
+                    "input_type": "Registertyp",
+                    "data_type": "Datentyp",
+                    "count": "Anzahl Register",
+                    "scale": "Skalierung",
+                    "offset": "Offset",
+                    "precision": "Nachkommastellen",
+                    "unit_of_measurement": "Einheit",
+                    "device_class": "Device class",
+                    "state_class": "State class",
+                    "scan_interval": "Scan-Intervall (Sekunden)",
+                    "encoding": "String-Encoding (utf-8 oder hex)",
+                    "byte_order": "Byte-Reihenfolge",
+                    "swap": "Word-Swap",
+                    "entity_category": "Entity-Kategorie",
+                    "icon": "Icon",
+                    "mm_group": "mm_group",
+                    "bitmask": "Bitmaske",
+                    "bit_position": "Bit-Position",
+                    "read_function_code": "Read-Function-Code (3 oder 4)",
+                    "write_function_code": "Write-Function-Code (6 oder 16)",
+                    "never_resets": "Never resets",
+                    "force_update": "Force update",
+                    "min_value": "Minimum",
+                    "max_value": "Maximum",
+                    "step": "Schrittweite",
+                    "write_value": "ON-Schreibwert",
+                    "write_value_off": "OFF-Schreibwert",
+                    "on_value": "ON-Zustand",
+                    "off_value": "OFF-Zustand",
+                    "button_press_value": "Button-Wert",
+                    "options_text": "Optionen (eine Zeile: 0: Off)",
+                    "max_length": "Max. Länge (Bytes)"
+                }
+            },
+            "generic_entity_confirm": {
+                "title": "Weitere Entität?",
+                "description": "{entity_count} Entität(en) bereit. Weitere hinzufügen oder Hub anlegen.",
+                "data": {
+                    "action": "Weiter"
                 }
             },
             "identify_confirm": {
@@ -268,7 +339,8 @@
             "no_device_definitions": "Keine Gerätedefinitionen gefunden",
             "same_source_selected": "Quelle A und Quelle B müssen unterschiedlich sein",
             "source_not_found": "Ausgewählter Quell-Entry existiert nicht mehr",
-            "invalid_pair": "Diese Quellen-Kombination wird nicht unterstützt"
+            "invalid_pair": "Diese Quellen-Kombination wird nicht unterstützt",
+            "invalid_generic_register": "Ungültiges Register. unique_id (Buchstabe + a-z/0-9/_), Register >= 1, nur Holding/Input."
         },
         "abort": {
             "no_device_definitions": "Es wurden keine Gerätedefinitionen gefunden. Bitte stellen Sie sicher, dass mindestens eine YAML-Datei im device_definitions Verzeichnis existiert.",
@@ -278,6 +350,7 @@
             "no_available_devices_for_subentry": "Alle Geräte sind bereits konfiguriert.",
             "template_not_found": "Template {template_name} nicht gefunden.",
             "no_registers": "Template {template_name} hat keine Entitäten definiert.",
+            "generic_no_registers": "Das generische Gerät braucht mindestens ein gültiges Register. {error}",
             "update_error": "Fehler beim Aktualisieren des Templates: {error}",
             "no_template_selected": "Kein Template ausgewählt",
             "device_added_to_existing_hub": "Gerät erfolgreich zum bestehenden Hub hinzugefügt. Ein Neustart ist erforderlich, um das neue Gerät zu aktivieren.",
@@ -295,10 +368,11 @@
                 "menu_options": {
                     "connection": "Verbindung — Host, Port und Timing",
                     "inverter": "Wechselrichter — Modell, MPPT und Verbindung",
-                    "device": "Gerät — Heizkreis, Wallbox und Optionen",
+                    "device": "Geräte Optionen",
                     "battery": "Batterie — Modell, Prefix und Slave",
                     "battery_template": "Batterie — Template hinzufügen, wechseln oder entfernen",
-                    "reload_template": "Register-Templates neu laden"
+                    "reload_template": "Register-Templates neu laden",
+                    "generic_registers": "Generisches Gerät — Register hinzufügen oder bearbeiten"
                 }
             },
             "connection": {
@@ -395,13 +469,92 @@
                 "data": {
                     "battery_selection": "Battery Selection"
                 }
+            },
+            "generic_registers": {
+                "title": "Generische Register",
+                "description": "Gerät: {device}. Entitäten in diesem Entwurf: {entity_count}. Hinzufügen, bearbeiten oder entfernen, dann speichern zum Neuladen. unique_id bleibt beim Bearbeiten gleich. Entfernen löscht die Registry-Zeile nicht (History bleibt).",
+                "data": {
+                    "device_entry_id": "Gerät",
+                    "action": "Weiter"
+                }
+            },
+            "generic_opt_pick": {
+                "title": "Entität wählen",
+                "description": "Modus: {mode}. unique_id ist der History-Schlüssel.",
+                "data": {
+                    "unique_id": "Entität (unique_id)"
+                }
+            },
+            "generic_opt_remove": {
+                "title": "Register entfernen?",
+                "description": "{unique_id} von diesem generischen Gerät entfernen. Die Entity-Registry-Zeile bleibt; die Entität wird unavailable, damit die History nicht splittert.",
+                "data": {
+                    "confirm": "Von diesem Gerät entfernen"
+                }
+            },
+            "generic_opt_entity": {
+                "title": "Generischer Entitätstyp",
+                "description": "Entitäten in diesem Entwurf: {entity_count}. Nur Holding- und Input-Register (keine Coils).",
+                "data": {
+                    "entity_type": "Entitätstyp"
+                }
+            },
+            "generic_opt_core": {
+                "title": "Generisches Register",
+                "description": "Typ: {entity_type}. unique_id beim Bearbeiten ist {unique_id} und kann nicht wechseln. Adresse ist dieselbe Zahl wie YAML address: — das gelesene Modbus-Register.",
+                "data": {
+                    "unique_id": "unique_id (stabiler Slug)",
+                    "name": "Anzeigename",
+                    "address": "Modbus-Adresse (wie YAML address:)",
+                    "input_type": "Registertyp",
+                    "data_type": "Datentyp",
+                    "scan_interval": "Scan-Intervall (Sekunden)",
+                    "entity_category": "Entity-Kategorie",
+                    "icon": "Icon",
+                    "mm_group": "mm_group"
+                }
+            },
+            "generic_opt_fields": {
+                "title": "Register-Zusatzfelder",
+                "description": "Typ: {entity_type}, Datentyp: {data_type}, unique_id: {unique_id}. Es erscheinen nur Felder, die zu dieser Kombination passen.",
+                "data": {
+                    "count": "Anzahl Register",
+                    "scale": "Skalierung",
+                    "offset": "Offset",
+                    "precision": "Nachkommastellen",
+                    "unit_of_measurement": "Einheit",
+                    "device_class": "Device class",
+                    "state_class": "State class",
+                    "encoding": "String-Encoding (utf-8 oder hex)",
+                    "byte_order": "Byte-Reihenfolge",
+                    "swap": "Word-Swap",
+                    "bitmask": "Bitmaske",
+                    "bit_position": "Bit-Position",
+                    "read_function_code": "Read-Function-Code (3 oder 4)",
+                    "write_function_code": "Write-Function-Code (6 oder 16)",
+                    "never_resets": "Never resets",
+                    "force_update": "Force update",
+                    "min_value": "Minimum",
+                    "max_value": "Maximum",
+                    "step": "Schrittweite",
+                    "write_value": "ON-Schreibwert",
+                    "write_value_off": "OFF-Schreibwert",
+                    "on_value": "ON-Zustand",
+                    "off_value": "OFF-Zustand",
+                    "button_press_value": "Button-Wert",
+                    "options_text": "Optionen (eine Zeile: 0: Off)",
+                    "max_length": "Max. Länge (Bytes)"
+                }
             }
         },
         "error": {
             "endpoint_in_use": "Ein anderer Modbus-Manager-Hub nutzt diese IP und diesen Port bereits.",
             "invalid_host": "Host ist erforderlich.",
             "invalid_port": "Port muss eine gültige Zahl sein.",
-            "already_configured": "Dieses Prefix wird bereits von einem anderen Gerät verwendet."
+            "already_configured": "Dieses Prefix wird bereits von einem anderen Gerät verwendet.",
+            "invalid_generic_register": "Ungültiges Register. unique_id (Buchstabe + a-z/0-9/_) und nur Holding/Input.",
+            "duplicate_generic_unique_id": "Diese unique_id ist auf diesem Gerät schon vergeben.",
+            "last_generic_register": "Ein generisches Gerät braucht mindestens ein Register."
         },
         "abort": {
             "combined_device": "Combined Devices haben keine Modbus-Verbindung. IP/Port an den Quell-Hub-Einträgen ändern.",

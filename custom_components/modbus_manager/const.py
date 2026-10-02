@@ -11,6 +11,8 @@ CONF_ENTITY_ID_STRATEGY: Final = "entity_id_strategy"
 CONF_ENTRY_TYPE: Final = "entry_type"
 ENTRY_TYPE_HUB: Final = "hub"
 ENTRY_TYPE_COMBINED_DEVICE: Final = "combined_device"
+GENERIC_TEMPLATE_SENTINEL: Final = "__generic_device__"
+CONF_GENERIC_REGISTERS: Final = "generic_registers"
 
 
 class EntityIdStrategy(StrEnum):

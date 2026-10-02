@@ -16,6 +16,7 @@ from .const import (
     DOMAIN,
     ENTRY_TYPE_COMBINED_DEVICE,
     ENTRY_TYPE_HUB,
+    GENERIC_TEMPLATE_SENTINEL,
     EntityIdStrategy,
 )
 
@@ -979,11 +980,14 @@ def create_device_info_dict(
         firmware_version = "1.0.0"
 
     selected = (model or "").strip()
-    display_model = selected or template_name
-    display_manufacturer = (manufacturer or "").strip() or "Modbus Manager"
-    # Prefer the probed/selected model as the device name; otherwise keep prefix
-    # so entity friendly names stay short on templates without valid_models.
-    display_name = selected or prefix
+    if str(template_name) == GENERIC_TEMPLATE_SENTINEL:
+        display_model = selected or "Generic Modbus Device"
+        display_manufacturer = (manufacturer or "").strip() or "Generic"
+        display_name = selected or prefix
+    else:
+        display_model = selected or template_name
+        display_manufacturer = (manufacturer or "").strip() or "Modbus Manager"
+        display_name = selected or prefix
 
     info: Dict[str, Any] = {
         "identifiers": {(DOMAIN, device_identifier)},
@@ -1020,6 +1024,7 @@ async def async_register_entry_devices(hass: HomeAssistant, entry: ConfigEntry) 
         return
 
     host, port = entry_host_port(entry)
+    from .generic_device import is_generic_device_template
     from .template_loader import get_template_by_name
 
     ordered = sorted(
@@ -1036,12 +1041,18 @@ async def async_register_entry_devices(hass: HomeAssistant, entry: ConfigEntry) 
     for device in ordered:
         template_name = str(device.get("template") or "template")
         manufacturer = None
-        try:
-            template = await get_template_by_name(template_name)
-        except Exception:
-            template = None
-        if isinstance(template, dict):
-            manufacturer = template.get("manufacturer")
+        model = device.get("selected_model")
+        if is_generic_device_template(template_name):
+            manufacturer = "Generic"
+            model = model or "Generic Modbus Device"
+            template_name = "Generic Modbus Device"
+        else:
+            try:
+                template = await get_template_by_name(template_name)
+            except Exception:
+                template = None
+            if isinstance(template, dict):
+                manufacturer = template.get("manufacturer")
         via_tuple = via_device_tuple(device, devices, host, port)
         info = create_device_info_dict(
             hass=hass,

@@ -42,6 +42,11 @@ from .device_utils import (
     resolve_firmware_profile_version,
     via_device_tuple,
 )
+from .generic_device import (
+    GenericRegisterError,
+    is_generic_device_template,
+    template_from_generic_device,
+)
 from .logger import ModbusManagerLogger
 from .modbus_utils import (
     decode_string_registers,
@@ -669,11 +674,21 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     device.get("firmware_version", "unknown"),
                 )
 
-                # Load template
-                template = await get_template_by_name(template_name)
-                if not template:
-                    _LOGGER.error("Template %s not found for device", template_name)
-                    continue
+                if is_generic_device_template(template_name):
+                    try:
+                        template = template_from_generic_device(device)
+                    except GenericRegisterError as err:
+                        _LOGGER.error(
+                            "Generic device %s has invalid registers: %s",
+                            prefix,
+                            err,
+                        )
+                        continue
+                else:
+                    template = await get_template_by_name(template_name)
+                    if not template:
+                        _LOGGER.error("Template %s not found for device", template_name)
+                        continue
 
                 # Build dynamic_config dict dynamically from template's dynamic_config section
                 # This automatically includes ALL fields defined in the template (e.g., dual_channel_meter)
@@ -1031,7 +1046,12 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     firmware_version=device_firmware_version,
                     config_entry_id=self.entry.entry_id,
                     manufacturer=template.get("manufacturer"),
-                    model=selected_model,
+                    model=selected_model
+                    or (
+                        template.get("display_name")
+                        if is_generic_device_template(template_name)
+                        else None
+                    ),
                     via_device=via_device_tuple(device, devices, host, port),
                 )
 
