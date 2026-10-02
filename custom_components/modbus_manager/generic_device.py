@@ -92,12 +92,17 @@ def _optional_float(value: object) -> float | None:
 
 
 def parse_value_map(text: object) -> dict[Any, str]:
-    """Parse ``0: Off`` / ``0=Off`` lines (or commas) into a value map."""
+    """Parse ``0: Off, 1: On`` (commas, semicolons, or newlines) into a value map.
+
+    Hex keys match YAML (``0xCF`` → 207). Surrounding quotes on labels are dropped.
+    """
     if isinstance(text, dict):
         parsed: dict[Any, str] = {}
         for key, value in text.items():
-            key_text = str(key).strip()
-            parsed[_map_key(key_text)] = str(value).strip()
+            if isinstance(key, int) and not isinstance(key, bool):
+                parsed[key] = _strip_option_label(value)
+            else:
+                parsed[_map_key(str(key).strip())] = _strip_option_label(value)
         return parsed
     raw = str(text or "").strip()
     if not raw:
@@ -112,14 +117,29 @@ def parse_value_map(text: object) -> dict[Any, str]:
         elif "=" in part:
             key_text, value = part.split("=", 1)
         else:
-            raise GenericRegisterError("options must be lines like '0: Off' or '1=On'")
-        parsed[_map_key(key_text.strip())] = value.strip()
+            raise GenericRegisterError(
+                "options must be comma-separated like '0: Off, 1: On'"
+            )
+        parsed[_map_key(key_text.strip())] = _strip_option_label(value)
     return parsed
+
+
+def _strip_option_label(value: object) -> str:
+    text = str(value or "").strip()
+    if len(text) >= 2 and text[0] == text[-1] and text[0] in {'"', "'"}:
+        return text[1:-1].strip()
+    return text
 
 
 def _map_key(key_text: str) -> Any:
     if key_text.isdigit() or (key_text.startswith("-") and key_text[1:].isdigit()):
         return int(key_text)
+    lowered = key_text.lower()
+    if lowered.startswith("0x") or lowered.startswith("-0x"):
+        try:
+            return int(key_text, 16)
+        except ValueError:
+            return key_text
     return key_text
 
 
@@ -284,7 +304,7 @@ def normalize_generic_register(row: dict[str, Any]) -> dict[str, Any]:
     if entity_type == "select":
         options = parse_value_map(row.get("options_text") or row.get("options"))
         if not options:
-            raise GenericRegisterError("select needs options (e.g. 0: Off)")
+            raise GenericRegisterError("select needs options (e.g. 0: Off, 1: On)")
         normalized["options"] = options
 
     if entity_type == "text" and encoding.lower() == "hex":
@@ -601,10 +621,10 @@ GENERIC_OPT_ACTIONS = {
 
 
 def format_options_text(options: object) -> str:
-    """Serialize a select options map for the form textarea."""
+    """Serialize a select options map as one comma-separated form line."""
     if not isinstance(options, dict) or not options:
         return ""
-    return "\n".join(f"{key}: {value}" for key, value in options.items())
+    return ", ".join(f"{key}: {value}" for key, value in options.items())
 
 
 def generic_row_form_defaults(row: dict[str, Any]) -> dict[str, Any]:
