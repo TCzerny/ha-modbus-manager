@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **String sensors — hex encoding**: `data_type: string` with `encoding: hex` publishes the register bytes as lowercase hex (`123456789012` for bytes `\x12\x34\x56\x78\x90\x12`). Hex is read-only; a control that uses it raises an error.
 
+### 🐛 Fixed
+
+- **Sungrow SHx — PV generation hours today ([#102](https://github.com/TCzerny/ha-modbus-manager/issues/102))**: Divide daily kWh by DC power in **kW** (`total_dc_power` / 1000). Night/zero branch returns **0.0** so the recorder does not flip `0` / `0.0`. The metric is still “energy at current power”, not true hours today — documented as under review. `unique_id` unchanged. Template v1.2.22.
+
 ## [1.2.1] - 2026-09-30
 
 ### ✨ Added

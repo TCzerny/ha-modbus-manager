@@ -6,7 +6,7 @@ display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters: RS, RT, T, MG*RL, SH*RL. SH50–125CX not included yet."
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.2.21
+version: 1.2.22
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -4902,19 +4902,20 @@ calculated:
       }}
     state: >-
       {% set daily_gen = states('[[mm:sensor:{PREFIX}_daily_pv_generation]]') | float(0) %}
-      {% set current_power = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
-      {% set avg_power = current_power %}
-      {% if avg_power > 0 %}
-        {{ (daily_gen / avg_power) | round(2) }}
+      {% set current_power_kw = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) / 1000 %}
+      {% if current_power_kw > 0 %}
+        {{ (daily_gen / current_power_kw) | round(2) }}
       {% else %}
-        0
+        0.0
       {% endif %}
     unit_of_measurement: "h"
     device_class: "duration"
     state_class: "measurement"
     precision: 2
     mm_group: "PV_performance"
-    # Equivalent generation hours at current power level (approximation)
+    # Daily kWh / current DC kW so units work. Not true “hours today”: the value
+    # tracks instantaneous power (inflates at dusk). Metric under review. Else 0.0
+    # so recorder does not flip 0 / 0.0.
 
   # Protocol Version (formatted) - extracts directly from raw value using bit operations
   # Format per documentation V1.1.7: 0xMMmmppbb
