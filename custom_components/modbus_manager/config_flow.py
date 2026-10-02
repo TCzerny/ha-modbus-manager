@@ -533,7 +533,112 @@ def _template_default_connection_type(template_data: dict[str, Any]) -> str | No
     return None
 
 
-class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class _GenericEntityLoopMixin:
+    """Add-entity loop shared by hub setup and Add device on an existing hub."""
+
+    def _generic_confirm_actions(self) -> dict[str, str]:
+        return {
+            "add": "Add another entity",
+            "finish": "Create hub",
+        }
+
+    async def _async_finish_generic_entity_loop(self) -> FlowResult:
+        """Persist the collected generic registers (hub create or attach)."""
+        raise NotImplementedError
+
+    async def async_step_generic_entity(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Pick entity platform, then type-specific fields."""
+        if user_input is not None:
+            self._generic_entity_type = user_input.get("entity_type", "sensor")
+            return await self.async_step_generic_entity_core()
+        return self.async_show_form(
+            step_id="generic_entity",
+            data_schema=generic_entity_type_schema(),
+            description_placeholders={
+                "entity_count": str(len(getattr(self, "_generic_registers", []) or [])),
+            },
+        )
+
+    async def async_step_generic_entity_core(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Identity, YAML address, and data type (drives extra fields)."""
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            self._generic_entity_core = dict(user_input)
+            self._generic_entity_core["entity_type"] = getattr(
+                self, "_generic_entity_type", "sensor"
+            )
+            return await self.async_step_generic_entity_fields()
+        return self.async_show_form(
+            step_id="generic_entity_core",
+            data_schema=generic_entity_core_schema(),
+            errors=errors,
+            description_placeholders={
+                "entity_type": getattr(self, "_generic_entity_type", "sensor"),
+            },
+        )
+
+    async def async_step_generic_entity_fields(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Type-specific extras after identity and data_type are known."""
+        errors: dict[str, str] = {}
+        entity_type = getattr(self, "_generic_entity_type", "sensor")
+        core = dict(getattr(self, "_generic_entity_core", {}) or {})
+        data_type = str(core.get("data_type") or "uint16")
+        if user_input is not None:
+            try:
+                row = {**core, **user_input}
+                row["entity_type"] = entity_type
+                normalize_generic_register(row)
+                existing = list(getattr(self, "_generic_registers", []) or [])
+                existing.append(row)
+                normalize_generic_registers(existing)
+                self._generic_registers = existing
+                return await self.async_step_generic_entity_confirm()
+            except GenericRegisterError as err:
+                _LOGGER.debug("Generic register rejected: %s", err)
+                errors["base"] = "invalid_generic_register"
+            except ValueError:
+                errors["base"] = "invalid_generic_register"
+        return self.async_show_form(
+            step_id="generic_entity_fields",
+            data_schema=generic_entity_extras_schema(entity_type, data_type),
+            errors=errors,
+            description_placeholders={
+                "entity_type": entity_type,
+                "data_type": data_type,
+            },
+        )
+
+    async def async_step_generic_entity_confirm(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Add another entity or finish (create hub / attach device)."""
+        if user_input is not None:
+            if user_input.get("action") == "add":
+                return await self.async_step_generic_entity()
+            return await self._async_finish_generic_entity_loop()
+        count = len(getattr(self, "_generic_registers", []) or [])
+        return self.async_show_form(
+            step_id="generic_entity_confirm",
+            data_schema=vol.Schema(
+                {
+                    vol.Required("action", default="finish"): vol.In(
+                        self._generic_confirm_actions()
+                    )
+                }
+            ),
+            description_placeholders={"entity_count": str(count)},
+        )
+
+
+class ModbusManagerConfigFlow(
+    _GenericEntityLoopMixin, config_entries.ConfigFlow, domain=DOMAIN
+):
     """Handle a config flow for Modbus Manager."""
 
     VERSION = 7
@@ -854,97 +959,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._generic_registers = []
         return await self.async_step_connection()
 
-    async def async_step_generic_entity(
-        self, user_input: dict | None = None
-    ) -> FlowResult:
-        """Pick entity platform, then type-specific fields."""
-        if user_input is not None:
-            self._generic_entity_type = user_input.get("entity_type", "sensor")
-            return await self.async_step_generic_entity_core()
-        return self.async_show_form(
-            step_id="generic_entity",
-            data_schema=generic_entity_type_schema(),
-            description_placeholders={
-                "entity_count": str(len(getattr(self, "_generic_registers", []) or [])),
-            },
-        )
-
-    async def async_step_generic_entity_core(
-        self, user_input: dict | None = None
-    ) -> FlowResult:
-        """Identity, YAML address, and data type (drives extra fields)."""
-        errors: dict[str, str] = {}
-        if user_input is not None:
-            self._generic_entity_core = dict(user_input)
-            self._generic_entity_core["entity_type"] = getattr(
-                self, "_generic_entity_type", "sensor"
-            )
-            return await self.async_step_generic_entity_fields()
-        return self.async_show_form(
-            step_id="generic_entity_core",
-            data_schema=generic_entity_core_schema(),
-            errors=errors,
-            description_placeholders={
-                "entity_type": getattr(self, "_generic_entity_type", "sensor"),
-            },
-        )
-
-    async def async_step_generic_entity_fields(
-        self, user_input: dict | None = None
-    ) -> FlowResult:
-        """Type-specific extras after identity and data_type are known."""
-        errors: dict[str, str] = {}
-        entity_type = getattr(self, "_generic_entity_type", "sensor")
-        core = dict(getattr(self, "_generic_entity_core", {}) or {})
-        data_type = str(core.get("data_type") or "uint16")
-        if user_input is not None:
-            try:
-                row = {**core, **user_input}
-                row["entity_type"] = entity_type
-                normalize_generic_register(row)
-                existing = list(getattr(self, "_generic_registers", []) or [])
-                existing.append(row)
-                normalize_generic_registers(existing)
-                self._generic_registers = existing
-                return await self.async_step_generic_entity_confirm()
-            except GenericRegisterError as err:
-                _LOGGER.debug("Generic register rejected: %s", err)
-                errors["base"] = "invalid_generic_register"
-            except ValueError:
-                errors["base"] = "invalid_generic_register"
-        return self.async_show_form(
-            step_id="generic_entity_fields",
-            data_schema=generic_entity_extras_schema(entity_type, data_type),
-            errors=errors,
-            description_placeholders={
-                "entity_type": entity_type,
-                "data_type": data_type,
-            },
-        )
-
-    async def async_step_generic_entity_confirm(
-        self, user_input: dict | None = None
-    ) -> FlowResult:
-        """Add another entity or create the hub."""
-        if user_input is not None:
-            if user_input.get("action") == "add":
-                return await self.async_step_generic_entity()
-            return await self._async_create_generic_hub_entry()
-        count = len(getattr(self, "_generic_registers", []) or [])
-        return self.async_show_form(
-            step_id="generic_entity_confirm",
-            data_schema=vol.Schema(
-                {
-                    vol.Required("action", default="finish"): vol.In(
-                        {
-                            "add": "Add another entity",
-                            "finish": "Create hub",
-                        }
-                    )
-                }
-            ),
-            description_placeholders={"entity_count": str(count)},
-        )
+    async def _async_finish_generic_entity_loop(self) -> FlowResult:
+        """Create a new hub (or attach if host:port already exists)."""
+        return await self._async_create_generic_hub_entry()
 
     async def _async_create_generic_hub_entry(self) -> FlowResult:
         """Persist hub + one generic devices[] row and finish the flow."""
@@ -3507,12 +3524,16 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return {"device": ModbusManagerDeviceSubentryFlow}
 
 
-class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
+class ModbusManagerDeviceSubentryFlow(
+    _GenericEntityLoopMixin, config_entries.ConfigSubentryFlow
+):
     """Config subentry flow for Modbus Manager devices."""
 
     @staticmethod
     async def _get_template_defaults(template_name: str) -> tuple[str, int]:
         """Return default prefix/slave_id for a template."""
+        if is_generic_device_template(template_name):
+            return "generic", 1
         template_data = await get_template_by_name(template_name)
         if not isinstance(template_data, dict):
             return "device", 1
@@ -3529,11 +3550,12 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
     ) -> FlowResult:
         """Render add-device form with template-aware defaults."""
         template_names = sorted(await get_template_names())
-        if not template_names:
-            return self.async_abort(reason="no_templates")
-
-        if selected_template not in template_names:
-            selected_template = template_names[0]
+        is_generic = is_generic_device_template(selected_template)
+        if not is_generic:
+            if not template_names:
+                return self.async_abort(reason="no_templates")
+            if selected_template not in template_names:
+                selected_template = template_names[0]
 
         if prefix_default is None or slave_id_default is None:
             resolved_prefix, resolved_slave_id = await self._get_template_defaults(
@@ -3548,7 +3570,11 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
         self._add_form_prefix_default = prefix_default
         self._add_form_slave_default = slave_id_default
 
-        template_data = await get_template_by_name(selected_template)
+        template_data = (
+            None
+            if is_generic_device_template(selected_template)
+            else await get_template_by_name(selected_template)
+        )
         dynamic_config = (
             template_data.get("dynamic_config", {})
             if isinstance(template_data, dict)
@@ -3601,10 +3627,9 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
     async def _show_add_template_select_form(self) -> FlowResult:
         """Render first add-device step with template selection only."""
         template_names = sorted(await get_template_names())
-        if not template_names:
-            return self.async_abort(reason="no_templates")
-
-        template_choices = {}
+        template_choices = {
+            GENERIC_TEMPLATE_SENTINEL: "Generic Modbus Device",
+        }
         for tn in template_names:
             td = await get_template_by_name(tn)
             label = (
@@ -3614,7 +3639,7 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
             )
             template_choices[tn] = label
 
-        default_template = template_names[0]
+        default_template = GENERIC_TEMPLATE_SENTINEL
         self._add_form_template_name = None
         self._add_template_candidate = default_template
         self._add_form_prefix_default = None
@@ -3630,6 +3655,67 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
                 }
             ),
         )
+
+    def _generic_confirm_actions(self) -> dict[str, str]:
+        return {
+            "add": "Add another entity",
+            "finish": "Add device",
+        }
+
+    async def _async_finish_generic_entity_loop(self) -> FlowResult:
+        """Attach a generic devices[] row to this hub."""
+        return await self._async_attach_generic_device()
+
+    async def _async_attach_generic_device(self) -> FlowResult:
+        """Persist generic_registers on a new devices[] row and reload."""
+        entry = self._get_entry()
+        try:
+            rows = normalize_generic_registers(
+                getattr(self, "_generic_registers", None)
+            )
+        except GenericRegisterError as err:
+            return self.async_abort(
+                reason="generic_no_registers",
+                description_placeholders={"error": str(err)},
+            )
+        prefix = str(getattr(self, "_generic_add_prefix", "") or "").strip()
+        slave_id = int(
+            getattr(self, "_generic_add_slave", DEFAULT_SLAVE) or DEFAULT_SLAVE
+        )
+        if not prefix:
+            return self.async_abort(reason="config_error")
+        if not _is_prefix_unique_across_hubs(
+            self.hass, prefix, exclude_entry_id=entry.entry_id
+        ):
+            return self.async_abort(reason="already_configured")
+        device = self._normalize_device_record(
+            {
+                "type": "generic",
+                "template": GENERIC_TEMPLATE_SENTINEL,
+                "prefix": prefix,
+                "slave_id": slave_id,
+                "template_version": "0.1.0",
+                CONF_GENERIC_REGISTERS: rows,
+            }
+        )
+        devices = self._get_devices(entry)
+        for existing in devices:
+            same_entry_id = existing.get("device_entry_id") == device.get(
+                "device_entry_id"
+            )
+            same_identity = (
+                existing.get("prefix") == device.get("prefix")
+                and existing.get("slave_id") == device.get("slave_id")
+                and existing.get("template") == device.get("template")
+            )
+            if same_entry_id or same_identity:
+                return self.async_abort(reason="already_configured")
+        new_data = dict(entry.data)
+        new_data["devices"] = devices + [device]
+        new_data.pop("pending_subentry_device_id", None)
+        self.hass.config_entries.async_update_entry(entry, data=new_data)
+        self.hass.config_entries.async_schedule_reload(entry.entry_id)
+        return self.async_abort(reason="device_attached")
 
     @staticmethod
     def _build_device_entry_id(device: dict[str, Any]) -> str:
@@ -3813,10 +3899,6 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
             template_name = user_input.get(
                 "template", getattr(self, "_add_template_candidate", None)
             )
-            template_data = await get_template_by_name(template_name)
-            if not template_data or not isinstance(template_data, dict):
-                return self.async_abort(reason="template_not_found")
-
             prefix = str(user_input.get("prefix", "")).strip()
             slave_id = int(user_input.get("slave_id", 1))
 
@@ -3849,6 +3931,20 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
                     prefix_default=new_prefix,
                     slave_id_default=new_slave_id,
                 )
+
+            if is_generic_device_template(template_name):
+                if not _is_prefix_unique_across_hubs(
+                    self.hass, prefix, exclude_entry_id=entry.entry_id
+                ):
+                    return self.async_abort(reason="already_configured")
+                self._generic_add_prefix = prefix
+                self._generic_add_slave = slave_id
+                self._generic_registers = []
+                return await self.async_step_generic_entity()
+
+            template_data = await get_template_by_name(template_name)
+            if not template_data or not isinstance(template_data, dict):
+                return self.async_abort(reason="template_not_found")
 
             device = {
                 "type": template_data.get("type", "inverter") or "inverter",

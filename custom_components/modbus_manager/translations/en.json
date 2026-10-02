@@ -547,7 +547,7 @@
         "step": {
             "user": {
                 "title": "Add device",
-                "description": "Choose the hub connection this device should use, then pick a template, prefix, and slave ID.",
+                "description": "This device uses this hub's connection. Choose Generic Modbus Device or a YAML template, then prefix and slave ID.",
                 "data": {
                     "template": "Device Template",
                     "prefix": "Device Prefix",
@@ -593,6 +593,67 @@
                     "pv2heat_enabled": "Enable PV2Heat registers",
                     "heat_meter_enabled": "Enable heat-meter power register"
                 }
+            },
+            "generic_entity": {
+                "title": "Generic entity type",
+                "description": "Entities added so far: {entity_count}. Holding and input registers only (no coils).",
+                "data": {
+                    "entity_type": "Entity type"
+                }
+            },
+            "generic_entity_core": {
+                "title": "Generic register",
+                "description": "Type: {entity_type}. Address is the same number as YAML `address:` — the Modbus address we read, with no offset. unique_id is the history key and must not change later.",
+                "data": {
+                    "unique_id": "unique_id (stable slug)",
+                    "name": "Display name",
+                    "address": "Modbus address (same as YAML address:)",
+                    "input_type": "Register type",
+                    "data_type": "Data type",
+                    "scan_interval": "Scan interval (seconds)",
+                    "entity_category": "Entity category",
+                    "icon": "Icon",
+                    "mm_group": "mm_group"
+                }
+            },
+            "generic_entity_fields": {
+                "title": "Register extras",
+                "description": "Type: {entity_type}, data type: {data_type}. Only fields that apply to this combination are shown.",
+                "data": {
+                    "count": "Register count",
+                    "scale": "Scale",
+                    "offset": "Offset",
+                    "precision": "Precision",
+                    "unit_of_measurement": "Unit",
+                    "device_class": "Device class",
+                    "state_class": "State class",
+                    "encoding": "String encoding (utf-8 or hex)",
+                    "byte_order": "Byte order",
+                    "swap": "Word swap",
+                    "bitmask": "Bitmask",
+                    "bit_position": "Bit position",
+                    "read_function_code": "Read function code (3 or 4)",
+                    "write_function_code": "Write function code (6 or 16)",
+                    "never_resets": "Never resets",
+                    "force_update": "Force update",
+                    "min_value": "Minimum",
+                    "max_value": "Maximum",
+                    "step": "Step",
+                    "write_value": "ON write value",
+                    "write_value_off": "OFF write value",
+                    "on_value": "ON state value",
+                    "off_value": "OFF state value",
+                    "button_press_value": "Button press value",
+                    "options_text": "Options (one per line: 0: Off)",
+                    "max_length": "Max length (bytes)"
+                }
+            },
+            "generic_entity_confirm": {
+                "title": "Add another entity?",
+                "description": "{entity_count} entit(y/ies) ready. Add another or attach this device to the hub.",
+                "data": {
+                    "action": "Next"
+                }
             }
         },
         "abort": {
@@ -604,7 +665,8 @@
             "nested_device_attached": "Device added under the inverter. It does not get its own hub row.",
             "device_attached": "Device added to the hub.",
             "combined_device": "Combined devices have no Modbus connection. Add the device on the source hub instead.",
-            "no_templates": "No device templates found."
+            "no_templates": "No device templates found.",
+            "generic_no_registers": "Generic device needs at least one valid register. {error}"
         },
         "device": {
             "title": "Add device",
@@ -616,7 +678,7 @@
             "step": {
                 "user": {
                     "title": "Add device",
-                    "description": "This device will use this hub's connection (host/port or serial). Choose a template, then prefix and slave ID.",
+                    "description": "This device will use this hub's connection (host/port or serial). Choose Generic Modbus Device or a YAML template, then prefix and slave ID.",
                     "data": {
                         "template": "Device Template",
                         "prefix": "Device Prefix",
@@ -662,6 +724,67 @@
                         "pv2heat_enabled": "Enable PV2Heat registers",
                         "heat_meter_enabled": "Enable heat-meter power register"
                     }
+                },
+                "generic_entity": {
+                    "title": "Generic entity type",
+                    "description": "Entities added so far: {entity_count}. Holding and input registers only (no coils).",
+                    "data": {
+                        "entity_type": "Entity type"
+                    }
+                },
+                "generic_entity_core": {
+                    "title": "Generic register",
+                    "description": "Type: {entity_type}. Address is the same number as YAML `address:` — the Modbus address we read, with no offset. unique_id is the history key and must not change later.",
+                    "data": {
+                        "unique_id": "unique_id (stable slug)",
+                        "name": "Display name",
+                        "address": "Modbus address (same as YAML address:)",
+                        "input_type": "Register type",
+                        "data_type": "Data type",
+                        "scan_interval": "Scan interval (seconds)",
+                        "entity_category": "Entity category",
+                        "icon": "Icon",
+                        "mm_group": "mm_group"
+                    }
+                },
+                "generic_entity_fields": {
+                    "title": "Register extras",
+                    "description": "Type: {entity_type}, data type: {data_type}. Only fields that apply to this combination are shown.",
+                    "data": {
+                        "count": "Register count",
+                        "scale": "Scale",
+                        "offset": "Offset",
+                        "precision": "Precision",
+                        "unit_of_measurement": "Unit",
+                        "device_class": "Device class",
+                        "state_class": "State class",
+                        "encoding": "String encoding (utf-8 or hex)",
+                        "byte_order": "Byte order",
+                        "swap": "Word swap",
+                        "bitmask": "Bitmask",
+                        "bit_position": "Bit position",
+                        "read_function_code": "Read function code (3 or 4)",
+                        "write_function_code": "Write function code (6 or 16)",
+                        "never_resets": "Never resets",
+                        "force_update": "Force update",
+                        "min_value": "Minimum",
+                        "max_value": "Maximum",
+                        "step": "Step",
+                        "write_value": "ON write value",
+                        "write_value_off": "OFF write value",
+                        "on_value": "ON state value",
+                        "off_value": "OFF state value",
+                        "button_press_value": "Button press value",
+                        "options_text": "Options (one per line: 0: Off)",
+                        "max_length": "Max length (bytes)"
+                    }
+                },
+                "generic_entity_confirm": {
+                    "title": "Add another entity?",
+                    "description": "{entity_count} entit(y/ies) ready. Add another or attach this device to the hub.",
+                    "data": {
+                        "action": "Next"
+                    }
                 }
             },
             "abort": {
@@ -673,8 +796,15 @@
                 "nested_device_attached": "Device added under the inverter. It does not get its own hub row.",
                 "device_attached": "Device added to the hub.",
                 "combined_device": "Combined devices have no Modbus connection. Add the device on the source hub instead.",
-                "no_templates": "No device templates found."
+                "no_templates": "No device templates found.",
+                "generic_no_registers": "Generic device needs at least one valid register. {error}"
+            },
+            "error": {
+                "invalid_generic_register": "This register is invalid. Check unique_id (letter + a-z/0-9/_) and holding/input only."
             }
+        },
+        "error": {
+            "invalid_generic_register": "This register is invalid. Check unique_id (letter + a-z/0-9/_) and holding/input only."
         }
     },
     "device": {

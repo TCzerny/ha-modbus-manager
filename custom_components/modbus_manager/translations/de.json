@@ -567,7 +567,7 @@
         "step": {
             "user": {
                 "title": "Gerät hinzufügen",
-                "description": "Wählen Sie die Hub-Verbindung, an die das Gerät soll, danach Template, Präfix und Slave-ID.",
+                "description": "Dieses Gerät nutzt die Verbindung des Hubs. Wählen Sie Generic Modbus Device oder ein YAML-Template, danach Präfix und Slave-ID.",
                 "data": {
                     "template": "Geräte-Template",
                     "prefix": "Geräte-Prefix",
@@ -613,6 +613,67 @@
                     "pv2heat_enabled": "PV2Heat-Register aktivieren",
                     "heat_meter_enabled": "Wärmemengenzähler-Register aktivieren"
                 }
+            },
+            "generic_entity": {
+                "title": "Generischer Entitätstyp",
+                "description": "Bisher angelegt: {entity_count}. Nur Holding- und Input-Register (keine Coils).",
+                "data": {
+                    "entity_type": "Entitätstyp"
+                }
+            },
+            "generic_entity_core": {
+                "title": "Generisches Register",
+                "description": "Typ: {entity_type}. Adresse ist dieselbe Zahl wie YAML `address:` — das Modbus-Register, das gelesen wird, ohne Offset. unique_id ist der History-Schlüssel und darf später nicht wechseln.",
+                "data": {
+                    "unique_id": "unique_id (stabiler Slug)",
+                    "name": "Anzeigename",
+                    "address": "Modbus-Adresse (wie YAML address:)",
+                    "input_type": "Registertyp",
+                    "data_type": "Datentyp",
+                    "scan_interval": "Scan-Intervall (Sekunden)",
+                    "entity_category": "Entity-Kategorie",
+                    "icon": "Icon",
+                    "mm_group": "mm_group"
+                }
+            },
+            "generic_entity_fields": {
+                "title": "Register-Zusatzfelder",
+                "description": "Typ: {entity_type}, Datentyp: {data_type}. Es erscheinen nur Felder, die zu dieser Kombination passen.",
+                "data": {
+                    "count": "Anzahl Register",
+                    "scale": "Skalierung",
+                    "offset": "Offset",
+                    "precision": "Nachkommastellen",
+                    "unit_of_measurement": "Einheit",
+                    "device_class": "Device class",
+                    "state_class": "State class",
+                    "encoding": "String-Encoding (utf-8 oder hex)",
+                    "byte_order": "Byte-Reihenfolge",
+                    "swap": "Word-Swap",
+                    "bitmask": "Bitmaske",
+                    "bit_position": "Bit-Position",
+                    "read_function_code": "Read-Function-Code (3 oder 4)",
+                    "write_function_code": "Write-Function-Code (6 oder 16)",
+                    "never_resets": "Never resets",
+                    "force_update": "Force update",
+                    "min_value": "Minimum",
+                    "max_value": "Maximum",
+                    "step": "Schrittweite",
+                    "write_value": "ON-Schreibwert",
+                    "write_value_off": "OFF-Schreibwert",
+                    "on_value": "ON-Zustand",
+                    "off_value": "OFF-Zustand",
+                    "button_press_value": "Button-Wert",
+                    "options_text": "Optionen (eine Zeile: 0: Off)",
+                    "max_length": "Max. Länge (Bytes)"
+                }
+            },
+            "generic_entity_confirm": {
+                "title": "Weitere Entität?",
+                "description": "{entity_count} Entität(en) bereit. Weitere hinzufügen oder das Gerät am Hub anlegen.",
+                "data": {
+                    "action": "Weiter"
+                }
             }
         },
         "abort": {
@@ -624,7 +685,8 @@
             "nested_device_attached": "Gerät unter dem Wechselrichter hinzugefügt. Es gibt keine eigene Hub-Zeile.",
             "device_attached": "Gerät zum Hub hinzugefügt.",
             "combined_device": "Combined Devices haben keine Modbus-Verbindung. Gerät am Quell-Hub hinzufügen.",
-            "no_templates": "Keine Geräte-Templates gefunden."
+            "no_templates": "Keine Geräte-Templates gefunden.",
+            "generic_no_registers": "Ein generisches Gerät braucht mindestens ein gültiges Register. {error}"
         },
         "device": {
             "title": "Gerät hinzufügen",
@@ -636,7 +698,7 @@
             "step": {
                 "user": {
                     "title": "Gerät hinzufügen",
-                    "description": "Das Gerät hängt an dieser Hub-Verbindung (Host/Port oder seriell). Template wählen, danach Präfix und Slave-ID.",
+                    "description": "Das Gerät hängt an dieser Hub-Verbindung (Host/Port oder seriell). Generic Modbus Device oder YAML-Template wählen, danach Präfix und Slave-ID.",
                     "data": {
                         "template": "Geräte-Template",
                         "prefix": "Geräte-Prefix",
@@ -682,6 +744,67 @@
                         "pv2heat_enabled": "PV2Heat-Register aktivieren",
                         "heat_meter_enabled": "Wärmemengenzähler-Register aktivieren"
                     }
+                },
+                "generic_entity": {
+                    "title": "Generischer Entitätstyp",
+                    "description": "Bisher angelegt: {entity_count}. Nur Holding- und Input-Register (keine Coils).",
+                    "data": {
+                        "entity_type": "Entitätstyp"
+                    }
+                },
+                "generic_entity_core": {
+                    "title": "Generisches Register",
+                    "description": "Typ: {entity_type}. Adresse ist dieselbe Zahl wie YAML `address:` — das Modbus-Register, das gelesen wird, ohne Offset. unique_id ist der History-Schlüssel und darf später nicht wechseln.",
+                    "data": {
+                        "unique_id": "unique_id (stabiler Slug)",
+                        "name": "Anzeigename",
+                        "address": "Modbus-Adresse (wie YAML address:)",
+                        "input_type": "Registertyp",
+                        "data_type": "Datentyp",
+                        "scan_interval": "Scan-Intervall (Sekunden)",
+                        "entity_category": "Entity-Kategorie",
+                        "icon": "Icon",
+                        "mm_group": "mm_group"
+                    }
+                },
+                "generic_entity_fields": {
+                    "title": "Register-Zusatzfelder",
+                    "description": "Typ: {entity_type}, Datentyp: {data_type}. Es erscheinen nur Felder, die zu dieser Kombination passen.",
+                    "data": {
+                        "count": "Anzahl Register",
+                        "scale": "Skalierung",
+                        "offset": "Offset",
+                        "precision": "Nachkommastellen",
+                        "unit_of_measurement": "Einheit",
+                        "device_class": "Device class",
+                        "state_class": "State class",
+                        "encoding": "String-Encoding (utf-8 oder hex)",
+                        "byte_order": "Byte-Reihenfolge",
+                        "swap": "Word-Swap",
+                        "bitmask": "Bitmaske",
+                        "bit_position": "Bit-Position",
+                        "read_function_code": "Read-Function-Code (3 oder 4)",
+                        "write_function_code": "Write-Function-Code (6 oder 16)",
+                        "never_resets": "Never resets",
+                        "force_update": "Force update",
+                        "min_value": "Minimum",
+                        "max_value": "Maximum",
+                        "step": "Schrittweite",
+                        "write_value": "ON-Schreibwert",
+                        "write_value_off": "OFF-Schreibwert",
+                        "on_value": "ON-Zustand",
+                        "off_value": "OFF-Zustand",
+                        "button_press_value": "Button-Wert",
+                        "options_text": "Optionen (eine Zeile: 0: Off)",
+                        "max_length": "Max. Länge (Bytes)"
+                    }
+                },
+                "generic_entity_confirm": {
+                    "title": "Weitere Entität?",
+                    "description": "{entity_count} Entität(en) bereit. Weitere hinzufügen oder das Gerät am Hub anlegen.",
+                    "data": {
+                        "action": "Weiter"
+                    }
                 }
             },
             "abort": {
@@ -693,8 +816,15 @@
                 "nested_device_attached": "Gerät unter dem Wechselrichter hinzugefügt. Es gibt keine eigene Hub-Zeile.",
                 "device_attached": "Gerät zum Hub hinzugefügt.",
                 "combined_device": "Combined Devices haben keine Modbus-Verbindung. Gerät am Quell-Hub hinzufügen.",
-                "no_templates": "Keine Geräte-Templates gefunden."
+                "no_templates": "Keine Geräte-Templates gefunden.",
+                "generic_no_registers": "Ein generisches Gerät braucht mindestens ein gültiges Register. {error}"
+            },
+            "error": {
+                "invalid_generic_register": "Ungültiges Register. unique_id (Buchstabe + a-z/0-9/_) und nur Holding/Input."
             }
+        },
+        "error": {
+            "invalid_generic_register": "Ungültiges Register. unique_id (Buchstabe + a-z/0-9/_) und nur Holding/Input."
         }
     },
     "device": {
