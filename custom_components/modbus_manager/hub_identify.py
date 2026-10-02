@@ -16,7 +16,7 @@ from homeassistant.core import HomeAssistant
 
 from .logger import ModbusManagerLogger
 from .modbus_client import TemporaryRegisterReader
-from .modbus_utils import registers_to_bytes
+from .modbus_utils import decode_string_registers
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -180,13 +180,12 @@ def _input_types(spec: dict[str, Any]) -> list[str]:
 def _decode_registers(spec: dict[str, Any], registers: list[int]) -> Any:
     data_type = str(spec.get("data_type") or "uint16").strip().lower()
     if data_type == "string":
-        raw = registers_to_bytes(
+        return decode_string_registers(
             registers,
+            encoding=str(spec.get("encoding") or "utf-8"),
             byte_order=str(spec.get("byte_order") or "big"),
             swap=spec.get("swap") or "none",
         )
-        encoding = str(spec.get("encoding") or "utf-8")
-        return raw.decode(encoding, errors="ignore").split("\x00", 1)[0].strip()
     if not registers:
         return None
     if data_type in {"uint32", "int32"}:

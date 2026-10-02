@@ -14,6 +14,7 @@ from .const import DOMAIN
 from .coordinator import ModbusCoordinator
 from .device_utils import create_base_extra_state_attributes, is_coordinator_connected
 from .logger import ModbusManagerLogger
+from .modbus_utils import reject_hex_encoding_for_control
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -70,6 +71,7 @@ class ModbusCoordinatorText(TextEntity):
 
     def __init__(self, coordinator: ModbusCoordinator, register_config: dict[str, Any]):
         """Initialize the coordinator text entity."""
+        reject_hex_encoding_for_control(register_config.get("encoding", "utf-8"))
         self._coordinator = coordinator
         self._register_config = register_config
 
@@ -229,6 +231,8 @@ class ModbusCoordinatorText(TextEntity):
                     _LOGGER.error(
                         "Error writing text value to register %d", self._address
                     )
+            except ValueError:
+                raise
             except Exception as e:
                 _LOGGER.error(
                     "Error writing text value to register %d: %s", self._address, str(e)
