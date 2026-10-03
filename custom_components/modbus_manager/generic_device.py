@@ -27,15 +27,126 @@ SENSOR_ENTITY_TYPES = frozenset({"sensor"})
 BINARY_ENTITY_TYPES = frozenset({"binary_sensor"})
 CONTROL_ENTITY_TYPES = frozenset({"number", "switch", "select", "text", "button"})
 GENERIC_ENTITY_TYPES = SENSOR_ENTITY_TYPES | BINARY_ENTITY_TYPES | CONTROL_ENTITY_TYPES
-GENERIC_ENTITY_TYPE_CHOICES = {
-    "sensor": "Sensor (read-only)",
-    "binary_sensor": "Binary sensor",
-    "number": "Number",
-    "switch": "Switch",
-    "select": "Select",
-    "text": "Text",
-    "button": "Button",
+GENERIC_ENTITY_TYPE_LABELS = {
+    "en": {
+        "sensor": "Sensor (read-only)",
+        "binary_sensor": "Binary sensor",
+        "number": "Number",
+        "switch": "Switch",
+        "select": "Select",
+        "text": "Text",
+        "button": "Button",
+    },
+    "de": {
+        "sensor": "Sensor (nur Lesen)",
+        "binary_sensor": "Binärsensor",
+        "number": "Zahl (Number)",
+        "switch": "Schalter",
+        "select": "Auswahl (Select)",
+        "text": "Text",
+        "button": "Taste (Button)",
+    },
 }
+GENERIC_ENTITY_TYPE_CHOICES = GENERIC_ENTITY_TYPE_LABELS["en"]
+GENERIC_OPT_ACTION_LABELS = {
+    "en": {
+        "add": "Add entity",
+        "edit": "Edit entity",
+        "remove": "Remove entity (registry row stays)",
+        "save": "Save and reload",
+    },
+    "de": {
+        "add": "Entität hinzufügen",
+        "edit": "Entität bearbeiten",
+        "remove": "Entität entfernen (Registry-Zeile bleibt)",
+        "save": "Speichern und neu laden",
+    },
+}
+GENERIC_OPT_ACTIONS = GENERIC_OPT_ACTION_LABELS["en"]
+GENERIC_CONFIRM_ACTION_LABELS = {
+    "en": {
+        "add": "Add another entity",
+        "finish_hub": "Create hub",
+        "finish_device": "Add device",
+    },
+    "de": {
+        "add": "Weitere Entität hinzufügen",
+        "finish_hub": "Hub anlegen",
+        "finish_device": "Gerät hinzufügen",
+    },
+}
+GENERIC_OPT_MODE_LABELS = {
+    "en": {"add": "Add", "edit": "Edit", "remove": "Remove"},
+    "de": {"add": "Hinzufügen", "edit": "Bearbeiten", "remove": "Entfernen"},
+}
+GENERIC_INPUT_TYPE_LABELS = {
+    "en": {"holding": "Holding", "input": "Input"},
+    "de": {"holding": "Holding-Register", "input": "Input-Register"},
+}
+GENERIC_ENTITY_CATEGORY_LABELS = {
+    "en": {"": "none", "diagnostic": "diagnostic", "config": "config"},
+    "de": {"": "keine", "diagnostic": "Diagnose", "config": "Konfiguration"},
+}
+GENERIC_BYTE_ORDER_LABELS = {
+    "en": {"big": "big", "little": "little"},
+    "de": {"big": "Big-Endian", "little": "Little-Endian"},
+}
+GENERIC_SWAP_LABELS = {
+    "en": {"none": "none", "word": "word"},
+    "de": {"none": "keine", "word": "Wort"},
+}
+
+
+def generic_ui_language(hass: Any | None = None) -> str:
+    """Home Assistant UI language, limited to catalogs we ship (en/de)."""
+    language = str(getattr(getattr(hass, "config", None), "language", "en") or "en")
+    language = language.split("-", 1)[0].lower()
+    if language not in ("de", "en"):
+        return "en"
+    return language
+
+
+def _ui_catalog(
+    table: dict[str, dict[str, str]], hass: Any | None = None
+) -> dict[str, str]:
+    language = generic_ui_language(hass)
+    return dict(table.get(language) or table["en"])
+
+
+def generic_opt_actions(hass: Any | None = None) -> dict[str, str]:
+    """Options-flow radio labels (vol.In uses dict values, not translations JSON)."""
+    return _ui_catalog(GENERIC_OPT_ACTION_LABELS, hass)
+
+
+def generic_confirm_actions(
+    hass: Any | None = None, *, attach: bool = False
+) -> dict[str, str]:
+    """Add-another vs finish radios for hub create or Add device."""
+    catalog = _ui_catalog(GENERIC_CONFIRM_ACTION_LABELS, hass)
+    finish_key = "finish_device" if attach else "finish_hub"
+    return {"add": catalog["add"], "finish": catalog[finish_key]}
+
+
+def generic_entity_type_label(hass: Any | None, entity_type: str) -> str:
+    """Localized platform name for form descriptions."""
+    catalog = _ui_catalog(GENERIC_ENTITY_TYPE_LABELS, hass)
+    key = str(entity_type or "sensor")
+    return catalog.get(key, key)
+
+
+def generic_opt_mode_label(hass: Any | None, mode: str) -> str:
+    """Localized add/edit/remove mode for the picker description."""
+    catalog = _ui_catalog(GENERIC_OPT_MODE_LABELS, hass)
+    key = str(mode or "edit")
+    return catalog.get(key, key)
+
+
+def generic_device_template_label(hass: Any | None = None) -> str:
+    """Add-device template picker label for the generic sentinel."""
+    if generic_ui_language(hass) == "de":
+        return "Generisches Modbus-Gerät"
+    return "Generic Modbus Device"
+
 
 ALLOWED_INPUT_TYPES = frozenset({"holding", "input"})
 ALLOWED_DATA_TYPES = frozenset(
@@ -648,14 +759,6 @@ async def async_notify_generic_export(
     )
 
 
-GENERIC_OPT_ACTIONS = {
-    "add": "Add entity",
-    "edit": "Edit entity",
-    "remove": "Remove entity (registry row stays)",
-    "save": "Save and reload",
-}
-
-
 def format_options_text(options: object) -> str:
     """Serialize a select options map as one comma-separated form line."""
     if not isinstance(options, dict) or not options:
@@ -683,22 +786,20 @@ def generic_row_form_defaults(row: dict[str, Any]) -> dict[str, Any]:
     return defaults
 
 
-def generic_entity_type_schema(default: str = "sensor") -> vol.Schema:
+def generic_entity_type_schema(
+    default: str = "sensor", hass: Any | None = None
+) -> vol.Schema:
     """Entity-platform picker."""
-    choice = default if default in GENERIC_ENTITY_TYPE_CHOICES else "sensor"
-    return vol.Schema(
-        {
-            vol.Required("entity_type", default=choice): vol.In(
-                GENERIC_ENTITY_TYPE_CHOICES
-            )
-        }
-    )
+    choices = _ui_catalog(GENERIC_ENTITY_TYPE_LABELS, hass)
+    choice = default if default in choices else "sensor"
+    return vol.Schema({vol.Required("entity_type", default=choice): vol.In(choices)})
 
 
 def generic_entity_core_schema(
     defaults: dict[str, Any] | None = None,
     *,
     include_unique_id: bool = True,
+    hass: Any | None = None,
 ) -> vol.Schema:
     """Identity, YAML address, and data type."""
     d = defaults or {}
@@ -731,14 +832,14 @@ def generic_entity_core_schema(
     fields.update(
         {
             vol.Required("input_type", default=input_type): vol.In(
-                {"holding": "Holding", "input": "Input"}
+                _ui_catalog(GENERIC_INPUT_TYPE_LABELS, hass)
             ),
             vol.Required("data_type", default=data_type): vol.In(data_types),
             vol.Optional(
                 "scan_interval", default=int(d.get("scan_interval") or 10)
             ): int,
             vol.Optional("entity_category", default=category): vol.In(
-                {"": "none", "diagnostic": "diagnostic", "config": "config"}
+                _ui_catalog(GENERIC_ENTITY_CATEGORY_LABELS, hass)
             ),
             vol.Optional("icon", default=str(d.get("icon") or "")): str,
             vol.Optional("mm_group", default=str(d.get("mm_group") or "")): str,
@@ -772,6 +873,7 @@ def generic_entity_extras_schema(
     entity_type: str,
     data_type: str,
     defaults: dict[str, Any] | None = None,
+    hass: Any | None = None,
 ) -> vol.Schema:
     """Extras that apply to this platform and data type."""
     d = defaults or {}
@@ -823,10 +925,10 @@ def generic_entity_extras_schema(
         fields.update(
             {
                 vol.Optional("byte_order", default=byte_order): vol.In(
-                    {"big": "big", "little": "little"}
+                    _ui_catalog(GENERIC_BYTE_ORDER_LABELS, hass)
                 ),
                 vol.Optional("swap", default=swap): vol.In(
-                    {"none": "none", "word": "word"}
+                    _ui_catalog(GENERIC_SWAP_LABELS, hass)
                 ),
             }
         )
@@ -842,9 +944,9 @@ def generic_entity_extras_schema(
                 ): str,
                 vol.Optional(
                     "byte_order", default=str(d.get("byte_order") or "big")
-                ): vol.In({"big": "big", "little": "little"}),
+                ): vol.In(_ui_catalog(GENERIC_BYTE_ORDER_LABELS, hass)),
                 vol.Optional("swap", default=str(d.get("swap") or "none")): vol.In(
-                    {"none": "none", "word": "word"}
+                    _ui_catalog(GENERIC_SWAP_LABELS, hass)
                 ),
             }
         )

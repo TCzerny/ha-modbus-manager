@@ -58,13 +58,17 @@ from .device_utils import (
 )
 from .dynamic_processing import process_dynamic_config
 from .generic_device import (
-    GENERIC_OPT_ACTIONS,
     GenericRegisterError,
     async_export_generic_device,
     async_notify_generic_export,
+    generic_confirm_actions,
+    generic_device_template_label,
     generic_entity_core_schema,
     generic_entity_extras_schema,
+    generic_entity_type_label,
     generic_entity_type_schema,
+    generic_opt_actions,
+    generic_opt_mode_label,
     generic_row_form_defaults,
     is_generic_device_template,
     normalize_generic_register,
@@ -539,10 +543,7 @@ class _GenericEntityLoopMixin:
     """Add-entity loop shared by hub setup and Add device on an existing hub."""
 
     def _generic_confirm_actions(self) -> dict[str, str]:
-        return {
-            "add": "Add another entity",
-            "finish": "Create hub",
-        }
+        return generic_confirm_actions(getattr(self, "hass", None), attach=False)
 
     async def _async_finish_generic_entity_loop(self) -> FlowResult:
         """Persist the collected generic registers (hub create or attach)."""
@@ -557,7 +558,7 @@ class _GenericEntityLoopMixin:
             return await self.async_step_generic_entity_core()
         return self.async_show_form(
             step_id="generic_entity",
-            data_schema=generic_entity_type_schema(),
+            data_schema=generic_entity_type_schema(hass=self.hass),
             description_placeholders={
                 "entity_count": str(len(getattr(self, "_generic_registers", []) or [])),
             },
@@ -576,10 +577,12 @@ class _GenericEntityLoopMixin:
             return await self.async_step_generic_entity_fields()
         return self.async_show_form(
             step_id="generic_entity_core",
-            data_schema=generic_entity_core_schema(),
+            data_schema=generic_entity_core_schema(hass=self.hass),
             errors=errors,
             description_placeholders={
-                "entity_type": getattr(self, "_generic_entity_type", "sensor"),
+                "entity_type": generic_entity_type_label(
+                    self.hass, getattr(self, "_generic_entity_type", "sensor")
+                ),
             },
         )
 
@@ -608,10 +611,12 @@ class _GenericEntityLoopMixin:
                 errors["base"] = "invalid_generic_register"
         return self.async_show_form(
             step_id="generic_entity_fields",
-            data_schema=generic_entity_extras_schema(entity_type, data_type),
+            data_schema=generic_entity_extras_schema(
+                entity_type, data_type, hass=self.hass
+            ),
             errors=errors,
             description_placeholders={
-                "entity_type": entity_type,
+                "entity_type": generic_entity_type_label(self.hass, entity_type),
                 "data_type": data_type,
             },
         )
@@ -3630,7 +3635,7 @@ class ModbusManagerDeviceSubentryFlow(
         """Render first add-device step with template selection only."""
         template_names = sorted(await get_template_names())
         template_choices = {
-            GENERIC_TEMPLATE_SENTINEL: "Generic Modbus Device",
+            GENERIC_TEMPLATE_SENTINEL: generic_device_template_label(self.hass),
         }
         for tn in template_names:
             td = await get_template_by_name(tn)
@@ -3659,10 +3664,7 @@ class ModbusManagerDeviceSubentryFlow(
         )
 
     def _generic_confirm_actions(self) -> dict[str, str]:
-        return {
-            "add": "Add another entity",
-            "finish": "Add device",
-        }
+        return generic_confirm_actions(self.hass, attach=True)
 
     async def _async_finish_generic_entity_loop(self) -> FlowResult:
         """Attach a generic devices[] row to this hub."""
@@ -4593,7 +4595,11 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         return self.async_show_form(
             step_id="generic_registers",
             data_schema=vol.Schema(
-                {vol.Required("action", default="save"): vol.In(GENERIC_OPT_ACTIONS)}
+                {
+                    vol.Required("action", default="save"): vol.In(
+                        generic_opt_actions(self.hass)
+                    )
+                }
             ),
             description_placeholders={
                 "device": _device_display_title(device),
@@ -4638,7 +4644,9 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             data_schema=vol.Schema({vol.Required("unique_id"): vol.In(choices)}),
             errors=errors,
             description_placeholders={
-                "mode": getattr(self, "_generic_opt_mode", "edit"),
+                "mode": generic_opt_mode_label(
+                    self.hass, getattr(self, "_generic_opt_mode", "edit")
+                ),
             },
         )
 
@@ -4671,7 +4679,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             return await self.async_step_generic_opt_core()
         return self.async_show_form(
             step_id="generic_opt_entity",
-            data_schema=generic_entity_type_schema(),
+            data_schema=generic_entity_type_schema(hass=self.hass),
             description_placeholders={
                 "entity_count": str(len(getattr(self, "_generic_opt_rows", []) or [])),
             },
@@ -4718,11 +4726,13 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         return self.async_show_form(
             step_id="generic_opt_core",
             data_schema=generic_entity_core_schema(
-                defaults, include_unique_id=not editing
+                defaults, include_unique_id=not editing, hass=self.hass
             ),
             errors=errors,
             description_placeholders={
-                "entity_type": getattr(self, "_generic_entity_type", "sensor"),
+                "entity_type": generic_entity_type_label(
+                    self.hass, getattr(self, "_generic_entity_type", "sensor")
+                ),
                 "unique_id": edit_uid or "—",
             },
         )
@@ -4772,10 +4782,12 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         defaults = generic_row_form_defaults(existing) if existing else None
         return self.async_show_form(
             step_id="generic_opt_fields",
-            data_schema=generic_entity_extras_schema(entity_type, data_type, defaults),
+            data_schema=generic_entity_extras_schema(
+                entity_type, data_type, defaults, hass=self.hass
+            ),
             errors=errors,
             description_placeholders={
-                "entity_type": entity_type,
+                "entity_type": generic_entity_type_label(self.hass, entity_type),
                 "data_type": data_type,
                 "unique_id": edit_uid or str(core.get("unique_id") or ""),
             },

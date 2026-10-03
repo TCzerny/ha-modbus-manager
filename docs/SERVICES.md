@@ -201,7 +201,7 @@ data:
 
 If several generic devices exist, pass one of these so the service can pick one.
 
-**When to use:** After configuring registers in the Generic Device UI, before turning the map into a YAML template (reload templates, then add that template as a device).
+**When to use:** After configuring registers in the Generic Device UI, before turning the map into a YAML template (reload templates, then add that template as a device). Options UI, map/flags, and signed download: [Generic Device](README_generic_device.md).
 
 ---
 

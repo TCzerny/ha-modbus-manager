@@ -31,7 +31,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
    - Go to **Settings** → **Devices & Services**
    - Click **Add Integration**
    - Search for "Modbus Manager"
-   - Follow the configuration wizard
+   - Follow the configuration wizard (YAML template, **Generic Device**, or Combined Device)
 
 ### Manual Installation
 
@@ -48,7 +48,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
    - Go to **Settings** → **Devices & Services**
    - Click **Add Integration**
    - Search for "Modbus Manager"
-   - Follow the configuration wizard
+   - Follow the configuration wizard (YAML template, **Generic Device**, or Combined Device)
 
 ## 🚀 Features
 
@@ -64,6 +64,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 - **Home Assistant Integration**: Fully integrated into the HA UI
 - **Entity ID strategy**: Per-device choice of HA–generated or legacy forced `entity_id`s; calculated templates can use **`[[mm:…]]`** registry references (see [Entity ID strategy & `[[mm:…]]`](docs/ENTITY_ID_STRATEGY.md))
 - **Cross-hub Combined Device** (since **1.0.11**): Optional virtual entry linking two hubs (e.g. Sungrow inverter + iHomeManager) for aggregated metrics and house-level consumed energy — see [Combined Device](docs/README_Combined_Device.md)
+- **Generic Device (PoC)**: Configure an unknown Modbus device in the UI (**Create a generic device** or **Add device**). Options: add / edit / remove registers, **map** / **flags** / select **options**, **translation_key**, **enabled_by_default**, YAML export. See [Generic Device](docs/README_generic_device.md).
 
 ## 🔌 Supported Devices
 
@@ -77,6 +78,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 - **[Victron EV Charging Station](docs/README_victron_ev_charging_station.md)** – EV Charging Station & EV Charging Station NS, Modbus TCP (register list v3.8)
 - **[Sungrow AC011E Wallbox](docs/README_sungrow_ac011e_wallbox.md)** – EV wallbox (AC007-00, AC011E-01, AC22E-01); [connection with/without iHM](docs/README_sungrow_wallbox_connection.md)
 - **[Sungrow iHomeManager EMS](docs/README_iHomeManager.md)** – Standalone EMS (unit **247**, TCP **502/503**); Combined Device with inverter; EV charger via **`charger_enabled`**
+- **[Generic Modbus Device](docs/README_generic_device.md)** – UI register map for unsupported hardware (PoC); hub **Configure** options and YAML export
 
 ### ⚠️ Needs Testing
 *Template and register map present; limited or no field validation on real hardware — please report issues.*
@@ -170,6 +172,7 @@ The repo file [`CONTRIBUTING.md`](CONTRIBUTING.md) is a short entry point with t
 - **[Sungrow SG Dynamic](docs/README_sungrow_sg_dynamic.md)** - Dynamic SG template documentation
 - **[Sungrow iHomeManager](docs/README_iHomeManager.md)** - iHomeManager register documentation
 - **[Cross-hub Combined Device](docs/README_Combined_Device.md)** - Inverter + iHomeManager / dual-inverter aggregation (1.0.11+)
+- **[Generic Device](docs/README_generic_device.md)** — UI register map, hub options (add/edit/remove, map/flags, YAML export; PoC, Discussion #100)
 - **[Sungrow SBR Battery](docs/README_sungrow_sbr_battery.md)** - SBR battery template
 - **[Solvis SC3](docs/README_solvis_sc3.md)** - Solvis SC2/SC3 template
 - **[Compleo eBox Professional](docs/README_compleo_ebox_professional.md)** - EV charger template
