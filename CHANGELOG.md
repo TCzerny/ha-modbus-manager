@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Generic Device — select options**: One comma-separated line (`0xCF: Enabled, 0xCE: Shutdown`). Hex keys store as integers like YAML (`0xCF` → 207). Quotes around labels are optional.
 - **Generic Device — sensor map**: Numeric sensors have **Map** (`0xAA: Enabled, 0x55: Disabled` or `170: Enabled, 85: Disabled`). Stored as YAML `map` with integer keys. Bitmask stays a separate field.
 - **Generic Device — sensor flags**: Numeric sensors have **Flags** (`0: PV Generating, 1: Battery charging`). Keys are bit positions, not register values. Stored as YAML `flags`.
+- **Templates — `translation_key`**: Optional per entity. Home Assistant uses `entity.<platform>.<translation_key>.name` in `translations/en.json` / `de.json`. YAML `name` stays the English fallback when no key is set. `unique_id` is unchanged. Select/map state localization is later.
+- **Templates — `enabled_by_default`**: Optional bool (alias `enable_default`). Default **true**. `false` creates the entity disabled so installers can turn it on later. Only applies to **new** registry rows.
+- **`dynamic_config` — binary_sensors**: `condition` / `valid_models` / `connection_type` apply to `binary_sensors` the same way as sensors.
 - **Generic Device — YAML export**: Options **Export YAML template** (or `modbus_manager.export_generic_device`) writes a normal MM template (same `unique_id` suffixes) to `config/modbus_manager/templates/`. Download is a **signed** `/api/modbus_manager/generic_export/…` link in a persistent notification (valid 1 hour). Unsigned `/api/` clicks look like a failed login; `/local/` is not used. No GitHub push.
 
 ## [1.2.2] - 2026-10-02

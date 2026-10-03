@@ -620,6 +620,44 @@ def generate_unique_id(
     return f"{p}_unknown"
 
 
+def template_enabled_by_default(register_config: dict[str, Any]) -> bool:
+    """Whether a new entity is enabled in the registry (existing rows keep theirs).
+
+    YAML ``enabled_by_default`` or ``enable_default``. Absent means True.
+    """
+    if "enabled_by_default" in register_config:
+        value = register_config.get("enabled_by_default")
+    elif "enable_default" in register_config:
+        value = register_config.get("enable_default")
+    else:
+        return True
+    if isinstance(value, bool):
+        return value
+    text = str(value).strip().lower()
+    return text not in {"false", "0", "no", "off"}
+
+
+def apply_template_entity_display(
+    entity: Any, register_config: dict[str, Any], *, fallback_name: str
+) -> None:
+    """Set name, translation_key, and enabled-by-default from a template row.
+
+    ``unique_id`` is unchanged. Without ``translation_key``, YAML ``name`` is
+    the label. With a key, Home Assistant uses
+    ``entity.<platform>.<translation_key>.name`` (English belongs in
+    ``translations/en.json``); YAML ``name`` stays the log/fallback string.
+    """
+    key = str(register_config.get("translation_key") or "").strip()
+    if key:
+        entity._attr_translation_key = key
+        entity._attr_name = None
+    else:
+        entity._attr_name = fallback_name
+    entity._attr_entity_registry_enabled_default = template_enabled_by_default(
+        register_config
+    )
+
+
 def process_template_entities_with_prefix(
     entities: list, prefix: str, template_name: str = "unknown"
 ) -> list:

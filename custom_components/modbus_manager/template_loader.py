@@ -191,6 +191,8 @@ OPTIONAL_FIELDS = {
     "never_resets": False,
     "entity_category": None,
     "icon": None,
+    "translation_key": None,
+    "enabled_by_default": True,
     "read_function_code": None,  # Optional: Modbus function code for read (3, 4, or None for auto)
     "write_function_code": None,  # Optional: Modbus function code for write (6, 16, or None for auto)
     "force_update": False,  # Write each update to state machine, even if data is the same

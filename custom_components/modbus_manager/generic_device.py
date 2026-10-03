@@ -91,6 +91,14 @@ def _optional_float(value: object) -> float | None:
     return float(value)
 
 
+def _optional_bool(value: object, default: bool = True) -> bool:
+    if value in (None, ""):
+        return default
+    if isinstance(value, bool):
+        return value
+    return str(value).strip().lower() not in {"false", "0", "no", "off"}
+
+
 def parse_value_map(text: object) -> dict[Any, str]:
     """Parse ``0: Off, 1: On`` (commas, semicolons, or newlines) into a value map.
 
@@ -258,6 +266,14 @@ def normalize_generic_register(row: dict[str, Any]) -> dict[str, Any]:
         "never_resets": bool(row.get("never_resets", False)),
     }
 
+    translation_key = str(row.get("translation_key") or "").strip()
+    if translation_key:
+        normalized["translation_key"] = translation_key
+    if not _optional_bool(
+        row.get("enabled_by_default", row.get("enable_default")), True
+    ):
+        normalized["enabled_by_default"] = False
+
     bitmask = _optional_int(row.get("bitmask"))
     if bitmask is not None:
         normalized["bitmask"] = bitmask
@@ -388,6 +404,7 @@ _ROW_KEY_ORDER = (
     "type",
     "name",
     "unique_id",
+    "translation_key",
     "address",
     "input_type",
     "data_type",
@@ -403,6 +420,7 @@ _ROW_KEY_ORDER = (
     "byte_order",
     "encoding",
     "entity_category",
+    "enabled_by_default",
     "icon",
     "mm_group",
     "bitmask",
@@ -468,6 +486,8 @@ def _omit_row_value(key: str, value: Any, data_type: str) -> bool:
     if key == "encoding" and value == "utf-8" and data_type != "string":
         return True
     if key in ("force_update", "never_resets") and value is False:
+        return True
+    if key == "enabled_by_default" and value is True:
         return True
     if key == "scale" and float(value) == 1.0:
         return True
@@ -652,6 +672,8 @@ def generic_row_form_defaults(row: dict[str, Any]) -> dict[str, Any]:
     defaults["unit_of_measurement"] = row.get("unit_of_measurement") or ""
     defaults["device_class"] = row.get("device_class") or ""
     defaults["state_class"] = row.get("state_class") or ""
+    if "enable_default" in row and "enabled_by_default" not in row:
+        defaults["enabled_by_default"] = _optional_bool(row.get("enable_default"), True)
     if "options" in row and "options_text" not in row:
         defaults["options_text"] = format_options_text(row.get("options"))
     if "map" in row and "map_text" not in row:
@@ -720,6 +742,15 @@ def generic_entity_core_schema(
             ),
             vol.Optional("icon", default=str(d.get("icon") or "")): str,
             vol.Optional("mm_group", default=str(d.get("mm_group") or "")): str,
+            vol.Optional(
+                "translation_key", default=str(d.get("translation_key") or "")
+            ): str,
+            vol.Optional(
+                "enabled_by_default",
+                default=_optional_bool(
+                    d.get("enabled_by_default", d.get("enable_default")), True
+                ),
+            ): bool,
         }
     )
     return vol.Schema(fields)

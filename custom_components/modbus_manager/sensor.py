@@ -17,6 +17,7 @@ from .combined_specs import COMBINED_SENSOR_METRIC_SPECS, combination_type_for_e
 from .const import CONF_ENTRY_TYPE, DOMAIN, ENTRY_TYPE_COMBINED_DEVICE
 from .coordinator import ModbusCoordinator
 from .device_utils import (
+    apply_template_entity_display,
     create_base_extra_state_attributes,
     get_entity_mm_group,
     is_coordinator_connected,
@@ -97,7 +98,11 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
         # Set entity properties from register config
         # unique_id is already processed by coordinator with prefix via _process_entities_with_prefix
         self._attr_has_entity_name = True
-        self._attr_name = register_config.get("name", "Unknown Sensor")
+        apply_template_entity_display(
+            self,
+            register_config,
+            fallback_name=register_config.get("name", "Unknown Sensor"),
+        )
         self._attr_unique_id = register_config.get("unique_id", "unknown")
         default_entity_id = register_config.get("default_entity_id")
         if default_entity_id:

@@ -14,6 +14,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
 from .device_utils import (
+    apply_template_entity_display,
     create_base_extra_state_attributes,
     create_device_info_dict,
     generate_unique_id,
@@ -42,7 +43,11 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
 
         # Set entity properties from register config
         self._attr_has_entity_name = True
-        self._attr_name = register_config.get("name", "Unknown Select")
+        apply_template_entity_display(
+            self,
+            register_config,
+            fallback_name=register_config.get("name", "Unknown Select"),
+        )
         self._attr_unique_id = register_config.get("unique_id", "unknown")
         default_entity_id = register_config.get("default_entity_id")
         if default_entity_id:

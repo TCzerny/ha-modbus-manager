@@ -13,6 +13,7 @@ from homeassistant.helpers.template import Template
 
 from .const import DOMAIN
 from .device_utils import (
+    apply_template_entity_display,
     create_base_extra_state_attributes,
     generate_entity_name,
     get_entity_mm_group,
@@ -83,7 +84,11 @@ class ModbusCalculatedSensor(SensorEntity):
         # Name is already processed by coordinator with prefix via _process_entities_with_prefix
         # The coordinator removes prefix from name when has_entity_name=True
         self._attr_has_entity_name = True
-        self._attr_name = config.get("name", "Unknown Calculated Sensor")
+        apply_template_entity_display(
+            self,
+            config,
+            fallback_name=config.get("name", "Unknown Calculated Sensor"),
+        )
         unique_id = config.get("unique_id", "unknown")
 
         # unique_id should be just the value, not "sensor.{value}"
@@ -105,7 +110,7 @@ class ModbusCalculatedSensor(SensorEntity):
         template_str = config.get("template", config.get("state", ""))
         if not template_str:
             raise ValueError(
-                f"Calculated entity {self._attr_name} has no template or state defined"
+                f"Calculated entity {config.get('name', 'unknown')} has no template or state defined"
             )
 
         # Raw strings (coordinator has applied Step A: [[mm:domain:sg_*]]; Step B in entity)
@@ -143,7 +148,6 @@ class ModbusCalculatedSensor(SensorEntity):
         self._attr_native_unit_of_measurement = config.get("unit_of_measurement")
         self._attr_device_class = config.get("device_class")
         self._attr_state_class = config.get("state_class")
-        self._attr_entity_registry_enabled_default = True
 
         # Set entity category:
         # - None (default): Primary sensors that represent main data points.
@@ -578,7 +582,11 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         # Name is already processed by coordinator with prefix via _process_entities_with_prefix
         # The coordinator removes prefix from name when has_entity_name=True
         self._attr_has_entity_name = True
-        self._attr_name = config.get("name", "Unknown Binary Sensor")
+        apply_template_entity_display(
+            self,
+            config,
+            fallback_name=config.get("name", "Unknown Binary Sensor"),
+        )
         unique_id = config.get("unique_id", "unknown")
 
         # unique_id should be just the value, not "binary_sensor.{value}"
@@ -600,7 +608,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         template_str = config.get("state", "")
         if not template_str:
             raise ValueError(
-                f"Calculated binary sensor {self._attr_name} has no state template defined"
+                f"Calculated binary sensor {config.get('name', 'unknown')} has no state template defined"
             )
 
         self._raw_state = template_str

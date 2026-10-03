@@ -329,12 +329,30 @@ def process_dynamic_config(user_input: dict, template_data: dict) -> dict:
         ):
             processed_calculated.append(calculated)
 
-    # Process binary sensors
+    # Process binary sensors (same condition / valid_models / connection_type as sensors)
     original_binary_sensors = template_data.get("binary_sensors", [])
     processed_binary_sensors = []
     for binary_sensor in original_binary_sensors:
-        # Binary sensors are always included (they don't depend on hardware config)
-        processed_binary_sensors.append(binary_sensor)
+        if _should_include_sensor(
+            binary_sensor,
+            phases,
+            mppt_count,
+            battery_enabled,
+            battery_type,
+            battery_slave_id,
+            firmware_version,
+            connection_type,
+            dynamic_config,
+            string_count,
+        ):
+            processed_binary_sensors.append(
+                _apply_firmware_modifications(
+                    binary_sensor,
+                    firmware_version,
+                    dynamic_config,
+                    original_dynamic_config,
+                )
+            )
 
     # Process controls
     for control in original_controls:

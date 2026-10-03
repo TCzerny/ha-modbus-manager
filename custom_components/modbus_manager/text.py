@@ -12,7 +12,11 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
-from .device_utils import create_base_extra_state_attributes, is_coordinator_connected
+from .device_utils import (
+    apply_template_entity_display,
+    create_base_extra_state_attributes,
+    is_coordinator_connected,
+)
 from .logger import ModbusManagerLogger
 from .modbus_utils import reject_hex_encoding_for_control
 
@@ -95,7 +99,7 @@ class ModbusCoordinatorText(TextEntity):
 
         # Set entity properties
         self._attr_has_entity_name = True
-        self._attr_name = self._name
+        apply_template_entity_display(self, register_config, fallback_name=self._name)
         self._attr_unique_id = self._unique_id
         default_entity_id = register_config.get("default_entity_id")
         if default_entity_id:

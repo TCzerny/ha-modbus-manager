@@ -18,6 +18,7 @@ from .combined_specs import COMBINED_BINARY_METRIC_SPECS, combination_type_for_e
 from .const import CONF_ENTRY_TYPE, CONF_MM_GROUP, DOMAIN, ENTRY_TYPE_COMBINED_DEVICE
 from .coordinator import ModbusCoordinator
 from .device_utils import (
+    apply_template_entity_display,
     create_base_extra_state_attributes,
     get_entity_mm_group,
     is_coordinator_connected,
@@ -230,7 +231,7 @@ class ModbusCoordinatorBinarySensor(BinarySensorEntity):
 
         # Set entity properties
         self._attr_has_entity_name = True
-        self._attr_name = self._name
+        apply_template_entity_display(self, register_config, fallback_name=self._name)
 
         # unique_id should be just the value, not "binary_sensor.{value}"
         # Home Assistant will auto-generate entity_id from unique_id
