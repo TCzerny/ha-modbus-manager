@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict, List, Tuple
 
-from .const import DEFAULT_MAX_REGISTER_READ
+from .const import CONF_READ_GROUP, DEFAULT_MAX_REGISTER_READ
 from .logger import ModbusManagerLogger
 from .modbus_utils import is_valid_modbus_address
 
@@ -28,6 +28,23 @@ def _register_width_for_merge(reg: Dict[str, Any]) -> int:
     if data_type == "string":
         return int(count) if count else 1
     return int(count) if count else 1
+
+
+def _read_groups_compatible(
+    current_range: "RegisterRange", candidate: Dict[str, Any]
+) -> bool:
+    """Return whether candidate may join the complete current read range.
+
+    An absent group retains historical automatic merging. Explicit groups form
+    transaction boundaries: both sides must name the same group. Comparing to
+    the range's first register keeps a range homogeneous and prevents a later
+    register from bridging across a group boundary.
+    """
+    current_group = current_range.registers[0].get(CONF_READ_GROUP)
+    candidate_group = candidate.get(CONF_READ_GROUP)
+    if current_group is None and candidate_group is None:
+        return True
+    return current_group is not None and current_group == candidate_group
 
 
 @dataclass
@@ -145,8 +162,14 @@ class RegisterOptimizer:
                         current_read_fc is None and reg_read_fc is None
                     )
 
+                    read_groups_compatible = _read_groups_compatible(
+                        current_range, reg
+                    )
+
                     add_w = _register_width_for_merge(reg)
                     if (
+                        read_groups_compatible
+                        and
                         address <= current_range.end_address + 1
                         and current_range.register_count + add_w <= self.max_read_size
                         and current_input_type

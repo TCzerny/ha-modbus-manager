@@ -66,6 +66,7 @@ def invalidate_template_cache() -> None:
 
 from .const import (
     CONF_MM_GROUP,
+    CONF_READ_GROUP,
     DEFAULT_MAX_REGISTER_READ,
     DEFAULT_MAX_VALUE,
     DEFAULT_MIN_VALUE,
@@ -166,6 +167,7 @@ OPTIONAL_FIELDS = {
     "swap": False,
     "byte_order": "big",  # Standard byte order (big endian)
     CONF_MM_GROUP: None,
+    CONF_READ_GROUP: None,
     # Neue Felder aus modbus_connect
     "offset": 0.0,
     "multiplier": 1.0,
@@ -1515,6 +1517,19 @@ def validate_register_data(reg: Dict[str, Any], template_name: str) -> bool:
 
         # Validate scan interval range (0 = never update, 1-3600 = normal range)
         register_name = reg.get("name", "unknown")
+
+        # Optional optimizer transaction group. Its absence preserves automatic
+        # address-based merging; when present it must be a stable non-empty key.
+        read_group = reg.get(CONF_READ_GROUP)
+        if read_group is not None and (
+            not isinstance(read_group, str) or not read_group.strip()
+        ):
+            _LOGGER.error(
+                "Invalid read_group in Template %s register %s: expected a non-empty string",
+                template_name,
+                register_name,
+            )
+            return False
 
         # Control-specific validation
         if not validate_control_settings(reg, template_name):
