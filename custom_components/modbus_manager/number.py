@@ -313,7 +313,7 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             self.async_write_ha_state()
 
         except Exception as e:
-            _LOGGER.error("Error updating number %s: %s", self._attr_name, str(e))
+            _LOGGER.error("Error updating number %s: %s", self._attr_unique_id, str(e))
             self._attr_native_value = None
             self._register_value_missing = True
 
