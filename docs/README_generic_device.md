@@ -44,7 +44,7 @@ Open the hub → **Configure**. Form radios (add / edit / remove / save, entity 
 | Field | Notes |
 |-------|--------|
 | `unique_id` | Stable slug (`a-z`, `0-9`, `_`). History key. Do not change later. |
-| `name` | English display name when there is no `translation_key` |
+| `name` | Entity name without `translation_key`; template metadata with a key |
 | `address` | YAML address (e.g. SHx reactive power **5032**) |
 | `input_type` | `holding` or `input` only |
 | `data_type` | Extra fields (encoding, word swap, count) appear only when they apply |
@@ -108,7 +108,7 @@ Optional on **YAML templates and Generic rows**. Without a key, YAML/`name` is t
   translation_key: pichler_outdoor_air_temperature
 ```
 
-Home Assistant looks up `entity.<platform>.<translation_key>.name` in this integration’s `translations/en.json` and `de.json`. Put the English string in **en.json** as well as YAML `name`. `unique_id` does not change.
+Home Assistant looks up `entity.<platform>.<translation_key>.name` in this integration’s `translations/en.json` and `de.json`. Put the English string in **en.json** as well as YAML `name`. With a key, the YAML name remains template metadata; it cannot also be assigned as `_attr_name`, because Home Assistant gives `_attr_name` precedence over entity-name translation. `unique_id` does not change.
 
 Select/map **state** strings are not localized yet.
 

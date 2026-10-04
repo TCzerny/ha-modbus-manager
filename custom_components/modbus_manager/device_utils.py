@@ -643,14 +643,19 @@ def apply_template_entity_display(
     """Set name, translation_key, and enabled-by-default from a template row.
 
     ``unique_id`` is unchanged. Without ``translation_key``, YAML ``name`` is
-    the label. With a key, Home Assistant uses
+    the entity name. With a key, Home Assistant resolves
     ``entity.<platform>.<translation_key>.name`` (English belongs in
-    ``translations/en.json``); YAML ``name`` stays the log/fallback string.
+    ``translations/en.json``). ``_attr_name`` must be absent in that case:
+    Home Assistant gives it precedence over entity-name translations.
     """
     key = str(register_config.get("translation_key") or "").strip()
+    entity._attr_has_entity_name = True
     if key:
         entity._attr_translation_key = key
-        entity._attr_name = None
+        # Remove only an instance attribute. Do not alter a class attribute;
+        # template-backed platform classes do not define one.
+        if "_attr_name" in vars(entity):
+            del entity._attr_name
     else:
         entity._attr_name = fallback_name
     entity._attr_entity_registry_enabled_default = template_enabled_by_default(
