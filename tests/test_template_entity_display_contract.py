@@ -49,6 +49,12 @@ class _Entity:
     """Minimal attribute carrier for exercising the production helper."""
 
 
+class _EntityWithClassName:
+    """Carrier that models an Entity class-level default attribute."""
+
+    _attr_name = "class-level default"
+
+
 class TemplateEntityDisplayContractTest(unittest.TestCase):
     """Guard the Home Assistant entity-name translation contract."""
 
@@ -70,6 +76,19 @@ class TemplateEntityDisplayContractTest(unittest.TestCase):
         self.assertEqual(entity._attr_translation_key, "example_temperature")
         self.assertFalse(hasattr(entity, "_attr_name"))
 
+    def test_keyed_entity_removes_only_an_instance_name(self):
+        entity = _EntityWithClassName()
+        entity._attr_name = "stale instance name"
+
+        self.apply_display(
+            entity,
+            {"translation_key": "example_temperature"},
+            fallback_name="English fallback",
+        )
+
+        self.assertNotIn("_attr_name", vars(entity))
+        self.assertEqual(_EntityWithClassName._attr_name, "class-level default")
+
     def test_unkeyed_entity_keeps_its_explicit_yaml_name(self):
         entity = _Entity()
 
@@ -86,6 +105,23 @@ class TemplateEntityDisplayContractTest(unittest.TestCase):
                 source = (component / filename).read_text(encoding="utf-8")
                 self.assertIn("apply_template_entity_display(", source)
                 self.assertIn("_attr_has_entity_name = True", source)
+
+    def test_select_never_reads_attr_name_after_display_helper(self):
+        """Translated selects must not depend on the intentionally absent name."""
+        select_source = (
+            ROOT / "custom_components/modbus_manager/select.py"
+        ).read_text(encoding="utf-8")
+        tree = ast.parse(select_source)
+        attr_name_reads = [
+            node
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Attribute)
+            and isinstance(node.value, ast.Name)
+            and node.value.id == "self"
+            and node.attr == "_attr_name"
+        ]
+        self.assertEqual(attr_name_reads, [])
+        self.assertIn("self._log_label", select_source)
 
 
 if __name__ == "__main__":

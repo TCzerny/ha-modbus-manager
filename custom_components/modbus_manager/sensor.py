@@ -290,7 +290,7 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
             self.async_write_ha_state()
 
         except Exception as e:
-            _LOGGER.error("Error updating sensor %s: %s", self._attr_name, str(e))
+            _LOGGER.error("Error updating sensor %s: %s", self._attr_unique_id, str(e))
             self._attr_native_value = None
 
     @property
