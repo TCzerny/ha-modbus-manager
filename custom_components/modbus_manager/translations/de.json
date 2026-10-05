@@ -1090,7 +1090,25 @@
             "temperature": "Temperatur",
             "charging_current_limit": "Ladestrom Limit",
             "start_stop_charging": "Laden Start/Stop",
-            "reset_error": "Fehler zurücksetzen"
+            "reset_error": "Fehler zurücksetzen",
+            "pichler_lg_es2020_outdoor_air_temperature": {"name": "Außenlufttemperatur"},
+            "pichler_lg_es2020_exhaust_air_temperature": {"name": "Fortlufttemperatur"},
+            "pichler_lg_es2020_extract_air_temperature": {"name": "Ablufttemperatur"},
+            "pichler_lg_es2020_supply_air_temperature": {"name": "Zulufttemperatur"},
+            "pichler_lg_es2020_external_supply_air_temperature": {"name": "Externe Zulufttemperatur"},
+            "pichler_lg_es2020_supply_airflow": {"name": "Zuluftvolumenstrom"},
+            "pichler_lg_es2020_extract_airflow": {"name": "Abluftvolumenstrom"},
+            "pichler_lg_es2020_operating_status": {"name": "Betriebsstatus"},
+            "pichler_lg_es2020_filter_remaining_time": {"name": "Filterrestlaufzeit"},
+            "pichler_lg_es2020_combined_coil_mixer_control_signal": {"name": "Stellsignal Kombiregister-Mischer"},
+            "pichler_lg_es2020_cooling_coil_mixer_control_signal": {"name": "Stellsignal Kühlregister-Mischer"},
+            "pichler_lg_es2020_calculated_supply_air_temperature_setpoint": {"name": "Berechneter Zulufttemperatur-Sollwert"}
+            ,"pichler_lg_es2020_device_model": {"name": "Gerätemodell"}
+            ,"pichler_lg_es2020_controller_firmware_version": {"name": "Firmware-Version des Steuergeräts"}
+            ,"pichler_lg_es2020_preheater_temperature": {"name": "Vorheizregistertemperatur"}
+            ,"pichler_lg_es2020_supply_airflow_setpoint": {"name": "Zuluftvolumenstrom-Sollwert"}
+            ,"pichler_lg_es2020_extract_airflow_setpoint": {"name": "Abluftvolumenstrom-Sollwert"}
+            ,"pichler_lg_es2020_current_ventilation_level": {"name": "Aktuelle Lüftungsstufe"}
         },
         "binary_sensor": {
             "combined_source_a_available": {
@@ -1104,7 +1122,48 @@
             },
             "combined_pv_generating_any": {
                 "name": "PV-Erzeugung bei mindestens einer Quelle"
-            }
+            },
+            "pichler_lg_es2020_heating_demand": {"name": "Heizanforderung"},
+            "pichler_lg_es2020_cooling_demand": {"name": "Kühlanforderung"},
+            "pichler_lg_es2020_combined_cooling_coil_circulation_pump": {"name": "Umwälzpumpe Kombi-/Kühlregister"},
+            "pichler_lg_es2020_external_supply_air_temperature_sensor_fault": {"name": "Störung externer Zulufttemperaturfühler"}
+            ,"pichler_lg_es2020_fans_running": {"name": "Ventilatoren in Betrieb"}
+            ,"pichler_lg_es2020_bypass_damper_open": {"name": "Bypassklappe geöffnet"}
+            ,"pichler_lg_es2020_aggregate_fault": {"name": "Gerätestörung"}
+            ,"pichler_lg_es2020_filter_indication": {"name": "Filteranzeige"}
+            ,"pichler_lg_es2020_preheater_relay": {"name": "Vorheizregister-Relais"}
+            ,"pichler_lg_es2020_outdoor_exhaust_dampers_open": {"name": "Außen- und Fortluftklappen geöffnet"}
+            ,"pichler_lg_es2020_heating_pump_running": {"name": "Heizungspumpe in Betrieb"}
+            ,"pichler_lg_es2020_external_off_or_fire_alarm": {"name": "Extern Aus oder Brandalarm"}
+            ,"pichler_lg_es2020_external_level_3_active": {"name": "Externe Lüftungsstufe 3 aktiv"}
+            ,"pichler_lg_es2020_geothermal_heat_exchanger_fault": {"name": "Störung Erdwärmetauscher"}
+            ,"pichler_lg_es2020_operating_panel_fault": {"name": "Störung Bediengerät"}
+            ,"pichler_lg_es2020_reheater_frost_protection_fault": {"name": "Frostschutzstörung Nachheizregister"}
+            ,"pichler_lg_es2020_exhaust_air_fan_fault": {"name": "Störung Fortluftventilator"}
+            ,"pichler_lg_es2020_supply_air_fan_fault": {"name": "Störung Zuluftventilator"}
+            ,"pichler_lg_es2020_outdoor_air_temperature_sensor_fault": {"name": "Störung Außenlufttemperaturfühler"}
+            ,"pichler_lg_es2020_exhaust_air_temperature_sensor_fault": {"name": "Störung Fortlufttemperaturfühler"}
+            ,"pichler_lg_es2020_extract_air_temperature_sensor_fault": {"name": "Störung Ablufttemperaturfühler"}
+            ,"pichler_lg_es2020_supply_air_temperature_sensor_fault": {"name": "Störung Zulufttemperaturfühler"}
+            ,"pichler_lg_es2020_preheater_temperature_sensor_fault": {"name": "Störung Vorheizregistertemperaturfühler"}
+            ,"pichler_lg_es2020_external_outdoor_air_temperature_sensor_fault": {"name": "Störung externer Außenlufttemperaturfühler"}
+            ,"pichler_lg_es2020_external_room_temperature_sensor_fault": {"name": "Störung externer Raumtemperaturfühler"}
+            ,"pichler_lg_es2020_fan_communication_fault": {"name": "Kommunikationsstörung Ventilatoren"}
+            ,"pichler_lg_es2020_low_supply_air_temperature_fault": {"name": "Störung niedrige Zulufttemperatur"}
+            ,"pichler_lg_es2020_filter_fault": {"name": "Filterstörung"}
+            ,"pichler_lg_es2020_low_preheater_temperature_fault": {"name": "Störung niedrige Vorheizregistertemperatur"}
+            ,"pichler_lg_es2020_reheater_frost_protection_active": {"name": "Frostschutz Nachheizregister aktiv"}
+            ,"pichler_lg_es2020_modbus_sensor_fault": {"name": "Störung Modbus-Sensor"}
+            ,"pichler_lg_es2020_external_frost_protection_active": {"name": "Externer Frostschutz aktiv"}
+        },
+        "select": {
+            "pichler_lg_es2020_ventilation_level": {"name": "Lüftungsstufe"}
+        },
+        "number": {
+            "pichler_lg_es2020_level_1_airflow_setpoint": {"name": "Luftvolumenstrom-Sollwert Stufe 1"},
+            "pichler_lg_es2020_level_2_airflow_setpoint": {"name": "Luftvolumenstrom-Sollwert Stufe 2"},
+            "pichler_lg_es2020_level_3_airflow_setpoint": {"name": "Luftvolumenstrom-Sollwert Stufe 3"},
+            "pichler_lg_es2020_basic_ventilation_airflow_setpoint": {"name": "Luftvolumenstrom-Sollwert Grundlüftung"}
         },
         "input_boolean": {
             "allow_battery_car_charging": {

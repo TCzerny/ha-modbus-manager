@@ -1,0 +1,718 @@
+# Pichler LG ventilation units (ES2020 controller)
+# Source: Pichler LIST_Modbus_ES2020_FW_LG350_LG450_LG740_LG1000_v2.1.0.xlsx.
+# Addresses are protocol addresses used directly by Home Assistant/Modbus Manager
+# (FC4 input registers).
+
+name: "Pichler LG (ES2020)"
+display_name: "Pichler LG (ES2020)"
+description: "Shared ES2020 Modbus interface documented for Pichler LG350, LG450, LG740, and LG1000 ventilation units."
+manufacturer: "Pichler"
+model: "LG ES2020 (LG350/LG450/LG740/LG1000)"
+type: "ventilation"
+version: 1.4.0
+default_prefix: "pichler_lg"
+default_slave_id: 20
+
+# Manual choice: ES2020 does not expose the installed coil configuration via
+# Modbus. This is one future-independent equipment dimension, not a global
+# statement of every HVAC option installed on the ventilation unit.
+dynamic_config:
+  # The integrated electric preheater (LG350 V variant) is independent from
+  # external downstream post-heating/cooling equipment.
+  preheater_type:
+    description: "Integrated preheater"
+    options:
+      none: "No integrated preheater"
+      electric: "Integrated electric preheater"
+    default: none
+
+  post_heating_cooling_type:
+    description: "External post-heating/cooling equipment"
+    options:
+      none: "No external water coil"
+      external_chilled_water_cooling_coil: "External Chilled-Water Cooling Coil"
+      external_combined_heating_cooling_water_coil: "External Combined Heating/Cooling Water Coil"
+    default: none
+
+sensors:
+  # Device information. The workbook maps 0=LG350, 1=LG450, 2=LG740.
+  - name: "Device Model"
+    unique_id: "device_model"
+    translation_key: "pichler_lg_es2020_device_model"
+    address: 25
+    input_type: input
+    data_type: uint16
+    scan_interval: 3600
+    entity_category: diagnostic
+    enabled_by_default: false
+    icon: "mdi:hvac"
+    map:
+      0: "LG350"
+      1: "LG450"
+      2: "LG740"
+
+  - name: "Controller Firmware Version"
+    unique_id: "controller_firmware_version"
+    translation_key: "pichler_lg_es2020_controller_firmware_version"
+    address: 23
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scan_interval: 3600
+    entity_category: diagnostic
+    enabled_by_default: false
+    icon: "mdi:chip"
+
+  # T1-T4 are contiguous input registers. Raw u16 values use (raw - 1000) / 10.
+  - name: "Outdoor Air Temperature"
+    unique_id: "outdoor_air_temperature"
+    translation_key: "pichler_lg_es2020_outdoor_air_temperature"
+    address: 30
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    offset: -100
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    scan_interval: 30
+    mm_group: "temperatures"
+    icon: "mdi:thermometer"
+
+  - name: "Exhaust Air Temperature"
+    unique_id: "exhaust_air_temperature"
+    translation_key: "pichler_lg_es2020_exhaust_air_temperature"
+    address: 31
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    offset: -100
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    scan_interval: 30
+    mm_group: "temperatures"
+    icon: "mdi:thermometer"
+
+  - name: "Extract Air Temperature"
+    unique_id: "extract_air_temperature"
+    translation_key: "pichler_lg_es2020_extract_air_temperature"
+    address: 32
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    offset: -100
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    scan_interval: 30
+    mm_group: "temperatures"
+    icon: "mdi:thermometer"
+
+  - name: "Supply Air Temperature"
+    unique_id: "supply_air_temperature"
+    translation_key: "pichler_lg_es2020_supply_air_temperature"
+    address: 33
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    offset: -100
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    scan_interval: 30
+    mm_group: "temperatures"
+    icon: "mdi:thermometer"
+
+  # T6 is downstream of Pichler's external water coil, not the internal T4.
+  - name: "External Supply Air Temperature"
+    unique_id: "external_supply_air_temperature"
+    translation_key: "pichler_lg_es2020_external_supply_air_temperature"
+    condition: "post_heating_cooling_type == 'external_chilled_water_cooling_coil' or post_heating_cooling_type == 'external_combined_heating_cooling_water_coil'"
+    address: 4
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    offset: -100
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    scan_interval: 60
+    icon: "mdi:thermometer"
+
+  # Actual flow values, not the writable holding-register setpoints at 9-12.
+  - name: "Supply Airflow"
+    unique_id: "supply_airflow"
+    translation_key: "pichler_lg_es2020_supply_airflow"
+    address: 46
+    input_type: input
+    data_type: uint16
+    precision: 0
+    unit_of_measurement: "m³/h"
+    state_class: measurement
+    scan_interval: 15
+    mm_group: "airflow"
+    icon: "mdi:weather-windy"
+
+  - name: "Extract Airflow"
+    unique_id: "extract_airflow"
+    translation_key: "pichler_lg_es2020_extract_airflow"
+    address: 47
+    input_type: input
+    data_type: uint16
+    precision: 0
+    unit_of_measurement: "m³/h"
+    state_class: measurement
+    scan_interval: 15
+    mm_group: "airflow"
+    icon: "mdi:weather-windy"
+
+  - name: "Operating Status"
+    unique_id: "operating_status"
+    translation_key: "pichler_lg_es2020_operating_status"
+    address: 48
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+    entity_category: diagnostic
+    icon: "mdi:hvac"
+    map:
+      0: "CPU startup"
+      1: "Standby"
+      2: "Starting"
+      3: "Operating"
+      4: "Run-on"
+      5: "Power-save standby"
+      6: "Test mode"
+
+  - name: "Filter Remaining Time"
+    unique_id: "filter_remaining_time"
+    translation_key: "pichler_lg_es2020_filter_remaining_time"
+    address: 50
+    input_type: input
+    data_type: uint16
+    precision: 0
+    unit_of_measurement: "h"
+    device_class: duration
+    state_class: measurement
+    scan_interval: 300
+    entity_category: diagnostic
+    icon: "mdi:air-filter"
+
+  - name: "Preheater Temperature"
+    unique_id: "preheater_temperature"
+    translation_key: "pichler_lg_es2020_preheater_temperature"
+    condition: "preheater_type == 'electric'"
+    address: 34
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    offset: -100
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    scan_interval: 60
+    entity_category: diagnostic
+    enabled_by_default: false
+    icon: "mdi:thermometer"
+
+  - name: "Supply Airflow Setpoint"
+    unique_id: "supply_airflow_setpoint"
+    translation_key: "pichler_lg_es2020_supply_airflow_setpoint"
+    address: 42
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "m³/h"
+    state_class: measurement
+    scan_interval: 60
+    entity_category: diagnostic
+    enabled_by_default: false
+    icon: "mdi:weather-windy"
+
+  - name: "Extract Airflow Setpoint"
+    unique_id: "extract_airflow_setpoint"
+    translation_key: "pichler_lg_es2020_extract_airflow_setpoint"
+    address: 43
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "m³/h"
+    state_class: measurement
+    scan_interval: 60
+    entity_category: diagnostic
+    enabled_by_default: false
+    icon: "mdi:weather-windy"
+
+  - name: "Current Ventilation Level"
+    unique_id: "current_ventilation_level"
+    translation_key: "pichler_lg_es2020_current_ventilation_level"
+    address: 59
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+    entity_category: diagnostic
+    enabled_by_default: false
+    icon: "mdi:fan"
+    map:
+      0: "Standby"
+      1: "Level 1"
+      2: "Level 2"
+      3: "Level 3"
+      4: "Basic ventilation"
+      6: "External off"
+      7: "Error"
+
+  - name: "Combined Coil Mixer Control Signal"
+    unique_id: "combined_coil_mixer_control_signal"
+    translation_key: "pichler_lg_es2020_combined_coil_mixer_control_signal"
+    condition: "post_heating_cooling_type == 'external_combined_heating_cooling_water_coil'"
+    address: 26
+    input_type: input
+    data_type: uint16
+    scale: 0.01
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    scan_interval: 60
+    entity_category: diagnostic
+    icon: "mdi:valve"
+
+  # Ao2 is the separate chilled-water cooling-coil mixer command, not valve feedback.
+  - name: "Cooling Coil Mixer Control Signal"
+    unique_id: "cooling_coil_mixer_control_signal"
+    translation_key: "pichler_lg_es2020_cooling_coil_mixer_control_signal"
+    condition: "post_heating_cooling_type == 'external_chilled_water_cooling_coil'"
+    address: 12
+    input_type: input
+    data_type: uint16
+    scale: 0.01
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    scan_interval: 60
+    entity_category: diagnostic
+    icon: "mdi:valve"
+
+  # Workbook: meaningful when room or extract-air temperature control is used.
+  - name: "Calculated Supply Air Temperature Setpoint"
+    unique_id: "calculated_supply_air_temperature_setpoint"
+    translation_key: "pichler_lg_es2020_calculated_supply_air_temperature_setpoint"
+    address: 55
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    offset: -100
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    scan_interval: 60
+    entity_category: diagnostic
+    enabled_by_default: false
+    icon: "mdi:thermometer"
+
+binary_sensors:
+  # All relay/status indicators below are documented FC4 read-only values.
+  - name: "Fans Running"
+    unique_id: "fans_running"
+    translation_key: "pichler_lg_es2020_fans_running"
+    address: 19
+    input_type: input
+    data_type: boolean
+    scan_interval: 30
+    device_class: running
+    icon: "mdi:fan"
+
+  - name: "Bypass Damper Open"
+    unique_id: "bypass_damper_open"
+    translation_key: "pichler_lg_es2020_bypass_damper_open"
+    address: 20
+    input_type: input
+    data_type: boolean
+    scan_interval: 30
+    device_class: opening
+    icon: "mdi:valve-open"
+
+  - name: "Aggregate Fault"
+    unique_id: "aggregate_fault"
+    translation_key: "pichler_lg_es2020_aggregate_fault"
+    address: 29
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+    icon: "mdi:alert-circle"
+
+  - name: "Filter Indication"
+    unique_id: "filter_indication"
+    translation_key: "pichler_lg_es2020_filter_indication"
+    address: 41
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+    icon: "mdi:air-filter"
+
+  - name: "Preheater Relay"
+    unique_id: "preheater_relay"
+    translation_key: "pichler_lg_es2020_preheater_relay"
+    address: 16
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: running
+    icon: "mdi:radiator"
+
+  - name: "Heating Demand"
+    unique_id: "heating_demand"
+    translation_key: "pichler_lg_es2020_heating_demand"
+    condition: "post_heating_cooling_type == 'external_combined_heating_cooling_water_coil'"
+    address: 17
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: heat
+    icon: "mdi:fire"
+
+  - name: "Cooling Demand"
+    unique_id: "cooling_demand"
+    translation_key: "pichler_lg_es2020_cooling_demand"
+    condition: "post_heating_cooling_type == 'external_chilled_water_cooling_coil' or post_heating_cooling_type == 'external_combined_heating_cooling_water_coil'"
+    address: 18
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: cold
+    icon: "mdi:snowflake"
+
+  - name: "Outdoor and Exhaust Dampers Open"
+    unique_id: "outdoor_exhaust_dampers_open"
+    translation_key: "pichler_lg_es2020_outdoor_exhaust_dampers_open"
+    address: 21
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: opening
+    icon: "mdi:valve-open"
+
+  - name: "Heating Pump Running"
+    unique_id: "heating_pump_running"
+    translation_key: "pichler_lg_es2020_heating_pump_running"
+    address: 27
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: running
+    icon: "mdi:pump"
+    enabled_by_default: false
+
+  - name: "Combined/Cooling Coil Circulation Pump"
+    unique_id: "cooling_pump_running"
+    translation_key: "pichler_lg_es2020_combined_cooling_coil_circulation_pump"
+    condition: "post_heating_cooling_type == 'external_chilled_water_cooling_coil' or post_heating_cooling_type == 'external_combined_heating_cooling_water_coil'"
+    address: 28
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: running
+    icon: "mdi:pump"
+    enabled_by_default: false
+
+  - name: "External Off or Fire Alarm"
+    unique_id: "external_off_or_fire_alarm"
+    translation_key: "pichler_lg_es2020_external_off_or_fire_alarm"
+    address: 37
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: safety
+    icon: "mdi:alarm-light"
+
+  - name: "External Level 3 Active"
+    unique_id: "external_level_3_active"
+    translation_key: "pichler_lg_es2020_external_level_3_active"
+    address: 38
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    icon: "mdi:fan-plus"
+
+  # Documented ES2020 fault/status inputs. All use 0 = no alarm, 1 = alarm.
+  - name: "Geothermal Heat Exchanger Fault"
+    unique_id: "geothermal_heat_exchanger_fault"
+    translation_key: "pichler_lg_es2020_geothermal_heat_exchanger_fault"
+    address: 60
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "Operating Panel Fault"
+    unique_id: "operating_panel_fault"
+    translation_key: "pichler_lg_es2020_operating_panel_fault"
+    address: 61
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "Reheater Frost Protection Fault"
+    unique_id: "reheater_frost_protection_fault"
+    translation_key: "pichler_lg_es2020_reheater_frost_protection_fault"
+    address: 62
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "Exhaust Air Fan Fault"
+    unique_id: "exhaust_air_fan_fault"
+    translation_key: "pichler_lg_es2020_exhaust_air_fan_fault"
+    address: 63
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "Supply Air Fan Fault"
+    unique_id: "supply_air_fan_fault"
+    translation_key: "pichler_lg_es2020_supply_air_fan_fault"
+    address: 64
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "Outdoor Air Temperature Sensor Fault"
+    unique_id: "outdoor_air_temperature_sensor_fault"
+    translation_key: "pichler_lg_es2020_outdoor_air_temperature_sensor_fault"
+    address: 65
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "Exhaust Air Temperature Sensor Fault"
+    unique_id: "exhaust_air_temperature_sensor_fault"
+    translation_key: "pichler_lg_es2020_exhaust_air_temperature_sensor_fault"
+    address: 66
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "Extract Air Temperature Sensor Fault"
+    unique_id: "extract_air_temperature_sensor_fault"
+    translation_key: "pichler_lg_es2020_extract_air_temperature_sensor_fault"
+    address: 67
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "Supply Air Temperature Sensor Fault"
+    unique_id: "supply_air_temperature_sensor_fault"
+    translation_key: "pichler_lg_es2020_supply_air_temperature_sensor_fault"
+    address: 68
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "Preheater Temperature Sensor Fault"
+    unique_id: "preheater_temperature_sensor_fault"
+    translation_key: "pichler_lg_es2020_preheater_temperature_sensor_fault"
+    condition: "preheater_type == 'electric'"
+    address: 69
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "External Supply Air Temperature Sensor Fault"
+    unique_id: "external_supply_air_temperature_sensor_fault"
+    translation_key: "pichler_lg_es2020_external_supply_air_temperature_sensor_fault"
+    condition: "post_heating_cooling_type == 'external_chilled_water_cooling_coil' or post_heating_cooling_type == 'external_combined_heating_cooling_water_coil'"
+    address: 70
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "External Outdoor Air Temperature Sensor Fault"
+    unique_id: "external_outdoor_air_temperature_sensor_fault"
+    translation_key: "pichler_lg_es2020_external_outdoor_air_temperature_sensor_fault"
+    address: 71
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "External Room Temperature Sensor Fault"
+    unique_id: "external_room_temperature_sensor_fault"
+    translation_key: "pichler_lg_es2020_external_room_temperature_sensor_fault"
+    address: 72
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "Fan Communication Fault"
+    unique_id: "fan_communication_fault"
+    translation_key: "pichler_lg_es2020_fan_communication_fault"
+    address: 73
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "Low Supply Air Temperature Fault"
+    unique_id: "low_supply_air_temperature_fault"
+    translation_key: "pichler_lg_es2020_low_supply_air_temperature_fault"
+    address: 74
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "Filter Fault"
+    unique_id: "filter_fault"
+    translation_key: "pichler_lg_es2020_filter_fault"
+    address: 75
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "Low Preheater Temperature Fault"
+    unique_id: "low_preheater_temperature_fault"
+    translation_key: "pichler_lg_es2020_low_preheater_temperature_fault"
+    condition: "preheater_type == 'electric'"
+    address: 76
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "Reheater Frost Protection Active"
+    unique_id: "reheater_frost_protection_active"
+    translation_key: "pichler_lg_es2020_reheater_frost_protection_active"
+    address: 80
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: cold
+
+  - name: "Modbus Sensor Fault"
+    unique_id: "modbus_sensor_fault"
+    translation_key: "pichler_lg_es2020_modbus_sensor_fault"
+    address: 88
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: problem
+
+  - name: "External Frost Protection Active"
+    unique_id: "external_frost_protection_active"
+    translation_key: "pichler_lg_es2020_external_frost_protection_active"
+    address: 108
+    input_type: input
+    data_type: boolean
+    scan_interval: 60
+    device_class: cold
+
+controls:
+  # Official setpoint 002: FC3 read / FC6 write at the same holding register.
+  # Pichler documents values, but not persistence/manual-mode restrictions.
+  - name: "Ventilation Level"
+    unique_id: "ventilation_level"
+    translation_key: "pichler_lg_es2020_ventilation_level"
+    type: select
+    address: 2
+    input_type: holding
+    data_type: uint16
+    scan_interval: 30
+    entity_category: config
+    icon: "mdi:fan"
+    write_function_code: 6
+    options:
+      0: "Standby"
+      1: "Level 1"
+      2: "Level 2"
+      3: "Level 3"
+      4: "Basic ventilation"
+
+  # Pichler setpoints 009-012. FC3 reads and FC6 writes the same holding word.
+  # The workbook documents 0-1000 m³/h, integer resolution, and no scaling.
+  # These are advanced controls; Modbus Manager currently cannot mark individual
+  # template entities disabled by default, so do not operate without approval.
+  - name: "Level 1 Airflow Setpoint"
+    unique_id: "level_1_airflow_setpoint"
+    translation_key: "pichler_lg_es2020_level_1_airflow_setpoint"
+    type: number
+    address: 9
+    input_type: holding
+    data_type: uint16
+    min_value: 0
+    max_value: 1000
+    step: 1
+    unit_of_measurement: "m³/h"
+    scan_interval: 300
+    entity_category: config
+    icon: "mdi:fan"
+    write_function_code: 6
+
+  - name: "Level 2 Airflow Setpoint"
+    unique_id: "level_2_airflow_setpoint"
+    translation_key: "pichler_lg_es2020_level_2_airflow_setpoint"
+    type: number
+    address: 10
+    input_type: holding
+    data_type: uint16
+    min_value: 0
+    max_value: 1000
+    step: 1
+    unit_of_measurement: "m³/h"
+    scan_interval: 300
+    entity_category: config
+    icon: "mdi:fan"
+    write_function_code: 6
+
+  - name: "Level 3 Airflow Setpoint"
+    unique_id: "level_3_airflow_setpoint"
+    translation_key: "pichler_lg_es2020_level_3_airflow_setpoint"
+    type: number
+    address: 11
+    input_type: holding
+    data_type: uint16
+    min_value: 0
+    max_value: 1000
+    step: 1
+    unit_of_measurement: "m³/h"
+    scan_interval: 300
+    entity_category: config
+    icon: "mdi:fan"
+    write_function_code: 6
+
+  - name: "Basic Ventilation Airflow Setpoint"
+    unique_id: "basic_ventilation_airflow_setpoint"
+    translation_key: "pichler_lg_es2020_basic_ventilation_airflow_setpoint"
+    type: number
+    address: 12
+    input_type: holding
+    data_type: uint16
+    min_value: 0
+    max_value: 1000
+    step: 1
+    unit_of_measurement: "m³/h"
+    scan_interval: 300
+    entity_category: config
+    icon: "mdi:fan"
+    write_function_code: 6
