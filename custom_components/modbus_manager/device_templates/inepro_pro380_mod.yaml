@@ -1,0 +1,35 @@
+# inepro PRO380-Mod
+#
+# Addresses are the hexadecimal protocol addresses from the inepro V1.18 map,
+# converted to decimal without an offset. Measurements are Float ABCD
+# (IEEE-754 binary32, big-endian bytes and words) read through FC03.
+name: "inepro PRO380-Mod"
+display_name: "inepro PRO380-Mod"
+description: "Read-only three-phase electricity meter (Modbus RTU)."
+manufacturer: "inepro"
+model: "PRO380-Mod"
+type: "electricity_meter"
+version: 1.0.0
+default_prefix: "inepro_pro380"
+default_slave_id: 1
+
+sensors:
+  - {name: "L1 Voltage", unique_id: "l1_voltage", address: 20482, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "V", device_class: voltage, state_class: measurement, precision: 1, scan_interval: 15, mm_group: "electrical"}
+  - {name: "L2 Voltage", unique_id: "l2_voltage", address: 20484, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "V", device_class: voltage, state_class: measurement, precision: 1, scan_interval: 15, mm_group: "electrical"}
+  - {name: "L3 Voltage", unique_id: "l3_voltage", address: 20486, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "V", device_class: voltage, state_class: measurement, precision: 1, scan_interval: 15, mm_group: "electrical"}
+  - {name: "Grid Frequency", unique_id: "grid_frequency", address: 20488, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "Hz", device_class: frequency, state_class: measurement, precision: 2, scan_interval: 30, mm_group: "grid_quality"}
+  - {name: "L1 Current", unique_id: "l1_current", address: 20492, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "A", device_class: current, state_class: measurement, precision: 2, scan_interval: 15, mm_group: "electrical"}
+  - {name: "L2 Current", unique_id: "l2_current", address: 20494, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "A", device_class: current, state_class: measurement, precision: 2, scan_interval: 15, mm_group: "electrical"}
+  - {name: "L3 Current", unique_id: "l3_current", address: 20496, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "A", device_class: current, state_class: measurement, precision: 2, scan_interval: 15, mm_group: "electrical"}
+  - {name: "Total Active Power", unique_id: "total_active_power", address: 20498, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "kW", device_class: power, state_class: measurement, precision: 3, scan_interval: 15, mm_group: "power"}
+  - {name: "L1 Active Power", unique_id: "l1_active_power", address: 20500, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "kW", device_class: power, state_class: measurement, precision: 3, scan_interval: 15, mm_group: "power"}
+  - {name: "L2 Active Power", unique_id: "l2_active_power", address: 20502, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "kW", device_class: power, state_class: measurement, precision: 3, scan_interval: 15, mm_group: "power"}
+  - {name: "L3 Active Power", unique_id: "l3_active_power", address: 20504, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "kW", device_class: power, state_class: measurement, precision: 3, scan_interval: 15, mm_group: "power"}
+  # Hardware validation found that the complete PF range times out; these two
+  # individually successful ranges must not be combined by the optimizer.
+  - {name: "Total Power Factor", unique_id: "total_power_factor", address: 20522, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "", state_class: measurement, precision: 3, scan_interval: 300, mm_group: "grid_quality", read_group: "pro380_pf_total"}
+  - {name: "L1 Power Factor", unique_id: "l1_power_factor", address: 20524, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "", state_class: measurement, precision: 3, scan_interval: 60, mm_group: "grid_quality", read_group: "pro380_pf_phases"}
+  - {name: "L2 Power Factor", unique_id: "l2_power_factor", address: 20526, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "", state_class: measurement, precision: 3, scan_interval: 60, mm_group: "grid_quality", read_group: "pro380_pf_phases"}
+  - {name: "L3 Power Factor", unique_id: "l3_power_factor", address: 20528, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "", state_class: measurement, precision: 3, scan_interval: 60, mm_group: "grid_quality", read_group: "pro380_pf_phases"}
+  - {name: "Imported Energy", unique_id: "imported_energy", address: 24588, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "kWh", device_class: energy, state_class: total_increasing, precision: 3, scan_interval: 60, mm_group: "energy"}
+  - {name: "Exported Energy", unique_id: "exported_energy", address: 24600, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: none, unit_of_measurement: "kWh", device_class: energy, state_class: total_increasing, precision: 3, scan_interval: 60, mm_group: "energy"}
