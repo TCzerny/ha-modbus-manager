@@ -2357,11 +2357,12 @@ class ModbusCoordinator(DataUpdateCoordinator):
             intervals_to_update = []
 
             for interval, registers in self._cached_registers_by_interval.items():
-                last_update = self._last_update_time.get(interval, 0)
-                time_since_update = current_time - last_update
+                # A group that was never read is due now: the loop clock is
+                # monotonic, so 0 is not "never" (it may still be < interval)
+                last_update = self._last_update_time.get(interval)
 
                 # Check if this interval group is due for update
-                if time_since_update >= interval:
+                if last_update is None or current_time - last_update >= interval:
                     registers_to_read.extend(registers)
                     intervals_to_update.append((interval, len(registers)))
 
