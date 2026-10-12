@@ -154,6 +154,71 @@ def _apply_post_write_settle_to_entry_data(
         hub["post_write_settle_milliseconds"] = milliseconds
 
 
+_TCP_RTU_MODBUS_TYPES = frozenset({"tcp", "rtuovertcp"})
+_MODBUS_TYPE_LABELS = {
+    "en": {
+        "tcp": "Modbus TCP",
+        "rtuovertcp": "Modbus RTU over TCP",
+        "serial": "Serial RTU",
+    },
+    "de": {
+        "tcp": "Modbus TCP",
+        "rtuovertcp": "Modbus RTU over TCP",
+        "serial": "Seriell RTU",
+    },
+}
+
+
+def _stored_modbus_type(entry_data: dict[str, Any]) -> str:
+    """Hub transport: tcp, rtuovertcp, or serial (not LAN/WiNet)."""
+    hub = entry_data.get("hub") if isinstance(entry_data.get("hub"), dict) else {}
+    raw = (
+        str(
+            entry_data.get("modbus_type")
+            or entry_data.get("type")
+            or hub.get("type")
+            or "tcp"
+        )
+        .strip()
+        .lower()
+    )
+    if raw in ("rtuovertcp", "rtu_over_tcp"):
+        return "rtuovertcp"
+    if raw in ("serial", "rtu"):
+        return "serial"
+    return "tcp"
+
+
+def _modbus_type_label(hass: HomeAssistant, modbus_type: str) -> str:
+    """Translated label for a stored hub transport."""
+    language = str(getattr(hass.config, "language", "en") or "en")
+    language = language.split("-", 1)[0].lower()
+    catalog = _MODBUS_TYPE_LABELS.get(language, _MODBUS_TYPE_LABELS["en"])
+    return catalog.get(modbus_type) or _MODBUS_TYPE_LABELS["en"].get(
+        modbus_type, modbus_type
+    )
+
+
+def _tcp_rtu_modbus_type_selector(hass: HomeAssistant) -> vol.In:
+    """TCP vs RTU-over-TCP radios (vol.In values are the visible labels)."""
+    language = str(getattr(hass.config, "language", "en") or "en")
+    language = language.split("-", 1)[0].lower()
+    catalog = _MODBUS_TYPE_LABELS.get(language, _MODBUS_TYPE_LABELS["en"])
+    return vol.In({key: catalog[key] for key in ("tcp", "rtuovertcp")})
+
+
+def _apply_modbus_type_to_entry_data(
+    entry_data: dict[str, Any], modbus_type: str
+) -> None:
+    """Persist hub transport without rewriting unrelated keys."""
+    entry_data["modbus_type"] = modbus_type
+    hub = entry_data.get("hub")
+    if isinstance(hub, dict):
+        hub = dict(hub)
+        hub["type"] = modbus_type
+        entry_data["hub"] = hub
+
+
 def _clamp_battery_config_for_connection(
     battery_config: Any, connection_type: Any
 ) -> str:
@@ -1464,8 +1529,16 @@ class ModbusManagerConfigFlow(
                 description_placeholders={"error": "No config entry for reconfigure"},
             )
 
+        current_modbus = _stored_modbus_type(config_entry.data)
+
         if user_input is not None:
             new_data = dict(config_entry.data)
+            if current_modbus in _TCP_RTU_MODBUS_TYPES:
+                chosen = (
+                    str(user_input.get("modbus_type") or current_modbus).strip().lower()
+                )
+                if chosen in _TCP_RTU_MODBUS_TYPES:
+                    _apply_modbus_type_to_entry_data(new_data, chosen)
             new_data["timeout"] = user_input.get(
                 "timeout", config_entry.data.get("timeout", DEFAULT_TIMEOUT)
             )
@@ -1491,29 +1564,39 @@ class ModbusManagerConfigFlow(
             await self.hass.config_entries.async_reload(config_entry.entry_id)
             return self.async_create_entry(title="", data={})
 
+        schema_fields: dict[Any, Any] = {}
+        if current_modbus in _TCP_RTU_MODBUS_TYPES:
+            schema_fields[
+                vol.Optional("modbus_type", default=current_modbus)
+            ] = _tcp_rtu_modbus_type_selector(self.hass)
+        schema_fields.update(
+            {
+                vol.Required(
+                    "timeout",
+                    default=config_entry.data.get("timeout", DEFAULT_TIMEOUT),
+                ): int,
+                vol.Required(
+                    "delay", default=config_entry.data.get("delay", DEFAULT_DELAY)
+                ): int,
+                vol.Required(
+                    "message_wait_milliseconds",
+                    default=config_entry.data.get(
+                        "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
+                    ),
+                ): int,
+                vol.Required(
+                    "post_write_settle_milliseconds",
+                    default=_entry_post_write_settle_ms(config_entry.data),
+                ): int,
+            }
+        )
+
         return self.async_show_form(
             step_id="reconfigure",
-            data_schema=vol.Schema(
-                {
-                    vol.Required(
-                        "timeout",
-                        default=config_entry.data.get("timeout", DEFAULT_TIMEOUT),
-                    ): int,
-                    vol.Required(
-                        "delay", default=config_entry.data.get("delay", DEFAULT_DELAY)
-                    ): int,
-                    vol.Required(
-                        "message_wait_milliseconds",
-                        default=config_entry.data.get(
-                            "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
-                        ),
-                    ): int,
-                    vol.Required(
-                        "post_write_settle_milliseconds",
-                        default=_entry_post_write_settle_ms(config_entry.data),
-                    ): int,
-                }
-            ),
+            data_schema=vol.Schema(schema_fields),
+            description_placeholders={
+                "current_modbus_type": _modbus_type_label(self.hass, current_modbus),
+            },
         )
 
     # Step 2a: User selected a template with dynamic config
@@ -4204,7 +4287,7 @@ class ModbusManagerDeviceSubentryFlow(
 # Dict labels for async_show_menu (list lookups stay blank until HA restarts).
 _OPTIONS_MENU_LABELS = {
     "en": {
-        "connection": "Connection — host, port, and request timing",
+        "connection": "Connection — type, host, port, and request timing",
         "inverter": "Inverter — model, MPPT, and connection",
         "device": "Device options",
         "battery": "Battery — model, prefix, and slave",
@@ -4217,7 +4300,7 @@ _OPTIONS_MENU_LABELS = {
         "generic_export_close": "Done — YAML written. Download YAML in the notification (link valid 1 hour).",
     },
     "de": {
-        "connection": "Verbindung — Host, Port und Timing",
+        "connection": "Verbindung — Typ, Host, Port und Timing",
         "inverter": "Wechselrichter — Modell, MPPT und Verbindung",
         "device": "Geräte Optionen",
         "battery": "Batterie — Modell, Prefix und Slave",
@@ -4946,6 +5029,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             return self.async_abort(reason="combined_device")
 
         current_host, current_port = entry_host_port(self.config_entry)
+        current_modbus = _stored_modbus_type(self.config_entry.data)
         errors: dict[str, str] = {}
 
         if user_input is not None:
@@ -4991,6 +5075,14 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 )
                 new_data["host"] = new_host
                 new_data["port"] = new_port
+                if current_modbus in _TCP_RTU_MODBUS_TYPES:
+                    chosen = (
+                        str(user_input.get("modbus_type") or current_modbus)
+                        .strip()
+                        .lower()
+                    )
+                    if chosen in _TCP_RTU_MODBUS_TYPES:
+                        _apply_modbus_type_to_entry_data(new_data, chosen)
                 hub_config = new_data.get("hub")
                 if isinstance(hub_config, dict):
                     hub_config = dict(hub_config)
@@ -4999,6 +5091,8 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     hub_config["post_write_settle_milliseconds"] = new_data[
                         "post_write_settle_milliseconds"
                     ]
+                    if new_data.get("modbus_type"):
+                        hub_config["type"] = new_data["modbus_type"]
                     new_data["hub"] = hub_config
 
                 endpoint_changed = (new_host, new_port) != (
@@ -5037,33 +5131,43 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     )
                 return self.async_create_entry(title="", data={})
 
-        schema_fields: dict[Any, Any] = {
-            vol.Required("host", default=current_host): str,
-            vol.Required("port", default=current_port): int,
-            vol.Required(
-                "timeout",
-                default=self.config_entry.data.get("timeout", DEFAULT_TIMEOUT),
-            ): int,
-            vol.Required(
-                "delay",
-                default=self.config_entry.data.get("delay", DEFAULT_DELAY),
-            ): int,
-            vol.Required(
-                "message_wait_milliseconds",
-                default=self.config_entry.data.get(
-                    "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
-                ),
-            ): int,
-            vol.Required(
-                "post_write_settle_milliseconds",
-                default=_entry_post_write_settle_ms(self.config_entry.data),
-            ): int,
-        }
+        schema_fields: dict[Any, Any] = {}
+        if current_modbus in _TCP_RTU_MODBUS_TYPES:
+            schema_fields[
+                vol.Optional("modbus_type", default=current_modbus)
+            ] = _tcp_rtu_modbus_type_selector(self.hass)
+        schema_fields.update(
+            {
+                vol.Required("host", default=current_host): str,
+                vol.Required("port", default=current_port): int,
+                vol.Required(
+                    "timeout",
+                    default=self.config_entry.data.get("timeout", DEFAULT_TIMEOUT),
+                ): int,
+                vol.Required(
+                    "delay",
+                    default=self.config_entry.data.get("delay", DEFAULT_DELAY),
+                ): int,
+                vol.Required(
+                    "message_wait_milliseconds",
+                    default=self.config_entry.data.get(
+                        "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
+                    ),
+                ): int,
+                vol.Required(
+                    "post_write_settle_milliseconds",
+                    default=_entry_post_write_settle_ms(self.config_entry.data),
+                ): int,
+            }
+        )
 
         return self.async_show_form(
             step_id="connection",
             data_schema=vol.Schema(schema_fields),
             errors=errors,
+            description_placeholders={
+                "current_modbus_type": _modbus_type_label(self.hass, current_modbus),
+            },
         )
 
     async def _async_build_template_reload_plan(self) -> list[dict[str, Any]]:

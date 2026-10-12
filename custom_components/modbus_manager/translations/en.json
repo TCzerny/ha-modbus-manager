@@ -291,8 +291,9 @@
             },
             "reconfigure": {
                 "title": "Reconfigure Hub",
-                "description": "Update hub communication settings",
+                "description": "Current connection type: {current_modbus_type}. Switch Modbus TCP ↔ RTU over TCP here. Serial RTU cannot be changed on this screen. Host, port, and devices stay.",
                 "data": {
+                    "modbus_type": "Modbus connection type (TCP or RTU over TCP)",
                     "prefix": "Device Prefix",
                     "slave_id": "Slave ID",
                     "selected_model": "Select Model",
@@ -351,7 +352,7 @@
                 "title": "Modbus Manager options",
                 "description": "What would you like to change?",
                 "menu_options": {
-                    "connection": "Connection — host, port, and request timing",
+                    "connection": "Connection — type, host, port, and request timing",
                     "inverter": "Inverter — model, MPPT, and connection",
                     "device": "Device options",
                     "battery": "Battery — model, prefix, and slave",
@@ -363,8 +364,9 @@
             },
             "connection": {
                 "title": "Connection",
-                "description": "Update Modbus TCP endpoint and communication settings. Dependent combined-device entries reload automatically when the endpoint changes.",
+                "description": "Current connection type: {current_modbus_type}. Switch Modbus TCP ↔ RTU over TCP here. Host, port, and devices stay. Serial RTU cannot be changed on this screen. Combined-device entries reload when the endpoint changes.",
                 "data": {
+                    "modbus_type": "Modbus connection type (TCP or RTU over TCP)",
                     "host": "IP address / hostname",
                     "port": "Modbus TCP port",
                     "timeout": "Timeout (seconds)",

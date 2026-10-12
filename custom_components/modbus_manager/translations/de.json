@@ -298,8 +298,9 @@
             },
             "reconfigure": {
                 "title": "Hub neu konfigurieren",
-                "description": "Kommunikationseinstellungen des Hubs aktualisieren",
+                "description": "Aktueller Verbindungstyp: {current_modbus_type}. Hier Modbus TCP ↔ RTU over TCP wechseln. Seriell RTU kann auf diesem Bildschirm nicht geändert werden. Host, Port und Geräte bleiben.",
                 "data": {
+                    "modbus_type": "Modbus-Verbindungstyp (TCP oder RTU over TCP)",
                     "prefix": "Geräte-Prefix",
                     "slave_id": "Slave ID",
                     "selected_model": "Modell auswählen",
@@ -371,7 +372,7 @@
                 "title": "Modbus-Manager-Optionen",
                 "description": "Was möchten Sie ändern?",
                 "menu_options": {
-                    "connection": "Verbindung — Host, Port und Timing",
+                    "connection": "Verbindung — Typ, Host, Port und Timing",
                     "inverter": "Wechselrichter — Modell, MPPT und Verbindung",
                     "device": "Geräte Optionen",
                     "battery": "Batterie — Modell, Prefix und Slave",
@@ -383,8 +384,9 @@
             },
             "connection": {
                 "title": "Verbindung",
-                "description": "Modbus-TCP-Endpunkt und Kommunikationseinstellungen ändern. Abhängige Combined-Device-Einträge werden bei Endpunktänderung automatisch neu geladen.",
+                "description": "Aktueller Verbindungstyp: {current_modbus_type}. Hier Modbus TCP ↔ RTU over TCP wechseln. Host, Port und Geräte bleiben. Seriell RTU kann auf diesem Bildschirm nicht geändert werden. Combined-Device-Einträge werden bei Endpunktänderung neu geladen.",
                 "data": {
+                    "modbus_type": "Modbus-Verbindungstyp (TCP oder RTU over TCP)",
                     "host": "IP-Adresse / Hostname",
                     "port": "Modbus-TCP-Port",
                     "timeout": "Timeout in Sekunden",
