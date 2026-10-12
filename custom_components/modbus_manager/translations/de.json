@@ -379,7 +379,8 @@
                     "battery_template": "Batterie — Template hinzufügen, wechseln oder entfernen",
                     "reload_template": "Register-Templates neu laden",
                     "generic_registers": "Generisches Gerät — Register hinzufügen oder bearbeiten",
-                    "generic_export": "Generisches Gerät — YAML-Template exportieren"
+                    "generic_export": "Generisches Gerät — YAML-Template exportieren",
+                    "remove_device": "Gerät entfernen — vom Hub streichen"
                 }
             },
             "connection": {
@@ -570,6 +571,20 @@
                     "generic_export_cancel": "Abbrechen",
                     "generic_export_close": "Fertig — YAML geschrieben. Download YAML in der Benachrichtigung (Link 1 Stunde gültig)."
                 }
+            },
+            "remove_device": {
+                "title": "Gerät entfernen",
+                "description": "Gerät wählen, das von diesem Hub gestrichen wird. Andere Geräte bleiben. Das letzte Gerät kann nicht entfernt werden — stattdessen den Hub löschen.",
+                "data": {
+                    "device_entry_id": "Gerät"
+                }
+            },
+            "remove_device_confirm": {
+                "title": "Dieses Gerät entfernen?",
+                "description": "{device} von diesem Hub entfernen. Der Home-Assistant-Geräteintrag wird gelöscht. Entity-Registry-Zeilen dieses Geräts werden beim Reload bereinigt. Andere Geräte und Combined-Device-Einträge bleiben unverändert.",
+                "data": {
+                    "confirm": "Dieses Gerät vom Hub entfernen"
+                }
             }
         },
         "error": {
@@ -580,10 +595,13 @@
             "invalid_generic_register": "Ungültiges Register. unique_id (Buchstabe + a-z/0-9/_) und nur Holding/Input.",
             "duplicate_generic_unique_id": "Diese unique_id ist auf diesem Gerät schon vergeben.",
             "last_generic_register": "Ein generisches Gerät braucht mindestens ein Register.",
-            "generic_export_failed": "YAML-Dateien konnten nicht geschrieben werden."
+            "generic_export_failed": "YAML-Dateien konnten nicht geschrieben werden.",
+            "unknown_device": "Dieses Gerät ist nicht auf diesem Hub.",
+            "not_confirmed": "Zum Entfernen die Bestätigung ankreuzen."
         },
         "abort": {
             "combined_device": "Combined Devices haben keine Modbus-Verbindung. IP/Port an den Quell-Hub-Einträgen ändern.",
+            "cannot_remove_last_device": "Das letzte Gerät auf einem Hub kann nicht entfernt werden. Stattdessen den Hub löschen.",
             "config_error": "Dieser Hub hat kein passendes Gerät zum Konfigurieren.",
             "template_not_found": "Template {template_name} nicht gefunden.",
             "update_error": "Fehler beim Aktualisieren der Templates: {error}",

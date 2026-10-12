@@ -281,6 +281,50 @@ def _apply_hub_battery_from_pack_device(
     )
 
 
+def _apply_hub_keys_after_device_removed(
+    entry_data: dict[str, Any],
+    removed: dict[str, Any],
+    remaining: list[dict[str, Any]],
+) -> None:
+    """Keep hub-level keys consistent after dropping one devices[] row."""
+    role = resolve_device_role_type(removed)
+    if role == "battery":
+        entry_data["battery_template"] = "none"
+        entry_data["battery_config"] = "none"
+        entry_data["battery_enabled"] = False
+        return
+    if role in {"wallbox", "ev_charger"}:
+        still_has_charger = any(
+            resolve_device_role_type(device) in {"wallbox", "ev_charger"}
+            for device in remaining
+        )
+        if still_has_charger:
+            return
+        entry_data["wallbox_connected"] = False
+        for device in remaining:
+            if resolve_device_role_type(device) == "inverter":
+                device["wallbox_connected"] = False
+        return
+    if role != "inverter":
+        return
+    next_inverter = next(
+        (
+            device
+            for device in remaining
+            if resolve_device_role_type(device) == "inverter"
+        ),
+        None,
+    )
+    if not next_inverter:
+        return
+    if next_inverter.get("prefix"):
+        entry_data["prefix"] = next_inverter["prefix"]
+    if next_inverter.get("slave_id") is not None:
+        entry_data["slave_id"] = next_inverter["slave_id"]
+    if next_inverter.get("template"):
+        entry_data["template"] = next_inverter["template"]
+
+
 def _default_battery_slave_id(template_default: Any, connection_type: Any) -> int:
     """Default pack unit id: 200 on LAN/RS485, forwarded id 2 on WiNet-S."""
     if str(connection_type or "LAN").strip().upper() == "WINET":
@@ -4298,6 +4342,7 @@ _OPTIONS_MENU_LABELS = {
         "generic_export_write": "Write YAML and notify",
         "generic_export_cancel": "Cancel",
         "generic_export_close": "Done — YAML written. Download YAML in the notification (link valid 1 hour).",
+        "remove_device": "Remove device — drop from this hub",
     },
     "de": {
         "connection": "Verbindung — Typ, Host, Port und Timing",
@@ -4311,6 +4356,7 @@ _OPTIONS_MENU_LABELS = {
         "generic_export_write": "YAML schreiben und benachrichtigen",
         "generic_export_cancel": "Abbrechen",
         "generic_export_close": "Fertig — YAML geschrieben. Download YAML in der Benachrichtigung (Link 1 Stunde gültig).",
+        "remove_device": "Gerät entfernen — vom Hub streichen",
     },
 }
 
@@ -4367,33 +4413,25 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             if is_generic_device_template(device.get("template"))
         ]
 
-    async def _remove_battery_devices_from_registry(
-        self, battery_devices: list
-    ) -> None:
-        """Remove battery devices from device registry when they are removed from config."""
+    async def _remove_hub_devices_from_registry(self, devices: list) -> None:
+        """Drop registry devices for rows removed from this hub's devices[]."""
         try:
             device_registry = dr.async_get(self.hass)
-            hub_config = self.config_entry.data.get("hub", {})
-            host = hub_config.get("host") or self.config_entry.data.get(
-                "host", "unknown"
-            )
-            port = hub_config.get("port") or self.config_entry.data.get("port", 502)
+            host, port = entry_host_port(self.config_entry)
 
-            for battery_device in battery_devices:
-                device_entry_id = battery_device.get(
+            for device in devices:
+                device_entry_id = device.get(
                     "device_entry_id"
-                ) or build_device_entry_id(battery_device)
+                ) or build_device_entry_id(device)
                 device_identifier = hub_device_identifier(host, port, device_entry_id)
-
                 device_entry = async_get_registry_device(
                     device_registry,
                     device_identifier,
                     self.config_entry.entry_id,
                 )
                 if device_entry is None:
-                    battery_slave_id = battery_device.get("slave_id", 200)
                     legacy_identifier = legacy_hub_device_identifier(
-                        host, port, battery_slave_id
+                        host, port, device.get("slave_id", 1)
                     )
                     device_entry = async_get_registry_device(
                         device_registry,
@@ -4401,33 +4439,31 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                         self.config_entry.entry_id,
                     )
 
-                if device_entry:
-                    # Check if this device belongs to this config entry
-                    if (
-                        device_entry.config_entries
-                        and self.config_entry.entry_id in device_entry.config_entries
-                    ):
-                        # Remove device from registry
-                        device_registry.async_remove_device(device_entry.id)
-                        _LOGGER.info(
-                            "Removed battery device '%s' (%s) from device registry",
-                            battery_device.get("prefix", "unknown"),
-                            device_entry_id,
-                        )
-                    else:
-                        _LOGGER.debug(
-                            "Battery device '%s' (%s) not found in device registry or belongs to different config entry",
-                            battery_device.get("prefix", "unknown"),
-                            device_entry_id,
-                        )
-                else:
+                if device_entry is None:
                     _LOGGER.debug(
-                        "Battery device '%s' (%s) not found in device registry",
-                        battery_device.get("prefix", "unknown"),
+                        "Hub device '%s' (%s) not found in device registry",
+                        device.get("prefix", "unknown"),
+                        device_entry_id,
+                    )
+                    continue
+                if (
+                    device_entry.config_entries
+                    and self.config_entry.entry_id in device_entry.config_entries
+                ):
+                    device_registry.async_remove_device(device_entry.id)
+                    _LOGGER.info(
+                        "Removed hub device '%s' (%s) from device registry",
+                        device.get("prefix", "unknown"),
                         device_entry_id,
                     )
         except Exception as e:
-            _LOGGER.error("Error removing battery devices from registry: %s", str(e))
+            _LOGGER.error("Error removing hub devices from registry: %s", str(e))
+
+    async def _remove_battery_devices_from_registry(
+        self, battery_devices: list
+    ) -> None:
+        """Remove battery devices from device registry when they are removed from config."""
+        await self._remove_hub_devices_from_registry(battery_devices)
 
     def _supports_battery_config(self, template_data: dict) -> bool:
         """Check if template defines a battery_config dynamic section."""
@@ -4460,6 +4496,8 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             not is_generic_device_template(device.get("template")) for device in devices
         ):
             options.append("reload_template")
+        if len(devices) >= 2:
+            options.append("remove_device")
         return options
 
     def _options_menu_labels(self, option_ids: list[str]) -> dict[str, str]:
@@ -4628,6 +4666,103 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
     async def async_step_battery_template(self, user_input: dict = None) -> FlowResult:
         """Add, replace, or remove the battery template on this hub."""
         return await self.async_step_battery_options_selection()
+
+    def _remove_device_choices(self) -> dict[str, str]:
+        """device_entry_id → label for Remove device."""
+        choices: dict[str, str] = {}
+        for device in self._get_editable_devices():
+            device_id = str(device.get("device_entry_id") or "")
+            if not device_id:
+                continue
+            title = _device_display_title(device)
+            role = resolve_device_role_type(device)
+            choices[device_id] = f"{title} ({role})"
+        return choices
+
+    async def async_step_remove_device(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Pick a hub device to drop from devices[]."""
+        devices = self._get_editable_devices()
+        if len(devices) < 2:
+            return self.async_abort(reason="cannot_remove_last_device")
+
+        choices = self._remove_device_choices()
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            chosen_id = str(user_input.get("device_entry_id") or "")
+            if chosen_id not in choices:
+                errors["device_entry_id"] = "unknown_device"
+            else:
+                self._remove_device_target_id = chosen_id
+                return await self.async_step_remove_device_confirm()
+
+        return self.async_show_form(
+            step_id="remove_device",
+            data_schema=vol.Schema({vol.Required("device_entry_id"): vol.In(choices)}),
+            errors=errors,
+        )
+
+    async def async_step_remove_device_confirm(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
+        """Confirm drop from devices[]; then purge that registry device."""
+        devices = self._get_editable_devices()
+        if len(devices) < 2:
+            return self.async_abort(reason="cannot_remove_last_device")
+
+        chosen_id = str(getattr(self, "_remove_device_target_id", "") or "")
+        selected = next(
+            (
+                device
+                for device in devices
+                if device.get("device_entry_id") == chosen_id
+            ),
+            None,
+        )
+        if selected is None:
+            return self.async_abort(reason="config_error")
+
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            if not user_input.get("confirm"):
+                errors["confirm"] = "not_confirmed"
+            else:
+                new_data = dict(self.config_entry.data)
+                stored_devices: list[dict[str, Any]] = []
+                for device in new_data.get("devices") or []:
+                    if not isinstance(device, dict):
+                        continue
+                    record = dict(device)
+                    if not record.get("device_entry_id"):
+                        record["device_entry_id"] = build_device_entry_id(record)
+                    stored_devices.append(record)
+                remaining = [
+                    device
+                    for device in stored_devices
+                    if device.get("device_entry_id") != chosen_id
+                ]
+                if len(remaining) < 1:
+                    return self.async_abort(reason="cannot_remove_last_device")
+                _apply_hub_keys_after_device_removed(new_data, selected, remaining)
+                new_data["devices"] = remaining
+                self.hass.config_entries.async_update_entry(
+                    self.config_entry, data=new_data
+                )
+                await self._remove_hub_devices_from_registry([selected])
+                await self.hass.config_entries.async_reload(self.config_entry.entry_id)
+                return self.async_create_entry(title="", data={})
+
+        return self.async_show_form(
+            step_id="remove_device_confirm",
+            data_schema=vol.Schema({vol.Required("confirm", default=False): bool}),
+            errors=errors,
+            description_placeholders={
+                "device": self._remove_device_choices().get(
+                    chosen_id, _device_display_title(selected)
+                ),
+            },
+        )
 
     async def async_step_reload_template(self, user_input: dict = None) -> FlowResult:
         """Reload YAML register templates for this hub."""

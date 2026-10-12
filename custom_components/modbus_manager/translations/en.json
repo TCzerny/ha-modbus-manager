@@ -359,7 +359,8 @@
                     "battery_template": "Battery — add, change, or remove template",
                     "reload_template": "Reload register templates",
                     "generic_registers": "Generic device — add or edit registers",
-                    "generic_export": "Generic device — export YAML template"
+                    "generic_export": "Generic device — export YAML template",
+                    "remove_device": "Remove device — drop from this hub"
                 }
             },
             "connection": {
@@ -550,6 +551,20 @@
                     "generic_export_cancel": "Cancel",
                     "generic_export_close": "Done — YAML written. Download YAML in the notification (link valid 1 hour)."
                 }
+            },
+            "remove_device": {
+                "title": "Remove device",
+                "description": "Choose a device to drop from this hub. Other devices stay. The last remaining device cannot be removed — delete the hub instead.",
+                "data": {
+                    "device_entry_id": "Device"
+                }
+            },
+            "remove_device_confirm": {
+                "title": "Remove this device?",
+                "description": "Remove {device} from this hub. The Home Assistant device is deleted. Entity registry rows for this device are cleaned on reload. Other devices and Combined Device entries are not changed.",
+                "data": {
+                    "confirm": "Remove this device from the hub"
+                }
             }
         },
         "error": {
@@ -560,10 +575,13 @@
             "invalid_generic_register": "This register is invalid. Check unique_id (letter + a-z/0-9/_) and holding/input only.",
             "duplicate_generic_unique_id": "This unique_id is already used on this device.",
             "last_generic_register": "A generic device needs at least one register.",
-            "generic_export_failed": "Could not write the YAML files."
+            "generic_export_failed": "Could not write the YAML files.",
+            "unknown_device": "This device is not on this hub.",
+            "not_confirmed": "Tick the box to confirm removal."
         },
         "abort": {
             "combined_device": "Combined devices have no Modbus connection. Change IP/port on the source hub entries instead.",
+            "cannot_remove_last_device": "The last device on a hub cannot be removed. Delete the hub instead.",
             "config_error": "This hub has no matching device to configure.",
             "template_not_found": "Template {template_name} not found.",
             "update_error": "Error updating templates: {error}",
