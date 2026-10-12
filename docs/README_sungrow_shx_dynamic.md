@@ -521,7 +521,7 @@ This section contains all entities that will be created by this template, includ
 - Daily imported/exported energy is not loaded for **SH10RS + WINET** (register stays 0 on WiNet-S)
 - Battery-related sensors are only available when battery is enabled
 - Meter Channel 2 sensors (13199-13205) are only available when meter_type is set to "DTSU666-20"
-- Meter phase voltage/current sensors (5740-5745) are only available for meter types `DTSU666` and `DTSU666-20`
+- Meter phase voltage/current sensors (5740-5745) are only available for meter types `DTSU666` and `DTSU666-20`, connection **LAN** or **RS485**, and models **SH10RT** / **SH10RT-20** ([#120](https://github.com/TCzerny/ha-modbus-manager/issues/120))
 - `Load power` (13007), `Export power raw` (13009), `Daily/Total import` (13035/13036), and `Daily/Total export` (13044/13045) are no longer meter-type-filtered
 - Battery control/diagnostic entities around 13050/13051, 33046/33047, and 33148/33149 are available when `battery_enabled == true` (independent of `meter_type`)
 - **iHomeManager is a separate template** (`sungrow_ihomemanager.yaml`) — do not use meter_type "iHomeManager" with this template
