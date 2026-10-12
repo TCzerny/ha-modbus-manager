@@ -161,14 +161,59 @@ def _clamp_battery_config_for_connection(
 
     WiNet-S can use the separate SBR/SBH pack template (forwarded unit id).
     ``other`` is still remapped to ``standard_battery`` (inverter slave 1).
+    Pack template names (Options / Add device) must not be mapped to ``none``.
     """
     value = str(battery_config or "none").strip()
+    if not value:
+        return "none"
+    if _is_pack_template_selection(value):
+        return value
     if str(connection_type or "LAN").strip().upper() == "WINET":
         if value == "other":
             return "standard_battery"
         if value not in _WINET_BATTERY_CONFIGS:
             return "none"
     return value
+
+
+def _is_pack_template_selection(value: Any) -> bool:
+    """True when Options stored a battery YAML template name, not an inverter enum."""
+    text = str(value or "").strip()
+    return bool(text) and text not in _WINET_BATTERY_CONFIGS
+
+
+def _hub_battery_config_for_pack(selection: Any, connection_type: Any = None) -> str:
+    """Inverter-facing battery_config. Pack YAML name stays on battery_template."""
+    value = str(selection or "none").strip()
+    if value in ("none", ""):
+        return "none"
+    if value == "other":
+        return _clamp_battery_config_for_connection("other", connection_type)
+    if value == "standard_battery":
+        return "standard_battery"
+    return "sbr_battery"
+
+
+def _apply_hub_battery_from_pack_device(
+    entry_data: dict[str, Any], device: dict[str, Any]
+) -> None:
+    """Copy pack devices[] fields onto hub keys (Add device and Options)."""
+    template = str(device.get("template") or "").strip()
+    if not template or template in ("none", "other"):
+        return
+    entry_data["battery_template"] = template
+    prefix = device.get("prefix")
+    if prefix:
+        entry_data["battery_prefix"] = prefix
+    if device.get("slave_id") is not None:
+        entry_data["battery_slave_id"] = device.get("slave_id")
+    model = device.get("selected_model")
+    if model:
+        entry_data["battery_model"] = model
+    entry_data["battery_enabled"] = True
+    entry_data["battery_config"] = _hub_battery_config_for_pack(
+        template, entry_data.get("connection_type")
+    )
 
 
 def _default_battery_slave_id(template_default: Any, connection_type: Any) -> int:
@@ -4004,6 +4049,8 @@ class ModbusManagerDeviceSubentryFlow(
 
             new_data = dict(entry.data)
             new_data["devices"] = devices + [normalized_device]
+            if resolve_device_role_type(normalized_device) == "battery":
+                _apply_hub_battery_from_pack_device(new_data, normalized_device)
             new_data.pop("pending_subentry_device_id", None)
             self.hass.config_entries.async_update_entry(entry, data=new_data)
             self.hass.config_entries.async_schedule_reload(entry.entry_id)
@@ -5428,6 +5475,13 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
     async def async_step_apply_config_changes(self, user_input: dict) -> FlowResult:
         """Apply configuration changes and reload integration if needed."""
         try:
+            original_keys = set(user_input)
+            pack_intent = user_input.get("battery_template") or user_input.get(
+                "battery_config"
+            )
+            explicit_pack_choice = bool(
+                {"battery_config", "battery_template"} & original_keys
+            )
             # Force battery_config to none when battery_config condition not met
             template_name = self.config_entry.data.get("template", "Unknown")
             template_data = await get_template_by_name(template_name)
@@ -5444,7 +5498,15 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 )
                 effective_data = {**self.config_entry.data, **user_input}
                 user_input = dict(user_input)
-                if condition and not _evaluate_condition(condition, effective_data):
+                connection_type = user_input.get(
+                    "connection_type", effective_data.get("connection_type")
+                )
+                if (
+                    condition
+                    and not _evaluate_condition(condition, effective_data)
+                    and not _is_pack_template_selection(pack_intent)
+                    and pack_intent not in ("sbr_battery", "standard_battery")
+                ):
                     user_input["battery_config"] = "none"
                     user_input["battery_template"] = "none"
                     _LOGGER.info(
@@ -5452,14 +5514,12 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                         condition,
                         effective_data.get("connection_type"),
                     )
-                else:
+                elif explicit_pack_choice:
+                    raw = user_input.get(
+                        "battery_config", user_input.get("battery_template")
+                    )
                     user_input["battery_config"] = _clamp_battery_config_for_connection(
-                        user_input.get(
-                            "battery_config", effective_data.get("battery_config")
-                        ),
-                        user_input.get(
-                            "connection_type", effective_data.get("connection_type")
-                        ),
+                        raw, connection_type
                     )
 
             # Check if dynamic configuration has changed
@@ -5516,30 +5576,51 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             new_data = dict(self.config_entry.data)
             new_data.update(user_input)
 
-            # Ensure battery_enabled is stored based on battery_config
-            if "battery_config" in user_input:
-                new_data["battery_enabled"] = user_input["battery_config"] != "none"
+            battery_selection = None
+            if explicit_pack_choice:
+                battery_selection = user_input.get(
+                    "battery_template"
+                ) or user_input.get("battery_config")
+                battery_selection = _clamp_battery_config_for_connection(
+                    battery_selection, new_data.get("connection_type")
+                )
 
-            battery_selection = new_data.get("battery_config")
             if battery_selection in ["none", "other"]:
                 new_data["battery_template"] = battery_selection
-            elif battery_selection:
+                new_data["battery_config"] = (
+                    "none"
+                    if battery_selection == "none"
+                    else _clamp_battery_config_for_connection(
+                        "other", new_data.get("connection_type")
+                    )
+                )
+                new_data["battery_enabled"] = new_data["battery_config"] != "none"
+            elif _is_pack_template_selection(battery_selection):
                 new_data["battery_template"] = battery_selection
+                new_data["battery_config"] = _hub_battery_config_for_pack(
+                    battery_selection, new_data.get("connection_type")
+                )
+                new_data["battery_enabled"] = True
+                user_input["battery_config"] = new_data["battery_config"]
+                user_input["battery_template"] = battery_selection
+            elif battery_selection in ("sbr_battery", "standard_battery"):
+                new_data["battery_config"] = battery_selection
+                new_data["battery_enabled"] = True
+                user_input["battery_config"] = battery_selection
+            elif "battery_config" in user_input:
+                new_data["battery_enabled"] = user_input["battery_config"] != "none"
 
             # Sync devices array for battery selection changes
             devices = new_data.get("devices")
             battery_removed = False
             removed_battery_devices = []  # Store removed devices for cleanup
-            if isinstance(devices, list) and devices:
+            if isinstance(devices, list) and devices and explicit_pack_choice:
                 battery_devices = [
                     device for device in devices if device.get("type") == "battery"
                 ]
                 if battery_selection in ["none", "other"]:
                     if battery_devices:
-                        # Store removed devices for device registry cleanup
                         removed_battery_devices = battery_devices.copy()
-
-                        # Remove battery devices from devices array
                         devices[:] = [
                             device
                             for device in devices
@@ -5551,20 +5632,31 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                             len(battery_devices),
                             battery_selection,
                         )
-                elif battery_selection:
-                    battery_template_data = await get_template_by_name(
-                        battery_selection
+                elif _is_pack_template_selection(battery_selection):
+                    pack_template = battery_selection
+                    battery_template_data = await get_template_by_name(pack_template)
+                    previous = battery_devices[0] if battery_devices else {}
+                    battery_prefix = new_data.get("battery_prefix") or previous.get(
+                        "prefix", "SBR"
                     )
-                    battery_prefix = new_data.get("battery_prefix", "SBR")
-                    battery_slave_id = new_data.get("battery_slave_id", 200)
-                    battery_model = new_data.get("battery_model")
-                    battery_device = {
-                        "type": "battery",
-                        "template": battery_selection,
-                        "prefix": battery_prefix,
-                        "slave_id": battery_slave_id,
-                        "selected_model": battery_model,
-                    }
+                    battery_slave_id = new_data.get(
+                        "battery_slave_id", previous.get("slave_id", 200)
+                    )
+                    battery_model = new_data.get("battery_model") or previous.get(
+                        "selected_model"
+                    )
+                    battery_device = dict(previous)
+                    battery_device.update(
+                        {
+                            "type": "battery",
+                            "template": pack_template,
+                            "prefix": battery_prefix,
+                            "slave_id": battery_slave_id,
+                            "selected_model": battery_model,
+                        }
+                    )
+                    if previous.get("device_entry_id"):
+                        battery_device["device_entry_id"] = previous["device_entry_id"]
                     if battery_template_data and isinstance(
                         battery_template_data, dict
                     ):
@@ -5574,6 +5666,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                         battery_device["firmware_version"] = battery_template_data.get(
                             "firmware_version", "1.0.0"
                         )
+                    battery_device = self._normalize_device_record(battery_device)
                     if battery_devices:
                         for i, device in enumerate(devices):
                             if device.get("type") == "battery":
@@ -5581,6 +5674,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                                 break
                     else:
                         devices.append(battery_device)
+                    _apply_hub_battery_from_pack_device(new_data, battery_device)
 
             # Keep device-specific dynamic config in sync with options updates
             devices = new_data.get("devices")
@@ -5589,8 +5683,13 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     if device.get("template") != template_name:
                         continue
                     for key in dynamic_params:
-                        if key in user_input:
-                            device[key] = user_input[key]
+                        if key not in user_input:
+                            continue
+                        if key == "battery_template" and _is_pack_template_selection(
+                            user_input.get(key)
+                        ):
+                            continue
+                        device[key] = user_input[key]
 
             # Remove temporary fields
             new_data.pop("update_template", None)
