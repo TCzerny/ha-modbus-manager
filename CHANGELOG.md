@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-10-12
+
 ### ✨ Added
 
 - **Hub — remove a device ([#110](https://github.com/TCzerny/ha-modbus-manager/issues/110))**: Options → **Remove device** drops one `devices[]` row after confirm. The last device cannot be removed (delete the hub). Pack hub keys follow **None**; a lone wallbox clears `wallbox_connected`. The registry device is deleted; remaining devices and Combined Device entries stay. `unique_id` formula unchanged.
