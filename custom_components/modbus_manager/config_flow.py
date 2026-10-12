@@ -584,6 +584,21 @@ def _template_default_connection_type(template_data: dict[str, Any]) -> str | No
     return None
 
 
+def _connection_type_form_field(
+    template_data: dict[str, Any],
+    current_value: Any | None = None,
+) -> tuple[Any, Any] | None:
+    """Optional connection_type selector from template dynamic_config options."""
+    dynamic = template_data.get("dynamic_config") or {}
+    if not isinstance(dynamic, dict):
+        return None
+    ct_cfg = dynamic.get("connection_type")
+    if not isinstance(ct_cfg, dict) or "options" not in ct_cfg:
+        return None
+    default, vol_in = _vol_in_from_dynamic_options(ct_cfg, current_value=current_value)
+    return vol.Optional("connection_type", default=default), vol_in
+
+
 class _GenericEntityLoopMixin:
     """Add-entity loop shared by hub setup and Add device on an existing hub."""
 
@@ -1308,6 +1323,11 @@ class ModbusManagerConfigFlow(
             schema_fields[
                 vol.Optional("wallbox_slave_id", default=int(hit.wallbox_slave_id))
             ] = int
+        ct_field = _connection_type_form_field(
+            template_data, current_value=hit.connection_type
+        )
+        if ct_field:
+            schema_fields[ct_field[0]] = ct_field[1]
 
         detail_lines = [f"Slave ID: {hit.slave_id}"]
         if hit.selected_model:
@@ -2274,24 +2294,21 @@ class ModbusManagerConfigFlow(
                     vol.Optional("firmware_version", default=fw_default)
                 ] = fw_in
 
-        # Add connection type if available (options flow / manual setup only)
-        if "connection_type" in dynamic_config and "connection_type" not in known:
-            ct_cfg = dynamic_config["connection_type"]
-            if isinstance(ct_cfg, dict) and "options" in ct_cfg:
-                probe = getattr(self, "_probe_result", None)
-                ct_current = None
-                if probe is not None and probe.connection_type:
-                    ct_current = probe.connection_type
-                elif (getattr(self, "_connection_params", {}) or {}).get(
+        # Always offer connection_type at setup so the user can override the probe.
+        if "connection_type" in dynamic_config:
+            probe = getattr(self, "_probe_result", None)
+            ct_current = known.get("connection_type")
+            if not ct_current and probe is not None:
+                ct_current = probe.connection_type
+            if not ct_current:
+                ct_current = (getattr(self, "_connection_params", {}) or {}).get(
                     "connection_type"
-                ):
-                    ct_current = self._connection_params.get("connection_type")
-                ct_default, ct_in = _vol_in_from_dynamic_options(
-                    ct_cfg, current_value=ct_current
                 )
-                schema_fields[
-                    vol.Optional("connection_type", default=ct_default)
-                ] = ct_in
+            ct_field = _connection_type_form_field(
+                template_data, current_value=ct_current
+            )
+            if ct_field:
+                schema_fields[ct_field[0]] = ct_field[1]
 
         # Battery slave ID removed - using connection slave_id instead
         # SunSpec model address fields are now handled automatically via dynamic_config

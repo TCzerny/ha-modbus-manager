@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🐛 Fixed
 
 - **Battery options — changing template dropped the pack ([#119](https://github.com/TCzerny/ha-modbus-manager/issues/119))**: WiNet clamp treated the YAML template name as invalid and set `battery_config` to `none`, then deleted `devices[]` and the registry device. Pack template names are kept; hub `battery_template` / `battery_prefix` / `battery_slave_id` / `battery_enabled` sync from the pack row (including **Add device**). Registry purge only when the user picks **None**. `unique_id` unchanged.
+- **Setup — WiNet connection type ([#115](https://github.com/TCzerny/ha-modbus-manager/issues/115))**: Detect confirm and the setup dynamic-config form always offer LAN / WiNet-S / RS485 (probe is the default). Previously a probed `connection_type` hid the field, so a LAN guess created WiNet-absent entities until Options. Existing entries are not rewritten.
 
 ## [1.3.0] - 2026-10-03
 
