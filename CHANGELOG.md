@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### 🐛 Fixed
+
+- **Device registry — `config_entries_subentries` ([#126](https://github.com/TCzerny/ha-modbus-manager/issues/126))**: HA 2026.8+ uses `DeviceEntry.config_entry_id` / `config_subentry_id` so the deprecated map is not read (warning gone, removed in 2027.10). Cores before that keep `config_entries_subentries`. `unique_id` unchanged.
+
 ## [1.3.3] - 2026-10-14
 
 ### ✨ Added

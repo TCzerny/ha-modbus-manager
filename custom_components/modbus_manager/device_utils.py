@@ -19,15 +19,9 @@ from .const import (
     GENERIC_TEMPLATE_SENTINEL,
     EntityIdStrategy,
 )
+from .device_registry_compat import device_subentry_ids_for_entry
 
 _LOGGER = logging.getLogger(__name__)
-
-
-def device_subentry_ids_for_entry(
-    device_entry: dr.DeviceEntry, config_entry_id: str
-) -> set[str | None]:
-    """Return subentry ids linked to a device for one config entry."""
-    return device_entry.config_entries_subentries.get(config_entry_id, set())
 
 
 def async_move_device_to_subentry(
