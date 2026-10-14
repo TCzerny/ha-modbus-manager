@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Added
+
+- **Setup — two-step template picker ([Discussion #118](https://github.com/TCzerny/ha-modbus-manager/discussions/118))**: Hub setup and Add device first ask for a device category (mapped from YAML `type`), then a short **Manufacturer — model** list. Combined Device stays on the first setup menu; Generic stays the first Add-device category. Template identity and `unique_id` are unchanged. A later manufacturer-only step can use the same catalog when more templates per vendor land.
+
 ## [1.3.2] - 2026-10-14
 
 ### ✨ Added

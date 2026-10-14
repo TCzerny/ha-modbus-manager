@@ -36,10 +36,18 @@
                 }
             },
             "template": {
-                "title": "Template wählen",
-                "description": "Keine automatische Erkennung, oder Sie wählen selbst. Die Adresse aus dem vorherigen Schritt bleibt erhalten.",
+                "title": "Geräte-Kategorie wählen",
+                "description": "Keine automatische Erkennung, oder Sie wählen selbst. Die Adresse aus dem vorherigen Schritt bleibt erhalten. Als Nächstes wählen Sie Hersteller und Modell in dieser Kategorie.",
                 "data": {
-                    "template": "Geräte-Template"
+                    "template": "Geräte-Template",
+                    "template_category": "Geräte-Kategorie"
+                }
+            },
+            "template_pick": {
+                "title": "Template wählen",
+                "description": "Kategorie: {category}. Die Namen sind Hersteller und Modell. Combined Device bleibt im ersten Setup-Menü.",
+                "data": {
+                    "template": "Hersteller — Modell"
                 }
             },
             "generic_entity": {
@@ -631,9 +639,10 @@
         "step": {
             "user": {
                 "title": "Gerät hinzufügen",
-                "description": "Dieses Gerät nutzt die Verbindung des Hubs. Wählen Sie Generisches Modbus-Gerät oder ein YAML-Template, danach Präfix und Slave-ID.",
+                "description": "Dieses Gerät nutzt die Verbindung des Hubs. Zuerst Kategorie (oder Generisches Modbus-Gerät), dann Hersteller und Modell, danach Präfix und Slave-ID.",
                 "data": {
                     "template": "Geräte-Template",
+                    "template_category": "Geräte-Kategorie",
                     "prefix": "Geräte-Prefix",
                     "slave_id": "Slave ID",
                     "selected_model": "Modell auswählen",
@@ -644,6 +653,13 @@
                     "heat_pump_enabled": "Wärmepumpen-Register aktivieren",
                     "pv2heat_enabled": "PV2Heat-Register aktivieren",
                     "heat_meter_enabled": "Wärmemengenzähler-Register aktivieren"
+                }
+            },
+            "template_pick": {
+                "title": "Template wählen",
+                "description": "Kategorie: {category}. Die Namen sind Hersteller und Modell.",
+                "data": {
+                    "template": "Hersteller — Modell"
                 }
             },
             "reconfigure": {
@@ -767,9 +783,10 @@
             "step": {
                 "user": {
                     "title": "Gerät hinzufügen",
-                    "description": "Das Gerät hängt an dieser Hub-Verbindung (Host/Port oder seriell). Generisches Modbus-Gerät oder YAML-Template wählen, danach Präfix und Slave-ID.",
+                    "description": "Das Gerät hängt an dieser Hub-Verbindung. Zuerst Kategorie (oder Generisches Modbus-Gerät), dann Hersteller und Modell, danach Präfix und Slave-ID.",
                     "data": {
                         "template": "Geräte-Template",
+                        "template_category": "Geräte-Kategorie",
                         "prefix": "Geräte-Prefix",
                         "slave_id": "Slave ID",
                         "selected_model": "Modell auswählen",
@@ -780,6 +797,13 @@
                         "heat_pump_enabled": "Wärmepumpen-Register aktivieren",
                         "pv2heat_enabled": "PV2Heat-Register aktivieren",
                         "heat_meter_enabled": "Wärmemengenzähler-Register aktivieren"
+                    }
+                },
+                "template_pick": {
+                    "title": "Template wählen",
+                    "description": "Kategorie: {category}. Die Namen sind Hersteller und Modell.",
+                    "data": {
+                        "template": "Hersteller — Modell"
                     }
                 },
                 "reconfigure": {
