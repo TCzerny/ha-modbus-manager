@@ -247,6 +247,7 @@ class ModbusCoordinatorBinarySensor(BinarySensorEntity):
 
         # Write each update to the state machine, even if the data is the same.
         self._attr_force_update = register_config.get("force_update", False)
+        self._attr_icon = register_config.get("icon")
 
         # Binary sensors are typically diagnostic (status indicators)
         entity_category_str = register_config.get("entity_category")

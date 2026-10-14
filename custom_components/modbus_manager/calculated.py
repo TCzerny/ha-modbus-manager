@@ -624,6 +624,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
 
         # Entity attributes
         self._attr_device_class = config.get("device_class")
+        self._attr_icon = config.get("icon")
         self._attr_is_on = None
 
         self._mm_group = get_entity_mm_group(config) or "calculated"

@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Hub poll groups Fast / Medium / Slow ([#124](https://github.com/TCzerny/ha-modbus-manager/issues/124))**: Templates use `scan_group` instead of a fixed `scan_interval`. Seconds are stored on the hub (`scan_group_fast` / `_medium` / `_slow`, defaults 10 / 30 / 600) in Config Flow and Options → Connection, and survive reload and updates. The coordinator and register optimizer run **per group** so Fast frames are never padded with Slow registers. The next poll is scheduled from the **start** of the cycle so Modbus I/O is not added on top of Fast/Medium/Slow. Legacy YAML `scan_interval` still maps (≤15 Fast, ≤60 Medium, else Slow). `unique_id` unchanged. SHx template v1.2.24.
 
+### 🐛 Fixed
+
+- **Entity icons ([#125](https://github.com/TCzerny/ha-modbus-manager/pull/125))**: Switches, buttons, text entities, binary sensors, and calculated binary sensors now use the template `icon`. An explicit icon overrides the `device_class` icon. `unique_id` unchanged.
+
 ## [1.3.1] - 2026-10-12
 
 ### ✨ Added

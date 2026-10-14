@@ -108,6 +108,7 @@ class ModbusCoordinatorButton(ButtonEntity):
 
         # Write each update to the state machine, even if the data is the same.
         self._attr_force_update = register_config.get("force_update", False)
+        self._attr_icon = register_config.get("icon")
 
         # Set entity category:
         # - None (default): Primary sensors that represent main data points.
