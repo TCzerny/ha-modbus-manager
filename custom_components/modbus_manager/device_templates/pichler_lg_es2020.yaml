@@ -42,7 +42,7 @@ sensors:
     address: 25
     input_type: input
     data_type: uint16
-    scan_interval: 3600
+    scan_group: slow
     entity_category: diagnostic
     enabled_by_default: false
     icon: "mdi:hvac"
@@ -58,7 +58,7 @@ sensors:
     input_type: input
     data_type: uint16
     precision: 1
-    scan_interval: 3600
+    scan_group: slow
     entity_category: diagnostic
     enabled_by_default: false
     icon: "mdi:chip"
@@ -76,7 +76,7 @@ sensors:
     unit_of_measurement: "°C"
     device_class: temperature
     state_class: measurement
-    scan_interval: 30
+    scan_group: medium
     mm_group: "temperatures"
     icon: "mdi:thermometer"
 
@@ -92,7 +92,7 @@ sensors:
     unit_of_measurement: "°C"
     device_class: temperature
     state_class: measurement
-    scan_interval: 30
+    scan_group: medium
     mm_group: "temperatures"
     icon: "mdi:thermometer"
 
@@ -108,7 +108,7 @@ sensors:
     unit_of_measurement: "°C"
     device_class: temperature
     state_class: measurement
-    scan_interval: 30
+    scan_group: medium
     mm_group: "temperatures"
     icon: "mdi:thermometer"
 
@@ -124,7 +124,7 @@ sensors:
     unit_of_measurement: "°C"
     device_class: temperature
     state_class: measurement
-    scan_interval: 30
+    scan_group: medium
     mm_group: "temperatures"
     icon: "mdi:thermometer"
 
@@ -142,7 +142,7 @@ sensors:
     unit_of_measurement: "°C"
     device_class: temperature
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     icon: "mdi:thermometer"
 
   # Actual flow values, not the writable holding-register setpoints at 9-12.
@@ -155,7 +155,7 @@ sensors:
     precision: 0
     unit_of_measurement: "m³/h"
     state_class: measurement
-    scan_interval: 15
+    scan_group: fast
     mm_group: "airflow"
     icon: "mdi:weather-windy"
 
@@ -168,7 +168,7 @@ sensors:
     precision: 0
     unit_of_measurement: "m³/h"
     state_class: measurement
-    scan_interval: 15
+    scan_group: fast
     mm_group: "airflow"
     icon: "mdi:weather-windy"
 
@@ -178,7 +178,7 @@ sensors:
     address: 48
     input_type: input
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
     entity_category: diagnostic
     icon: "mdi:hvac"
     map:
@@ -200,7 +200,7 @@ sensors:
     unit_of_measurement: "h"
     device_class: duration
     state_class: measurement
-    scan_interval: 300
+    scan_group: slow
     entity_category: diagnostic
     icon: "mdi:air-filter"
 
@@ -217,7 +217,7 @@ sensors:
     unit_of_measurement: "°C"
     device_class: temperature
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     entity_category: diagnostic
     enabled_by_default: false
     icon: "mdi:thermometer"
@@ -230,7 +230,7 @@ sensors:
     data_type: uint16
     unit_of_measurement: "m³/h"
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     entity_category: diagnostic
     enabled_by_default: false
     icon: "mdi:weather-windy"
@@ -243,7 +243,7 @@ sensors:
     data_type: uint16
     unit_of_measurement: "m³/h"
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     entity_category: diagnostic
     enabled_by_default: false
     icon: "mdi:weather-windy"
@@ -254,7 +254,7 @@ sensors:
     address: 59
     input_type: input
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
     entity_category: diagnostic
     enabled_by_default: false
     icon: "mdi:fan"
@@ -279,7 +279,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     entity_category: diagnostic
     icon: "mdi:valve"
 
@@ -296,7 +296,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     entity_category: diagnostic
     icon: "mdi:valve"
 
@@ -313,7 +313,7 @@ sensors:
     unit_of_measurement: "°C"
     device_class: temperature
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     entity_category: diagnostic
     enabled_by_default: false
     icon: "mdi:thermometer"
@@ -326,7 +326,7 @@ binary_sensors:
     address: 19
     input_type: input
     data_type: boolean
-    scan_interval: 30
+    scan_group: medium
     device_class: running
     icon: "mdi:fan"
 
@@ -336,7 +336,7 @@ binary_sensors:
     address: 20
     input_type: input
     data_type: boolean
-    scan_interval: 30
+    scan_group: medium
     device_class: opening
     icon: "mdi:valve-open"
 
@@ -346,7 +346,7 @@ binary_sensors:
     address: 29
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
     icon: "mdi:alert-circle"
 
@@ -356,7 +356,7 @@ binary_sensors:
     address: 41
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
     icon: "mdi:air-filter"
 
@@ -366,7 +366,7 @@ binary_sensors:
     address: 16
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: running
     icon: "mdi:radiator"
 
@@ -377,7 +377,7 @@ binary_sensors:
     address: 17
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: heat
     icon: "mdi:fire"
 
@@ -388,7 +388,7 @@ binary_sensors:
     address: 18
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: cold
     icon: "mdi:snowflake"
 
@@ -398,7 +398,7 @@ binary_sensors:
     address: 21
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: opening
     icon: "mdi:valve-open"
 
@@ -408,7 +408,7 @@ binary_sensors:
     address: 27
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: running
     icon: "mdi:pump"
     enabled_by_default: false
@@ -420,7 +420,7 @@ binary_sensors:
     address: 28
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: running
     icon: "mdi:pump"
     enabled_by_default: false
@@ -431,7 +431,7 @@ binary_sensors:
     address: 37
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: safety
     icon: "mdi:alarm-light"
 
@@ -441,7 +441,7 @@ binary_sensors:
     address: 38
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     icon: "mdi:fan-plus"
 
   # Documented ES2020 fault/status inputs. All use 0 = no alarm, 1 = alarm.
@@ -451,7 +451,7 @@ binary_sensors:
     address: 60
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "Operating Panel Fault"
@@ -460,7 +460,7 @@ binary_sensors:
     address: 61
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "Reheater Frost Protection Fault"
@@ -469,7 +469,7 @@ binary_sensors:
     address: 62
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "Exhaust Air Fan Fault"
@@ -478,7 +478,7 @@ binary_sensors:
     address: 63
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "Supply Air Fan Fault"
@@ -487,7 +487,7 @@ binary_sensors:
     address: 64
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "Outdoor Air Temperature Sensor Fault"
@@ -496,7 +496,7 @@ binary_sensors:
     address: 65
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "Exhaust Air Temperature Sensor Fault"
@@ -505,7 +505,7 @@ binary_sensors:
     address: 66
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "Extract Air Temperature Sensor Fault"
@@ -514,7 +514,7 @@ binary_sensors:
     address: 67
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "Supply Air Temperature Sensor Fault"
@@ -523,7 +523,7 @@ binary_sensors:
     address: 68
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "Preheater Temperature Sensor Fault"
@@ -533,7 +533,7 @@ binary_sensors:
     address: 69
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "External Supply Air Temperature Sensor Fault"
@@ -543,7 +543,7 @@ binary_sensors:
     address: 70
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "External Outdoor Air Temperature Sensor Fault"
@@ -552,7 +552,7 @@ binary_sensors:
     address: 71
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "External Room Temperature Sensor Fault"
@@ -561,7 +561,7 @@ binary_sensors:
     address: 72
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "Fan Communication Fault"
@@ -570,7 +570,7 @@ binary_sensors:
     address: 73
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "Low Supply Air Temperature Fault"
@@ -579,7 +579,7 @@ binary_sensors:
     address: 74
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "Filter Fault"
@@ -588,7 +588,7 @@ binary_sensors:
     address: 75
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "Low Preheater Temperature Fault"
@@ -598,7 +598,7 @@ binary_sensors:
     address: 76
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "Reheater Frost Protection Active"
@@ -607,7 +607,7 @@ binary_sensors:
     address: 80
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: cold
 
   - name: "Modbus Sensor Fault"
@@ -616,7 +616,7 @@ binary_sensors:
     address: 88
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: problem
 
   - name: "External Frost Protection Active"
@@ -625,7 +625,7 @@ binary_sensors:
     address: 108
     input_type: input
     data_type: boolean
-    scan_interval: 60
+    scan_group: medium
     device_class: cold
 
 controls:
@@ -638,7 +638,7 @@ controls:
     address: 2
     input_type: holding
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
     entity_category: config
     icon: "mdi:fan"
     write_function_code: 6
@@ -664,7 +664,7 @@ controls:
     max_value: 1000
     step: 1
     unit_of_measurement: "m³/h"
-    scan_interval: 300
+    scan_group: slow
     entity_category: config
     icon: "mdi:fan"
     write_function_code: 6
@@ -680,7 +680,7 @@ controls:
     max_value: 1000
     step: 1
     unit_of_measurement: "m³/h"
-    scan_interval: 300
+    scan_group: slow
     entity_category: config
     icon: "mdi:fan"
     write_function_code: 6
@@ -696,7 +696,7 @@ controls:
     max_value: 1000
     step: 1
     unit_of_measurement: "m³/h"
-    scan_interval: 300
+    scan_group: slow
     entity_category: config
     icon: "mdi:fan"
     write_function_code: 6
@@ -712,7 +712,7 @@ controls:
     max_value: 1000
     step: 1
     unit_of_measurement: "m³/h"
-    scan_interval: 300
+    scan_group: slow
     entity_category: config
     icon: "mdi:fan"
     write_function_code: 6

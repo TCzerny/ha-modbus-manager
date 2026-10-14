@@ -8,9 +8,10 @@ from pathlib import Path
 
 import yaml
 
-
 ROOT = Path(__file__).resolve().parents[1]
-TEMPLATE = ROOT / "custom_components/modbus_manager/device_templates/pichler_lg_es2020.yaml"
+TEMPLATE = (
+    ROOT / "custom_components/modbus_manager/device_templates/pichler_lg_es2020.yaml"
+)
 COMBINED = "external_combined_heating_cooling_water_coil"
 CHILLED = "external_chilled_water_cooling_coil"
 ELECTRIC_PREHEATER = "electric"
@@ -49,7 +50,9 @@ class PichlerTemplateTest(unittest.TestCase):
         }
         condition = f"post_heating_cooling_type == '{COMBINED}'"
         for unique_id, (section, address) in expected.items():
-            entity = next(item for item in self.data[section] if item["unique_id"] == unique_id)
+            entity = next(
+                item for item in self.data[section] if item["unique_id"] == unique_id
+            )
             self.assertEqual(entity["address"], address)
             self.assertEqual(entity["condition"], condition)
 
@@ -103,7 +106,7 @@ class PichlerTemplateTest(unittest.TestCase):
         self.assertEqual(entity["data_type"], "uint16")
         self.assertEqual(entity["scale"], 0.01)
         self.assertEqual(entity["unit_of_measurement"], "V")
-        self.assertEqual(entity["scan_interval"], 60)
+        self.assertEqual(entity["scan_group"], "medium")
         self.assertEqual(
             entity["condition"],
             f"post_heating_cooling_type == '{COMBINED}'",
@@ -121,7 +124,9 @@ class PichlerTemplateTest(unittest.TestCase):
     def test_preheater_type_and_preheater_entities_are_independent(self):
         config = self.data["dynamic_config"]
         self.assertEqual(config["preheater_type"]["default"], "none")
-        self.assertEqual(set(config["preheater_type"]["options"]), {"none", ELECTRIC_PREHEATER})
+        self.assertEqual(
+            set(config["preheater_type"]["options"]), {"none", ELECTRIC_PREHEATER}
+        )
         condition = f"preheater_type == '{ELECTRIC_PREHEATER}'"
         expected = {
             "preheater_temperature": ("sensors", 34),
@@ -129,11 +134,17 @@ class PichlerTemplateTest(unittest.TestCase):
             "low_preheater_temperature_fault": ("binary_sensors", 76),
         }
         for unique_id, (section, address) in expected.items():
-            entity = next(item for item in self.data[section] if item["unique_id"] == unique_id)
+            entity = next(
+                item for item in self.data[section] if item["unique_id"] == unique_id
+            )
             self.assertEqual(entity["address"], address)
             self.assertEqual(entity["condition"], condition)
 
-        relay = next(item for item in self.data["binary_sensors"] if item["unique_id"] == "preheater_relay")
+        relay = next(
+            item
+            for item in self.data["binary_sensors"]
+            if item["unique_id"] == "preheater_relay"
+        )
         self.assertEqual(relay["address"], 16)
         self.assertNotIn("condition", relay)
 
@@ -176,7 +187,13 @@ class PichlerTemplateTest(unittest.TestCase):
             "external_supply_air_temperature_sensor_fault",
         }
         chilled_only = {"cooling_coil_mixer_control_signal"}
-        for preheater_type, post_type, expected_preheater, expected_chilled, expected_combined in (
+        for (
+            preheater_type,
+            post_type,
+            expected_preheater,
+            expected_chilled,
+            expected_combined,
+        ) in (
             ("none", "none", False, False, False),
             (ELECTRIC_PREHEATER, "none", True, False, False),
             ("none", CHILLED, False, True, False),
@@ -187,15 +204,25 @@ class PichlerTemplateTest(unittest.TestCase):
             with self.subTest(preheater_type=preheater_type, post_type=post_type):
                 included = included_ids(preheater_type, post_type)
                 self.assertEqual(preheater <= included, expected_preheater)
-                self.assertEqual(shared_cooling <= included, post_type in {CHILLED, COMBINED})
+                self.assertEqual(
+                    shared_cooling <= included, post_type in {CHILLED, COMBINED}
+                )
                 self.assertEqual(chilled_only <= included, expected_chilled)
                 self.assertEqual(combined_only <= included, expected_combined)
                 self.assertIn("preheater_relay", included)
 
     def test_translation_keys_exist_in_both_languages(self):
         translations = [
-            json.loads((ROOT / "custom_components/modbus_manager/translations/en.json").read_text()),
-            json.loads((ROOT / "custom_components/modbus_manager/translations/de.json").read_text()),
+            json.loads(
+                (
+                    ROOT / "custom_components/modbus_manager/translations/en.json"
+                ).read_text()
+            ),
+            json.loads(
+                (
+                    ROOT / "custom_components/modbus_manager/translations/de.json"
+                ).read_text()
+            ),
         ]
         self.assertEqual(len(self.entities), 55)
         self.assertTrue(all("translation_key" in entity for entity in self.entities))
@@ -209,11 +236,15 @@ class PichlerTemplateTest(unittest.TestCase):
         ):
             for entity in self.data[section]:
                 for translation in translations:
-                    self.assertIn(entity["translation_key"], translation["entity"][platform])
+                    self.assertIn(
+                        entity["translation_key"], translation["entity"][platform]
+                    )
         for entity in self.data["controls"]:
             platform = entity["type"]
             for translation in translations:
-                self.assertIn(entity["translation_key"], translation["entity"][platform])
+                self.assertIn(
+                    entity["translation_key"], translation["entity"][platform]
+                )
 
     def test_enabled_by_default_contract_is_unchanged(self):
         disabled = {

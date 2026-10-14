@@ -45,7 +45,7 @@ sensors:
     input_type: "input"
     data_type: "string"
     count: 25
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     icon: "mdi:identifier"
 
@@ -55,7 +55,7 @@ sensors:
     input_type: "input"
     data_type: "string"
     count: 25
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     icon: "mdi:barcode"
 
@@ -65,7 +65,7 @@ sensors:
     input_type: "input"
     data_type: "string"
     count: 25
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     icon: "mdi:protocol"
 
@@ -75,7 +75,7 @@ sensors:
     input_type: "input"
     data_type: "string"
     count: 25
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     icon: "mdi:factory"
 
@@ -85,7 +85,7 @@ sensors:
     input_type: "input"
     data_type: "string"
     count: 25
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     icon: "mdi:shape"
 
@@ -95,7 +95,7 @@ sensors:
     input_type: "input"
     data_type: "string"
     count: 25
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     icon: "mdi:tag"
 
@@ -104,7 +104,7 @@ sensors:
     address: 175
     input_type: "input"
     data_type: "uint16"
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     icon: "mdi:table"
 
@@ -114,7 +114,7 @@ sensors:
     input_type: "input"
     data_type: "string"
     count: 25
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     icon: "mdi:chip"
 
@@ -124,7 +124,7 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     precision: 0
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     icon: "mdi:power-plug"
 
@@ -133,7 +133,7 @@ sensors:
     address: 250
     input_type: "input"
     data_type: "uint16"
-    scan_interval: 15
+    scan_group: fast
     mm_group: "EV_charging_status"
     icon: "mdi:web"
     map:
@@ -147,7 +147,7 @@ sensors:
     input_type: "input"
     data_type: "string"
     count: 2
-    scan_interval: 120
+    scan_group: slow
     mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
     map:
@@ -166,7 +166,7 @@ sensors:
     address: 300
     input_type: "input"
     data_type: "uint16"
-    scan_interval: 120
+    scan_group: slow
     mm_group: "EV_charging_status"
     icon: "mdi:cable-data"
     map:
@@ -181,7 +181,7 @@ sensors:
     address: 301
     input_type: "input"
     data_type: "float32"
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
@@ -194,7 +194,7 @@ sensors:
     address: 303
     input_type: "input"
     data_type: "float32"
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
@@ -207,7 +207,7 @@ sensors:
     address: 305
     input_type: "input"
     data_type: "float32"
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
@@ -222,7 +222,7 @@ sensors:
     input_type: "input"
     data_type: "float32"
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"
@@ -237,7 +237,7 @@ sensors:
     address: 1000
     input_type: "input"
     data_type: "float32"
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -249,7 +249,7 @@ sensors:
     address: 1002
     input_type: "input"
     data_type: "float32"
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -261,7 +261,7 @@ sensors:
     address: 1004
     input_type: "input"
     data_type: "float32"
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -275,7 +275,7 @@ sensors:
     address: 1006
     input_type: "input"
     data_type: "float32"
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -287,7 +287,7 @@ sensors:
     address: 1008
     input_type: "input"
     data_type: "float32"
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -299,7 +299,7 @@ sensors:
     address: 1010
     input_type: "input"
     data_type: "float32"
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -312,7 +312,7 @@ sensors:
     address: 1012
     input_type: "holding"
     data_type: "float32"
-    scan_interval: 30
+    scan_group: medium
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -324,7 +324,7 @@ sensors:
     address: 1014
     input_type: "holding"
     data_type: "float32"
-    scan_interval: 30
+    scan_group: medium
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -336,7 +336,7 @@ sensors:
     address: 1016
     input_type: "holding"
     data_type: "float32"
-    scan_interval: 30
+    scan_group: medium
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -350,7 +350,7 @@ sensors:
     address: 1018
     input_type: "holding"
     data_type: "float32"
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -362,7 +362,7 @@ sensors:
     address: 1020
     input_type: "holding"
     data_type: "float32"
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -374,7 +374,7 @@ sensors:
     address: 1022
     input_type: "holding"
     data_type: "float32"
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -392,7 +392,7 @@ sensors:
     device_class: "duration"
     state_class: "measurement"
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "EV_fallback_timer"
     icon: "mdi:timer"
 
@@ -401,7 +401,7 @@ sensors:
     address: 1025
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     precision: 0
     mm_group: "EV_phase_setup"
     icon: "mdi:transmission-tower"
@@ -411,7 +411,7 @@ sensors:
     address: 1026
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     precision: 0
     mm_group: "EV_phase_setup"
     icon: "mdi:transmission-tower"
@@ -421,7 +421,7 @@ sensors:
     address: 1027
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     precision: 0
     mm_group: "EV_phase_setup"
     icon: "mdi:transmission-tower"
@@ -431,7 +431,7 @@ sensors:
     address: 1028
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 10
+    scan_group: fast
     mm_group: "EV_charging_status"
     icon: "mdi:power-settings"
     map:
@@ -448,7 +448,7 @@ controls:
     address: 1012
     input_type: "holding"
     data_type: "float32"
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -468,7 +468,7 @@ controls:
     address: 1014
     input_type: "holding"
     data_type: "float32"
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -486,7 +486,7 @@ controls:
     address: 1016
     input_type: "holding"
     data_type: "float32"
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"

@@ -6,7 +6,7 @@ display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters: RS, RT, T, MG*RL, SH*RL. SH50–125CX not included yet."
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.2.23
+version: 1.2.24
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -185,7 +185,7 @@ sensors:
     address: 33499
     input_type: holding
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
     map:
@@ -197,7 +197,7 @@ sensors:
     address: 33500
     input_type: holding
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
     map:
@@ -213,7 +213,7 @@ sensors:
     input_type: holding
     data_type: uint16
     precision: 0
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
@@ -224,7 +224,7 @@ sensors:
     input_type: input
     data_type: string
     count: 10
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_device_count"
     entity_category: "diagnostic"
 
@@ -233,7 +233,7 @@ sensors:
     address: 4999 # reg 5000
     input_type: input
     data_type: uint16
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
     # Appendix 1: Device type codes (hex -> decimal)
@@ -303,7 +303,7 @@ sensors:
     input_type: input
     data_type: uint32
     swap: word
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
     # Note: Format: 0x01010B00 = V1.1.11 (Major.Minor.Patch.Build)
@@ -317,7 +317,7 @@ sensors:
     input_type: input
     data_type: string
     count: 15
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_device_info"
     icon: "mdi:certificate"
     entity_category: "diagnostic"
@@ -329,7 +329,7 @@ sensors:
     input_type: input
     data_type: string
     count: 15
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_device_info"
     icon: "mdi:certificate"
     entity_category: "diagnostic"
@@ -345,7 +345,7 @@ sensors:
     unit_of_measurement: kW
     device_class: "power"
     state_class: measurement
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
@@ -354,7 +354,7 @@ sensors:
     address: 5001 # reg 5002
     input_type: input
     data_type: uint16
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
     # Protocol Table 3: 0=Single, 1=3P4L, 2=3P3L
@@ -371,7 +371,7 @@ sensors:
     input_type: input
     data_type: string
     count: 15
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
@@ -383,7 +383,7 @@ sensors:
     input_type: input
     data_type: string
     count: 15
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
@@ -395,7 +395,7 @@ sensors:
     input_type: input
     data_type: string
     count: 15
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
@@ -414,7 +414,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
 
   - name: Total PV generation & battery discharge
     unique_id: total_pv_gen_battery_discharge
@@ -427,7 +427,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Inverter temperature
@@ -440,7 +440,7 @@ sensors:
     device_class: "temperature"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_temperature"
 
   # MPPT Data (will be filtered based on mppt_count)
@@ -454,7 +454,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: MPPT1 current
     unique_id: mppt1_current
@@ -466,7 +466,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: MPPT2 voltage
     unique_id: mppt2_voltage
@@ -478,7 +478,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: MPPT2 current
     unique_id: mppt2_current
@@ -490,7 +490,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   # only for SH*T inverters with 3 MPPTs (will be filtered based on mppt_count)
   - name: MPPT3 voltage
@@ -503,7 +503,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 3"
 
   - name: MPPT3 current
@@ -516,7 +516,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 3"
 
   # MPPT 4 (only SH8.0RS, SH10RS with 4 MPPTs per Protocol V1.1.11)
@@ -530,7 +530,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "selected_model in [SH8.0RS, SH10RS] and connection_type != 'RS485'"
     # RS485 reads 0xFFFF (65535 * 0.1 scale = 6553.5) on this register - unpopulated over that path
 
@@ -544,7 +544,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "selected_model in [SH8.0RS, SH10RS] and connection_type != 'RS485'"
     # RS485 reads 0xFFFF (65535 * 0.1 scale = 6553.5) on this register - unpopulated over that path
 
@@ -559,7 +559,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_total_dc_power"
 
   # Phase Data (will be filtered based on phases)
@@ -573,7 +573,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Phase B voltage
     unique_id: phase_b_voltage
@@ -585,7 +585,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Phase C voltage
     unique_id: phase_c_voltage
@@ -597,7 +597,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Reactive power
     unique_id: reactive_power
@@ -611,7 +611,7 @@ sensors:
     state_class: measurement
     scale: 1
     offset: 0
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_power_measurement"
     entity_category: "diagnostic"
 
@@ -625,7 +625,7 @@ sensors:
     device_class: "power_factor"
     state_class: measurement
     scale: 0.001
-    scan_interval: 10
+    scan_group: fast
     entity_category: "diagnostic"
 
   # Grid frequency: we use reg 5242 (address 5241) for higher precision 0.01Hz; reg 5036 (address 5035) has 0.1Hz only
@@ -647,7 +647,7 @@ sensors:
     device_class: "frequency"
     state_class: measurement
     scale: 0.01
-    scan_interval: 10
+    scan_group: fast
     condition: "meter_type in ['DTSU666', 'DTSU666-20']"
 
   # Meter Data (will be filtered based on phases and meter_type)
@@ -668,7 +668,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
     entity_category: "diagnostic"
 
@@ -683,7 +683,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     condition: "(meter_type == 'DTSU666' or meter_type == 'DTSU666-20')"
     entity_category: "diagnostic"
 
@@ -698,7 +698,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     condition: "(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1"
     entity_category: "diagnostic"
 
@@ -714,7 +714,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     condition: "(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1"
     entity_category: "diagnostic"
 
@@ -732,7 +732,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_meter_channel_2"
     condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
     entity_category: "diagnostic"
@@ -748,7 +748,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_meter_channel_2"
     condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
     entity_category: "diagnostic"
@@ -764,7 +764,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_meter_channel_2"
     condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
     entity_category: "diagnostic"
@@ -780,7 +780,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_meter_channel_2"
     condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
     entity_category: "diagnostic"
@@ -794,7 +794,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 100
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: BMS max. charging current
@@ -807,7 +807,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: BMS max. discharging current
@@ -820,7 +820,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Battery capacity
@@ -832,7 +832,7 @@ sensors:
     unit_of_measurement: kWh
     device_class: "energy_storage"
     scale: 0.01
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
     condition: "selected_model in [SH20T, SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, SH5.0RT, SH6.0RT, SH8.0RT, SH10RT, SH5.0RT-20, SH6.0RT-20, SH8.0RT-20, SH10RT-20, SH5.0RT-V112, SH6.0RT-V112, SH8.0RT-V112, SH10RT-V112, SH5.0RT-V122, SH6.0RT-V122, SH8.0RT-V122, SH10RT-V122]"
     # Added SH20T om request of user
@@ -848,7 +848,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 0.01
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_control"
     entity_category: "diagnostic"
 
@@ -862,7 +862,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 0.01
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_control"
     entity_category: "diagnostic"
 
@@ -877,7 +877,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Backup phase B power
     unique_id: backup_phase_b_power
@@ -889,7 +889,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Backup phase C power
     unique_id: backup_phase_c_power
@@ -901,7 +901,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Total backup power
     unique_id: total_backup_power
@@ -914,7 +914,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
 
   # Backup port current, voltage, frequency (off-grid/backup monitoring per Protocol V1.1.11)
   - name: Backup phase A current
@@ -927,7 +927,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Backup phase B current
     unique_id: backup_phase_b_current
@@ -939,7 +939,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Backup phase C current
     unique_id: backup_phase_c_current
@@ -951,7 +951,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Backup phase A voltage
     unique_id: backup_phase_a_voltage
@@ -963,7 +963,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Backup phase B voltage
     unique_id: backup_phase_b_voltage
@@ -975,7 +975,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Backup phase C voltage
     unique_id: backup_phase_c_voltage
@@ -987,7 +987,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Backup frequency
     unique_id: backup_frequency
@@ -999,7 +999,7 @@ sensors:
     device_class: "frequency"
     state_class: measurement
     scale: 0.01
-    scan_interval: 10
+    scan_group: fast
 
   # Meter Phase Data (will be filtered based on phases)
   - name: Meter phase A voltage
@@ -1012,7 +1012,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     # Undocumented registers, reengineered by forum; tested: SH10RT + LAN, SH10RT-20 ([#120])
     condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT, SH10RT-20]"
 
@@ -1026,7 +1026,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     # Undocumented registers, reengineered by forum; tested: SH10RT + LAN, SH10RT-20 ([#120])
     condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT, SH10RT-20]"
 
@@ -1040,7 +1040,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     # Undocumented registers, reengineered by forum; tested: SH10RT + LAN, SH10RT-20 ([#120])
     condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT, SH10RT-20]"
 
@@ -1054,7 +1054,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.01
-    scan_interval: 10
+    scan_group: fast
     # Undocumented registers, reengineered by forum; tested: SH10RT + LAN, SH10RT-20 ([#120])
     condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT, SH10RT-20]"
 
@@ -1068,7 +1068,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.01
-    scan_interval: 10
+    scan_group: fast
     # Undocumented registers, reengineered by forum; tested: SH10RT + LAN, SH10RT-20 ([#120])
     condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT, SH10RT-20]"
 
@@ -1082,7 +1082,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.01
-    scan_interval: 10
+    scan_group: fast
     # Undocumented registers, reengineered by forum; tested: SH10RT + LAN, SH10RT-20 ([#120])
     condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT, SH10RT-20]"
 
@@ -1100,7 +1100,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     condition: "connection_type in ['LAN', 'RS485']"
     entity_category: "diagnostic"
 
@@ -1115,7 +1115,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly PV generation (03 March)
@@ -1129,7 +1129,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly PV generation (04 April)
@@ -1143,7 +1143,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly PV generation (05 May)
@@ -1157,7 +1157,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly PV generation (06 June)
@@ -1171,7 +1171,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly PV generation (07 July)
@@ -1185,7 +1185,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly PV generation (08 August)
@@ -1199,7 +1199,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly PV generation (09 September)
@@ -1213,7 +1213,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly PV generation (10 October)
@@ -1227,7 +1227,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly PV generation (11 November)
@@ -1241,7 +1241,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly PV generation (12 December)
@@ -1255,7 +1255,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
   # End monthly PV generation
 
@@ -1272,7 +1272,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly PV generation (2020)
@@ -1287,7 +1287,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly PV generation (2021)
@@ -1302,7 +1302,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly PV generation (2022)
@@ -1317,7 +1317,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly PV generation (2023)
@@ -1332,7 +1332,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly PV generation (2024)
@@ -1347,7 +1347,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly PV generation (2025)
@@ -1362,7 +1362,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly PV generation (2026)
@@ -1377,7 +1377,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly PV generation (2027)
@@ -1392,7 +1392,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly PV generation (2028)
@@ -1407,7 +1407,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly PV generation (2029)
@@ -1422,7 +1422,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
   # End yearly pv generation
 
@@ -1438,7 +1438,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly export (02 February)
@@ -1452,7 +1452,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly export (03 March)
@@ -1466,7 +1466,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly export (04 April)
@@ -1480,7 +1480,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly export (05 May)
@@ -1494,7 +1494,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly export (06 June)
@@ -1508,7 +1508,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly export (07 July)
@@ -1522,7 +1522,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly export (08 August)
@@ -1536,7 +1536,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly export (09 September)
@@ -1550,7 +1550,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly export (10 October)
@@ -1564,7 +1564,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly export (11 November)
@@ -1578,7 +1578,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Monthly export (12 December)
@@ -1592,7 +1592,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
   # End monthly export
 
@@ -1609,7 +1609,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly Export (2020)
@@ -1624,7 +1624,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly Export (2021)
@@ -1639,7 +1639,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly Export (2022)
@@ -1654,7 +1654,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly Export (2023)
@@ -1669,7 +1669,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly Export (2024)
@@ -1684,7 +1684,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly Export (2025)
@@ -1699,7 +1699,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly Export (2026)
@@ -1714,7 +1714,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly Export (2027)
@@ -1729,7 +1729,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Yearly Export (2028)
@@ -1744,7 +1744,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     entity_category: "diagnostic"
   # # End yearly export energy from PV
 
@@ -1755,7 +1755,7 @@ sensors:
     address: 12999
     input_type: "input"
     data_type: "uint16"
-    scan_interval: 10
+    scan_group: fast
     # Appendix 2: Running State
     options:
       # Running states (power generation)
@@ -1805,7 +1805,7 @@ sensors:
     precision: 0
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_status"
     # Appendix 3: Power Flow State (bit position = key)
     flags:
@@ -1822,7 +1822,7 @@ sensors:
     address: 13001
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     state_class: measurement
     # Appendix 5: Load Control Mode
     options:
@@ -1843,7 +1843,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
 
   - name: Total PV generation
     unique_id: total_pv_generation
@@ -1856,7 +1856,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
 
   - name: Daily exported energy from PV
     unique_id: daily_exported_energy_from_PV
@@ -1868,7 +1868,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
 
   - name: Total exported energy from PV
     unique_id: total_exported_energy_from_pv
@@ -1881,7 +1881,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
 
   # Power consumed by loads
   - name: Load power
@@ -1895,7 +1895,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
 
   # Power delivered by the inverter to the grid
   - name: Export power raw
@@ -1909,14 +1909,14 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Load Adjustment Mode ON/OFF Selection raw
     unique_id: load_adjustment_mode_on_off_selection_raw
     address: 13010 # reg 13011
     input_type: holding
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
     state_class: measurement
     # Parameter Setting Table 4: Load ON/OFF mode - 0xAA=ON, 0x55=OFF
     options:
@@ -1934,7 +1934,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
 
   - name: Total battery charge from PV
     unique_id: total_battery_charge_from_pv
@@ -1947,7 +1947,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
 
   - name: Daily direct energy consumption
     unique_id: daily_direct_energy_consumption
@@ -1959,7 +1959,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
 
   - name: Total direct energy consumption
     unique_id: total_direct_energy_consumption
@@ -1972,7 +1972,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
 
   - name: Battery voltage
     unique_id: battery_voltage
@@ -1984,7 +1984,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "battery_enabled == true"
 
   - name: Battery current
@@ -1997,7 +1997,7 @@ sensors:
     state_class: measurement
     device_class: "current"
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "battery_enabled == true"
 
   - name: Battery power
@@ -2011,7 +2011,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_battery_power"
     condition: "battery_enabled == true"
 
@@ -2025,7 +2025,7 @@ sensors:
     device_class: "battery"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "battery_enabled == true"
 
   - name: Battery state of health
@@ -2037,7 +2037,7 @@ sensors:
     unit_of_measurement: "%"
     state_class: measurement
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     condition: "battery_enabled == true and connection_type in ['LAN', 'WINET']"
     # WiNet-S returns raw value x10 (e.g. 990 for 99%) - confirmed live, issue #82
 
@@ -2050,7 +2050,7 @@ sensors:
     unit_of_measurement: "%"
     state_class: measurement
     scale: 1
-    scan_interval: 600
+    scan_group: slow
     condition: "battery_enabled == true and connection_type == 'RS485'"
     # RS485 returns true value directly (e.g. 99 for 99%) - confirmed live, issue #82
 
@@ -2064,7 +2064,7 @@ sensors:
     device_class: "temperature"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_battery_temperature"
     condition: "battery_enabled == true"
 
@@ -2078,7 +2078,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     condition: "battery_enabled == true"
 
   - name: Total battery discharge
@@ -2092,7 +2092,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     condition: "battery_enabled == true"
 
   - name: Self-consumption of today
@@ -2104,7 +2104,7 @@ sensors:
     unit_of_measurement: "%"
     state_class: measurement
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
 
   # Commented out for now as not clear if useful for us
   #- name: DRM State
@@ -2137,7 +2137,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Phase B current
     unique_id: phase_b_current
@@ -2149,7 +2149,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "phases > 1"
 
   - name: Phase C current
@@ -2162,7 +2162,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "phases > 1"
 
   - name: Total active power
@@ -2176,7 +2176,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Daily imported energy
     unique_id: daily_imported_energy
@@ -2188,7 +2188,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     condition: "selected_model not in ['SH10RS'] or connection_type not in ['WINET']"
     # SH10RS does not support this register on WINET-S. Other SHx models unconfirmed.
 
@@ -2203,7 +2203,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
 
   - name: Daily battery charge
     unique_id: daily_battery_charge
@@ -2215,7 +2215,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     condition: "battery_enabled == true"
 
   - name: Total battery charge
@@ -2229,7 +2229,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     condition: "battery_enabled == true"
 
   - name: Daily exported energy
@@ -2242,7 +2242,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     condition: "selected_model not in ['SH10RS'] or connection_type not in ['WINET']"
     # SH10RS does not support this register on WINET-S. Other SHx models unconfirmed.
 
@@ -2258,7 +2258,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
 
   # --- COMMENTED OUT: Fault/Diagnostic registers (Protocol V1.1.11 Appendix 4) - uncomment for diagnostics ---
   # Bit-based fault analysis; flags key = bit position
@@ -2664,7 +2664,7 @@ sensors:
     address: 13049
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     # Appendix 6: Energy Management Mode
     map:
       0: "Self-consumption (default)"
@@ -2681,7 +2681,7 @@ sensors:
     data_type: uint16
     precision: 0
     state_class: measurement
-    scan_interval: 30
+    scan_group: medium
     # Parameter Setting Table 4: Charge/discharge command
     options:
       0xAA: "Charge"
@@ -2699,7 +2699,7 @@ sensors:
     unit_of_measurement: W
     device_class: "power"
     state_class: measurement
-    scan_interval: 30
+    scan_group: medium
     condition: "battery_enabled == true"
 
   - name: Global mpp scan manual raw
@@ -2709,7 +2709,7 @@ sensors:
     data_type: uint16
     precision: 0
     state_class: measurement
-    scan_interval: 30
+    scan_group: medium
     options:
       0xAA: "Start"
       0x55: "Off"
@@ -2722,7 +2722,7 @@ sensors:
     data_type: uint16
     precision: 0
     state_class: measurement
-    scan_interval: 30
+    scan_group: medium
     options:
       0x55: "Disabled"
       0xAA: "Enabled"
@@ -2738,7 +2738,7 @@ sensors:
     address: 33540
     input_type: holding
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
     mm_group: "EV_settings"
     icon: "mdi:ev-station"
     map:
@@ -2756,7 +2756,7 @@ sensors:
     scale: 0.1
     precision: 1
     unit_of_measurement: "kWh"
-    scan_interval: 30
+    scan_group: medium
     mm_group: "EV_settings"
     icon: "mdi:battery-charging"
     condition: "wallbox_connected == 'yes'"
@@ -2766,7 +2766,7 @@ sensors:
     address: 33542
     input_type: holding
     data_type: uint32
-    scan_interval: 30
+    scan_group: medium
     mm_group: "EV_settings"
     icon: "mdi:timer-outline"
     entity_category: "diagnostic"
@@ -2780,7 +2780,7 @@ sensors:
     scale: 0.1
     precision: 1
     unit_of_measurement: "A"
-    scan_interval: 30
+    scan_group: medium
     mm_group: "EV_settings"
     icon: "mdi:current-ac"
     condition: "wallbox_connected == 'yes'"
@@ -2790,7 +2790,7 @@ sensors:
     address: 33545
     input_type: holding
     data_type: uint32
-    scan_interval: 30
+    scan_group: medium
     mm_group: "EV_settings"
     icon: "mdi:clock-start"
     entity_category: "diagnostic"
@@ -2801,7 +2801,7 @@ sensors:
     address: 33547
     input_type: holding
     data_type: uint32
-    scan_interval: 30
+    scan_group: medium
     mm_group: "EV_settings"
     icon: "mdi:clock-end"
     entity_category: "diagnostic"
@@ -2812,7 +2812,7 @@ sensors:
     address: 33549
     input_type: holding
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
     mm_group: "EV_settings"
     icon: "mdi:transmission-tower-export"
     entity_category: "diagnostic"
@@ -2829,7 +2829,7 @@ controls:
     address: 12999 # reg 13000
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     # Parameter Setting Table 4: Start/Stop - 0xCF=Boot, 0xCE=Shutdown
     options:
       0xCF: "Enabled"
@@ -2842,7 +2842,7 @@ controls:
     address: 30229 # reg 30230
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     # 0xAA starts one global MPPT scan while the inverter is running; 0x55 is idle.
     # A second Start while a scan is already running is ignored by the inverter.
     options:
@@ -2856,7 +2856,7 @@ controls:
     address: 13049
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     # Appendix 6: Energy Management Mode
     options:
       0: "Self-consumption mode (default)"
@@ -2871,7 +2871,7 @@ controls:
     address: 13050
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0xAA: "Charge"
       0xBB: "Discharge"
@@ -2892,7 +2892,7 @@ controls:
     min_value: 0
     max_value: "{{max(max_charge_power, max_discharge_power)}}"
     step: 100
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
     # Placeholder will be replaced with maximum of model-specific max_charge_power and max_discharge_power
@@ -2904,7 +2904,7 @@ controls:
     address: 13001
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     # Appendix 5: Load Control Mode
     options:
       0: "Timing mode"
@@ -2925,7 +2925,7 @@ controls:
     min_value: 50
     max_value: 100
     step: 1
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
 
@@ -2941,7 +2941,7 @@ controls:
     min_value: 0
     max_value: 50
     step: 1
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
 
@@ -2951,7 +2951,7 @@ controls:
     address: 13074
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0x55: "Disabled"
       0xAA: "Enabled"
@@ -2971,7 +2971,7 @@ controls:
     max_value: "{{max_ac_output_power}}"
     step: 100
     mode: "box"  # Explicitly set to box for consistent UI display
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control"
 
   - type: "select"
@@ -2980,7 +2980,7 @@ controls:
     address: 13086
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0x55: "Disabled"
       0xAA: "Enabled"
@@ -2999,7 +2999,7 @@ controls:
     max_value: 1000
     step: 1
     mode: "box"  # Explicitly set to box for consistent UI display
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control"
     condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
     # Protocol V1.1.16: not supported on SH3.0-10RS, MG5-12RL, SH3-10RL
@@ -3010,7 +3010,7 @@ controls:
     address: 13088 # reg 13089
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0x55: "Disabled"
       0xAA: "Enabled"
@@ -3024,7 +3024,7 @@ controls:
     address: 31203 # reg 31204
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0x55: "Disabled"
       0xAA: "Enabled"
@@ -3044,7 +3044,7 @@ controls:
     min_value: 0
     max_value: 1000
     step: 1
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control"
     condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG7.5RL, MG8RL, MG10RL, MG12RL, SH3RL, SH3.6RL, SH4RL, SH5RL, SH6RL, SH8RL, SH10RL]"
     # Protocol V1.1.16: not supported on SH3.0-10RS, MG5-12RL, SH3-10RL
@@ -3061,7 +3061,7 @@ controls:
     min_value: 0
     max_value: 1000
     step: 1
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control"
     condition: "selected_model in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
     # Confirmed functional at this address on SH10RS/SH6.0RS
@@ -3076,7 +3076,7 @@ controls:
     min_value: 0
     max_value: 100
     step: 1
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
 
@@ -3086,7 +3086,7 @@ controls:
     address: 13010
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     # Parameter Setting Table 4: Load ON/OFF mode
     options:
       0x55: "OFF"
@@ -3105,7 +3105,7 @@ controls:
     min_value: 0
     max_value: "{{max_charge_power}}"
     step: 0.01
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
     # Placeholder will be replaced with model-specific value from dynamic_config.valid_models
@@ -3123,7 +3123,7 @@ controls:
     min_value: 0
     max_value: "{{max_discharge_power}}"
     step: 0.01
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
     # Placeholder will be replaced with model-specific value from dynamic_config.valid_models
@@ -3142,7 +3142,7 @@ controls:
     max_value: "{{max_ac_output_power}}"
     step: 0.01
     mode: "box"  # Explicitly set to box for consistent UI display
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control"
     # Placeholder will be replaced with model-specific value from dynamic_config.valid_models
     # For SH10RT: 10000 W -> 10.0 kW
@@ -3161,7 +3161,7 @@ controls:
     device_class: "power"
     state_class: measurement
     scale: 10
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_battery_control"
     condition: "battery_enabled == true and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
     # Placeholder will be replaced with 50% of model-specific max_charge_power
@@ -3182,7 +3182,7 @@ controls:
     device_class: "power"
     state_class: measurement
     scale: 10
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_battery_control"
     condition: "battery_enabled == true and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS]"
     # Placeholder will be replaced with 50% of model-specific max_discharge_power
@@ -3195,7 +3195,7 @@ controls:
     address: 13016 # reg 13017 - Protocol V1.1.7 (Control register, not sensor)
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0x55: "Disabled"
       0xAA: "Enabled"
@@ -3211,7 +3211,7 @@ controls:
     condition: "selected_model in [SH5T, SH6T, SH8T, SH10T, SH12T, SH15T, SH20T, SH25T]"
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0x55: "Disabled"
       0xAA: "Limit PV"
@@ -3227,7 +3227,7 @@ controls:
     address: 33540
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       160: "Fast Charge"
       161: "PV Surplus"
@@ -3245,7 +3245,7 @@ controls:
     scale: 0.1
     precision: 0
     unit_of_measurement: "kWh"
-    scan_interval: 30
+    scan_group: medium
     mm_group: "EV_control"
     condition: "wallbox_connected == 'yes'"
 
@@ -3258,7 +3258,7 @@ controls:
     scale: 0.1
     precision: 0
     unit_of_measurement: "A"
-    scan_interval: 30
+    scan_group: medium
     mm_group: "EV_control"
     condition: "wallbox_connected == 'yes'"
 
@@ -3268,7 +3268,7 @@ controls:
     address: 33549
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       85: "PV Surplus with out Grid Power"
       170: "PV Surplus with Grid Power"

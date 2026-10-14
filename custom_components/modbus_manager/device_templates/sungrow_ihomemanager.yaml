@@ -81,7 +81,7 @@ sensors:
     address: 7999 # reg 8000
     input_type: input
     data_type: uint16
-    scan_interval: 3600
+    scan_group: slow
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
@@ -92,7 +92,7 @@ sensors:
     input_type: input
     data_type: string
     count: 2
-    scan_interval: 3600
+    scan_group: slow
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
@@ -103,7 +103,7 @@ sensors:
     input_type: input
     data_type: uint32
     swap: word
-    scan_interval: 3600
+    scan_group: slow
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
@@ -114,7 +114,7 @@ sensors:
     input_type: input
     data_type: uint16
     state_class: measurement
-    scan_interval: 300
+    scan_group: slow
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
@@ -124,7 +124,7 @@ sensors:
     input_type: input
     data_type: uint16
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
@@ -139,7 +139,7 @@ sensors:
     scale: 0.1
     unit_of_measurement: kW
     device_class: "power"
-    scan_interval: 300
+    scan_group: slow
     mm_group: "PV_system_capacity"
     entity_category: "diagnostic"
 
@@ -153,7 +153,7 @@ sensors:
     scale: 0.1
     unit_of_measurement: kWh
     device_class: "energy"
-    scan_interval: 300
+    scan_group: slow
     mm_group: "PV_system_capacity"
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
@@ -169,7 +169,7 @@ sensors:
     scale: 0.1
     unit_of_measurement: kW
     device_class: "power"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "PV_battery_limits"
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
@@ -183,7 +183,7 @@ sensors:
     scale: 0.1
     unit_of_measurement: kW
     device_class: "power"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "PV_battery_limits"
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
@@ -197,7 +197,7 @@ sensors:
     scale: 0.1
     unit_of_measurement: kW
     device_class: "power"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "PV_battery_limits"
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
@@ -211,7 +211,7 @@ sensors:
     scale: 0.1
     unit_of_measurement: kW
     device_class: "power"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "PV_battery_limits"
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
@@ -225,7 +225,7 @@ sensors:
     scale: 0.1
     unit_of_measurement: kW
     device_class: "power"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "PV_battery_limits"
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
@@ -243,7 +243,7 @@ sensors:
     unit_of_measurement: W
     device_class: "power"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_power"
 
   # Total Active Power of Grid Connection
@@ -259,7 +259,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 10
-    scan_interval: 10
+    scan_group: fast
     entity_category: "diagnostic"
 
   - name: Load Power
@@ -273,7 +273,7 @@ sensors:
     unit_of_measurement: W
     device_class: "power"
     state_class: measurement
-    scan_interval: 5
+    scan_group: fast
     mm_group: "PV_power"
 
   - name: Battery Power
@@ -287,7 +287,7 @@ sensors:
     unit_of_measurement: W
     device_class: "power"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_battery_power"
     condition: "battery_enabled == true"
 
@@ -301,7 +301,7 @@ sensors:
     unit_of_measurement: "%"
     device_class: "battery"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_battery_state"
     condition: "battery_enabled == true"
 
@@ -320,7 +320,7 @@ sensors:
     unit_of_measurement: kWh
     device_class: "energy"
     state_class: total_increasing
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_energy"
 
   # Export energy at the grid connection point
@@ -336,7 +336,7 @@ sensors:
     unit_of_measurement: kWh
     device_class: "energy"
     state_class: total_increasing
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_energy"
 
   # Application Software Version
@@ -346,7 +346,7 @@ sensors:
     input_type: input
     data_type: string
     count: 15
-    scan_interval: 3600
+    scan_group: slow
     mm_group: "PV_device_info"
     entity_category: "diagnostic"
     protocol_min_version: "1.0.1"
@@ -358,7 +358,7 @@ sensors:
     input_type: input
     data_type: uint16
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_charger"
     entity_category: "diagnostic"
     condition: "charger_enabled == true"
@@ -379,7 +379,7 @@ sensors:
     unit_of_measurement: W
     device_class: "power"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_charger"
     condition: "charger_enabled == true"
 
@@ -393,7 +393,7 @@ sensors:
     unit_of_measurement: W
     device_class: "power"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_charger"
     condition: "charger_enabled == true"
 
@@ -407,7 +407,7 @@ sensors:
     unit_of_measurement: W
     device_class: "power"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_charger"
     condition: "charger_enabled == true and charger_phases == 3"
 
@@ -421,7 +421,7 @@ sensors:
     unit_of_measurement: W
     device_class: "power"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_charger"
     condition: "charger_enabled == true and charger_phases == 3"
 
@@ -430,7 +430,7 @@ sensors:
     address: 8553 # reg 8554
     input_type: input
     data_type: uint16
-    scan_interval: 3600
+    scan_group: slow
     mm_group: "PV_meter_ihm"
     entity_category: "diagnostic"
     # Protocol table lists 0.1 V here; that matches the phase-voltage rows below.
@@ -455,7 +455,7 @@ sensors:
     unit_of_measurement: V
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     mm_group: "PV_meter_ihm"
 
   - name: Phase B Voltage
@@ -468,7 +468,7 @@ sensors:
     unit_of_measurement: V
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     mm_group: "PV_meter_ihm"
 
   - name: Phase C Voltage
@@ -481,7 +481,7 @@ sensors:
     unit_of_measurement: V
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     mm_group: "PV_meter_ihm"
 
   - name: Grid Frequency
@@ -494,7 +494,7 @@ sensors:
     unit_of_measurement: Hz
     device_class: "frequency"
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     mm_group: "PV_meter_ihm"
 
   # Note: This data is obtained through the GRID-CT sampling port of iHM
@@ -509,7 +509,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     entity_category: "diagnostic"
 
   - name: Meter Phase B Active Power Raw
@@ -523,7 +523,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     entity_category: "diagnostic"
 
   - name: Meter Phase C Active Power Raw
@@ -537,7 +537,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     entity_category: "diagnostic"
 
   # Grid Meter Channel 2 - Voltage and Frequency
@@ -552,7 +552,7 @@ sensors:
     unit_of_measurement: V
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
     protocol_min_version: "1.0.1"
@@ -567,7 +567,7 @@ sensors:
     unit_of_measurement: V
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
     protocol_min_version: "1.0.1"
@@ -582,7 +582,7 @@ sensors:
     unit_of_measurement: V
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
     protocol_min_version: "1.0.1"
@@ -597,7 +597,7 @@ sensors:
     unit_of_measurement: Hz
     device_class: "frequency"
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
     protocol_min_version: "1.0.1"
@@ -614,7 +614,7 @@ sensors:
     unit_of_measurement: W
     device_class: "power"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
     protocol_min_version: "1.0.1"
@@ -629,7 +629,7 @@ sensors:
     unit_of_measurement: W
     device_class: "power"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
     protocol_min_version: "1.0.1"
@@ -644,7 +644,7 @@ sensors:
     unit_of_measurement: W
     device_class: "power"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
     protocol_min_version: "1.0.1"
@@ -657,7 +657,7 @@ controls:
     address: 8023 # reg 8024
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0: "AI Mode"
       1: "Self-consumption"
@@ -672,7 +672,7 @@ controls:
     address: 8024 # reg 8025
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0xAA: "Charge"
       0xBB: "Discharge"
@@ -696,7 +696,7 @@ controls:
     max_value_from_register: "{PREFIX}_battery_charge_discharge_limit"
     step: 0.1
     mode: "box"
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control_ihm"
     condition: "battery_enabled == true"
 
@@ -706,7 +706,7 @@ controls:
     address: 8027 # reg 8028
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0x55: "Off"
       0xAA: "On"
@@ -729,7 +729,7 @@ controls:
     max_value_from_register: "{PREFIX}_total_nominal_active_power"
     step: 0.1
     mode: "box"
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control_ihm"
     protocol_min_version: "1.0.1"
     # Undocumented U32 in PDF gap 8029–8030. On V1.0.2 require enable 8028=On.
@@ -753,7 +753,7 @@ controls:
     max_value: 1000
     step: 1
     mode: "box"
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control_ihm"
     protocol_min_version: "1.0.1"
     # V1.0.1 PDF: S32. Enable 8028 does not exist until V1.0.2 — do not depends_on it.
@@ -779,7 +779,7 @@ controls:
     address: 8046 # reg 8047
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0xCF: "Power-on"
       0xCE: "Power-off"
@@ -791,7 +791,7 @@ controls:
     address: 8047 # reg 8048
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       160: "Fast charging"
       161: "ECO mode charging"
@@ -806,7 +806,7 @@ controls:
     address: 8047 # reg 8048
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       164: "Fast charging"
       165: "Eco & fast charging"
@@ -825,7 +825,7 @@ controls:
     write_value_off: 0x55
     on_value: 0xAA
     off_value: 0x55
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control_ihm"
     condition: "charger_enabled == true"
 
@@ -837,7 +837,7 @@ controls:
     address: 8049 # reg 8050
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0xAA: "Enable"
       0x55: "Disable"
@@ -858,7 +858,7 @@ controls:
     write_value_off: 0x55
     on_value: 0xAA
     off_value: 0x55
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control_ihm"
 
   - type: "number"
@@ -874,7 +874,7 @@ controls:
     max_value: 100
     step: 1
     mode: "box"
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control_ihm"
     protocol_min_version: "1.0.1"
     depends_on_register:

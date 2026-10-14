@@ -67,6 +67,7 @@ def invalidate_template_cache() -> None:
 from .const import (
     CONF_MM_GROUP,
     CONF_READ_GROUP,
+    CONF_SCAN_GROUP,
     DEFAULT_MAX_REGISTER_READ,
     DEFAULT_MAX_VALUE,
     DEFAULT_MIN_VALUE,
@@ -78,6 +79,7 @@ from .const import (
 )
 from .device_utils import get_entity_mm_group
 from .logger import ModbusManagerLogger
+from .scan_groups import SCAN_GROUPS, annotate_register_scan_timing
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -159,6 +161,7 @@ OPTIONAL_FIELDS = {
     "data_type": "uint16",
     "count": 1,
     "scan_interval": DEFAULT_UPDATE_INTERVAL,
+    CONF_SCAN_GROUP: None,
     "precision": DEFAULT_PRECISION,
     "unit_of_measurement": "",
     "device_class": None,
@@ -1410,6 +1413,8 @@ def validate_and_process_register(
         # Set default values for optional fields (skip count - handled above)
         for field, default_value in OPTIONAL_FIELDS.items():
             if field not in processed_reg and field != "count":
+                if field == "scan_interval" and field not in reg:
+                    continue
                 processed_reg[field] = reg.get(field, default_value)
 
         # Zusätzliche Felder aus dem Template übernehmen
@@ -1419,6 +1424,7 @@ def validate_and_process_register(
 
         # Entity-Typ bestimmen
         processed_reg["entity_type"] = determine_entity_type(processed_reg)
+        annotate_register_scan_timing(processed_reg)
 
         # Validate register
         if not validate_register_data(processed_reg, template_name):
@@ -1507,7 +1513,13 @@ def validate_register_data(reg: Dict[str, Any], template_name: str) -> bool:
             _LOGGER.error("Invalid scale in Template %s: %s", template_name, scale)
             return False
 
-        # Validate scan interval
+        # Validate scan interval / scan_group
+        scan_group = reg.get(CONF_SCAN_GROUP)
+        if scan_group is not None and scan_group not in SCAN_GROUPS:
+            _LOGGER.error(
+                "Invalid scan_group in Template %s: %s", template_name, scan_group
+            )
+            return False
         scan_interval = reg.get("scan_interval")
         if not isinstance(scan_interval, int) or scan_interval < 0:
             _LOGGER.error(

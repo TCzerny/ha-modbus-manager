@@ -162,22 +162,22 @@ After you change a **select**, **number**, **switch**, or similar control:
 
 1. The integration **writes** the holding register (serialized with other Modbus IO).
 2. A **post-write settle** delay runs (hub setting or automatic LAN/WiNet default).
-3. The **written register is read back immediately** (does not wait for its normal `scan_interval`).
+3. The **written register is read back immediately** (does not wait for its normal poll group).
 4. Entities listening on that register update via coordinator listeners.
 
 **Typical UI update:** about **1–2 seconds** after a successful write.
 
-### Polling (`scan_interval`)
+### Polling (`scan_group`)
 
-SHx uses three groups (template v1.2.21):
+SHx uses three YAML groups. Hub seconds are set in Config Flow / Options → Connection (survive reload and updates; defaults below):
 
-| Seconds | Group | Typical entities |
-|---------|--------|------------------|
-| **10** | Live telemetry | Power, voltage, current, SoC, temperature, running state |
-| **30** | Settings / diagnostics | EMS, limits, MPP scan, master/slave, wallbox setpoints |
-| **600** | Totals / identity | Energy counters, serial, firmware, protocol |
+| `scan_group` | Default seconds | Typical entities |
+|--------------|-----------------|------------------|
+| **fast** | **10** | Power, voltage, current, SoC, temperature, running state |
+| **medium** | **30** | EMS, limits, MPP scan, master/slave, wallbox setpoints |
+| **slow** | **600** | Energy counters, serial, firmware, protocol |
 
-Raw and writable entities that share a holding register use the **same** group. A write still read-backs immediately (see above).
+The optimizer builds frames **inside** each group only. Raw and writable entities that share a holding register use the **same** group. A write still read-backs immediately (see above).
 
 **If it takes longer:** the inverter may not yet reflect the new value in the register (device-side delay). The state history shows when Home Assistant **read back** the new value, not necessarily the exact moment you clicked.
 

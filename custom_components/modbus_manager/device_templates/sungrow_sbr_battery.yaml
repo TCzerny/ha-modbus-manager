@@ -65,7 +65,7 @@ sensors:
     input_type: input
     data_type: string
     count: 10
-    scan_interval: 3600
+    scan_group: slow
     entity_category: diagnostic
     icon: "mdi:barcode"
     mm_group: "battery"
@@ -76,7 +76,7 @@ sensors:
     input_type: input
     data_type: string
     count: 10
-    scan_interval: 3600
+    scan_group: slow
     entity_category: diagnostic
     icon: "mdi:chip"
     mm_group: "battery"
@@ -91,7 +91,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     icon: "mdi:battery-outline"
     mm_group: "battery_voltage"
 
@@ -105,7 +105,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_current"
 
   - name: Battery 1 Temperature
@@ -118,7 +118,7 @@ sensors:
     unit_of_measurement: "°C"
     device_class: "temperature"
     state_class: measurement
-    scan_interval: 30
+    scan_group: medium
     mm_group: "battery_temperature"
 
   - name: Battery 1 SOC
@@ -131,7 +131,7 @@ sensors:
     unit_of_measurement: "%"
     device_class: "battery"
     state_class: measurement
-    scan_interval: 30
+    scan_group: medium
     mm_group: "battery_soc"
 
   - name: Battery 1 SOH
@@ -144,7 +144,7 @@ sensors:
     unit_of_measurement: "%"
     device_class: "battery"
     state_class: measurement
-    scan_interval: 60
+    scan_group: medium
     mm_group: "battery_soh"
 
   - name: Battery 1 Total Battery Charge
@@ -158,7 +158,7 @@ sensors:
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: total_increasing
-    scan_interval: 30
+    scan_group: medium
     mm_group: "battery"
 
   - name: Battery 1 Total Battery Discharge
@@ -172,7 +172,7 @@ sensors:
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: total_increasing
-    scan_interval: 30
+    scan_group: medium
     mm_group: "battery"
 
   # SBR detailed diagnostics (10756+): not exposed on WiNet-S — use direct inverter LAN (issue #77).
@@ -186,7 +186,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     icon: "mdi:battery-plus-variant"
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
@@ -198,7 +198,7 @@ sensors:
     data_type: uint16
     scale: 1
     precision: 0
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -212,7 +212,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     icon: "mdi:battery-minus-variant"
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
@@ -224,7 +224,7 @@ sensors:
     data_type: uint16
     scale: 1
     precision: 0
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -238,7 +238,7 @@ sensors:
     unit_of_measurement: "°C"
     device_class: "temperature"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -249,7 +249,7 @@ sensors:
     data_type: uint16
     scale: 1
     precision: 0
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -263,7 +263,7 @@ sensors:
     unit_of_measurement: "°C"
     device_class: "temperature"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -274,7 +274,7 @@ sensors:
     data_type: uint16
     scale: 1
     precision: 0
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -289,7 +289,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -303,7 +303,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -317,7 +317,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -331,7 +331,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -345,7 +345,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -359,7 +359,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -373,7 +373,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -387,7 +387,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -401,7 +401,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -415,7 +415,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -429,7 +429,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -443,7 +443,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -457,7 +457,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -471,7 +471,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -485,7 +485,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -499,7 +499,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     mm_group: "battery_cells"
     condition: "connection_type != 'WINET'"
 
@@ -511,7 +511,7 @@ sensors:
     data_type: uint16
     scale: 1
     precision: 0
-    scan_interval: 120
+    scan_group: slow
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -522,7 +522,7 @@ sensors:
     data_type: uint16
     scale: 1
     precision: 0
-    scan_interval: 120
+    scan_group: slow
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -533,7 +533,7 @@ sensors:
     data_type: uint16
     scale: 1
     precision: 0
-    scan_interval: 120
+    scan_group: slow
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -544,7 +544,7 @@ sensors:
     data_type: uint16
     scale: 1
     precision: 0
-    scan_interval: 120
+    scan_group: slow
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -555,7 +555,7 @@ sensors:
     data_type: uint16
     scale: 1
     precision: 0
-    scan_interval: 120
+    scan_group: slow
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -566,7 +566,7 @@ sensors:
     data_type: uint16
     scale: 1
     precision: 0
-    scan_interval: 120
+    scan_group: slow
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -577,7 +577,7 @@ sensors:
     data_type: uint16
     scale: 1
     precision: 0
-    scan_interval: 120
+    scan_group: slow
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -588,7 +588,7 @@ sensors:
     data_type: uint16
     scale: 1
     precision: 0
-    scan_interval: 120
+    scan_group: slow
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -600,7 +600,7 @@ sensors:
     data_type: uint16
     scale: 1
     precision: 0
-    scan_interval: 120
+    scan_group: slow
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -611,7 +611,7 @@ sensors:
     input_type: input
     data_type: string
     count: 9
-    scan_interval: 600
+    scan_group: slow
     mm_group: "battery"
     condition: "modules >= 1 and connection_type != 'WINET'"
 
@@ -621,7 +621,7 @@ sensors:
     input_type: input
     data_type: string
     count: 9
-    scan_interval: 600
+    scan_group: slow
     mm_group: "battery"
     condition: "modules >= 2 and connection_type != 'WINET'"
 
@@ -631,7 +631,7 @@ sensors:
     input_type: input
     data_type: string
     count: 9
-    scan_interval: 600
+    scan_group: slow
     mm_group: "battery"
     condition: "modules >= 3 and connection_type != 'WINET'"
 
@@ -641,7 +641,7 @@ sensors:
     input_type: input
     data_type: string
     count: 9
-    scan_interval: 600
+    scan_group: slow
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -651,7 +651,7 @@ sensors:
     input_type: input
     data_type: string
     count: 9
-    scan_interval: 600
+    scan_group: slow
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -661,7 +661,7 @@ sensors:
     input_type: input
     data_type: string
     count: 9
-    scan_interval: 600
+    scan_group: slow
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -671,7 +671,7 @@ sensors:
     input_type: input
     data_type: string
     count: 9
-    scan_interval: 600
+    scan_group: slow
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 
@@ -681,7 +681,7 @@ sensors:
     input_type: input
     data_type: string
     count: 9
-    scan_interval: 600
+    scan_group: slow
     mm_group: "battery"
     condition: "connection_type != 'WINET'"
 

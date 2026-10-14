@@ -19,6 +19,9 @@ from .combined_specs import resolve_combination_type
 from .const import (
     CONF_ENTRY_TYPE,
     CONF_GENERIC_REGISTERS,
+    CONF_SCAN_GROUP_FAST,
+    CONF_SCAN_GROUP_MEDIUM,
+    CONF_SCAN_GROUP_SLOW,
     DEFAULT_DELAY,
     DEFAULT_MESSAGE_WAIT_MS,
     DEFAULT_PORT,
@@ -30,10 +33,15 @@ from .const import (
     ENTRY_TYPE_HUB,
     GENERIC_TEMPLATE_SENTINEL,
     MAX_POST_WRITE_SETTLE_MS,
+    MAX_SCAN_GROUP_SECONDS,
     MIN_DELAY,
     MIN_MESSAGE_WAIT_MS,
     MIN_POST_WRITE_SETTLE_MS,
+    MIN_SCAN_GROUP_SECONDS,
     MIN_TIMEOUT,
+    SCAN_GROUP_FAST,
+    SCAN_GROUP_MEDIUM,
+    SCAN_GROUP_SLOW,
     EntityIdStrategy,
 )
 from .device_utils import (
@@ -76,6 +84,7 @@ from .generic_device import (
 )
 from .hub_identify import IdentifyHit, async_identify_hub
 from .logger import ModbusManagerLogger
+from .scan_groups import persist_scan_groups, scan_group_seconds_from_config
 from .template_loader import (
     _evaluate_condition,
     get_template_by_name,
@@ -152,6 +161,27 @@ def _apply_post_write_settle_to_entry_data(
     hub = entry_data.get("hub")
     if isinstance(hub, dict):
         hub["post_write_settle_milliseconds"] = milliseconds
+
+
+def _scan_group_schema_fields(source: dict[str, Any] | None = None) -> dict[Any, Any]:
+    """Hub Fast / Medium / Slow poll intervals (seconds)."""
+    seconds = scan_group_seconds_from_config(source)
+    return {
+        vol.Optional(CONF_SCAN_GROUP_FAST, default=seconds[SCAN_GROUP_FAST]): vol.All(
+            vol.Coerce(int),
+            vol.Range(min=MIN_SCAN_GROUP_SECONDS, max=MAX_SCAN_GROUP_SECONDS),
+        ),
+        vol.Optional(
+            CONF_SCAN_GROUP_MEDIUM, default=seconds[SCAN_GROUP_MEDIUM]
+        ): vol.All(
+            vol.Coerce(int),
+            vol.Range(min=MIN_SCAN_GROUP_SECONDS, max=MAX_SCAN_GROUP_SECONDS),
+        ),
+        vol.Optional(CONF_SCAN_GROUP_SLOW, default=seconds[SCAN_GROUP_SLOW]): vol.All(
+            vol.Coerce(int),
+            vol.Range(min=MIN_SCAN_GROUP_SECONDS, max=MAX_SCAN_GROUP_SECONDS),
+        ),
+    }
 
 
 _TCP_RTU_MODBUS_TYPES = frozenset({"tcp", "rtuovertcp"})
@@ -1210,6 +1240,7 @@ class ModbusManagerConfigFlow(
             "template_version": "0.1.0",
             CONF_GENERIC_REGISTERS: rows,
         }
+        persist_scan_groups(config_data, user_input)
         config_data["devices"] = [
             self._normalize_device_record(
                 _apply_entry_data_fallbacks_to_device(device, config_data)
@@ -1287,6 +1318,7 @@ class ModbusManagerConfigFlow(
                             ),
                         }
                     )
+                    persist_scan_groups(stored, user_input)
                     self._connection_params = stored
                     try:
                         hit = await async_identify_hub(
@@ -1327,6 +1359,7 @@ class ModbusManagerConfigFlow(
                             )
                         ),
                     ): int,
+                    **_scan_group_schema_fields(stored),
                 }
             ),
             errors=errors,
@@ -1604,6 +1637,7 @@ class ModbusManagerConfigFlow(
                     )
                 ),
             )
+            persist_scan_groups(new_data, user_input)
             self.hass.config_entries.async_update_entry(config_entry, data=new_data)
             await self.hass.config_entries.async_reload(config_entry.entry_id)
             return self.async_create_entry(title="", data={})
@@ -1634,6 +1668,7 @@ class ModbusManagerConfigFlow(
                 ): int,
             }
         )
+        schema_fields.update(_scan_group_schema_fields(config_entry.data))
 
         return self.async_show_form(
             step_id="reconfigure",
@@ -1658,6 +1693,7 @@ class ModbusManagerConfigFlow(
 
             stored = dict(getattr(self, "_connection_params", {}) or {})
             stored.update(user_input)
+            persist_scan_groups(stored, user_input)
             self._connection_params = stored
 
             # Proceed to model selection or dynamic config
@@ -1720,6 +1756,7 @@ class ModbusManagerConfigFlow(
                         "post_write_settle_milliseconds",
                         default=default_settle,
                     ): int,
+                    **_scan_group_schema_fields(stored),
                     # vol.Optional(
                     #     CONF_TEST_ALLOW_SAME_ENDPOINT_NEW_HUB, default=False
                     # ): bool,
@@ -1967,6 +2004,7 @@ class ModbusManagerConfigFlow(
                     "post_write_settle_milliseconds",
                     default=DEFAULT_POST_WRITE_SETTLE_MS,
                 ): int,
+                **_scan_group_schema_fields(getattr(self, "_connection_params", {})),
                 # vol.Optional(
                 #     CONF_TEST_ALLOW_SAME_ENDPOINT_NEW_HUB, default=False
                 # ): bool,
@@ -3357,6 +3395,7 @@ class ModbusManagerConfigFlow(
                 "binary_sensors": template_binary_sensors,
                 "controls": template_controls,
             }
+            persist_scan_groups(config_data, user_input)
 
             # Add dynamic configuration parameters if available
             # Configuration values are already extracted from processed_data above
@@ -5208,6 +5247,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                         )
                     ),
                 )
+                persist_scan_groups(new_data, user_input)
                 new_data["host"] = new_host
                 new_data["port"] = new_port
                 if current_modbus in _TCP_RTU_MODBUS_TYPES:
@@ -5229,6 +5269,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     if new_data.get("modbus_type"):
                         hub_config["type"] = new_data["modbus_type"]
                     new_data["hub"] = hub_config
+                persist_scan_groups(new_data, user_input)
 
                 endpoint_changed = (new_host, new_port) != (
                     current_host,
@@ -5251,7 +5292,15 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     new_host,
                     new_port,
                 )
-                update_kwargs: dict[str, Any] = {"data": new_data}
+                scan_options = {
+                    CONF_SCAN_GROUP_FAST: new_data[CONF_SCAN_GROUP_FAST],
+                    CONF_SCAN_GROUP_MEDIUM: new_data[CONF_SCAN_GROUP_MEDIUM],
+                    CONF_SCAN_GROUP_SLOW: new_data[CONF_SCAN_GROUP_SLOW],
+                }
+                update_kwargs: dict[str, Any] = {
+                    "data": new_data,
+                    "options": {**dict(self.config_entry.options), **scan_options},
+                }
                 if entry_title is not None:
                     update_kwargs["title"] = entry_title
                 self.hass.config_entries.async_update_entry(
@@ -5264,7 +5313,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     await reload_dependent_combined_entries(
                         self.hass, self.config_entry.entry_id
                     )
-                return self.async_create_entry(title="", data={})
+                return self.async_create_entry(title="", data=scan_options)
 
         schema_fields: dict[Any, Any] = {}
         if current_modbus in _TCP_RTU_MODBUS_TYPES:
@@ -5295,6 +5344,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 ): int,
             }
         )
+        schema_fields.update(_scan_group_schema_fields(self.config_entry.data))
 
         return self.async_show_form(
             step_id="connection",

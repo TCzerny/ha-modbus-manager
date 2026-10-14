@@ -47,7 +47,7 @@ sensors:
     address: 21223
     input_type: input
     data_type: uint16
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:ev-station"
@@ -61,7 +61,7 @@ sensors:
     address: 21224
     input_type: input
     data_type: uint16
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:sine-wave"
@@ -73,7 +73,7 @@ sensors:
     data_type: uint16
     unit_of_measurement: "V"
     device_class: "voltage"
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     icon: "mdi:lightning-bolt"
 
@@ -82,7 +82,7 @@ sensors:
     address: 21269
     input_type: input
     data_type: uint16
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_settings"
     icon: "mdi:sine-wave"
     map:
@@ -98,7 +98,7 @@ sensors:
     scale: 1
     unit_of_measurement: "W"
     device_class: "power"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
 
@@ -111,7 +111,7 @@ sensors:
     scale: 1
     unit_of_measurement: "W"
     device_class: "power"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
 
@@ -126,7 +126,7 @@ sensors:
     unit_of_measurement: "Wh"
     state_class: "total_increasing"
     device_class: "energy"
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_energy"
     icon: "mdi:meter-electric"
 
@@ -139,7 +139,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_charging_measurement"
     icon: "mdi:lightning-bolt"
 
@@ -152,7 +152,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_charging_measurement"
     icon: "mdi:current-dc"
 
@@ -165,7 +165,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_charging_measurement"
     icon: "mdi:lightning-bolt"
 
@@ -178,7 +178,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_charging_measurement"
     icon: "mdi:current-dc"
 
@@ -191,7 +191,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_charging_measurement"
     icon: "mdi:lightning-bolt"
 
@@ -204,7 +204,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_charging_measurement"
     icon: "mdi:current-dc"
 
@@ -217,7 +217,7 @@ sensors:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
 
@@ -230,7 +230,7 @@ sensors:
     scale: 1
     unit_of_measurement: "Wh"
     state_class: "measurement"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_charging_status"
     icon: "mdi:meter-electric"
 
@@ -239,7 +239,7 @@ sensors:
     address: 21316
     input_type: input
     data_type: uint16
-    scan_interval: 10
+    scan_group: fast
     mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
     map:
@@ -259,7 +259,7 @@ sensors:
     input_type: input
     data_type: uint32
     swap: word
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_charging_status"
     entity_category: "diagnostic"
     icon: "mdi:clock-start"
@@ -270,7 +270,7 @@ sensors:
     input_type: input
     data_type: uint32
     swap: word
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_charging_status"
     entity_category: "diagnostic"
     icon: "mdi:clock-end"
@@ -280,7 +280,7 @@ sensors:
     address: 21313
     input_type: input
     data_type: uint16
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_settings"
     entity_category: "diagnostic"
     icon: "mdi:play-circle"
@@ -295,7 +295,7 @@ sensors:
     address: 21211
     input_type: holding
     data_type: uint16
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_charging_status"
     entity_category: "diagnostic"
     icon: "mdi:remote"
@@ -314,7 +314,7 @@ controls:
     min_value: "{{min_current}}"
     max_value: "{{max_current}}"
     step: 0.1
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_current_setting"
     icon: "mdi:gauge"
 
@@ -324,7 +324,7 @@ controls:
     address: 21203
     input_type: holding
     data_type: uint16
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_settings"
     options:
       0: "Three phase"
@@ -340,7 +340,7 @@ controls:
     write_value_off: 0
     on_value: 1
     off_value: 0
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_settings"
 
   - type: "number"
@@ -355,7 +355,7 @@ controls:
     min_value: 1
     max_value: 500
     step: 0.1
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_settings"
     icon: "mdi:car-cruise-control"
 
@@ -365,7 +365,7 @@ controls:
     address: 21262
     input_type: holding
     data_type: uint16
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_settings"
     options:
       0: "Network"
@@ -379,7 +379,7 @@ controls:
     input_type: holding
     data_type: uint16
     button_press_value: 0
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_charging_control"
     icon: "mdi:play"
 
@@ -390,7 +390,7 @@ controls:
     input_type: holding
     data_type: uint16
     button_press_value: 1
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_charging_control"
     icon: "mdi:stop"
 

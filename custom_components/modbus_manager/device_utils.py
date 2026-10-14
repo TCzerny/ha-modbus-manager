@@ -1178,6 +1178,9 @@ def create_base_extra_state_attributes(
     scan_interval_value = scan_interval or register_config.get("scan_interval")
     if scan_interval_value is not None:
         base_attributes["scan_interval"] = scan_interval_value
+    scan_group_value = register_config.get("scan_group")
+    if scan_group_value:
+        base_attributes["scan_group"] = scan_group_value
     if register_config.get("swap") is not None:
         base_attributes["swap"] = register_config.get("swap")
 

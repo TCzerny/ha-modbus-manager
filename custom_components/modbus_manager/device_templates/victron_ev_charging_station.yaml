@@ -45,7 +45,7 @@ sensors:
     input_type: "holding"
     data_type: "uint16"
     precision: 0
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     icon: "mdi:identifier"
     entity_category: "diagnostic"
@@ -57,7 +57,7 @@ sensors:
     data_type: "string"
     count: 6
     byte_order: "little"
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     icon: "mdi:barcode"
     entity_category: "diagnostic"
@@ -69,7 +69,7 @@ sensors:
     data_type: "uint32"
     count: 2
     precision: 0
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
@@ -81,7 +81,7 @@ sensors:
     data_type: "string"
     count: 22
     byte_order: "little"
-    scan_interval: 600
+    scan_group: slow
     mm_group: "EV_device_info"
     icon: "mdi:rename-outline"
     entity_category: "diagnostic"
@@ -92,7 +92,7 @@ sensors:
     address: 5127
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 60
+    scan_group: medium
     scale: 0.1
     mm_group: "EV_device_status"
     icon: "mdi:thermometer"
@@ -109,7 +109,7 @@ sensors:
     input_type: "holding"
     data_type: "uint16"
     precision: 0
-    scan_interval: 60
+    scan_group: medium
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -124,7 +124,7 @@ sensors:
     data_type: "uint32"
     count: 2
     precision: 0
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "s"
     device_class: "duration"
     state_class: "total"
@@ -139,7 +139,7 @@ sensors:
     data_type: "uint32"
     count: 2
     precision: 0
-    scan_interval: 10
+    scan_group: fast
     scale: 0.01
     unit_of_measurement: "kWh"
     device_class: "energy"
@@ -153,7 +153,7 @@ sensors:
     input_type: "holding"
     data_type: "uint16"
     precision: 0
-    scan_interval: 60
+    scan_group: medium
     state_class: "total_increasing"
     mm_group: "EV_device_status"
     icon: "mdi:history"
@@ -164,7 +164,7 @@ sensors:
     address: 5114
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_device_status"
     icon: "mdi:clipboard-text-clock"
     map:
@@ -188,7 +188,7 @@ sensors:
     input_type: "holding"
     data_type: "uint16"
     precision: 0
-    scan_interval: 5
+    scan_group: fast
     mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
     entity_category: "diagnostic"
@@ -198,7 +198,7 @@ sensors:
     address: 5015
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 5
+    scan_group: fast
     mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
     map:
@@ -230,7 +230,7 @@ sensors:
     input_type: "holding"
     data_type: "uint16"
     precision: 0
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -244,7 +244,7 @@ sensors:
     input_type: "holding"
     data_type: "uint16"
     precision: 0
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -258,7 +258,7 @@ sensors:
     input_type: "holding"
     data_type: "uint16"
     precision: 0
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -272,7 +272,7 @@ sensors:
     input_type: "holding"
     data_type: "uint16"
     precision: 0
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -284,7 +284,7 @@ sensors:
     address: 5018
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 10
+    scan_group: fast
     scale: 0.1
     unit_of_measurement: "A"
     device_class: "current"
@@ -299,7 +299,7 @@ sensors:
     data_type: "uint32"
     count: 2
     precision: 0
-    scan_interval: 10
+    scan_group: fast
     unit_of_measurement: "s"
     device_class: "duration"
     state_class: "total"
@@ -312,7 +312,7 @@ sensors:
     input_type: "holding"
     data_type: "uint16"
     precision: 2
-    scan_interval: 10
+    scan_group: fast
     scale: 0.01
     unit_of_measurement: "kWh"
     device_class: "energy"
@@ -327,7 +327,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     precision: 0
-    scan_interval: 5
+    scan_group: fast
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -343,7 +343,7 @@ controls:
     address: 5010
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 5
+    scan_group: fast
     mm_group: "EV_controls"
     icon: "mdi:electric-switch"
     type: "switch"
@@ -356,7 +356,7 @@ controls:
     address: 5049
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 5
+    scan_group: fast
     mm_group: "EV_controls"
     icon: "mdi:arrow-decision-auto"
     type: "switch"
@@ -369,7 +369,7 @@ controls:
     address: 5050
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_controls"
     icon: "mdi:gesture-tap-button"
     type: "switch"
@@ -385,7 +385,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     precision: 0
-    scan_interval: 60
+    scan_group: medium
     unit_of_measurement: "%"
     mm_group: "EV_controls"
     icon: "mdi:brightness-percent"
@@ -402,7 +402,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     precision: 0
-    scan_interval: 60
+    scan_group: medium
     unit_of_measurement: "%"
     mm_group: "EV_controls"
     icon: "mdi:brightness-percent"
@@ -419,7 +419,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     precision: 0
-    scan_interval: 60
+    scan_group: medium
     unit_of_measurement: "s"
     mm_group: "EV_controls"
     icon: "mdi:timer-sand-complete"
@@ -435,7 +435,7 @@ controls:
     address: 5009
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_controls"
     icon: "mdi:arrow-decision"
     type: "select"
@@ -451,7 +451,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     precision: 0
-    scan_interval: 60
+    scan_group: medium
     unit_of_measurement: "%"
     mm_group: "EV_controls"
     icon: "mdi:brightness-percent"
@@ -467,7 +467,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     precision: 0
-    scan_interval: 60
+    scan_group: medium
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -484,7 +484,7 @@ controls:
     address: 5063
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 60
+    scan_group: medium
     state_class: "measurement"
     mm_group: "EV_controls"
     icon: "mdi:gauge-empty"

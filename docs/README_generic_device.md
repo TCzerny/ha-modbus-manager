@@ -48,7 +48,7 @@ Open the hub → **Configure**. Form radios (add / edit / remove / save, entity 
 | `address` | YAML address (e.g. SHx reactive power **5032**) |
 | `input_type` | `holding` or `input` only |
 | `data_type` | Extra fields (encoding, word swap, count) appear only when they apply |
-| `scan_interval` | Seconds |
+| `scan_group` | Fast / Medium / Slow (hub seconds in Connection options) |
 | `entity_category` | none / diagnostic / config |
 | `icon`, `mm_group` | Optional |
 | `translation_key` | Optional. See [Localization](#localization-translation_key) |

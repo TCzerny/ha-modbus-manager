@@ -13,13 +13,15 @@ from homeassistant.components.http.auth import async_sign_path
 
 from .const import (
     CONF_GENERIC_REGISTERS,
+    CONF_SCAN_GROUP,
     DEFAULT_PRECISION,
-    DEFAULT_UPDATE_INTERVAL,
+    DEFAULT_SCAN_GROUP_SECONDS,
     GENERIC_EXPORT_API_PATH,
     GENERIC_EXPORT_LINK_VALID,
     GENERIC_TEMPLATE_SENTINEL,
 )
 from .modbus_utils import is_valid_modbus_address, reject_hex_encoding_for_control
+from .scan_groups import annotate_register_scan_timing, normalize_scan_group
 
 _UNIQUE_ID_RE = re.compile(r"^[a-z][a-z0-9_]*$")
 
@@ -94,6 +96,10 @@ GENERIC_BYTE_ORDER_LABELS = {
 GENERIC_SWAP_LABELS = {
     "en": {"none": "none", "word": "word"},
     "de": {"none": "keine", "word": "Wort"},
+}
+GENERIC_SCAN_GROUP_LABELS = {
+    "en": {"fast": "Fast", "medium": "Medium", "slow": "Slow"},
+    "de": {"fast": "Schnell", "medium": "Mittel", "slow": "Langsam"},
 }
 
 
@@ -328,7 +334,10 @@ def normalize_generic_register(row: dict[str, Any]) -> dict[str, Any]:
     if count < 1:
         raise GenericRegisterError("count must be >= 1")
 
-    scan_interval = _optional_int(row.get("scan_interval")) or DEFAULT_UPDATE_INTERVAL
+    scan_group = normalize_scan_group(row)
+    scan_interval = _optional_int(row.get("scan_interval"))
+    if scan_interval is None:
+        scan_interval = int(DEFAULT_SCAN_GROUP_SECONDS[scan_group])
     if scan_interval < 1:
         raise GenericRegisterError("scan_interval must be >= 1")
 
@@ -361,6 +370,7 @@ def normalize_generic_register(row: dict[str, Any]) -> dict[str, Any]:
         "data_type": data_type,
         "count": count,
         "scan_interval": scan_interval,
+        CONF_SCAN_GROUP: scan_group,
         "scale": scale,
         "offset": offset,
         "precision": precision,
@@ -398,6 +408,7 @@ def normalize_generic_register(row: dict[str, Any]) -> dict[str, Any]:
         normalized["read_function_code"] = read_fc
     if write_fc is not None:
         normalized["write_function_code"] = write_fc
+    annotate_register_scan_timing(normalized)
 
     if entity_type == "number":
         min_value = _optional_float(row.get("min_value"))
@@ -526,6 +537,7 @@ _ROW_KEY_ORDER = (
     "unit_of_measurement",
     "device_class",
     "state_class",
+    "scan_group",
     "scan_interval",
     "swap",
     "byte_order",
@@ -836,8 +848,9 @@ def generic_entity_core_schema(
             ),
             vol.Required("data_type", default=data_type): vol.In(data_types),
             vol.Optional(
-                "scan_interval", default=int(d.get("scan_interval") or 10)
-            ): int,
+                "scan_group",
+                default=normalize_scan_group(d),
+            ): vol.In(_ui_catalog(GENERIC_SCAN_GROUP_LABELS, hass)),
             vol.Optional("entity_category", default=category): vol.In(
                 _ui_catalog(GENERIC_ENTITY_CATEGORY_LABELS, hass)
             ),

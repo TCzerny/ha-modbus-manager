@@ -96,7 +96,7 @@ sensors:
     address: 3000
     input_type: input
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
     map:
       0: "Standby"
       1: "Normal"
@@ -110,7 +110,7 @@ sensors:
     address: 3000
     input_type: input
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
     shift_bits: 8
     bits: 8
     map:
@@ -137,7 +137,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     icon: "mdi:solar-power"
 
   - name: PV1 voltage
@@ -151,7 +151,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: PV1 current
     unique_id: pv1_current
@@ -164,7 +164,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: PV1 power
     unique_id: pv1_power
@@ -179,7 +179,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: PV2 voltage
     unique_id: pv2_voltage
@@ -192,7 +192,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: PV2 current
     unique_id: pv2_current
@@ -205,7 +205,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: PV2 power
     unique_id: pv2_power
@@ -220,7 +220,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   # Grid Data
   - name: Output power
@@ -236,7 +236,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 0.1
-    scan_interval: 5
+    scan_group: fast
 
   - name: Grid frequency
     unique_id: grid_frequency
@@ -249,7 +249,7 @@ sensors:
     device_class: "frequency"
     state_class: measurement
     scale: 0.01
-    scan_interval: 10
+    scan_group: fast
 
   - name: Grid voltage
     unique_id: grid_voltage
@@ -262,7 +262,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Grid output current
     unique_id: grid_output_current
@@ -275,7 +275,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Grid output apparent power
     unique_id: grid_output_apparent_power
@@ -290,7 +290,7 @@ sensors:
     device_class: "apparent_power"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   # Three Phase Grid Data (will be filtered based on phases)
   - name: Three phase grid voltage (2)
@@ -304,7 +304,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "phases == 3"
 
   - name: Three phase grid output current (2)
@@ -318,7 +318,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "phases == 3"
 
   - name: Three phase grid output power (2)
@@ -334,7 +334,7 @@ sensors:
     device_class: "apparent_power"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "phases == 3"
 
   - name: Three phase grid voltage (3)
@@ -348,7 +348,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "phases == 3"
 
   - name: Three phase grid output current (3)
@@ -362,7 +362,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "phases == 3"
 
   - name: Three phase grid output power (3)
@@ -378,7 +378,7 @@ sensors:
     device_class: "apparent_power"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "phases == 3"
 
   # Three Phase Line-to-Line Voltages
@@ -393,7 +393,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "phases == 3"
 
   - name: Three phase grid voltage ST
@@ -407,7 +407,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "phases == 3"
 
   - name: Three phase grid voltage TR
@@ -421,7 +421,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "phases == 3"
 
   # Energy Data
@@ -438,7 +438,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Total reverse power
     unique_id: total_reverse_power
@@ -453,7 +453,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Total load power
     unique_id: total_load_power
@@ -468,7 +468,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Work time total
     unique_id: work_time_total
@@ -483,7 +483,7 @@ sensors:
     device_class: "duration"
     state_class: total_increasing
     scale: 0.5
-    scan_interval: 300
+    scan_group: slow
     never_resets: true
 
   - name: Today generate energy
@@ -499,7 +499,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 60
+    scan_group: medium
 
   - name: Total generate energy
     unique_id: total_generation_energy
@@ -514,7 +514,7 @@ sensors:
     device_class: "energy"
     state_class: total
     scale: 0.1
-    scan_interval: 300
+    scan_group: slow
     never_resets: true
 
   - name: PV Energy total
@@ -530,7 +530,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 300
+    scan_group: slow
     never_resets: true
 
   - name: PV1 Energy today
@@ -546,7 +546,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 60
+    scan_group: medium
 
   - name: PV1 Energy total
     unique_id: pv1_energy_total
@@ -561,7 +561,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 300
+    scan_group: slow
     never_resets: true
 
   - name: PV2 Energy today
@@ -577,7 +577,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 60
+    scan_group: medium
 
   - name: PV2 Energy total
     unique_id: pv2_energy_total
@@ -592,7 +592,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 300
+    scan_group: slow
     never_resets: true
 
   - name: Today energy to user
@@ -608,7 +608,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 60
+    scan_group: medium
     icon: "mdi:transmission-tower-import"
 
   - name: Total energy to user
@@ -624,7 +624,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 300
+    scan_group: slow
     never_resets: true
     icon: "mdi:transmission-tower-import"
 
@@ -641,7 +641,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 60
+    scan_group: medium
     icon: "mdi:transmission-tower-export"
 
   - name: Total energy to grid
@@ -657,7 +657,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 300
+    scan_group: slow
     never_resets: true
     icon: "mdi:transmission-tower-export"
 
@@ -674,7 +674,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 60
+    scan_group: medium
     icon: "mdi:solar-power-variant"
 
   - name: Total energy of user load
@@ -690,7 +690,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 300
+    scan_group: slow
     never_resets: true
     icon: "mdi:solar-power-variant"
 
@@ -701,7 +701,7 @@ sensors:
     address: 3086
     input_type: input
     data_type: uint16
-    scan_interval: 60
+    scan_group: medium
     map:
       0: "cNOTDerate"
       1: "cPVHighDerate"
@@ -733,7 +733,7 @@ sensors:
     device_class: "temperature"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: IPM Inverter temperature
     unique_id: ipm_temperature
@@ -746,7 +746,7 @@ sensors:
     device_class: "temperature"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Boost temperature
     unique_id: boost_temperature
@@ -759,7 +759,7 @@ sensors:
     device_class: "temperature"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Communications board temperature
     unique_id: comm_board_temperature
@@ -772,7 +772,7 @@ sensors:
     device_class: "temperature"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   # Bus Voltages
   - name: P Bus inside voltage
@@ -786,7 +786,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: N Bus inside voltage
     unique_id: n_bus_voltage
@@ -799,7 +799,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   # Power Factor and Status
   - name: Inverter output Power Factor
@@ -812,7 +812,7 @@ sensors:
     device_class: "power_factor"
     state_class: measurement
     scale: 0.001
-    scan_interval: 10
+    scan_group: fast
 
   - name: Real output power percent
     unique_id: real_output_power_percent
@@ -824,7 +824,7 @@ sensors:
     unit_of_measurement: "%"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Output Maxpower Limited
     unique_id: output_maxpower_limited
@@ -839,7 +839,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Inverter standby flag
     unique_id: standby_flag
@@ -847,7 +847,7 @@ sensors:
     address: 3104
     input_type: input
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
 
   - name: Fault code
     unique_id: fault_code
@@ -855,7 +855,7 @@ sensors:
     address: 3105
     input_type: input
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
 
   - name: Warning code
     unique_id: warning_code
@@ -863,7 +863,7 @@ sensors:
     address: 3106
     input_type: input
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
 
   # Battery Data (will be filtered based on battery_config)
   - name: Today discharge energy
@@ -879,7 +879,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 60
+    scan_group: medium
     icon: "mdi:battery-negative"
     condition: "battery_config != 'none'"
 
@@ -896,7 +896,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 300
+    scan_group: slow
     never_resets: true
     icon: "mdi:battery-negative"
     condition: "battery_config != 'none'"
@@ -914,7 +914,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 60
+    scan_group: medium
     icon: "mdi:battery-positive"
     condition: "battery_config != 'none'"
 
@@ -931,7 +931,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 300
+    scan_group: slow
     never_resets: true
     icon: "mdi:battery-positive"
     condition: "battery_config != 'none'"
@@ -942,7 +942,7 @@ sensors:
     address: 3144
     input_type: input
     data_type: uint16
-    scan_interval: 60
+    scan_group: medium
     map:
       0: "LoadFirst"
       1: "BatteryFirst"
@@ -955,7 +955,7 @@ sensors:
     address: 3167
     input_type: input
     data_type: uint16
-    scan_interval: 60
+    scan_group: medium
     condition: "battery_config != 'none'"
 
   - name: Storage Warning code
@@ -964,7 +964,7 @@ sensors:
     address: 3168
     input_type: input
     data_type: uint16
-    scan_interval: 60
+    scan_group: medium
     condition: "battery_config != 'none'"
 
   - name: Battery voltage
@@ -978,7 +978,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.01
-    scan_interval: 10
+    scan_group: fast
     condition: "battery_config != 'none'"
 
   - name: Battery current
@@ -992,7 +992,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "battery_config != 'none'"
 
   - name: Battery SoC
@@ -1006,7 +1006,7 @@ sensors:
     device_class: "battery"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     condition: "battery_config != 'none'"
 
   - name: Discharge power
@@ -1022,7 +1022,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "battery_config != 'none'"
 
   - name: Charge power
@@ -1038,7 +1038,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "battery_config != 'none'"
 
 # Controls for write access (Holding Registers)
@@ -1049,7 +1049,7 @@ controls:
     address: 0
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0: "Off"
       1: "On"
@@ -1063,7 +1063,7 @@ controls:
     input_type: "holding"
     data_type: "string"
     count: 3
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_device_info"
 
   - type: "text"
@@ -1073,7 +1073,7 @@ controls:
     input_type: "holding"
     data_type: "string"
     count: 3
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_device_info"
 
   - type: "text"
@@ -1083,7 +1083,7 @@ controls:
     input_type: "holding"
     data_type: "string"
     count: 14
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_device_info"
 
   - type: "number"
@@ -1097,7 +1097,7 @@ controls:
     min_value: 0
     max_value: 100
     step: 1
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control"
 
   - type: "number"
@@ -1109,7 +1109,7 @@ controls:
     min_value: 1
     max_value: 255
     step: 1
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control"
     condition: "battery_config != 'none'"
 
@@ -1123,7 +1123,7 @@ controls:
     min_value: 1
     max_value: 100
     step: 1
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control"
     condition: "battery_config != 'none'"
 
@@ -1136,7 +1136,7 @@ controls:
     min_value: 1
     max_value: 100
     step: 1
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control"
     condition: "battery_config != 'none'"
 
@@ -1150,7 +1150,7 @@ controls:
     min_value: 1
     max_value: 100
     step: 1
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control"
     condition: "battery_config != 'none'"
 
@@ -1160,7 +1160,7 @@ controls:
     address: 3049
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0: "Off"
       1: "On"
@@ -1173,7 +1173,7 @@ controls:
     address: 15
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 300
+    scan_group: slow
     options:
       0: "Italian"
       1: "English"
@@ -1195,7 +1195,7 @@ controls:
     min_value: 1
     max_value: 254
     step: 1
-    scan_interval: 300
+    scan_group: slow
     mm_group: "PV_control"
 
 # Calculated Sensors

@@ -111,7 +111,7 @@ sensors:
     input_type: input
     data_type: uint32
     swap: word
-    scan_interval: 3600
+    scan_group: slow
     entity_category: "diagnostic"
 
   - name: Protocol version raw
@@ -121,7 +121,7 @@ sensors:
     input_type: input
     data_type: uint32
     swap: word
-    scan_interval: 3600
+    scan_group: slow
     entity_category: "diagnostic"
     # Format: 0x01015300 = V1.1.53 (Major.Minor.Patch.Build); Logger forwarding not supported
 
@@ -132,7 +132,7 @@ sensors:
     input_type: input
     data_type: string
     count: 15
-    scan_interval: 3600
+    scan_group: slow
     icon: "mdi:certificate"
     entity_category: "diagnostic"
     # Certified version after finalizing electrical, safety regulations, and standards
@@ -144,7 +144,7 @@ sensors:
     input_type: input
     data_type: string
     count: 15
-    scan_interval: 3600
+    scan_group: slow
     icon: "mdi:certificate"
     entity_category: "diagnostic"
 
@@ -155,7 +155,7 @@ sensors:
     input_type: input
     data_type: string
     count: 10
-    scan_interval: 600
+    scan_group: slow
 
   - name: Sungrow device type code
     unique_id: sungrow_device_type_code
@@ -163,7 +163,7 @@ sensors:
     address: 4999 # reg 5000
     input_type: input
     data_type: uint16
-    scan_interval: 600
+    scan_group: slow
     map:
       # SG Series Device Type Codes (from Communication Protocol V1.1.53)
       0x27: "SG30KTL"
@@ -287,7 +287,7 @@ sensors:
     address: 5001 # reg 5002
     input_type: input
     data_type: uint16
-    scan_interval: 600
+    scan_group: slow
     map:
       0: "Two phase"
       1: "3P4L"
@@ -303,7 +303,7 @@ sensors:
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"
-    scan_interval: 60
+    scan_group: medium
     icon: "mdi:solar-power"
 
   - name: Total PV generation
@@ -316,7 +316,7 @@ sensors:
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total"
-    scan_interval: 300
+    scan_group: slow
     icon: "mdi:solar-power"
 
   - name: Total running time
@@ -329,7 +329,7 @@ sensors:
     unit_of_measurement: "h"
     device_class: "duration"
     state_class: "total_increasing"
-    scan_interval: 300
+    scan_group: slow
     icon: "mdi:clock"
 
   - name: Inverter temperature
@@ -343,7 +343,7 @@ sensors:
     device_class: "temperature"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Total apparent power
     unique_id: total_apparent_power
@@ -355,7 +355,7 @@ sensors:
     unit_of_measurement: "VA"
     device_class: "apparent_power"
     state_class: measurement
-    scan_interval: 5
+    scan_group: fast
     icon: "mdi:flash"
     condition: "selected_model in [SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT, SG7.0RT, SG8.0RT, SG10RT, SG12RT, SG15RT, SG20RT, SG10KTL, SG12KTL, SG15KTL, SG20KTL, SG30KTL, SG36KTL, SG40KTL, SG60KTL, SG80KTL, SG30KTL-M, SG40KTL-M, SG50KTL-M, SG60KTL-M, SG30CX, SG33CX, SG40CX, SG50CX, SG75CX, SG100CX, SG110CX, SG250HX, SG320HX, SG350HX]"
 
@@ -371,7 +371,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: MPPT1 current
     unique_id: mppt1_current
@@ -384,7 +384,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: MPPT2 voltage
     unique_id: mppt2_voltage
@@ -397,7 +397,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 2"
 
   - name: MPPT2 current
@@ -411,7 +411,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 2"
 
   - name: MPPT3 voltage
@@ -425,7 +425,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 3"
 
   - name: MPPT3 current
@@ -439,7 +439,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 3"
 
   - name: Total DC power
@@ -454,7 +454,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_total_dc_power"
 
   # Phase Data (will be filtered based on phases)
@@ -468,7 +468,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Phase B voltage
     unique_id: phase_b_voltage
@@ -480,7 +480,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "phases >= 2"
 
   - name: Phase C voltage
@@ -493,7 +493,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "phases >= 2"
 
   - name: Phase A current
@@ -506,7 +506,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Phase B current
     unique_id: phase_b_current
@@ -518,7 +518,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "phases >= 2"
 
   - name: Phase C current
@@ -531,7 +531,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "phases >= 2"
 
   - name: Total active power
@@ -545,7 +545,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 5
+    scan_group: fast
 
   - name: Reactive power
     unique_id: reactive_power
@@ -559,7 +559,7 @@ sensors:
     state_class: measurement
     scale: 1
     offset: 0
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_power_measurement"
 
   - name: "Power Factor raw"
@@ -572,7 +572,7 @@ sensors:
     device_class: "power_factor"
     state_class: measurement
     scale: 0.001
-    scan_interval: 10
+    scan_group: fast
 
   - name: Grid frequency
     unique_id: grid_frequency
@@ -585,7 +585,7 @@ sensors:
     device_class: "frequency"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_grid_status"
 
   - name: Work state
@@ -593,7 +593,7 @@ sensors:
     address: 5037 # reg 5038
     input_type: input
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
     map:
       0x0: "Run"
       0x8000: "Stop"
@@ -627,7 +627,7 @@ sensors:
     data_type: uint32
     swap: word
     state_class: measurement
-    scan_interval: 10
+    scan_group: fast
     # Bit positions per Appendix 2; flags key = bit position
     flags:
       1: "Stop"
@@ -655,7 +655,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 5
+    scan_group: fast
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT, SG3.0RS, SG3.6RS, SG4.0RS, SG5.0RS, SG6.0RS, SG8.0RS, SG10RS]"
 
   - name: Meter Phase A power
@@ -668,7 +668,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 5
+    scan_group: fast
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT]"
 
   - name: Meter Phase B power
@@ -681,7 +681,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 5
+    scan_group: fast
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT]"
 
   - name: Meter Phase C power
@@ -694,7 +694,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 5
+    scan_group: fast
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT]"
 
 
@@ -711,7 +711,7 @@ sensors:
     device_class: power
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_load_power"
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT]"
 
@@ -725,7 +725,7 @@ sensors:
     device_class: "energy"
     state_class: "total_increasing"
     scale: 0.1
-    scan_interval: 60
+    scan_group: medium
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT]"
 
   - name: Total exported energy
@@ -738,7 +738,7 @@ sensors:
     device_class: "energy"
     state_class: "total"
     scale: 0.1
-    scan_interval: 300
+    scan_group: slow
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT, SG3.0RS, SG3.6RS, SG4.0RS, SG5.0RS, SG6.0RS, SG8.0RS, SG10RS]"
 
   - name: "Daily Imported Energy"
@@ -752,7 +752,7 @@ sensors:
     device_class: energy
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_energy_import"
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT]"
 
@@ -767,7 +767,7 @@ sensors:
     device_class: energy
     state_class: total
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_energy_import"
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT, SG3.0RS, SG3.6RS, SG4.0RS, SG5.0RS, SG6.0RS, SG8.0RS, SG10RS]"
 
@@ -782,7 +782,7 @@ sensors:
     device_class: energy
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_energy_consumption"
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT]"
 
@@ -797,7 +797,7 @@ sensors:
     device_class: energy
     state_class: total
     scale: 1
-    scan_interval: 600
+    scan_group: slow
     mm_group: "PV_energy_consumption"
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M, SG10RT]"
 
@@ -810,7 +810,7 @@ sensors:
     device_class: "duration"
     state_class: "total_increasing"
     scale: 1
-    scan_interval: 300
+    scan_group: slow
 
   # - name: Present country
   #   unique_id: present_country
@@ -831,7 +831,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_mppt"
     condition: "mppt_count >= 4"
 
@@ -846,7 +846,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_mppt"
     condition: "mppt_count >= 4"
 
@@ -861,7 +861,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_mppt"
     condition: "mppt_count >= 5"
 
@@ -876,7 +876,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_mppt"
     condition: "mppt_count >= 5"
 
@@ -891,7 +891,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_mppt"
     condition: "mppt_count >= 6"
 
@@ -906,7 +906,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     mm_group: "PV_mppt"
     condition: "mppt_count >= 6"
 
@@ -920,7 +920,7 @@ sensors:
     device_class: "energy"
     state_class: "total_increasing"
     scale: 0.1
-    scan_interval: 300
+    scan_group: slow
 
   # MPPT 7-12 sensors (continuation)
   - name: MPPT7 voltage
@@ -934,7 +934,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 7"
 
   - name: MPPT7 current
@@ -948,7 +948,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 7"
 
   - name: MPPT8 voltage
@@ -962,7 +962,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 8"
 
   - name: MPPT8 current
@@ -976,7 +976,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 8"
 
   - name: MPPT9 voltage
@@ -990,7 +990,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 9"
 
   - name: MPPT9 current
@@ -1004,7 +1004,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 9"
 
   - name: MPPT10 voltage
@@ -1018,7 +1018,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 10"
 
   - name: MPPT10 current
@@ -1032,7 +1032,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 10"
 
   - name: MPPT11 voltage
@@ -1046,7 +1046,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 11"
 
   - name: MPPT11 current
@@ -1060,7 +1060,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 11"
 
   - name: MPPT12 voltage
@@ -1074,7 +1074,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 12"
 
   - name: MPPT12 current
@@ -1088,7 +1088,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
     condition: "mppt_count >= 12"
 
   # Work Status registers
@@ -1097,7 +1097,7 @@ sensors:
     address: 5139 # reg 5140
     input_type: input
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
     condition: "selected_model in [SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT, SG7.0RT, SG8.0RT, SG10RT, SG12RT, SG15RT, SG20RT, SG30CX, SG33CX, SG40CX, SG50CX, SG75CX, SG100CX, SG110CX, SG250HX, SG320HX, SG350HX]"
     map:
       0: "Standby"
@@ -1113,7 +1113,7 @@ sensors:
     address: 5140 # reg 5141
     input_type: input
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
     condition: "selected_model in [SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT, SG7.0RT, SG8.0RT, SG10RT, SG12RT, SG15RT, SG20RT, SG30CX, SG33CX, SG40CX, SG50CX, SG75CX, SG100CX, SG110CX, SG250HX, SG320HX, SG350HX]"
     map:
       1: "Running"
@@ -1141,7 +1141,7 @@ sensors:
     device_class: "energy"
     state_class: "total"
     scale: 0.1
-    scan_interval: 300
+    scan_group: slow
 
   - name: Negative voltage to ground
     unique_id: negative_voltage_ground
@@ -1152,7 +1152,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 30
+    scan_group: medium
 
   - name: Bus voltage
     unique_id: bus_voltage
@@ -1163,7 +1163,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scale: 0.1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Grid frequency (high precision)
     unique_id: grid_frequency_hp
@@ -1175,14 +1175,14 @@ sensors:
     device_class: "frequency"
     state_class: measurement
     scale: 0.01
-    scan_interval: 10
+    scan_group: fast
 
   - name: PID work state
     unique_id: pid_work_state
     address: 5149 # reg 5150
     input_type: input
     data_type: uint16
-    scan_interval: 60
+    scan_group: medium
     map:
       2: "PID Recover Operation"
       4: "Anti-PID Operation"
@@ -1193,7 +1193,7 @@ sensors:
     address: 5150 # reg 5151
     input_type: input
     data_type: uint16
-    scan_interval: 60
+    scan_group: medium
     map:
       432: "PID resistance abnormal"
       433: "PID function abnormal"
@@ -1211,7 +1211,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
 
   - name: Meter Power raw
     unique_id: meter_power_raw
@@ -1222,7 +1222,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_group: fast
 
   # String Current sensors (7013-7044) - Important for diagnostics
   - name: String 1 current
@@ -1235,7 +1235,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.01
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_strings"
     condition: "string_count >= 1"
 
@@ -1249,7 +1249,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.01
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_strings"
     condition: "string_count >= 2"
 
@@ -1263,7 +1263,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.01
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_strings"
     condition: "string_count >= 3"
 
@@ -1277,7 +1277,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.01
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_strings"
     condition: "string_count >= 4"
 
@@ -1291,7 +1291,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.01
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_strings"
     condition: "string_count >= 5"
 
@@ -1305,7 +1305,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.01
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_strings"
     condition: "string_count >= 6"
 
@@ -1319,7 +1319,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.01
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_strings"
     condition: "string_count >= 7"
 
@@ -1334,7 +1334,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 0.01
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_strings"
 
 # Controls for write access (Holding Registers)
@@ -1402,7 +1402,7 @@ controls:
     address: 5005 # reg 5006
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0xCF: "Start"
       0xCE: "Stop"
@@ -1414,7 +1414,7 @@ controls:
     address: 5006 # reg 5007
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0xAA: "Enable"
       0x55: "Disable"
@@ -1431,7 +1431,7 @@ controls:
     min: 0
     max: 1000
     step: 1
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control"
 
   # Additional SG-specific control registers
@@ -1441,7 +1441,7 @@ controls:
     address: 5009 # reg 5010
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0xAA: "Enable"
       0x55: "Disable"
@@ -1458,7 +1458,7 @@ controls:
     min: 0
     max_value: "{{max_ac_output_power}}"
     step: 100
-    scan_interval: 30
+    scan_group: medium
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
     mm_group: "PV_control"
     # Placeholder will be replaced with model-specific value from dynamic_config.valid_models
@@ -1474,7 +1474,7 @@ controls:
     min: 1
     max_value: 5
     step: 1
-    scan_interval: 60
+    scan_group: medium
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
     mm_group: "PV_control"
     # Standard CT secondary current is 5A
@@ -1489,7 +1489,7 @@ controls:
     min: 1
     max_value: "{{max_current * 1.5}}"
     step: 1
-    scan_interval: 60
+    scan_group: medium
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
     mm_group: "PV_control"
     # Placeholder will be replaced with model-specific value: max_current * 1.5 (50% safety margin)
@@ -1501,7 +1501,7 @@ controls:
     address: 5013 # reg 5014
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 60
+    scan_group: medium
     options:
       0: "Internal"
       1: "External"
@@ -1519,7 +1519,7 @@ controls:
     min: 0
     max: 100
     step: 0.1
-    scan_interval: 30
+    scan_group: medium
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
     mm_group: "PV_control"
 
@@ -1548,7 +1548,7 @@ controls:
     min: -1.0
     max: 1.0
     step: 0.001
-    scan_interval: 30
+    scan_group: medium
     mm_group: "PV_control"
     depends_on_register:
       register_unique_id: "reactive_power_adjustment_mode"
@@ -1587,7 +1587,7 @@ controls:
     address: 5034 # reg 5035
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     condition: "selected_model in [SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT, SG7.0RT, SG8.0RT, SG10RT, SG12RT, SG15RT, SG20RT, SG30CX, SG33CX, SG40CX, SG50CX, SG75CX, SG100CX, SG110CX, SG250HX, SG320HX, SG350HX]"
     options:
       0xAA: "Enable"
@@ -1601,7 +1601,7 @@ controls:
     address: 5035 # reg 5036
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     options:
       0x55: "OFF"
       0xA1: "Power factor setting"
@@ -1617,7 +1617,7 @@ controls:
     address: 5036 # reg 5037
     input_type: "holding"
     data_type: "int16"
-    scan_interval: 30
+    scan_group: medium
     unit_of_measurement: "0.1%"
     mm_group: "PV_control"
     # Note: Available when reactive power adjustment mode is set to 0xA2
@@ -1629,7 +1629,7 @@ controls:
     address: 5038 # reg 5039
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     unit_of_measurement: "0.1kW"
     mm_group: "PV_control"
     # Note: Available when power limitation switch is enabled, Except SG5.5RS-JP
@@ -1640,7 +1640,7 @@ controls:
     address: 5039 # reg 5040
     input_type: "holding"
     data_type: "int16"
-    scan_interval: 30
+    scan_group: medium
     unit_of_measurement: "0.1kVar"
     mm_group: "PV_control"
     # Note: Check for valid inverters
@@ -1652,7 +1652,7 @@ controls:
     address: 5040 # reg 5041
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     condition: "selected_model in [SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT, SG7.0RT, SG8.0RT, SG10RT, SG12RT, SG15RT, SG20RT, SG30CX, SG33CX, SG40CX, SG50CX, SG75CX, SG100CX, SG110CX, SG250HX, SG320HX, SG350HX]"
     options:
       0xAA: "Enable"
@@ -1666,7 +1666,7 @@ controls:
     address: 5041 # reg 5042
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     condition: "selected_model in [SG250HX, SG320HX, SG350HX]"
     options:
       0xAA: "Enable"
@@ -1680,7 +1680,7 @@ controls:
     address: 5042 # reg 5043
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     condition: "selected_model in [SG250HX, SG320HX, SG350HX]"
     options:
       0xAA: "Enable"
@@ -1695,7 +1695,7 @@ controls:
     address: 32568 # reg 32569
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     condition: "selected_model in [SG320HX, SG350HX]"
     options:
       0xAA: "Enable"
@@ -1709,7 +1709,7 @@ controls:
     address: 32569 # reg 32570
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 30
+    scan_group: medium
     condition: "selected_model in [SG320HX, SG350HX]"
     options:
       0xAA: "Enable"

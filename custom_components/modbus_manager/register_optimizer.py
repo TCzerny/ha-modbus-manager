@@ -108,7 +108,11 @@ class RegisterOptimizer:
     def optimize_registers(
         self, registers: List[Dict[str, Any]]
     ) -> List[RegisterRange]:
-        """Group registers into optimal reading ranges."""
+        """Group registers into optimal reading ranges.
+
+        Callers must pass one scan_group at a time so Fast and Slow
+        registers are never padded into the same Modbus frame.
+        """
         try:
             if not registers:
                 return []
@@ -162,15 +166,12 @@ class RegisterOptimizer:
                         current_read_fc is None and reg_read_fc is None
                     )
 
-                    read_groups_compatible = _read_groups_compatible(
-                        current_range, reg
-                    )
+                    read_groups_compatible = _read_groups_compatible(current_range, reg)
 
                     add_w = _register_width_for_merge(reg)
                     if (
                         read_groups_compatible
-                        and
-                        address <= current_range.end_address + 1
+                        and address <= current_range.end_address + 1
                         and current_range.register_count + add_w <= self.max_read_size
                         and current_input_type
                         == reg_input_type  # Same input_type required

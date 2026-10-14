@@ -39,7 +39,7 @@ sensors:
     address: 4
     input_type: input
     data_type: uint16
-    scan_interval: 3600
+    scan_group: slow
     mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:information"
@@ -49,7 +49,7 @@ sensors:
     address: 5
     input_type: input
     data_type: uint16
-    scan_interval: 10
+    scan_group: fast
     mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
     map:
@@ -75,7 +75,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    scan_interval: 10
+    scan_group: fast
     mm_group: "EV_current_measurement"
     icon: "mdi:lightning-bolt"
 
@@ -89,7 +89,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    scan_interval: 10
+    scan_group: fast
     mm_group: "EV_current_measurement"
     icon: "mdi:lightning-bolt"
 
@@ -103,7 +103,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    scan_interval: 10
+    scan_group: fast
     mm_group: "EV_current_measurement"
     icon: "mdi:lightning-bolt"
 
@@ -118,7 +118,7 @@ sensors:
     unit_of_measurement: "°C"
     device_class: "temperature"
     state_class: "measurement"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:thermometer"
@@ -132,7 +132,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
-    scan_interval: 10
+    scan_group: fast
     mm_group: "EV_voltage_measurement"
     icon: "mdi:lightning-bolt"
 
@@ -144,7 +144,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
-    scan_interval: 10
+    scan_group: fast
     mm_group: "EV_voltage_measurement"
     icon: "mdi:lightning-bolt"
 
@@ -156,7 +156,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
-    scan_interval: 10
+    scan_group: fast
     mm_group: "EV_voltage_measurement"
     icon: "mdi:lightning-bolt"
 
@@ -166,7 +166,7 @@ sensors:
     address: 13
     input_type: input
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
     mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:lock"
@@ -183,7 +183,7 @@ sensors:
     unit_of_measurement: "VA"
     device_class: "power"
     state_class: "measurement"
-    scan_interval: 10
+    scan_group: fast
     mm_group: "EV_charging_power"
     icon: "mdi:ev-station"
 
@@ -197,7 +197,7 @@ sensors:
     unit_of_measurement: "VAh"
     device_class: "energy"
     state_class: "total_increasing"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_meter_reading"
     icon: "mdi:meter-electric"
 
@@ -211,7 +211,7 @@ sensors:
     unit_of_measurement: "VAh"
     device_class: "energy"
     state_class: "total_increasing"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_meter_reading"
     icon: "mdi:meter-electric"
     entity_category: "diagnostic"
@@ -225,7 +225,7 @@ sensors:
     data_type: uint16
     unit_of_measurement: "A"
     device_class: "current"
-    scan_interval: 3600
+    scan_group: slow
     mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:gauge"
@@ -237,7 +237,7 @@ sensors:
     data_type: uint16
     unit_of_measurement: "A"
     device_class: "current"
-    scan_interval: 3600
+    scan_group: slow
     mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:gauge"
@@ -248,7 +248,7 @@ sensors:
     address: 200
     input_type: input
     data_type: uint16
-    scan_interval: 3600
+    scan_group: slow
     mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:chip"
@@ -258,7 +258,7 @@ sensors:
     address: 203
     input_type: input
     data_type: uint16
-    scan_interval: 3600
+    scan_group: slow
     mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:chip"
@@ -273,7 +273,7 @@ sensors:
     scale: 0.1
     unit_of_measurement: "A"
     device_class: "current"
-    scan_interval: 30
+    scan_group: medium
     mm_group: "EV_max_current_actual"
     icon: "mdi:gauge"
 
@@ -286,7 +286,7 @@ sensors:
     scale: 0.1
     unit_of_measurement: "A"
     device_class: "current"
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_max_current_actual"
     entity_category: "config"
     icon: "mdi:shield-alert"
@@ -309,7 +309,7 @@ controls:
     max_value_from_register: {register_unique_id: "{PREFIX}_hw_max_current", fallback: 16}
     step: 0.1
     mode: "slider"
-    scan_interval: 30
+    scan_group: medium
     mm_group: "EV_max_current_setting"
 
   # FailSafe current (0=error state, 60-160=6-16A) (reg 262)
@@ -327,7 +327,7 @@ controls:
     max_value: 16
     max_value_from_register: {register_unique_id: "{PREFIX}_hw_max_current", fallback: 16}
     step: 0.1
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_max_current_setting"
     entity_category: "config"
 
@@ -338,7 +338,7 @@ controls:
     address: 259
     input_type: holding
     data_type: uint16
-    scan_interval: 30
+    scan_group: medium
     mm_group: "EV_lock_control"
     switch:
       on: 1    # unlocked
@@ -351,7 +351,7 @@ controls:
     address: 258
     input_type: holding
     data_type: uint16
-    scan_interval: 60
+    scan_group: medium
     mm_group: "EV_power_control"
     options:
       0: "Enable (Power Saving)"

@@ -29,7 +29,10 @@
                     "modbus_type": "Modbus-Verbindungstyp",
                     "timeout": "Timeout in Sekunden",
                     "delay": "Verzögerung nach Verbindung (Sekunden)",
-                    "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)"
+                    "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
+                    "scan_group_fast": "Schnelle Poll-Gruppe (Sekunden)",
+                    "scan_group_medium": "Mittlere Poll-Gruppe (Sekunden)",
+                    "scan_group_slow": "Langsame Poll-Gruppe (Sekunden)"
                 }
             },
             "template": {
@@ -56,6 +59,7 @@
                     "input_type": "Registertyp",
                     "data_type": "Datentyp",
                     "scan_interval": "Scan-Intervall (Sekunden)",
+                    "scan_group": "Poll-Gruppe (Schnell / Mittel / Langsam)",
                     "entity_category": "Entity-Kategorie",
                     "icon": "Icon",
                     "mm_group": "mm_group",
@@ -80,6 +84,7 @@
                     "device_class": "Geräteklasse",
                     "state_class": "Zustandsklasse",
                     "scan_interval": "Scan-Intervall (Sekunden)",
+                    "scan_group": "Poll-Gruppe (Schnell / Mittel / Langsam)",
                     "encoding": "String-Encoding (utf-8 oder hex)",
                     "byte_order": "Byte-Reihenfolge",
                     "swap": "Word-Swap",
@@ -147,6 +152,9 @@
                     "delay": "Verzögerung nach Verbindung (Sekunden)",
                     "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
                     "post_write_settle_milliseconds": "Pause nach Schreibbefehlen (Millisekunden, 0 = aus)",
+                    "scan_group_fast": "Schnelle Poll-Gruppe (Sekunden)",
+                    "scan_group_medium": "Mittlere Poll-Gruppe (Sekunden)",
+                    "scan_group_slow": "Langsame Poll-Gruppe (Sekunden)",
                     "use_coordinator": "Coordinator-Modus verwenden (experimentell)",
                     "baudrate": "Baudrate",
                     "data_bits": "Datenbits",
@@ -234,6 +242,9 @@
                     "delay": "Verzögerung nach Verbindung (Sekunden)",
                     "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
                     "post_write_settle_milliseconds": "Pause nach Schreibbefehlen (Millisekunden, 0 = aus)",
+                    "scan_group_fast": "Schnelle Poll-Gruppe (Sekunden)",
+                    "scan_group_medium": "Mittlere Poll-Gruppe (Sekunden)",
+                    "scan_group_slow": "Langsame Poll-Gruppe (Sekunden)",
                     "baudrate": "Baudrate (nur RTU)",
                     "data_bits": "Datenbits (nur RTU)",
                     "stop_bits": "Stoppbits (nur RTU)",
@@ -330,7 +341,10 @@
                     "timeout": "Timeout in Sekunden",
                     "delay": "Verzögerung nach Verbindung (Sekunden)",
                     "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
-                    "post_write_settle_milliseconds": "Pause nach Schreibbefehlen (Millisekunden, 0 = aus)"
+                    "post_write_settle_milliseconds": "Pause nach Schreibbefehlen (Millisekunden, 0 = aus)",
+                    "scan_group_fast": "Schnelle Poll-Gruppe (Sekunden)",
+                    "scan_group_medium": "Mittlere Poll-Gruppe (Sekunden)",
+                    "scan_group_slow": "Langsame Poll-Gruppe (Sekunden)"
                 }
             }
         },
@@ -393,7 +407,10 @@
                     "timeout": "Timeout in Sekunden",
                     "delay": "Verzögerung nach Verbindung (Sekunden)",
                     "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
-                    "post_write_settle_milliseconds": "Pause nach Schreibbefehlen (Millisekunden, 0 = aus)"
+                    "post_write_settle_milliseconds": "Pause nach Schreibbefehlen (Millisekunden, 0 = aus)",
+                    "scan_group_fast": "Schnelle Poll-Gruppe (Sekunden)",
+                    "scan_group_medium": "Mittlere Poll-Gruppe (Sekunden)",
+                    "scan_group_slow": "Langsame Poll-Gruppe (Sekunden)"
                 }
             },
             "inverter": {
@@ -518,6 +535,7 @@
                     "input_type": "Registertyp",
                     "data_type": "Datentyp",
                     "scan_interval": "Scan-Intervall (Sekunden)",
+                    "scan_group": "Poll-Gruppe (Schnell / Mittel / Langsam)",
                     "entity_category": "Entity-Kategorie",
                     "icon": "Icon",
                     "mm_group": "mm_group",
@@ -677,6 +695,7 @@
                     "input_type": "Registertyp",
                     "data_type": "Datentyp",
                     "scan_interval": "Scan-Intervall (Sekunden)",
+                    "scan_group": "Poll-Gruppe (Schnell / Mittel / Langsam)",
                     "entity_category": "Entity-Kategorie",
                     "icon": "Icon",
                     "mm_group": "mm_group",
@@ -812,6 +831,7 @@
                         "input_type": "Registertyp",
                         "data_type": "Datentyp",
                         "scan_interval": "Scan-Intervall (Sekunden)",
+                    "scan_group": "Poll-Gruppe (Schnell / Mittel / Langsam)",
                         "entity_category": "Entity-Kategorie",
                         "icon": "Icon",
                         "mm_group": "mm_group",
