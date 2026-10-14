@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.3] - 2026-10-14
+
 ### ✨ Added
 
 - **Setup — two-step template picker ([Discussion #118](https://github.com/TCzerny/ha-modbus-manager/discussions/118))**: Hub setup and Add device first ask for a device category (mapped from YAML `type`), then a short **Manufacturer — model** list. Combined Device stays on the first setup menu; Generic stays the first Add-device category. Template identity and `unique_id` are unchanged. A later manufacturer-only step can use the same catalog when more templates per vendor land.
+- **Poll — skip HA-disabled entities ([Discussion #107](https://github.com/TCzerny/ha-modbus-manager/discussions/107))**: After setup, disabling an entity in Home Assistant drops it from the next Modbus read (optimizer splits the block). Registry row and `unique_id` stay; re-enable resumes the same history. No hub reload. Another enabled entity on the same address is still read.
 
 ## [1.3.2] - 2026-10-14
 

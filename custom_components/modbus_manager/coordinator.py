@@ -14,8 +14,9 @@ from homeassistant.components.modbus.const import (
     CALL_TYPE_REGISTER_INPUT,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
+from homeassistant.core import Event, HomeAssistant, callback
 from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import (
@@ -54,6 +55,7 @@ from .modbus_utils import (
     registers_to_bytes,
 )
 from .performance_monitor import PerformanceMonitor
+from .poll_filter import registers_enabled_for_poll
 from .register_optimizer import RegisterOptimizer
 from .scan_groups import (
     SCAN_GROUPS,
@@ -148,6 +150,8 @@ class ModbusCoordinator(DataUpdateCoordinator):
         # Structured dict: {"sensors": [...], "controls": [...], "calculated": [...], "binary_sensors": [...]}
         self._cached_entities = None
         self._cached_registers_by_scan_group = {}
+        self._poll_cache_ready = False
+        self._unsub_registry = None
         self._cache_initialized = False
         self._cache_signature: str | None = None
         self._logged_dynamic_config_sources: set[str] = set()
@@ -185,12 +189,24 @@ class ModbusCoordinator(DataUpdateCoordinator):
             entry.data.get("prefix", "unknown"),
             update_interval,
         )
+        registry_event = getattr(
+            er, "EVENT_ENTITY_REGISTRY_UPDATED", "entity_registry_updated"
+        )
+        self._unsub_registry = self.hass.bus.async_listen(
+            registry_event,
+            self._async_entity_registry_updated,
+        )
+
+    def invalidate_poll_cache(self) -> None:
+        """Rebuild Fast/Medium/Slow ranges on the next poll (no entry reload)."""
+        self._cached_registers_by_scan_group = {}
+        self._poll_cache_ready = False
 
     def invalidate_cache(self):
         """Invalidate the entity cache (e.g., when template is reloaded)."""
         _LOGGER.debug("Invalidating entity cache")
         self._cached_entities = None
-        self._cached_registers_by_scan_group = {}
+        self.invalidate_poll_cache()
         self._last_update_time = {}
         self._cache_initialized = False
         self._cache_signature = None
@@ -241,6 +257,10 @@ class ModbusCoordinator(DataUpdateCoordinator):
         """Mark coordinator as unloading to stop further updates."""
         _LOGGER.debug("Marking coordinator as unloading")
         self._is_unloading = True
+        unsub = self._unsub_registry
+        self._unsub_registry = None
+        if unsub:
+            unsub()
         self.invalidate_cache()
 
     def _resolve_post_write_settle_ms(self) -> int | None:
@@ -299,9 +319,45 @@ class ModbusCoordinator(DataUpdateCoordinator):
             self.async_update_listeners()
         return success
 
+    def _disabled_unique_ids(self) -> set[str]:
+        """unique_id values disabled in the entity registry for this hub."""
+        registry = er.async_get(self.hass)
+        disabled: set[str] = set()
+        for entity_entry in registry.entities.values():
+            if entity_entry.config_entry_id != self.entry.entry_id:
+                continue
+            if not entity_entry.disabled:
+                continue
+            unique_id = str(entity_entry.unique_id or "").strip()
+            if unique_id:
+                disabled.add(unique_id)
+        return disabled
+
+    @callback
+    def _async_entity_registry_updated(self, event: Event) -> None:
+        """Rebuild poll ranges when the user enables or disables an entity."""
+        if self._is_unloading:
+            return
+        data = event.data or {}
+        action = data.get("action")
+        entity_id = data.get("entity_id")
+        if action == "update":
+            changes = data.get("changes") or {}
+            if "disabled_by" not in changes:
+                return
+        elif action != "create":
+            return
+        registry = er.async_get(self.hass)
+        entity_entry = registry.async_get(entity_id) if entity_id else None
+        if entity_entry is None or entity_entry.config_entry_id != self.entry.entry_id:
+            return
+        if action == "create" and not entity_entry.disabled:
+            return
+        self.invalidate_poll_cache()
+
     async def _ensure_register_interval_cache(self) -> None:
         """Build Fast/Medium/Slow register cache if not yet initialized."""
-        if self._cached_registers_by_scan_group:
+        if self._poll_cache_ready:
             return
 
         entities_dict = await self._collect_all_registers()
@@ -312,12 +368,19 @@ class ModbusCoordinator(DataUpdateCoordinator):
             b for b in binary_sensors if is_valid_modbus_address(b.get("address"))
         ]
         all_registers = sensors + controls + binary_sensors_with_address
-        if not all_registers:
-            return
+        disabled_ids = self._disabled_unique_ids()
+        poll_registers = registers_enabled_for_poll(all_registers, disabled_ids)
+        skipped = len(all_registers) - len(poll_registers)
+        if skipped:
+            _LOGGER.debug(
+                "Skipping %d HA-disabled entities in Modbus poll",
+                skipped,
+            )
 
         self._cached_registers_by_scan_group = self._group_registers_by_scan_group(
-            all_registers
+            poll_registers
         )
+        self._poll_cache_ready = True
         populated_seconds = [
             self._scan_group_seconds[group]
             for group, regs in self._cached_registers_by_scan_group.items()
@@ -2536,6 +2599,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
     async def async_shutdown(self) -> None:
         """Shutdown the coordinator."""
         _LOGGER.debug("Shutting down ModbusCoordinator")
+        self.mark_as_unloading()
         # Cancel any pending updates
         if hasattr(self, "_update_task") and self._update_task:
             self._update_task.cancel()

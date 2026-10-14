@@ -382,6 +382,7 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
                 hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
             )
             await platform_task
+            coordinator.invalidate_poll_cache()
             _LOGGER.debug("Coordinator platforms loaded successfully: %s", PLATFORMS)
         except Exception as e:
             _LOGGER.error("Error loading coordinator platforms: %s", str(e))
