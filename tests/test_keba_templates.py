@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 import asyncio
+import json
 import logging
 import os
 import re
@@ -174,6 +175,91 @@ class KebaTemplatesTest(unittest.TestCase):
         )
         return environment.from_string(self.entity(model, unique_id)[field]).render()
 
+    def translations(self, language):
+        def unique_keys(pairs):
+            result = {}
+            for key, value in pairs:
+                self.assertNotIn(key, result, f"Duplicate {language} JSON key: {key}")
+                result[key] = value
+            return result
+
+        return json.loads(
+            (COMPONENT / "translations" / f"{language}.json").read_text(encoding="utf-8"),
+            object_pairs_hook=unique_keys,
+        )
+
+    def test_localized_names_are_complete_shared_and_not_orphaned(self):
+        for language in ("en", "de"):
+            translations = self.translations(language)["entity"]
+            expected = {"sensor": set(), "binary_sensor": set()}
+            for model, template in self.templates.items():
+                for section in ("sensors", "calculated", "binary_sensors"):
+                    domain = "binary_sensor" if section == "binary_sensors" else "sensor"
+                    for entity in template[section]:
+                        with self.subTest(language=language, model=model, uid=entity["unique_id"]):
+                            key = entity["translation_key"]
+                            self.assertEqual(key, f"keba_{entity['unique_id']}")
+                            self.assertTrue(translations[domain][key]["name"].strip())
+                            expected[domain].add(key)
+            for domain, keys in expected.items():
+                self.assertEqual(
+                    {key for key in translations[domain] if key.startswith("keba_")},
+                    keys,
+                )
+
+    def test_localized_states_cover_exact_runtime_values_without_orphans(self):
+        expected = {}
+        for model, template in self.templates.items():
+            for entity in template["sensors"]:
+                if "map" in entity:
+                    expected.setdefault(entity["translation_key"], set()).update(
+                        entity["map"].values()
+                    )
+            for code in range(6):
+                expected.setdefault("keba_charging_state", set()).add(
+                    self.render(model, "charging_state", {"charging_state_raw": str(code)})
+                )
+            for product in ("4212311", "4222311"):
+                for code in (0, 1, 3, 5, 7):
+                    expected.setdefault("keba_cable_state", set()).add(
+                        self.render(model, "cable_state", {
+                            "cable_state_raw": str(code),
+                            "product_type_and_features": product,
+                        }).strip()
+                    )
+        for language in ("en", "de"):
+            translations = self.translations(language)["entity"]
+            actual = {
+                key: set(value["state"])
+                for key, value in translations["sensor"].items()
+                if key.startswith("keba_") and "state" in value
+            }
+            self.assertEqual(actual, expected)
+            for domain in ("sensor", "binary_sensor"):
+                for key, value in translations[domain].items():
+                    if not key.startswith("keba_"):
+                        continue
+                    if domain == "binary_sensor":
+                        self.assertEqual(set(value["state"]), {"on", "off"})
+                    for label in value.get("state", {}).values():
+                        self.assertTrue(label.strip())
+
+    def test_localized_configuration_fields_match_template_options(self):
+        paths = (
+            ("config", "dynamic_config"),
+            ("options", "device"),
+            ("config_subentries", "user"),
+            ("config_subentries", "reconfigure"),
+        )
+        fields = {"connector_type", "rfid", "phase_switching_registers"}
+        for language in ("en", "de"):
+            translations = self.translations(language)
+            for section, step in paths:
+                labels = translations[section]["step"][step]["data"]
+                for field in fields:
+                    self.assertIn(field, self.templates["p40"]["dynamic_config"])
+                    self.assertTrue(labels[field].strip())
+
     def test_actual_loader_accepts_every_sensor(self):
         for model, template in self.templates.items():
             path = COMPONENT / "device_templates" / f"keba_kecontact_{model}.yaml"
@@ -183,6 +269,7 @@ class KebaTemplatesTest(unittest.TestCase):
             self.assertEqual(loaded["controls"], [])
             self.assertEqual(loaded["default_slave_id"], 255)
             for sensor in loaded["sensors"]:
+                self.assertEqual(sensor["translation_key"], f"keba_{sensor['unique_id']}")
                 self.assertEqual(sensor["entity_type"], "sensor")
                 self.assertEqual(sensor["scan_group"], normalize_scan_group(sensor))
 

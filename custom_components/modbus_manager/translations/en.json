@@ -177,6 +177,9 @@
                 "title": "Device Options",
                 "description": "Configure connection and options for {template_name}{model_note}",
                 "data": {
+                    "connector_type": "Charging connector",
+                    "rfid": "RFID information",
+                    "phase_switching_registers": "Phase switching register support",
                     "selected_model": "Select Model",
                     "phases": "Number of Phases",
                     "mppt_count": "Number of MPPT Trackers",
@@ -447,6 +450,9 @@
                 "title": "Device options",
                 "description": "Edit device settings for: {device}",
                 "data": {
+                    "connector_type": "Charging connector",
+                    "rfid": "RFID information",
+                    "phase_switching_registers": "Phase switching register support",
                     "device_entry_id": "Device",
                     "prefix": "Device Prefix",
                     "slave_id": "Slave ID",
@@ -621,6 +627,9 @@
                 "title": "Add device",
                 "description": "This device uses this hub's connection. Choose a category (or Generic Modbus Device), then manufacturer and model, then prefix and slave ID.",
                 "data": {
+                    "connector_type": "Charging connector",
+                    "rfid": "RFID information",
+                    "phase_switching_registers": "Phase switching register support",
                     "template": "Device Template",
                     "template_category": "Device category",
                     "prefix": "Device Prefix",
@@ -646,6 +655,9 @@
                 "title": "Reconfigure Device",
                 "description": "Edit device settings for: {device}",
                 "data": {
+                    "connector_type": "Charging connector",
+                    "rfid": "RFID information",
+                    "phase_switching_registers": "Phase switching register support",
                     "prefix": "Device Prefix",
                     "slave_id": "Slave ID",
                     "selected_model": "Select Model",
@@ -915,6 +927,76 @@
     },
     "entity": {
         "sensor": {
+            "keba_charging_state_raw": {"name": "Charging state (raw)"},
+            "keba_cable_state_raw": {"name": "Cable state (raw)"},
+            "keba_error_code": {"name": "Error code"},
+            "keba_current_l1": {"name": "Current L1"},
+            "keba_current_l2": {"name": "Current L2"},
+            "keba_current_l3": {"name": "Current L3"},
+            "keba_serial_number": {"name": "Serial number"},
+            "keba_product_type_and_features": {"name": "Product type and features"},
+            "keba_firmware_version_raw": {"name": "Firmware version (raw)"},
+            "keba_firmware_version": {"name": "Firmware version"},
+            "keba_active_power": {"name": "Active power"},
+            "keba_total_energy": {"name": "Total energy"},
+            "keba_session_energy": {"name": "Session energy"},
+            "keba_voltage_l1": {"name": "Voltage L1"},
+            "keba_voltage_l2": {"name": "Voltage L2"},
+            "keba_voltage_l3": {"name": "Voltage L3"},
+            "keba_power_factor": {"name": "Power factor"},
+            "keba_maximum_charging_current": {"name": "Maximum charging current"},
+            "keba_supported_charging_current": {"name": "Supported charging current"},
+            "keba_rfid_card_raw": {"name": "RFID card (raw)"},
+            "keba_rfid_uid_prefix": {"name": "RFID UID prefix"},
+            "keba_failsafe_current_setting": {"name": "Failsafe current setting"},
+            "keba_failsafe_timeout_setting": {"name": "Failsafe timeout setting"},
+            "keba_hardware_revision_device": {"name": "Device hardware revision"},
+            "keba_hardware_revision_ms10": {"name": "KC-MS10 hardware revision"},
+            "keba_charging_state": {
+                "name": "Charging state",
+                "state": {
+                    "Starting": "Starting up",
+                    "Not ready": "Not ready",
+                    "Ready": "Ready",
+                    "Charging": "Charging",
+                    "Error": "Error",
+                    "Suspended": "Suspended"
+                }
+            },
+            "keba_cable_state": {
+                "name": "Cable state",
+                "state": {
+                    "Disconnected": "Disconnected",
+                    "Station connected": "Connected to charging station",
+                    "Station connected and locked": "Connected to charging station and locked",
+                    "Vehicle connected, unlocked": "Connected to vehicle, unlocked",
+                    "Vehicle connected and locked": "Connected to vehicle and locked",
+                    "Vehicle connected": "Connected to vehicle"
+                }
+            },
+            "keba_fast_charging_status": {
+                "name": "Fast charging status",
+                "state": {
+                    "Inactive": "Inactive",
+                    "Active (Modbus current control unavailable)": "Active (Modbus current control unavailable)"
+                }
+            },
+            "keba_phase_switching_source": {
+                "name": "Phase switching source",
+                "state": {
+                    "Unavailable": "No phase switching source",
+                    "OCPP": "OCPP",
+                    "REST API": "REST API",
+                    "Modbus TCP": "Modbus TCP"
+                }
+            },
+            "keba_phase_switching_state": {
+                "name": "Phase switching state",
+                "state": {
+                    "Single-phase charging": "Single-phase charging",
+                    "Three-phase charging possible": "Three-phase charging available"
+                }
+            },
             "combined_pair_type": {
                 "name": "Combination Type",
                 "state": {
@@ -1073,6 +1155,22 @@
             "inepro_pro380_exported_energy": {"name": "Exported Energy"}
         },
         "binary_sensor": {
+            "keba_vehicle_connected": {
+                "name": "Vehicle connected",
+                "state": {"on": "Connected", "off": "Disconnected"}
+            },
+            "keba_charging_active": {
+                "name": "Charging active",
+                "state": {"on": "Charging", "off": "Not charging"}
+            },
+            "keba_error_present": {
+                "name": "Error present",
+                "state": {"on": "Error", "off": "No error"}
+            },
+            "keba_plug_locked": {
+                "name": "Plug locked",
+                "state": {"on": "Locked", "off": "Unlocked"}
+            },
             "combined_source_a_available": {
                 "name": "Source A Available"
             },

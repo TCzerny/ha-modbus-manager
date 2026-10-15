@@ -25,6 +25,36 @@ integration cannot represent correctly. In particular, **even buttons are polled
 by the current coordinator. Adding KEBA write-only registers as controls would
 therefore generate unsupported FC03 reads. See the control mapping below.
 
+## Localization
+
+Both templates use the integration's existing `translation_key` display helper.
+All 26 P30 and 34 P40 entity definitions have English and German names in
+`translations/en.json` and `translations/de.json`. Shared definitions reuse
+`keba_*` keys; no entity identity, register definition or calculation changes.
+
+Home Assistant translates charging and cable states, fast charging status, phase
+switching source/state, and the four binary sensor states for display. The
+underlying English sensor states and binary `on`/`off` states remain unchanged,
+so existing state comparisons in automations do not need migrating. In
+particular, the mapped phase source `Unavailable` is a protocol value, not Home
+Assistant's lowercase `unavailable` state.
+
+Raw diagnostic codes, serial/product numbers, hardware revisions, formatted
+firmware versions and RFID UID prefixes are data, not translatable status
+messages. RFID has no additional documented authorization/status values in
+these templates; missing/zero RFID remains unavailable through the existing
+availability template. Home Assistant supplies its standard translations for
+`unknown` and `unavailable`.
+
+Connector, RFID and optional phase-register field labels are translated in the
+initial configuration, device options and subentry forms. Model/brand names and
+units remain unchanged. Template descriptions, `config_flow_note`, dynamic
+configuration descriptions and dropdown labels embedded in YAML remain English:
+the existing flow uses literal template text and `vol.In` labels, without
+per-language template-text lookup. Translating those surfaces would require a
+separate config-flow enhancement, outside this localization-only template change.
+User-assigned entity names also retain Home Assistant's normal override behavior.
+
 ## Sources and precedence
 
 1. [Symcon KEBA overview](https://www.symcon.de/de/service/dokumentation/modulreferenz/geraete/keba/).
