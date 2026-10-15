@@ -1,0 +1,593 @@
+# KEBA KeContact P40/P40 Pro Modbus TCP Programmers Guide V1.02 (04.2025).
+# See docs/README_keba_kecontact.md, particularly the pre-1.2.1 energy bug.
+# Each documented value requires its own FC03 request of exactly two words.
+name: "KEBA KeContact P40"
+display_name: "KEBA KeContact P40 / P40 Pro"
+description: "Read-only KeContact P40/P40 Pro monitoring with firmware-dependent energy scaling."
+manufacturer: "KEBA"
+model: "KeContact P40 / P40 Pro"
+type: "ev_charger"
+version: 1.0.0
+firmware_version: "1.2.1"
+default_prefix: "keba_p40"
+default_slave_id: 255
+config_flow_note: "TCP port 502, Unit ID 255; enable Modbus in the KEBA app. Set message wait to at least 500 ms. Select the correct energy firmware profile before recording statistics. Phase registers require confirmed hardware/firmware support."
+
+dynamic_config:
+  valid_models:
+    "KeContact P40": {}
+    "KeContact P40 Pro": {}
+
+  firmware_version:
+    description: "Energy encoding profile, not automatic firmware detection"
+    options:
+      "1.0.0": "Installed firmware below 1.2.1 (Wh)"
+      "1.2.1": "Installed firmware 1.2.1 or newer (0.1 Wh)"
+    default: "1.2.1"
+    sensor_replacements:
+      total_energy:
+        "1.0.0": {scale: 0.001, precision: 3}
+        "1.2.1": {scale: 0.0001, precision: 4}
+      session_energy:
+        "1.0.0": {scale: 0.001, precision: 3}
+        "1.2.1": {scale: 0.0001, precision: 4}
+
+  connector_type:
+    description: "Connector hardware (locking status applies to sockets only)"
+    options:
+      cable: "Attached cable"
+      socket: "Socket"
+    default: cable
+
+  rfid:
+    description: "RFID hardware installed and Modbus RFID reading enabled in KEBA app"
+    options:
+      unavailable: "Do not read RFID information"
+      enabled: "Read RFID information (sensitive data)"
+    default: unavailable
+
+  phase_switching_registers:
+    description: "Registers 1550/1552 verified on installed phase-switching hardware and firmware"
+    options:
+      unavailable: "Not confirmed (do not read)"
+      confirmed: "Confirmed supported by this device"
+    default: unavailable
+
+sensors:
+  - name: "Charging State (raw)"
+    unique_id: "charging_state_raw"
+    address: 1000
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    precision: 0
+    read_group: "keba_1000"
+    scan_group: fast
+    mm_group: "EV_charging_status"
+    entity_category: diagnostic
+
+  - name: "Cable State (raw)"
+    unique_id: "cable_state_raw"
+    address: 1004
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    precision: 0
+    read_group: "keba_1004"
+    scan_group: fast
+    mm_group: "EV_charging_status"
+    entity_category: diagnostic
+
+  - name: "Error Code"
+    unique_id: "error_code"
+    address: 1006
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    precision: 0
+    read_group: "keba_1006"
+    scan_group: fast
+    mm_group: "EV_device_status"
+    entity_category: diagnostic
+
+  - name: "Current L1"
+    unique_id: "current_l1"
+    address: 1008
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    scale: 0.001
+    precision: 3
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    read_group: "keba_1008"
+    scan_group: fast
+    mm_group: "EV_measurements"
+
+  - name: "Current L2"
+    unique_id: "current_l2"
+    address: 1010
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    scale: 0.001
+    precision: 3
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    read_group: "keba_1010"
+    scan_group: fast
+    mm_group: "EV_measurements"
+
+  - name: "Current L3"
+    unique_id: "current_l3"
+    address: 1012
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    scale: 0.001
+    precision: 3
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    read_group: "keba_1012"
+    scan_group: fast
+    mm_group: "EV_measurements"
+
+  - name: "Serial Number"
+    unique_id: "serial_number"
+    address: 1014
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    precision: 0
+    read_group: "keba_1014"
+    scan_group: slow
+    mm_group: "EV_device_info"
+    entity_category: diagnostic
+
+  - name: "Product Type and Features"
+    unique_id: "product_type_and_features"
+    address: 1016
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    precision: 0
+    read_group: "keba_1016"
+    scan_group: slow
+    mm_group: "EV_device_info"
+    entity_category: diagnostic
+
+  - name: "Firmware Version (raw)"
+    unique_id: "firmware_version_raw"
+    address: 1018
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    precision: 0
+    read_group: "keba_1018"
+    scan_group: slow
+    mm_group: "EV_device_info"
+    entity_category: diagnostic
+
+  - name: "Active Power"
+    unique_id: "active_power"
+    address: 1020
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    scale: 0.001
+    precision: 3
+    unit_of_measurement: "W"
+    device_class: power
+    state_class: measurement
+    read_group: "keba_1020"
+    scan_group: fast
+    mm_group: "EV_measurements"
+
+  - name: "Total Energy"
+    unique_id: "total_energy"
+    address: 1036
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "kWh"
+    device_class: energy
+    state_class: total_increasing
+    read_group: "keba_1036"
+    scan_group: medium
+    mm_group: "EV_meter_reading"
+
+  - name: "Voltage L1"
+    unique_id: "voltage_l1"
+    address: 1040
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    precision: 0
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    read_group: "keba_1040"
+    scan_group: fast
+    mm_group: "EV_measurements"
+
+  - name: "Voltage L2"
+    unique_id: "voltage_l2"
+    address: 1042
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    precision: 0
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    read_group: "keba_1042"
+    scan_group: fast
+    mm_group: "EV_measurements"
+
+  - name: "Voltage L3"
+    unique_id: "voltage_l3"
+    address: 1044
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    precision: 0
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    read_group: "keba_1044"
+    scan_group: fast
+    mm_group: "EV_measurements"
+
+  - name: "Power Factor"
+    unique_id: "power_factor"
+    address: 1046
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "%"
+    device_class: power_factor
+    state_class: measurement
+    read_group: "keba_1046"
+    scan_group: fast
+    mm_group: "EV_measurements"
+
+  - name: "Maximum Charging Current"
+    unique_id: "maximum_charging_current"
+    address: 1100
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    scale: 0.001
+    precision: 3
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    read_group: "keba_1100"
+    scan_group: fast
+    mm_group: "EV_charging_status"
+
+  - name: "Supported Charging Current"
+    unique_id: "supported_charging_current"
+    address: 1110
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    scale: 0.001
+    precision: 3
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    read_group: "keba_1110"
+    scan_group: fast
+    mm_group: "EV_charging_status"
+
+  - name: "Fast Charging Status"
+    unique_id: "fast_charging_status"
+    address: 1200
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    read_group: "keba_1200"
+    scan_group: fast
+    mm_group: "EV_charging_status"
+    map:
+      0: "Inactive"
+      1: "Active (Modbus current control unavailable)"
+
+  - name: "RFID Card (raw)"
+    unique_id: "rfid_card_raw"
+    address: 1500
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    precision: 0
+    read_group: "keba_1500"
+    scan_group: slow
+    mm_group: "EV_device_info"
+    entity_category: diagnostic
+    condition: "rfid == 'enabled'"
+
+  - name: "Session Energy"
+    unique_id: "session_energy"
+    address: 1502
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "kWh"
+    device_class: energy
+    state_class: total_increasing
+    read_group: "keba_1502"
+    scan_group: medium
+    mm_group: "EV_meter_reading"
+
+  # Guide V1.02 promises these in a later, unspecified software update.
+  - name: "Phase Switching Source"
+    unique_id: "phase_switching_source"
+    address: 1550
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    read_group: "keba_1550"
+    scan_group: medium
+    mm_group: "EV_device_status"
+    entity_category: diagnostic
+    condition: "phase_switching_registers == 'confirmed'"
+    map:
+      0: "Unavailable"
+      1: "OCPP"
+      2: "REST API"
+      3: "Modbus TCP"
+
+  - name: "Phase Switching State"
+    unique_id: "phase_switching_state"
+    address: 1552
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    read_group: "keba_1552"
+    scan_group: medium
+    mm_group: "EV_charging_status"
+    condition: "phase_switching_registers == 'confirmed'"
+    map:
+      1: "Single-phase charging"
+      3: "Three-phase charging possible"
+
+  - name: "Failsafe Current Setting"
+    unique_id: "failsafe_current_setting"
+    address: 1600
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    scale: 0.001
+    precision: 3
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    read_group: "keba_1600"
+    scan_group: medium
+    mm_group: "EV_device_status"
+    entity_category: diagnostic
+
+  - name: "Failsafe Timeout Setting"
+    unique_id: "failsafe_timeout_setting"
+    address: 1602
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    precision: 0
+    unit_of_measurement: "s"
+    device_class: duration
+    state_class: measurement
+    read_group: "keba_1602"
+    scan_group: medium
+    mm_group: "EV_device_status"
+    entity_category: diagnostic
+
+  - name: "Hardware Revision Device"
+    unique_id: "hardware_revision_device"
+    address: 1700
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    precision: 0
+    read_group: "keba_1700"
+    scan_group: slow
+    mm_group: "EV_device_info"
+    entity_category: diagnostic
+
+  - name: "Hardware Revision KC-MS10"
+    unique_id: "hardware_revision_ms10"
+    address: 1702
+    input_type: holding
+    read_function_code: 3
+    data_type: uint32
+    count: 2
+    byte_order: big
+    swap: none
+    precision: 0
+    read_group: "keba_1702"
+    scan_group: slow
+    mm_group: "EV_device_info"
+    entity_category: diagnostic
+
+controls: []
+
+calculated:
+  - name: "Charging State"
+    unique_id: "charging_state"
+    type: sensor
+    mm_group: "EV_charging_status"
+    availability: >-
+      {{ states('[[mm:sensor:{PREFIX}_charging_state_raw]]') in ['0', '1', '2', '3', '4', '5'] }}
+    state: >-
+      {{ {0: 'Starting', 1: 'Not ready', 2: 'Ready', 3: 'Charging', 4: 'Error', 5: 'Suspended'}
+         [states('[[mm:sensor:{PREFIX}_charging_state_raw]]') | int] }}
+
+  - name: "Cable State"
+    unique_id: "cable_state"
+    type: sensor
+    mm_group: "EV_charging_status"
+    availability: >-
+      {{ states('[[mm:sensor:{PREFIX}_cable_state_raw]]') in ['0', '1', '3', '5', '7'] and
+         states('[[mm:sensor:{PREFIX}_product_type_and_features]]') | is_number }}
+    state: >-
+      {% set product = states('[[mm:sensor:{PREFIX}_product_type_and_features]]') | int %}
+      {% set attached = (product // 10000) % 10 == 1 %}
+      {% set code = states('[[mm:sensor:{PREFIX}_cable_state_raw]]') | int %}
+      {% if attached and code in [3, 7] %}
+        {{ 'Vehicle connected' if code == 7 else 'Station connected' }}
+      {% else %}
+        {{ {0: 'Disconnected', 1: 'Station connected', 3: 'Station connected and locked',
+            5: 'Vehicle connected, unlocked', 7: 'Vehicle connected and locked'}[code] }}
+      {% endif %}
+
+  - name: "Firmware Version"
+    unique_id: "firmware_version"
+    type: sensor
+    mm_group: "EV_device_info"
+    entity_category: diagnostic
+    availability: >-
+      {{ states('[[mm:sensor:{PREFIX}_firmware_version_raw]]') | is_number and
+         (states('[[mm:sensor:{PREFIX}_firmware_version_raw]]') | int) > 0 }}
+    state: >-
+      {%- set version = states('[[mm:sensor:{PREFIX}_firmware_version_raw]]') | int -%}
+      {{ '%d.%d.%d' | format(version // 10000, (version // 100) % 100, version % 100) }}
+
+  - name: "RFID UID Prefix"
+    unique_id: "rfid_uid_prefix"
+    type: sensor
+    mm_group: "EV_device_info"
+    entity_category: diagnostic
+    condition: "rfid == 'enabled'"
+    availability: >-
+      {{ states('[[mm:sensor:{PREFIX}_rfid_card_raw]]') | is_number and
+         0 < (states('[[mm:sensor:{PREFIX}_rfid_card_raw]]') | int) <= 4294967295 }}
+    state: >-
+      {{ '%08X' | format(states('[[mm:sensor:{PREFIX}_rfid_card_raw]]') | int) }}
+
+binary_sensors:
+  - name: "Vehicle Connected"
+    unique_id: "vehicle_connected"
+    type: binary_sensor
+    device_class: plug
+    mm_group: "EV_charging_status"
+    availability: >-
+      {{ states('[[mm:sensor:{PREFIX}_cable_state_raw]]') in ['0', '1', '3', '5', '7'] }}
+    state: >-
+      {{ states('[[mm:sensor:{PREFIX}_cable_state_raw]]') in ['5', '7'] }}
+
+  - name: "Charging Active"
+    unique_id: "charging_active"
+    type: binary_sensor
+    device_class: running
+    mm_group: "EV_charging_status"
+    availability: >-
+      {{ states('[[mm:sensor:{PREFIX}_charging_state_raw]]') in ['0', '1', '2', '3', '4', '5'] }}
+    state: >-
+      {{ states('[[mm:sensor:{PREFIX}_charging_state_raw]]') == '3' }}
+
+  - name: "Error Present"
+    unique_id: "error_present"
+    type: binary_sensor
+    device_class: problem
+    mm_group: "EV_device_status"
+    entity_category: diagnostic
+    availability: >-
+      {{ states('[[mm:sensor:{PREFIX}_charging_state_raw]]') in ['0', '1', '2', '3', '4', '5'] }}
+    state: >-
+      {{ states('[[mm:sensor:{PREFIX}_charging_state_raw]]') == '4' }}
+
+  - name: "Plug Locked"
+    unique_id: "plug_locked"
+    type: binary_sensor
+    icon: "mdi:lock"
+    mm_group: "EV_charging_status"
+    condition: "connector_type == 'socket'"
+    availability: >-
+      {{ states('[[mm:sensor:{PREFIX}_cable_state_raw]]') in ['0', '1', '3', '5', '7'] }}
+    state: >-
+      {{ states('[[mm:sensor:{PREFIX}_cable_state_raw]]') in ['3', '7'] }}
