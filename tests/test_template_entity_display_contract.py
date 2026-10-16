@@ -123,6 +123,23 @@ class TemplateEntityDisplayContractTest(unittest.TestCase):
         self.assertEqual(attr_name_reads, [])
         self.assertIn("self._log_label", select_source)
 
+    def test_calculated_entities_never_read_attr_name_after_display_helper(self):
+        """Translated calculated entities must log via a stable label."""
+        calculated_source = (
+            ROOT / "custom_components/modbus_manager/calculated.py"
+        ).read_text(encoding="utf-8")
+        tree = ast.parse(calculated_source)
+        attr_name_reads = [
+            node
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Attribute)
+            and isinstance(node.value, ast.Name)
+            and node.value.id == "self"
+            and node.attr == "_attr_name"
+        ]
+        self.assertEqual(attr_name_reads, [])
+        self.assertIn("self._log_label", calculated_source)
+
 
 if __name__ == "__main__":
     unittest.main()

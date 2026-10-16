@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 import asyncio
+import copy
 import json
 import logging
 import os
@@ -17,6 +18,7 @@ from pathlib import Path
 import yaml
 from jinja2 import StrictUndefined
 from jinja2.nativetypes import NativeEnvironment
+from packaging import version
 
 from test_register_optimizer import ranges
 from test_scan_groups import normalize_scan_group  # Loads production constants.
@@ -84,6 +86,8 @@ def production_namespace():
         re=re,
         struct=struct,
         yaml=yaml,
+        copy=copy,
+        version=version,
         annotate_register_scan_timing=annotate_register_scan_timing,
         _template_cache={},
         _cache_file_mtimes={},
@@ -127,6 +131,18 @@ def production_namespace():
             "collect_version_replacements",
             "apply_version_replacements",
             "resolve_firmware_profile_version",
+            "entity_allowed_for_protocol",
+        },
+    )
+    load_production_definitions(
+        "dynamic_processing.py",
+        namespace,
+        {
+            "migrate_legacy_battery_enabled",
+            "resolve_battery_config_value",
+            "process_dynamic_config",
+            "_should_include_sensor",
+            "_apply_firmware_modifications",
         },
     )
     load_production_definitions(
@@ -259,6 +275,42 @@ class KebaTemplatesTest(unittest.TestCase):
                 for field in fields:
                     self.assertIn(field, self.templates["p40"]["dynamic_config"])
                     self.assertTrue(labels[field].strip())
+
+    def test_empty_valid_model_override_uses_defaults_without_warning(self):
+        process = self.production["process_dynamic_config"]
+        logger = self.production["_LOGGER"]
+        records = []
+
+        class _Capture(logging.Handler):
+            def emit(self, record):
+                records.append(record)
+
+        handler = _Capture(level=logging.WARNING)
+        logger.addHandler(handler)
+        try:
+            result = process(
+                {"selected_model": "KeContact P30 c-series"},
+                deepcopy(self.templates["p30"]),
+            )
+        finally:
+            logger.removeHandler(handler)
+
+        self.assertEqual(
+            [
+                record.getMessage()
+                for record in records
+                if "Model config not found" in record.getMessage()
+            ],
+            [],
+        )
+        self.assertEqual(
+            result["config_values"]["selected_model"], "KeContact P30 c-series"
+        )
+        self.assertEqual(result["config_values"]["phases"], 3)
+        self.assertEqual(
+            result["config_values"]["dynamic_config"]["selected_model"],
+            "KeContact P30 c-series",
+        )
 
     def test_actual_loader_accepts_every_sensor(self):
         for model, template in self.templates.items():
