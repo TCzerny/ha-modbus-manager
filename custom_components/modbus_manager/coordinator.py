@@ -1605,14 +1605,14 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 return {}
 
             # Look up the selected model
-            model_config = valid_models.get(selected_model)
-            if not model_config:
+            if selected_model not in valid_models:
                 _LOGGER.warning(
                     "Selected model %s not found in valid_models for template %s",
                     selected_model,
                     template_name,
                 )
                 return {}
+            model_config = valid_models[selected_model]
 
             # GENERIC: Extract ALL configuration values from model_config
             # This automatically includes any new fields added to templates in the future:
