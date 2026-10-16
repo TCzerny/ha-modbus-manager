@@ -14,6 +14,7 @@ import sys
 import unittest
 from copy import deepcopy
 from pathlib import Path
+from unittest.mock import AsyncMock, patch
 
 import yaml
 from jinja2 import StrictUndefined
@@ -150,13 +151,14 @@ def production_namespace():
     )
     load_production_definitions("value_processor.py", namespace)
     tree = ast.parse((COMPONENT / "coordinator.py").read_text(encoding="utf-8"))
-    method = next(
+    methods = [
         node
         for node in ast.walk(tree)
-        if isinstance(node, ast.FunctionDef) and node.name == "_process_register_value"
-    )
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+        and node.name in {"_process_register_value", "_extract_config_from_model"}
+    ]
     exec(
-        compile(ast.Module([method], type_ignores=[]), "coordinator.py", "exec"),
+        compile(ast.Module(methods, type_ignores=[]), "coordinator.py", "exec"),
         namespace,
     )
     return namespace
@@ -311,6 +313,48 @@ class KebaTemplatesTest(unittest.TestCase):
             result["config_values"]["dynamic_config"]["selected_model"],
             "KeContact P30 c-series",
         )
+
+    def test_coordinator_accepts_existing_model_with_empty_config(self):
+        template = deepcopy(self.templates["p30"])
+        loader = AsyncMock(return_value=template)
+        with patch.dict(self.production, get_template_by_name=loader):
+            with self.assertNoLogs(self.production["_LOGGER"], level="WARNING"):
+                result = asyncio.run(self.production["_extract_config_from_model"](
+                    None, "KeContact P30 c-series", template["name"]
+                ))
+        self.assertEqual(result, {})
+        loader.assert_awaited_once_with(template["name"])
+
+    def test_coordinator_preserves_existing_populated_model_config(self):
+        template = deepcopy(self.templates["p30"])
+        model_config = {"phases": 3, "max_charge_power": 22000}
+        template["dynamic_config"]["valid_models"]["KeContact P30 c-series"] = model_config
+        loader = AsyncMock(return_value=template)
+        with patch.dict(self.production, get_template_by_name=loader):
+            with self.assertNoLogs(self.production["_LOGGER"], level="WARNING"):
+                result = asyncio.run(self.production["_extract_config_from_model"](
+                    None, "KeContact P30 c-series", template["name"]
+                ))
+        self.assertEqual(result, model_config)
+        self.assertIsNot(result, model_config)
+        loader.assert_awaited_once_with(template["name"])
+
+    def test_coordinator_warns_for_missing_model(self):
+        template = deepcopy(self.templates["p30"])
+        loader = AsyncMock(return_value=template)
+        with patch.dict(self.production, get_template_by_name=loader):
+            with self.assertLogs(self.production["_LOGGER"], level="WARNING") as logs:
+                result = asyncio.run(self.production["_extract_config_from_model"](
+                    None, "Unknown KEBA model", template["name"]
+                ))
+        self.assertEqual(result, {})
+        self.assertEqual(len(logs.records), 1)
+        self.assertEqual(
+            logs.records[0].getMessage(),
+            "Selected model Unknown KEBA model not found in valid_models "
+            "for template KEBA KeContact P30",
+        )
+        loader.assert_awaited_once_with(template["name"])
 
     def test_actual_loader_accepts_every_sensor(self):
         for model, template in self.templates.items():
