@@ -79,6 +79,14 @@ class ModbusCalculatedSensor(SensorEntity):
         self._slave_id = slave_id
         self._config_entry_id = config_entry_id
         self._template_error_logged = False
+        # A translated entity deliberately has no instance ``_attr_name``:
+        # Home Assistant uses the absent attribute to reach its translation
+        # lookup. Keep an independent label for diagnostics instead.
+        self._log_label = str(
+            config.get("name")
+            or config.get("unique_id")
+            or "Unknown Calculated Sensor"
+        )
 
         # Extract configuration
         # Name is already processed by coordinator with prefix via _process_entities_with_prefix
@@ -124,12 +132,12 @@ class ModbusCalculatedSensor(SensorEntity):
             self._attr_icon = self._static_icon
             _LOGGER.debug(
                 "Static icon set for calculated sensor %s: %s",
-                self._attr_name,
+                self._log_label,
                 self._static_icon,
             )
         elif self._raw_icon:
             _LOGGER.debug(
-                "Dynamic icon template set for calculated sensor %s", self._attr_name
+                "Dynamic icon template set for calculated sensor %s", self._log_label
             )
 
         self._mm_registry_frozen = False
@@ -191,7 +199,7 @@ class ModbusCalculatedSensor(SensorEntity):
         else:
             _LOGGER.error(
                 "Calculated entity %s missing device_info. Coordinator should provide this.",
-                self._attr_name,
+                self._log_label,
             )
             raise ValueError("device_info missing from coordinator")
 
@@ -200,7 +208,7 @@ class ModbusCalculatedSensor(SensorEntity):
 
         _LOGGER.debug(
             "Created calculated sensor: %s (unique_id: %s, mm_group: %s)",
-            self._attr_name,
+            self._log_label,
             self._attr_unique_id,
             self._mm_group,
         )
@@ -227,7 +235,7 @@ class ModbusCalculatedSensor(SensorEntity):
             return bool(self._availability_result)
         except Exception as e:
             _LOGGER.error(
-                "Error checking availability for %s: %s", self._attr_name, str(e)
+                "Error checking availability for %s: %s", self._log_label, str(e)
             )
             return True  # Default to available if check fails
 
@@ -279,7 +287,7 @@ class ModbusCalculatedSensor(SensorEntity):
         try:
             self._template = Template(state_s, self.hass)
         except Exception as e:
-            _LOGGER.error("Error creating template for %s: %s", self._attr_name, str(e))
+            _LOGGER.error("Error creating template for %s: %s", self._log_label, str(e))
             raise
 
         if self._raw_availability:
@@ -288,7 +296,7 @@ class ModbusCalculatedSensor(SensorEntity):
             except Exception as e:
                 _LOGGER.error(
                     "Error creating availability template for %s: %s",
-                    self._attr_name,
+                    self._log_label,
                     str(e),
                 )
                 raise
@@ -301,7 +309,7 @@ class ModbusCalculatedSensor(SensorEntity):
                 self._mm_icon_jinja = Template(icon_s, self.hass)
             except Exception as e:
                 _LOGGER.error(
-                    "Error creating icon template for %s: %s", self._attr_name, str(e)
+                    "Error creating icon template for %s: %s", self._log_label, str(e)
                 )
                 raise
 
@@ -318,7 +326,7 @@ class ModbusCalculatedSensor(SensorEntity):
             self._mm_registry_frozen = True
             _LOGGER.debug(
                 "MM registry markers frozen for %s (no further registry lookups)",
-                self._attr_name,
+                self._log_label,
             )
 
         self._dependency_entity_ids = _filter_placeholder_entity_deps(
@@ -424,7 +432,7 @@ class ModbusCalculatedSensor(SensorEntity):
                 self._availability_result = bool(availability_result)
             except Exception as e:
                 _LOGGER.debug(
-                    "Error checking availability for %s: %s", self._attr_name, str(e)
+                    "Error checking availability for %s: %s", self._log_label, str(e)
                 )
                 self._availability_result = True  # Default to available if check fails
 
@@ -444,7 +452,7 @@ class ModbusCalculatedSensor(SensorEntity):
                 if "Cannot be called from within the event loop" in str(e):
                     _LOGGER.debug(
                         "Template rendering issue for %s, trying alternative method",
-                        self._attr_name,
+                        self._log_label,
                     )
                     # Try to get the value directly
                     try:
@@ -510,13 +518,13 @@ class ModbusCalculatedSensor(SensorEntity):
                         self._attr_icon = rendered_icon.strip()
                     #  _LOGGER.debug(
                     #      "Dynamic icon updated for %s: %s",
-                    #      self._attr_name,
+                    #      self._log_label,
                     #      self._attr_icon,
                     #  )
                 except Exception as icon_error:
                     _LOGGER.debug(
                         "Error updating dynamic icon for %s: %s",
-                        self._attr_name,
+                        self._log_label,
                         str(icon_error),
                     )
                     # Keep existing icon or use static icon as fallback
@@ -531,19 +539,19 @@ class ModbusCalculatedSensor(SensorEntity):
             ):
                 _LOGGER.debug(
                     "Sensor %s has unavailable source value, setting to None",
-                    self._attr_name,
+                    self._log_label,
                 )
                 self._attr_native_value = None
             elif "Cannot be called from within the event loop" in message:
                 _LOGGER.debug(
-                    "Template rendering issue for %s, setting to None", self._attr_name
+                    "Template rendering issue for %s, setting to None", self._log_label
                 )
                 self._attr_native_value = None
             else:
                 if not self._template_error_logged:
                     _LOGGER.info(
                         "Calculated sensor %s template unavailable; waiting for source entities",
-                        self._attr_name,
+                        self._log_label,
                     )
                     self._template_error_logged = True
                 self._attr_native_value = None
@@ -577,6 +585,14 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         self._slave_id = slave_id
         self._config_entry_id = config_entry_id
         self._template_error_logged = False
+        # A translated entity deliberately has no instance ``_attr_name``:
+        # Home Assistant uses the absent attribute to reach its translation
+        # lookup. Keep an independent label for diagnostics instead.
+        self._log_label = str(
+            config.get("name")
+            or config.get("unique_id")
+            or "Unknown Binary Sensor"
+        )
 
         # Extract configuration
         # Name is already processed by coordinator with prefix via _process_entities_with_prefix
@@ -640,13 +656,13 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         else:
             _LOGGER.error(
                 "Calculated binary sensor %s missing device_info. Coordinator should provide this.",
-                self._attr_name,
+                self._log_label,
             )
             raise ValueError("device_info missing from coordinator")
 
         _LOGGER.debug(
             "Created calculated binary sensor: %s (unique_id: %s, mm_group: %s)",
-            self._attr_name,
+            self._log_label,
             self._attr_unique_id,
             self._mm_group,
         )
@@ -669,7 +685,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
             return bool(self._availability_result)
         except Exception as e:
             _LOGGER.error(
-                "Error checking availability for %s: %s", self._attr_name, str(e)
+                "Error checking availability for %s: %s", self._log_label, str(e)
             )
             return True
 
@@ -717,7 +733,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         try:
             self._template = Template(state_s, self.hass)
         except Exception as e:
-            _LOGGER.error("Error creating template for %s: %s", self._attr_name, str(e))
+            _LOGGER.error("Error creating template for %s: %s", self._log_label, str(e))
             raise
 
         if self._raw_availability:
@@ -726,7 +742,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
             except Exception as e:
                 _LOGGER.error(
                     "Error creating availability template for %s: %s",
-                    self._attr_name,
+                    self._log_label,
                     str(e),
                 )
                 raise
@@ -740,7 +756,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
             self._mm_registry_frozen = True
             _LOGGER.debug(
                 "MM registry markers frozen for %s (no further registry lookups)",
-                self._attr_name,
+                self._log_label,
             )
 
         self._dependency_entity_ids = _filter_placeholder_entity_deps(
@@ -844,7 +860,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
                 self._availability_result = bool(availability_result)
             except Exception as e:
                 _LOGGER.debug(
-                    "Error checking availability for %s: %s", self._attr_name, str(e)
+                    "Error checking availability for %s: %s", self._log_label, str(e)
                 )
                 self._availability_result = True
 
@@ -863,7 +879,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
                 if "Cannot be called from within the event loop" in str(e):
                     _LOGGER.debug(
                         "Template rendering issue for %s, trying alternative method",
-                        self._attr_name,
+                        self._log_label,
                     )
                     try:
                         rendered_value = self._template.template
@@ -877,7 +893,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
                     if not self._template_error_logged:
                         _LOGGER.info(
                             "Calculated binary sensor %s template unavailable; waiting for source entities",
-                            self._attr_name,
+                            self._log_label,
                         )
                         self._template_error_logged = True
                     self._attr_is_on = None
@@ -912,7 +928,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
                         # If conversion fails, log warning and treat as False
                         _LOGGER.warning(
                             "Binary sensor %s received unrecognized string value: '%s', treating as False",
-                            self._attr_name,
+                            self._log_label,
                             rendered_value,
                         )
                         self._attr_is_on = False
@@ -924,7 +940,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
 
         #  _LOGGER.debug(
         #      "Binary sensor %s updated: state=%s (rendered=%s)",
-        #      self._attr_name,
+        #      self._log_label,
         #      self._attr_is_on,
         #      rendered_value,
         #  )
@@ -932,7 +948,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         except Exception as e:
             _LOGGER.error(
                 "Error updating calculated binary sensor %s: %s",
-                self._attr_name,
+                self._log_label,
                 str(e),
             )
             self._attr_is_on = None

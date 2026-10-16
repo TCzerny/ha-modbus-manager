@@ -80,12 +80,11 @@ def process_dynamic_config(user_input: dict, template_data: dict) -> dict:
         )
 
         # Get model configuration directly from valid_models
-        model_config = (
-            valid_models.get(selected_model)
-            if valid_models and isinstance(valid_models, dict)
-            else None
+        model_config_exists = (
+            isinstance(valid_models, dict) and selected_model in valid_models
         )
-        if model_config:
+        model_config = valid_models.get(selected_model, {}) if model_config_exists else None
+        if model_config_exists:
             # Generic model configuration - extract all fields dynamically
             config_values = {}
             for field_name, field_value in model_config.items():
@@ -101,12 +100,18 @@ def process_dynamic_config(user_input: dict, template_data: dict) -> dict:
             modules = config_values.get("modules", 3)
 
             # Log all configuration values
-            config_str = ", ".join([f"{k}={v}" for k, v in config_values.items()])
-            _LOGGER.info(
-                "Using model-specific config for %s: %s",
-                selected_model,
-                config_str,
-            )
+            if config_values:
+                config_str = ", ".join([f"{k}={v}" for k, v in config_values.items()])
+                _LOGGER.info(
+                    "Using model-specific config for %s: %s",
+                    selected_model,
+                    config_str,
+                )
+            else:
+                _LOGGER.debug(
+                    "Selected model %s has no overrides; using template defaults",
+                    selected_model,
+                )
         else:
             _LOGGER.warning(
                 "Model config not found for %s, using defaults", selected_model
