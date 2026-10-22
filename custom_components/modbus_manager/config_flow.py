@@ -44,6 +44,7 @@ from .const import (
     SCAN_GROUP_SLOW,
     EntityIdStrategy,
 )
+from .device_registry_compat import device_belongs_to_config_entry
 from .device_utils import (
     async_get_registry_device,
     build_device_entry_id,
@@ -4533,6 +4534,12 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         """Build stable logical device id."""
         return build_device_entry_id(device)
 
+    def _normalize_device_record(self, device: dict[str, Any]) -> dict[str, Any]:
+        """Normalize a devices[] row (same fields as ConfigFlow)."""
+        normalized = _normalize_stored_device(device)
+        ensure_entity_id_strategy_on_device(normalized)
+        return normalized
+
     def _get_editable_devices(self) -> list[dict[str, Any]]:
         """Return normalized list of devices that can be edited."""
         devices = self.config_entry.data.get("devices", [])
@@ -4607,9 +4614,8 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                         device_entry_id,
                     )
                     continue
-                if (
-                    device_entry.config_entries
-                    and self.config_entry.entry_id in device_entry.config_entries
+                if device_belongs_to_config_entry(
+                    device_entry, self.config_entry.entry_id
                 ):
                     device_registry.async_remove_device(device_entry.id)
                     _LOGGER.info(

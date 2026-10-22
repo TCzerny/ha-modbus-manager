@@ -8,6 +8,19 @@ from typing import Any
 _UNSET = object()
 
 
+def device_belongs_to_config_entry(device_entry: Any, config_entry_id: str) -> bool:
+    """True if this registry device is owned by ``config_entry_id``.
+
+    Home Assistant 2026.8+: ``config_entry_id`` (do not read deprecated
+    ``config_entries``). Older cores: membership in ``config_entries``.
+    """
+    current_entry_id = getattr(device_entry, "config_entry_id", _UNSET)
+    if current_entry_id is not _UNSET:
+        return current_entry_id == config_entry_id
+    entries = getattr(device_entry, "config_entries", None) or ()
+    return config_entry_id in entries
+
+
 def device_subentry_ids_for_entry(
     device_entry: Any, config_entry_id: str
 ) -> set[str | None]:

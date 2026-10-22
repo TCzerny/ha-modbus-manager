@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🐛 Fixed
 
 - **Device registry — `config_entries_subentries` ([#126](https://github.com/TCzerny/ha-modbus-manager/issues/126))**: HA 2026.8+ uses `DeviceEntry.config_entry_id` / `config_subentry_id` so the deprecated map is not read (warning gone, removed in 2027.10). Cores before that keep `config_entries_subentries`. `unique_id` unchanged.
+- **Options — battery device save ([#129](https://github.com/TCzerny/ha-modbus-manager/issues/129))**: Configure on an existing battery device no longer fails with `_normalize_device_record` missing on the options flow. Same helper as setup; `unique_id` unchanged. Removing a hub device uses `config_entry_id` on HA 2026.8+ instead of deprecated `DeviceEntry.config_entries`.
 
 ## [1.3.3] - 2026-10-14
 
