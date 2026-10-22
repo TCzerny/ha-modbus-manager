@@ -84,6 +84,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 *Template and register map present; limited or no field validation on real hardware — please report issues.*
 
 - **[Heidelberg Energy Control](docs/README_heidelberg_energy_control.md)** – EV charger (Modbus RTU via proxy)
+- **[KEBA KeContact P30 / P40](docs/README_keba_kecontact.md)** – Read-only Modbus TCP monitoring; P30 c-/x-series and P40/P40 Pro, firmware-dependent energy scaling
 - **[BYD Battery Box](docs/README_byd_battery_box.md)** – HVS/HVM/HVL/LVS series
 - **[Fronius GEN24](docs/README_fronius_dynamic.md)** – SunSpec-capable
 - **[Growatt MIN/MOD/MAX](docs/README_growatt_min_mod_max_dynamic.md)** – Inverter template

@@ -177,6 +177,9 @@
                 "title": "Geräteoptionen",
                 "description": "Verbindung und Optionen für {template_name} konfigurieren{model_note}",
                 "data": {
+                    "connector_type": "Ladeanschluss",
+                    "rfid": "RFID-Informationen",
+                    "phase_switching_registers": "Unterstützung der Phasenumschaltungsregister",
                     "selected_model": "Modell auswählen",
                     "phases": "Anzahl Phasen",
                     "mppt_count": "Anzahl MPPT-Tracker",
@@ -467,6 +470,9 @@
                 "title": "Geräte-Optionen",
                 "description": "Geräteeinstellungen bearbeiten für: {device}",
                 "data": {
+                    "connector_type": "Ladeanschluss",
+                    "rfid": "RFID-Informationen",
+                    "phase_switching_registers": "Unterstützung der Phasenumschaltungsregister",
                     "device_entry_id": "Gerät",
                     "prefix": "Geräte-Prefix",
                     "slave_id": "Slave ID",
@@ -641,6 +647,9 @@
                 "title": "Gerät hinzufügen",
                 "description": "Dieses Gerät nutzt die Verbindung des Hubs. Zuerst Kategorie (oder Generisches Modbus-Gerät), dann Hersteller und Modell, danach Präfix und Slave-ID.",
                 "data": {
+                    "connector_type": "Ladeanschluss",
+                    "rfid": "RFID-Informationen",
+                    "phase_switching_registers": "Unterstützung der Phasenumschaltungsregister",
                     "template": "Geräte-Template",
                     "template_category": "Geräte-Kategorie",
                     "prefix": "Geräte-Prefix",
@@ -666,6 +675,9 @@
                 "title": "Gerät neu konfigurieren",
                 "description": "Geräteeinstellungen bearbeiten für: {device}",
                 "data": {
+                    "connector_type": "Ladeanschluss",
+                    "rfid": "RFID-Informationen",
+                    "phase_switching_registers": "Unterstützung der Phasenumschaltungsregister",
                     "prefix": "Geräte-Prefix",
                     "slave_id": "Slave ID",
                     "selected_model": "Modell auswählen",
@@ -935,6 +947,76 @@
     },
     "entity": {
         "sensor": {
+            "keba_charging_state_raw": {"name": "Ladestatus (Rohwert)"},
+            "keba_cable_state_raw": {"name": "Kabelstatus (Rohwert)"},
+            "keba_error_code": {"name": "Fehlercode"},
+            "keba_current_l1": {"name": "Strom L1"},
+            "keba_current_l2": {"name": "Strom L2"},
+            "keba_current_l3": {"name": "Strom L3"},
+            "keba_serial_number": {"name": "Seriennummer"},
+            "keba_product_type_and_features": {"name": "Produkttyp und Ausstattung"},
+            "keba_firmware_version_raw": {"name": "Firmware-Version (Rohwert)"},
+            "keba_firmware_version": {"name": "Firmware-Version"},
+            "keba_active_power": {"name": "Wirkleistung"},
+            "keba_total_energy": {"name": "Gesamtenergie"},
+            "keba_session_energy": {"name": "Energie der Ladesitzung"},
+            "keba_voltage_l1": {"name": "Spannung L1"},
+            "keba_voltage_l2": {"name": "Spannung L2"},
+            "keba_voltage_l3": {"name": "Spannung L3"},
+            "keba_power_factor": {"name": "Leistungsfaktor"},
+            "keba_maximum_charging_current": {"name": "Maximaler Ladestrom"},
+            "keba_supported_charging_current": {"name": "Unterstützter Ladestrom"},
+            "keba_rfid_card_raw": {"name": "RFID-Karte (Rohwert)"},
+            "keba_rfid_uid_prefix": {"name": "RFID-UID-Präfix"},
+            "keba_failsafe_current_setting": {"name": "Eingestellter Fallback-Ladestrom"},
+            "keba_failsafe_timeout_setting": {"name": "Eingestellte Fallback-Zeitüberschreitung"},
+            "keba_hardware_revision_device": {"name": "Hardware-Revision der Wallbox"},
+            "keba_hardware_revision_ms10": {"name": "Hardware-Revision KC-MS10"},
+            "keba_charging_state": {
+                "name": "Ladestatus",
+                "state": {
+                    "Starting": "Wird gestartet",
+                    "Not ready": "Nicht ladebereit",
+                    "Ready": "Ladebereit",
+                    "Charging": "Lädt",
+                    "Error": "Fehler",
+                    "Suspended": "Laden unterbrochen"
+                }
+            },
+            "keba_cable_state": {
+                "name": "Kabelstatus",
+                "state": {
+                    "Disconnected": "Nicht angeschlossen",
+                    "Station connected": "An der Wallbox angeschlossen",
+                    "Station connected and locked": "An der Wallbox angeschlossen und verriegelt",
+                    "Vehicle connected, unlocked": "Am Fahrzeug angeschlossen, nicht verriegelt",
+                    "Vehicle connected and locked": "Am Fahrzeug angeschlossen und verriegelt",
+                    "Vehicle connected": "Am Fahrzeug angeschlossen"
+                }
+            },
+            "keba_fast_charging_status": {
+                "name": "Schnellladestatus",
+                "state": {
+                    "Inactive": "Inaktiv",
+                    "Active (Modbus current control unavailable)": "Aktiv (Stromregelung über Modbus nicht verfügbar)"
+                }
+            },
+            "keba_phase_switching_source": {
+                "name": "Steuerquelle der Phasenumschaltung",
+                "state": {
+                    "Unavailable": "Keine Steuerquelle für die Phasenumschaltung",
+                    "OCPP": "OCPP",
+                    "REST API": "REST-API",
+                    "Modbus TCP": "Modbus TCP"
+                }
+            },
+            "keba_phase_switching_state": {
+                "name": "Status der Phasenumschaltung",
+                "state": {
+                    "Single-phase charging": "Einphasiges Laden",
+                    "Three-phase charging possible": "Dreiphasiges Laden möglich"
+                }
+            },
             "combined_pair_type": {
                 "name": "Kombinationstyp",
                 "state": {
@@ -1193,6 +1275,22 @@
             "inepro_pro380_exported_energy": {"name": "Einspeiseenergie"}
         },
         "binary_sensor": {
+            "keba_vehicle_connected": {
+                "name": "Fahrzeug angeschlossen",
+                "state": {"on": "Angeschlossen", "off": "Nicht angeschlossen"}
+            },
+            "keba_charging_active": {
+                "name": "Ladevorgang aktiv",
+                "state": {"on": "Lädt", "off": "Lädt nicht"}
+            },
+            "keba_error_present": {
+                "name": "Fehler vorhanden",
+                "state": {"on": "Fehler", "off": "Kein Fehler"}
+            },
+            "keba_plug_locked": {
+                "name": "Ladestecker verriegelt",
+                "state": {"on": "Verriegelt", "off": "Nicht verriegelt"}
+            },
             "combined_source_a_available": {
                 "name": "Quelle A verfügbar"
             },
