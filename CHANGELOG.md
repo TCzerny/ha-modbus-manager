@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### ✨ Added
 
 - **HACS / HA brand icon**: Square icon in `custom_components/modbus_manager/brand/` (`icon.png`, `icon@2x.png`) for HA 2026.3+ local brands and the HACS default-catalog brands check.
-- **CI — hassfest and HACS Action**: `.github/workflows/validate.yml` on push/PR, weekly schedule, and manual run. No `ignore` flags (required before a `hacs/default` PR).
+- **CI — hassfest and HACS Action**: `.github/workflows/validate.yml` on push/PR, weekly schedule, and manual run. No `ignore` flags (required before a `hacs/default` PR). Root translation `title`. Checkout action v7. Subentry flow has no deprecated `config_subentries.*.title`.
 
 ### 🐛 Fixed
 
