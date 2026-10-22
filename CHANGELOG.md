@@ -7,10 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.4] - 2026-10-22
+
+### ✨ Added
+
+- **KEBA KeContact P30 / P40 ([#128](https://github.com/TCzerny/ha-modbus-manager/pull/128))**: Read-only Modbus TCP templates (needs testing). Per-register read groups, P40 energy scale as a manual firmware profile, English/German entity translations. Thanks to [@7weazel7](https://github.com/7weazel7).
+- **AEFA EVSE ([#130](https://github.com/TCzerny/ha-modbus-manager/pull/130))**: Modbus TCP template for AEFA hardware sold as EM2GO / Greenlight / evpartner / Kallik / AMPHAWK / ANS (needs testing). Field checks on Greenlight EVB07 and EVE03. Thanks to [@hostcc](https://github.com/hostcc).
+
 ### 🐛 Fixed
 
 - **Device registry — `config_entries_subentries` ([#126](https://github.com/TCzerny/ha-modbus-manager/issues/126))**: HA 2026.8+ uses `DeviceEntry.config_entry_id` / `config_subentry_id` so the deprecated map is not read (warning gone, removed in 2027.10). Cores before that keep `config_entries_subentries`. `unique_id` unchanged.
 - **Options — battery device save ([#129](https://github.com/TCzerny/ha-modbus-manager/issues/129))**: Configure on an existing battery device no longer fails with `_normalize_device_record` missing on the options flow. Same helper as setup; `unique_id` unchanged. Removing a hub device uses `config_entry_id` on HA 2026.8+ instead of deprecated `DeviceEntry.config_entries`.
+- **Calculated entities — log label**: Translated calculated sensors/binary sensors no longer use missing `_attr_name` in logs. Empty `valid_models` rows are accepted instead of a false "model not found" warning.
 
 ## [1.3.3] - 2026-10-14
 
