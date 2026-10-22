@@ -59,9 +59,10 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 - 🔌 **Victron EV Charging Station**: Modbus TCP (register list v3.8)
 - 🔌 **Sungrow AC011E Wallbox**: AC007-00, AC011E-01, AC22E-01 — **without iHM:** RS485 via inverter (slave **3**); **with iHM:** use the iHomeManager template instead ([topologies](docs/README_sungrow_wallbox_connection.md))
 - 🔌 **Heidelberg Energy Control**: EV charger (Modbus RTU via proxy) – *needs testing*
+- 🔌 **AEFA EVSE**: EV charger (Modbus TCP), tested with Greenlight EVB07 and EVE03 – *needs testing*
 
 **Needs testing on hardware**
-Templates present with limited field validation — please report issues: **Heidelberg Energy Control**, **Fronius GEN24**, **Growatt MIN/MOD/MAX**, **SMA Sunny Tripower/Boy**, **SolaX Inverter Series**, **BYD Battery Box**. See [Documentation](https://github.com/TCzerny/ha-modbus-manager/wiki) and `docs/` for per-template docs.
+Templates present with limited field validation — please report issues: **Heidelberg Energy Control**, **AEFA EVSE**, **Fronius GEN24**, **Growatt MIN/MOD/MAX**, **SMA Sunny Tripower/Boy**, **SolaX Inverter Series**, **BYD Battery Box**. See [Documentation](https://github.com/TCzerny/ha-modbus-manager/wiki) and `docs/` for per-template docs.
 
 
 ## 📋 Configuration
@@ -91,7 +92,7 @@ Templates present with limited field validation — please report issues: **Heid
 - **Sungrow iHomeManager EMS**: Grid/EMS + optional charger (`charger_enabled`)
 
 ### Needs Testing
-- **Heidelberg Energy Control**, **BYD Battery Box**, **Fronius GEN24**, **Growatt MIN/MOD/MAX**, **SMA**, **SolaX**
+- **AEFA EVSE** (tested with Greenlight EVB07 and EVE03), **Heidelberg Energy Control**, **BYD Battery Box**, **Fronius GEN24**, **Growatt MIN/MOD/MAX**, **SMA**, **SolaX**
 
 
 ### Template Development

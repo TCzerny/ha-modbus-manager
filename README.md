@@ -84,6 +84,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 *Template and register map present; limited or no field validation on real hardware — please report issues.*
 
 - **[Heidelberg Energy Control](docs/README_heidelberg_energy_control.md)** – EV charger (Modbus RTU via proxy)
+- **[AEFA EVSE](docs/README_aefa_evse.md)** – EV charger (Modbus TCP). Tested with Greenlight EVB07 and EVE03
 - **[KEBA KeContact P30 / P40](docs/README_keba_kecontact.md)** – Read-only Modbus TCP monitoring; P30 c-/x-series and P40/P40 Pro, firmware-dependent energy scaling
 - **[BYD Battery Box](docs/README_byd_battery_box.md)** – HVS/HVM/HVL/LVS series
 - **[Fronius GEN24](docs/README_fronius_dynamic.md)** – SunSpec-capable
@@ -181,6 +182,7 @@ The repo file [`CONTRIBUTING.md`](CONTRIBUTING.md) is a short entry point with t
 - **[Sungrow AC011E Wallbox](docs/README_sungrow_ac011e_wallbox.md)** - EV wallbox template (AC007, AC011E, AC22E)
 - **[Sungrow AC wallbox connection](docs/README_sungrow_wallbox_connection.md)** - RS485 via inverter vs iHM (`charger_enabled`; no TLS to charger `:516` while iHM holds that port)
 - **[Heidelberg Energy Control](docs/README_heidelberg_energy_control.md)** - EV charger (Modbus RTU via proxy)
+- **[AEFA EVSE](docs/README_aefa_evse.md)** - EV charger (Modbus TCP; needs testing). Tested with Greenlight EVB07 and EVE03
 - **[BYD Battery Box](docs/README_byd_battery_box.md)** - BYD Battery-Box template (BETA)
 - **[Fronius GEN24 Dynamic](docs/README_fronius_dynamic.md)** - Fronius GEN24 template (BETA)
 - **[Growatt MIN/MOD/MAX Dynamic](docs/README_growatt_min_mod_max_dynamic.md)** - Growatt template (BETA)

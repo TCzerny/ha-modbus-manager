@@ -1,0 +1,504 @@
+---
+# AEFA / Chengdu Alpha / Honors (ANS) EVSE with Modbus TCP.
+#
+# Faceplate brands on this hardware:
+#   EM2GO Home (D-Parts) — EMH011AC1RW / EMH022AC1RW
+#   Greenlight GNLT EVB — EVB07W / EVB11W / EVB12W / EVB22W
+#   evpartner e-Vision Pro Max (inovatronic)
+#   IGLU Kallik Home (IGLU TECH) — sold as EVE11W / EVE22W
+#   Voltant AMPHAWK — factory codes EVE07W / EVE11W / EVE22W
+#   ANS / Honors — factory export name (ANS-EVE)
+#
+# Based on EM2GO Modbus register map,
+# https://wallboxcenter.de/wp-content/uploads/2024/06/EM2GO-Home-Wallbox-11kw-Modbus-Register.pdf
+
+name: "AEFA EVSE"
+display_name: "AEFA EVSE"
+description: >-
+  AEFA EVSE, sold under EM2GO, Greenlight GNLT, evpartner e-Vision, IGLU
+  Kallik, Voltant AMPHAWK, and ANS/Honors brands (there might be others).
+model: "EVSE"
+manufacturer: "AEFA (EM2GO/Greenlight/evpartner/Kallik/AMPHAWK/ANS)"
+type: "ev_charger"
+version: 1.0.0
+firmware_version: "1.0"
+default_slave_id: 255
+default_prefix: "AEFA"
+
+dynamic_config:
+  valid_models:
+    "22 kW, three phases":
+      min_current: 6
+      max_current: 32
+      phases: 3
+    "16 kW, three phases":
+      min_current: 6
+      max_current: 25
+      phases: 3
+    "11 kW, three phases":
+      min_current: 6
+      max_current: 16
+      phases: 3
+    "7 kW, single phase":
+      min_current: 6
+      max_current: 32
+      phases: 1
+    "3.5 kW, single phase":
+      min_current: 6
+      max_current: 16
+      phases: 1
+
+sensors:
+  - name: "EVSE State"
+    unique_id: "evse_state"
+    address: 0
+    input_type: holding
+    data_type: uint16
+    scan_interval: 5
+    mm_group: "EV_charging_status"
+    icon: "mdi:ev-station"
+    map:
+      0: "Unknown"
+      1: "Standby"
+      2: "Connected"
+      3: "Starting"
+      4: "Charging"
+      5: "Start failed"
+      6: "Charging end"
+      7: "System fail"
+      8: "Transaction scheduled"
+      9: "Firmware update"
+      10: "Power on"
+
+  - name: "Cable State"
+    unique_id: "cable_state"
+    address: 2
+    input_type: holding
+    data_type: uint16
+    scan_interval: 30
+    mm_group: "EV_charging_status"
+    icon: "mdi:cable-data"
+    map:
+      0: "Not connected"
+      1: "Connected"
+
+  - name: "Error Code"
+    unique_id: "error_code"
+    address: 4
+    input_type: holding
+    data_type: uint16
+    scan_interval: 10
+    mm_group: "EV_charging_status"
+    icon: "mdi:alert-circle"
+    entity_category: "diagnostic"
+    map:
+      0: "None"
+      11: "CP fault"
+      12: "E-stop"
+      13: "Under-voltage"
+      14: "Over-voltage"
+      15: "Over-temperature"
+      16: "Meter fault"
+      17: "Leakage"
+      18: "Short"
+      19: "Over-current"
+      21: "Vehicle fault"
+      22: "Vehicle comm timeout"
+      23: "Relay"
+      24: "RCD"
+      25: "PE"
+      26: "Start-up charging fault"
+
+  - name: "Charge Current L1"
+    unique_id: "charge_current_l1"
+    address: 6
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    scan_interval: 5
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    mm_group: "EV_measurements"
+    icon: "mdi:current-ac"
+
+  - name: "Charge Current L2"
+    unique_id: "charge_current_l2"
+    address: 8
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    scan_interval: 5
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    mm_group: "EV_measurements"
+    icon: "mdi:current-ac"
+    condition: "phases >= 2"
+
+  - name: "Charge Current L3"
+    unique_id: "charge_current_l3"
+    address: 10
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    scan_interval: 5
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    mm_group: "EV_measurements"
+    icon: "mdi:current-ac"
+    condition: "phases >= 3"
+
+  - name: "Active Power"
+    unique_id: "active_power"
+    address: 12
+    input_type: holding
+    data_type: uint32
+    scan_interval: 5
+    unit_of_measurement: "W"
+    device_class: power
+    state_class: measurement
+    mm_group: "EV_measurements"
+    icon: "mdi:lightning-bolt"
+
+  - name: "Active Power L1"
+    unique_id: "active_power_l1"
+    address: 16
+    input_type: holding
+    data_type: uint32
+    scale: 10
+    precision: 0
+    scan_interval: 5
+    unit_of_measurement: "W"
+    device_class: power
+    state_class: measurement
+    mm_group: "EV_measurements"
+    icon: "mdi:lightning-bolt"
+
+  - name: "Active Power L2"
+    unique_id: "active_power_l2"
+    address: 20
+    input_type: holding
+    data_type: uint32
+    scale: 10
+    precision: 0
+    scan_interval: 5
+    unit_of_measurement: "W"
+    device_class: power
+    state_class: measurement
+    mm_group: "EV_measurements"
+    icon: "mdi:lightning-bolt"
+    condition: "phases >= 2"
+
+  - name: "Active Power L3"
+    unique_id: "active_power_l3"
+    address: 24
+    input_type: holding
+    data_type: uint32
+    scale: 10
+    precision: 0
+    scan_interval: 5
+    unit_of_measurement: "W"
+    device_class: power
+    state_class: measurement
+    mm_group: "EV_measurements"
+    icon: "mdi:lightning-bolt"
+    condition: "phases >= 3"
+
+  - name: "Total Energy"
+    unique_id: "total_energy"
+    address: 28
+    input_type: holding
+    data_type: uint32
+    scale: 0.1
+    precision: 1
+    scan_interval: 60
+    unit_of_measurement: "kWh"
+    device_class: energy
+    state_class: total_increasing
+    mm_group: "EV_measurements"
+    icon: "mdi:meter-electric"
+
+  - name: "EVSE Max Current"
+    unique_id: "evse_max_current"
+    address: 32
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    scan_interval: 600
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    mm_group: "EV_device_info"
+    icon: "mdi:gauge-full"
+    entity_category: "diagnostic"
+
+  - name: "EVSE Min Current"
+    unique_id: "evse_min_current"
+    address: 34
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    scan_interval: 600
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    mm_group: "EV_device_info"
+    icon: "mdi:gauge-empty"
+    entity_category: "diagnostic"
+
+  - name: "Cable Max Current"
+    unique_id: "cable_max_current"
+    address: 36
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    scan_interval: 600
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    mm_group: "EV_device_info"
+    icon: "mdi:ev-plug-type2"
+    entity_category: "diagnostic"
+
+  - name: "Serial number"
+    unique_id: "serial_number"
+    address: 38
+    input_type: holding
+    data_type: string
+    encoding: hex
+    byte_order: big
+    count: 3
+    scan_interval: 600
+    mm_group: "EV_device_info"
+    icon: "mdi:label"
+    entity_category: "diagnostic"
+
+  - name: "Charging Energy"
+    unique_id: "charging_energy"
+    address: 72
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    scan_interval: 10
+    unit_of_measurement: "kWh"
+    device_class: energy
+    state_class: total
+    mm_group: "EV_measurements"
+    icon: "mdi:battery-charging"
+
+  - name: "Charging Duration"
+    unique_id: "charging_duration"
+    address: 78
+    input_type: holding
+    data_type: uint32
+    precision: 0
+    scan_interval: 10
+    unit_of_measurement: "s"
+    device_class: duration
+    state_class: measurement
+    mm_group: "EV_measurements"
+    icon: "mdi:timer-outline"
+
+  - name: "Voltage L1"
+    unique_id: "voltage_l1"
+    address: 109
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    scan_interval: 10
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    mm_group: "EV_measurements"
+    icon: "mdi:flash"
+
+  - name: "Voltage L2"
+    unique_id: "voltage_l2"
+    address: 111
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    scan_interval: 10
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    mm_group: "EV_measurements"
+    icon: "mdi:flash"
+    condition: "phases >= 2"
+
+  - name: "Voltage L3"
+    unique_id: "voltage_l3"
+    address: 113
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    scan_interval: 10
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    mm_group: "EV_measurements"
+    icon: "mdi:flash"
+    condition: "phases >= 3"
+
+controls:
+  - type: number
+    name: "Modbus Current Limit"
+    unique_id: "modbus_current_limit"
+    address: 91
+    input_type: holding
+    write_function_code: 16
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    step: 0.1
+    min_value: "{{ min_current }}"
+    max_value: "{{ max_current }}"
+    scan_interval: 5
+    unit_of_measurement: "A"
+    device_class: current
+    mm_group: "EV_controls"
+    icon: "mdi:gauge"
+    entity_category: "config"
+
+  - type: number
+    name: "Fallback Current"
+    unique_id: "fallback_current"
+    address: 87
+    input_type: holding
+    write_function_code: 16
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    step: 0.1
+    min_value: "{{ min_current }}"
+    max_value: "{{ max_current }}"
+    scan_interval: 600
+    unit_of_measurement: "A"
+    device_class: current
+    mm_group: "EV_controls"
+    icon: "mdi:shield-alert"
+    entity_category: "config"
+
+  - type: number
+    name: "Comm Timeout"
+    unique_id: "comm_timeout"
+    address: 89
+    input_type: holding
+    write_function_code: 16
+    data_type: uint16
+    precision: 0
+    step: 60
+    min_value: 60
+    max_value: 7200
+    scan_interval: 600
+    unit_of_measurement: "s"
+    device_class: duration
+    mm_group: "EV_controls"
+    icon: "mdi:timer-outline"
+    entity_category: config
+
+  - type: "switch"
+    name: "Plug & charge"
+    unique_id: "plug_n_charge"
+    address: 93
+    input_type: "holding"
+    write_function_code: 16
+    data_type: uint16
+    scan_interval: 600
+    write_value: 0
+    write_value_off: 1
+    mm_group: "EV_controls"
+    icon: "mdi:lightning-bolt"
+
+  - type: "button"
+    name: "Start charging"
+    unique_id: "start_charge"
+    address: 95
+    input_type: "holding"
+    write_function_code: 16
+    data_type: uint16
+    write_value: 1
+    mm_group: "EV_controls"
+    icon: "mdi:play-circle"
+
+  - type: "button"
+    name: "Stop charging"
+    unique_id: "stop_charge"
+    address: 95
+    input_type: "holding"
+    write_function_code: 16
+    data_type: uint16
+    write_value: 2
+    mm_group: "EV_controls"
+    icon: "mdi:stop-circle"
+
+  - type: number
+    name: "Number of Phases"
+    unique_id: "number_of_phases"
+    address: 200
+    input_type: holding
+    write_function_code: 16
+    data_type: uint16
+    precision: 0
+    step: 2
+    min_value: "{{ phases }}"
+    max_value: "{{ phases }}"
+    scan_interval: 600
+    mm_group: "EV_controls"
+    icon: "mdi:sine-wave"
+    entity_category: config
+
+binary_sensors:
+  - name: "Vehicle Connected"
+    unique_id: "vehicle_connected"
+    type: binary_sensor
+    mm_group: "EV_charging_status"
+    device_class: plug
+    icon: "mdi:car-electric"
+    availability: >-
+      {{ states('[[mm:sensor:{PREFIX}_evse_state]]') not in
+         ['unknown', 'unavailable'] }}
+    state: >-
+      {{ states('[[mm:sensor:{PREFIX}_evse_state]]') in
+         ['Connected', 'Starting', 'Charging', 'Charging end'] }}
+
+  - name: "Charging Active"
+    unique_id: "charging_active"
+    type: binary_sensor
+    mm_group: "EV_charging_status"
+    device_class: power
+    icon: "mdi:ev-station"
+    availability: >-
+      {{ states('[[mm:sensor:{PREFIX}_evse_state]]') not in
+         ['unknown', 'unavailable'] }}
+    state: >-
+      {{ states('[[mm:sensor:{PREFIX}_evse_state]]') == 'Charging' }}
+
+  - name: "Fault"
+    unique_id: "fault_active"
+    type: binary_sensor
+    mm_group: "EV_charging_status"
+    device_class: problem
+    icon: "mdi:alert"
+    availability: >-
+      {{ states('[[mm:sensor:{PREFIX}_error_code]]') not in
+         ['unknown', 'unavailable', 'None']
+         or states('[[mm:sensor:{PREFIX}_evse_state]]') not in
+         ['unknown', 'unavailable'] }}
+    state: >-
+      {{ states('[[mm:sensor:{PREFIX}_error_code]]') not in
+         ['None', 'unknown', 'unavailable']
+         or states('[[mm:sensor:{PREFIX}_evse_state]]') in
+         ['System fail', 'Start failed'] }}
