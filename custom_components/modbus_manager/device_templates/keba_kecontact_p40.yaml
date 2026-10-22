@@ -370,8 +370,8 @@ sensors:
     scan_group: fast
     mm_group: "EV_charging_status"
     map:
-      0: "Inactive"
-      1: "Active (Modbus current control unavailable)"
+      0: "inactive"
+      1: "active_no_modbus_current"
 
   - name: "RFID Card (raw)"
     unique_id: "rfid_card_raw"
@@ -426,10 +426,10 @@ sensors:
     entity_category: diagnostic
     condition: "phase_switching_registers == 'confirmed'"
     map:
-      0: "Unavailable"
-      1: "OCPP"
-      2: "REST API"
-      3: "Modbus TCP"
+      0: "unavailable"
+      1: "ocpp"
+      2: "rest_api"
+      3: "modbus_tcp"
 
   - name: "Phase Switching State"
     unique_id: "phase_switching_state"
@@ -446,8 +446,8 @@ sensors:
     mm_group: "EV_charging_status"
     condition: "phase_switching_registers == 'confirmed'"
     map:
-      1: "Single-phase charging"
-      3: "Three-phase charging possible"
+      1: "single_phase"
+      3: "three_phase"
 
   - name: "Failsafe Current Setting"
     unique_id: "failsafe_current_setting"
@@ -531,7 +531,7 @@ calculated:
     availability: >-
       {{ states('[[mm:sensor:{PREFIX}_charging_state_raw]]') in ['0', '1', '2', '3', '4', '5'] }}
     state: >-
-      {{ {0: 'Starting', 1: 'Not ready', 2: 'Ready', 3: 'Charging', 4: 'Error', 5: 'Suspended'}
+      {{ {0: 'starting', 1: 'not_ready', 2: 'ready', 3: 'charging', 4: 'error', 5: 'suspended'}
          [states('[[mm:sensor:{PREFIX}_charging_state_raw]]') | int] }}
 
   - name: "Cable State"
@@ -547,10 +547,10 @@ calculated:
       {% set attached = (product // 10000) % 10 == 1 %}
       {% set code = states('[[mm:sensor:{PREFIX}_cable_state_raw]]') | int %}
       {% if attached and code in [3, 7] %}
-        {{ 'Vehicle connected' if code == 7 else 'Station connected' }}
+        {{ 'vehicle_connected' if code == 7 else 'station_connected' }}
       {% else %}
-        {{ {0: 'Disconnected', 1: 'Station connected', 3: 'Station connected and locked',
-            5: 'Vehicle connected, unlocked', 7: 'Vehicle connected and locked'}[code] }}
+        {{ {0: 'disconnected', 1: 'station_connected', 3: 'station_connected_locked',
+            5: 'vehicle_connected_unlocked', 7: 'vehicle_connected_locked'}[code] }}
       {% endif %}
 
   - name: "Firmware Version"

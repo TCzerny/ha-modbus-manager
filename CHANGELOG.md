@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Added
+
+- **HACS / HA brand icon**: Square icon in `custom_components/modbus_manager/brand/` (`icon.png`, `icon@2x.png`) for HA 2026.3+ local brands and the HACS default-catalog brands check.
+- **CI — hassfest and HACS Action**: `.github/workflows/validate.yml` on push/PR, weekly schedule, and manual run. No `ignore` flags (required before a `hacs/default` PR).
+
+### 🐛 Fixed
+
+- **Hassfest / HACS validation**: `http` in `after_dependencies`; config-entry-only `CONFIG_SCHEMA`; `hacs.json` drops the obsolete `domains` key; `config_subentries` strings sit under the `device` subentry type; KEBA map/calculated states use slug keys so entity translations validate. `unique_id` unchanged.
+
 ## [1.3.4] - 2026-10-22
 
 ### ✨ Added

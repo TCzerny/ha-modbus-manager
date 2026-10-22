@@ -1,6 +1,5 @@
 {
     "config": {
-        "title": "Modbus Manager",
         "step": {
             "user": {
                 "title": "Modbus Manager",
@@ -622,149 +621,6 @@
         }
     },
     "config_subentries": {
-        "step": {
-            "user": {
-                "title": "Add device",
-                "description": "This device uses this hub's connection. Choose a category (or Generic Modbus Device), then manufacturer and model, then prefix and slave ID.",
-                "data": {
-                    "connector_type": "Charging connector",
-                    "rfid": "RFID information",
-                    "phase_switching_registers": "Phase switching register support",
-                    "template": "Device Template",
-                    "template_category": "Device category",
-                    "prefix": "Device Prefix",
-                    "slave_id": "Slave ID",
-                    "selected_model": "Select Model",
-                    "wallbox_connected": "Wallbox Connected",
-                    "hkr2_enabled": "Enable heating circuit 2 (HKR2)",
-                    "hkr3_enabled": "Enable heating circuit 3 (HKR3)",
-                    "solar_enabled": "Enable solar collector registers",
-                    "heat_pump_enabled": "Enable heat pump registers",
-                    "pv2heat_enabled": "Enable PV2Heat registers",
-                    "heat_meter_enabled": "Enable heat-meter power register"
-                }
-            },
-            "template_pick": {
-                "title": "Choose a template",
-                "description": "Category: {category}. Labels are manufacturer and model.",
-                "data": {
-                    "template": "Manufacturer — model"
-                }
-            },
-            "reconfigure": {
-                "title": "Reconfigure Device",
-                "description": "Edit device settings for: {device}",
-                "data": {
-                    "connector_type": "Charging connector",
-                    "rfid": "RFID information",
-                    "phase_switching_registers": "Phase switching register support",
-                    "prefix": "Device Prefix",
-                    "slave_id": "Slave ID",
-                    "selected_model": "Select Model",
-                    "phases": "Number of Phases",
-                    "mppt_count": "Number of MPPT Trackers",
-                    "string_count": "Number of Strings",
-                    "modules": "Number of Modules",
-                    "firmware_version": "Register mapping (firmware profile)",
-                    "connection_type": "Connection Type",
-                    "meter_type": "Meter Type",
-                    "wallbox_connected": "Wallbox Connected",
-                    "entity_ids_without_prefix": "Entity IDs without prefix",
-                    "entity_id_strategy": "Entity ID strategy",
-                    "battery_config": "Battery Configuration",
-                    "battery_slave_id": "Battery Slave ID",
-                    "channel_2_enabled": "Enable PROD.CT channel 2 registers",
-                    "charger_enabled": "Enable charger-related registers",
-                    "charger_phases": "EV charger phase count",
-                    "charger_region": "EV charger regional mode map",
-                    "protocol_version": "iHomeManager Modbus protocol version",
-                    "hkr2_enabled": "Enable heating circuit 2 (HKR2)",
-                    "hkr3_enabled": "Enable heating circuit 3 (HKR3)",
-                    "solar_enabled": "Enable solar collector registers",
-                    "heat_pump_enabled": "Enable heat pump registers",
-                    "pv2heat_enabled": "Enable PV2Heat registers",
-                    "heat_meter_enabled": "Enable heat-meter power register"
-                }
-            },
-            "generic_entity": {
-                "title": "Generic entity type",
-                "description": "Entities added so far: {entity_count}. Holding and input registers only (no coils).",
-                "data": {
-                    "entity_type": "Entity type"
-                }
-            },
-            "generic_entity_core": {
-                "title": "Generic register",
-                "description": "Type: {entity_type}. Address is the same number as YAML `address:` — the Modbus address we read, with no offset. unique_id is the history key and must not change later.",
-                "data": {
-                    "unique_id": "unique_id (stable slug)",
-                    "name": "Display name",
-                    "address": "Modbus address (same as YAML address:)",
-                    "input_type": "Register type",
-                    "data_type": "Data type",
-                    "scan_interval": "Scan interval (seconds)",
-                    "scan_group": "Poll group (Fast / Medium / Slow)",
-                    "entity_category": "Entity category",
-                    "icon": "Icon",
-                    "mm_group": "mm_group",
-                    "translation_key": "Translation key (optional)",
-                    "enabled_by_default": "Enabled by default"
-                }
-            },
-            "generic_entity_fields": {
-                "title": "Register extras",
-                "description": "Type: {entity_type}, data type: {data_type}. Only fields that apply to this combination are shown.",
-                "data": {
-                    "count": "Register count",
-                    "scale": "Scale",
-                    "offset": "Offset",
-                    "precision": "Precision",
-                    "unit_of_measurement": "Unit",
-                    "device_class": "Device class",
-                    "state_class": "State class",
-                    "encoding": "String encoding (utf-8 or hex)",
-                    "byte_order": "Byte order",
-                    "swap": "Word swap",
-                    "bitmask": "Bitmask",
-                    "bit_position": "Bit position",
-                    "map_text": "Map (one line, comma-separated: 0xAA: Enabled, 0x55: Disabled)",
-                    "flags_text": "Flags (bit positions, comma-separated: 0: PV Generating, 1: Battery charging)",
-                    "read_function_code": "Read function code (3 or 4)",
-                    "write_function_code": "Write function code (6 or 16)",
-                    "never_resets": "Never resets",
-                    "force_update": "Force update",
-                    "min_value": "Minimum",
-                    "max_value": "Maximum",
-                    "step": "Step",
-                    "write_value": "ON write value",
-                    "write_value_off": "OFF write value",
-                    "on_value": "ON state value",
-                    "off_value": "OFF state value",
-                    "button_press_value": "Button press value",
-                    "options_text": "Options (one line, comma-separated: 0: Off, 1: On)",
-                    "max_length": "Max length (bytes)"
-                }
-            },
-            "generic_entity_confirm": {
-                "title": "Add another entity?",
-                "description": "{entity_count} entit(y/ies) ready. Add another or attach this device to the hub.",
-                "data": {
-                    "action": "Next"
-                }
-            }
-        },
-        "abort": {
-            "reconfigure_successful": "Device reconfigured successfully.",
-            "already_configured": "This prefix is already used by another device.",
-            "invalid_config": "Invalid configuration. {error}",
-            "no_available_devices_for_subentry": "All devices are already configured.",
-            "config_error": "Configuration error.",
-            "nested_device_attached": "Device added under the inverter. It does not get its own hub row.",
-            "device_attached": "Device added to the hub.",
-            "combined_device": "Combined devices have no Modbus connection. Add the device on the source hub instead.",
-            "no_templates": "No device templates found.",
-            "generic_no_registers": "Generic device needs at least one valid register. {error}"
-        },
         "device": {
             "title": "Add device",
             "entry_type": "Device",
@@ -788,7 +644,10 @@
                         "solar_enabled": "Enable solar collector registers",
                         "heat_pump_enabled": "Enable heat pump registers",
                         "pv2heat_enabled": "Enable PV2Heat registers",
-                        "heat_meter_enabled": "Enable heat-meter power register"
+                        "heat_meter_enabled": "Enable heat-meter power register",
+                        "connector_type": "Charging connector",
+                        "rfid": "RFID information",
+                        "phase_switching_registers": "Phase switching register support"
                     }
                 },
                 "template_pick": {
@@ -827,7 +686,10 @@
                         "solar_enabled": "Enable solar collector registers",
                         "heat_pump_enabled": "Enable heat pump registers",
                         "pv2heat_enabled": "Enable PV2Heat registers",
-                        "heat_meter_enabled": "Enable heat-meter power register"
+                        "heat_meter_enabled": "Enable heat-meter power register",
+                        "connector_type": "Charging connector",
+                        "rfid": "RFID information",
+                        "phase_switching_registers": "Phase switching register support"
                     }
                 },
                 "generic_entity": {
@@ -847,7 +709,7 @@
                         "input_type": "Register type",
                         "data_type": "Data type",
                         "scan_interval": "Scan interval (seconds)",
-                    "scan_group": "Poll group (Fast / Medium / Slow)",
+                        "scan_group": "Poll group (Fast / Medium / Slow)",
                         "entity_category": "Entity category",
                         "icon": "Icon",
                         "mm_group": "mm_group",
@@ -912,89 +774,128 @@
             "error": {
                 "invalid_generic_register": "This register is invalid. Check unique_id (letter + a-z/0-9/_) and holding/input only."
             }
-        },
-        "error": {
-            "invalid_generic_register": "This register is invalid. Check unique_id (letter + a-z/0-9/_) and holding/input only."
-        }
-    },
-    "device": {
-        "firmware": {
-            "auto_detect": "Auto Detect",
-            "manual_select": "Manual Selection",
-            "unknown": "Unknown Version",
-            "not_supported": "Not Supported Version"
         }
     },
     "entity": {
         "sensor": {
-            "keba_charging_state_raw": {"name": "Charging state (raw)"},
-            "keba_cable_state_raw": {"name": "Cable state (raw)"},
-            "keba_error_code": {"name": "Error code"},
-            "keba_current_l1": {"name": "Current L1"},
-            "keba_current_l2": {"name": "Current L2"},
-            "keba_current_l3": {"name": "Current L3"},
-            "keba_serial_number": {"name": "Serial number"},
-            "keba_product_type_and_features": {"name": "Product type and features"},
-            "keba_firmware_version_raw": {"name": "Firmware version (raw)"},
-            "keba_firmware_version": {"name": "Firmware version"},
-            "keba_active_power": {"name": "Active power"},
-            "keba_total_energy": {"name": "Total energy"},
-            "keba_session_energy": {"name": "Session energy"},
-            "keba_voltage_l1": {"name": "Voltage L1"},
-            "keba_voltage_l2": {"name": "Voltage L2"},
-            "keba_voltage_l3": {"name": "Voltage L3"},
-            "keba_power_factor": {"name": "Power factor"},
-            "keba_maximum_charging_current": {"name": "Maximum charging current"},
-            "keba_supported_charging_current": {"name": "Supported charging current"},
-            "keba_rfid_card_raw": {"name": "RFID card (raw)"},
-            "keba_rfid_uid_prefix": {"name": "RFID UID prefix"},
-            "keba_failsafe_current_setting": {"name": "Failsafe current setting"},
-            "keba_failsafe_timeout_setting": {"name": "Failsafe timeout setting"},
-            "keba_hardware_revision_device": {"name": "Device hardware revision"},
-            "keba_hardware_revision_ms10": {"name": "KC-MS10 hardware revision"},
+            "keba_charging_state_raw": {
+                "name": "Charging state (raw)"
+            },
+            "keba_cable_state_raw": {
+                "name": "Cable state (raw)"
+            },
+            "keba_error_code": {
+                "name": "Error code"
+            },
+            "keba_current_l1": {
+                "name": "Current L1"
+            },
+            "keba_current_l2": {
+                "name": "Current L2"
+            },
+            "keba_current_l3": {
+                "name": "Current L3"
+            },
+            "keba_serial_number": {
+                "name": "Serial number"
+            },
+            "keba_product_type_and_features": {
+                "name": "Product type and features"
+            },
+            "keba_firmware_version_raw": {
+                "name": "Firmware version (raw)"
+            },
+            "keba_firmware_version": {
+                "name": "Firmware version"
+            },
+            "keba_active_power": {
+                "name": "Active power"
+            },
+            "keba_total_energy": {
+                "name": "Total energy"
+            },
+            "keba_session_energy": {
+                "name": "Session energy"
+            },
+            "keba_voltage_l1": {
+                "name": "Voltage L1"
+            },
+            "keba_voltage_l2": {
+                "name": "Voltage L2"
+            },
+            "keba_voltage_l3": {
+                "name": "Voltage L3"
+            },
+            "keba_power_factor": {
+                "name": "Power factor"
+            },
+            "keba_maximum_charging_current": {
+                "name": "Maximum charging current"
+            },
+            "keba_supported_charging_current": {
+                "name": "Supported charging current"
+            },
+            "keba_rfid_card_raw": {
+                "name": "RFID card (raw)"
+            },
+            "keba_rfid_uid_prefix": {
+                "name": "RFID UID prefix"
+            },
+            "keba_failsafe_current_setting": {
+                "name": "Failsafe current setting"
+            },
+            "keba_failsafe_timeout_setting": {
+                "name": "Failsafe timeout setting"
+            },
+            "keba_hardware_revision_device": {
+                "name": "Device hardware revision"
+            },
+            "keba_hardware_revision_ms10": {
+                "name": "KC-MS10 hardware revision"
+            },
             "keba_charging_state": {
                 "name": "Charging state",
                 "state": {
-                    "Starting": "Starting up",
-                    "Not ready": "Not ready",
-                    "Ready": "Ready",
-                    "Charging": "Charging",
-                    "Error": "Error",
-                    "Suspended": "Suspended"
+                    "starting": "Starting up",
+                    "not_ready": "Not ready",
+                    "ready": "Ready",
+                    "charging": "Charging",
+                    "error": "Error",
+                    "suspended": "Suspended"
                 }
             },
             "keba_cable_state": {
                 "name": "Cable state",
                 "state": {
-                    "Disconnected": "Disconnected",
-                    "Station connected": "Connected to charging station",
-                    "Station connected and locked": "Connected to charging station and locked",
-                    "Vehicle connected, unlocked": "Connected to vehicle, unlocked",
-                    "Vehicle connected and locked": "Connected to vehicle and locked",
-                    "Vehicle connected": "Connected to vehicle"
+                    "disconnected": "Disconnected",
+                    "station_connected": "Connected to charging station",
+                    "station_connected_locked": "Connected to charging station and locked",
+                    "vehicle_connected_unlocked": "Connected to vehicle, unlocked",
+                    "vehicle_connected_locked": "Connected to vehicle and locked",
+                    "vehicle_connected": "Connected to vehicle"
                 }
             },
             "keba_fast_charging_status": {
                 "name": "Fast charging status",
                 "state": {
-                    "Inactive": "Inactive",
-                    "Active (Modbus current control unavailable)": "Active (Modbus current control unavailable)"
+                    "inactive": "Inactive",
+                    "active_no_modbus_current": "Active (Modbus current control unavailable)"
                 }
             },
             "keba_phase_switching_source": {
                 "name": "Phase switching source",
                 "state": {
-                    "Unavailable": "No phase switching source",
-                    "OCPP": "OCPP",
-                    "REST API": "REST API",
-                    "Modbus TCP": "Modbus TCP"
+                    "unavailable": "No phase switching source",
+                    "ocpp": "OCPP",
+                    "rest_api": "REST API",
+                    "modbus_tcp": "Modbus TCP"
                 }
             },
             "keba_phase_switching_state": {
                 "name": "Phase switching state",
                 "state": {
-                    "Single-phase charging": "Single-phase charging",
-                    "Three-phase charging possible": "Three-phase charging available"
+                    "single_phase": "Single-phase charging",
+                    "three_phase": "Three-phase charging available"
                 }
             },
             "combined_pair_type": {
@@ -1118,58 +1019,140 @@
                     "error": "Detection Error"
                 }
             },
-            "pichler_lg_es2020_outdoor_air_temperature": {"name": "Outdoor Air Temperature"},
-            "pichler_lg_es2020_exhaust_air_temperature": {"name": "Exhaust Air Temperature"},
-            "pichler_lg_es2020_extract_air_temperature": {"name": "Extract Air Temperature"},
-            "pichler_lg_es2020_supply_air_temperature": {"name": "Supply Air Temperature"},
-            "pichler_lg_es2020_external_supply_air_temperature": {"name": "External Supply Air Temperature"},
-            "pichler_lg_es2020_supply_airflow": {"name": "Supply Airflow"},
-            "pichler_lg_es2020_extract_airflow": {"name": "Extract Airflow"},
-            "pichler_lg_es2020_operating_status": {"name": "Operating Status"},
-            "pichler_lg_es2020_filter_remaining_time": {"name": "Filter Remaining Time"},
-            "pichler_lg_es2020_combined_coil_mixer_control_signal": {"name": "Combined Coil Mixer Control Signal"},
-            "pichler_lg_es2020_cooling_coil_mixer_control_signal": {"name": "Cooling Coil Mixer Control Signal"},
-            "pichler_lg_es2020_calculated_supply_air_temperature_setpoint": {"name": "Calculated Supply Air Temperature Setpoint"}
-            ,"pichler_lg_es2020_device_model": {"name": "Device Model"}
-            ,"pichler_lg_es2020_controller_firmware_version": {"name": "Controller Firmware Version"}
-            ,"pichler_lg_es2020_preheater_temperature": {"name": "Preheater Temperature"}
-            ,"pichler_lg_es2020_supply_airflow_setpoint": {"name": "Supply Airflow Setpoint"}
-            ,"pichler_lg_es2020_extract_airflow_setpoint": {"name": "Extract Airflow Setpoint"}
-            ,"pichler_lg_es2020_current_ventilation_level": {"name": "Current Ventilation Level"},
-            "inepro_pro380_l1_voltage": {"name": "L1 Voltage"},
-            "inepro_pro380_l2_voltage": {"name": "L2 Voltage"},
-            "inepro_pro380_l3_voltage": {"name": "L3 Voltage"},
-            "inepro_pro380_grid_frequency": {"name": "Grid Frequency"},
-            "inepro_pro380_l1_current": {"name": "L1 Current"},
-            "inepro_pro380_l2_current": {"name": "L2 Current"},
-            "inepro_pro380_l3_current": {"name": "L3 Current"},
-            "inepro_pro380_total_active_power": {"name": "Total Active Power"},
-            "inepro_pro380_l1_active_power": {"name": "L1 Active Power"},
-            "inepro_pro380_l2_active_power": {"name": "L2 Active Power"},
-            "inepro_pro380_l3_active_power": {"name": "L3 Active Power"},
-            "inepro_pro380_total_power_factor": {"name": "Total Power Factor"},
-            "inepro_pro380_l1_power_factor": {"name": "L1 Power Factor"},
-            "inepro_pro380_l2_power_factor": {"name": "L2 Power Factor"},
-            "inepro_pro380_l3_power_factor": {"name": "L3 Power Factor"},
-            "inepro_pro380_imported_energy": {"name": "Imported Energy"},
-            "inepro_pro380_exported_energy": {"name": "Exported Energy"}
+            "pichler_lg_es2020_outdoor_air_temperature": {
+                "name": "Outdoor Air Temperature"
+            },
+            "pichler_lg_es2020_exhaust_air_temperature": {
+                "name": "Exhaust Air Temperature"
+            },
+            "pichler_lg_es2020_extract_air_temperature": {
+                "name": "Extract Air Temperature"
+            },
+            "pichler_lg_es2020_supply_air_temperature": {
+                "name": "Supply Air Temperature"
+            },
+            "pichler_lg_es2020_external_supply_air_temperature": {
+                "name": "External Supply Air Temperature"
+            },
+            "pichler_lg_es2020_supply_airflow": {
+                "name": "Supply Airflow"
+            },
+            "pichler_lg_es2020_extract_airflow": {
+                "name": "Extract Airflow"
+            },
+            "pichler_lg_es2020_operating_status": {
+                "name": "Operating Status"
+            },
+            "pichler_lg_es2020_filter_remaining_time": {
+                "name": "Filter Remaining Time"
+            },
+            "pichler_lg_es2020_combined_coil_mixer_control_signal": {
+                "name": "Combined Coil Mixer Control Signal"
+            },
+            "pichler_lg_es2020_cooling_coil_mixer_control_signal": {
+                "name": "Cooling Coil Mixer Control Signal"
+            },
+            "pichler_lg_es2020_calculated_supply_air_temperature_setpoint": {
+                "name": "Calculated Supply Air Temperature Setpoint"
+            },
+            "pichler_lg_es2020_device_model": {
+                "name": "Device Model"
+            },
+            "pichler_lg_es2020_controller_firmware_version": {
+                "name": "Controller Firmware Version"
+            },
+            "pichler_lg_es2020_preheater_temperature": {
+                "name": "Preheater Temperature"
+            },
+            "pichler_lg_es2020_supply_airflow_setpoint": {
+                "name": "Supply Airflow Setpoint"
+            },
+            "pichler_lg_es2020_extract_airflow_setpoint": {
+                "name": "Extract Airflow Setpoint"
+            },
+            "pichler_lg_es2020_current_ventilation_level": {
+                "name": "Current Ventilation Level"
+            },
+            "inepro_pro380_l1_voltage": {
+                "name": "L1 Voltage"
+            },
+            "inepro_pro380_l2_voltage": {
+                "name": "L2 Voltage"
+            },
+            "inepro_pro380_l3_voltage": {
+                "name": "L3 Voltage"
+            },
+            "inepro_pro380_grid_frequency": {
+                "name": "Grid Frequency"
+            },
+            "inepro_pro380_l1_current": {
+                "name": "L1 Current"
+            },
+            "inepro_pro380_l2_current": {
+                "name": "L2 Current"
+            },
+            "inepro_pro380_l3_current": {
+                "name": "L3 Current"
+            },
+            "inepro_pro380_total_active_power": {
+                "name": "Total Active Power"
+            },
+            "inepro_pro380_l1_active_power": {
+                "name": "L1 Active Power"
+            },
+            "inepro_pro380_l2_active_power": {
+                "name": "L2 Active Power"
+            },
+            "inepro_pro380_l3_active_power": {
+                "name": "L3 Active Power"
+            },
+            "inepro_pro380_total_power_factor": {
+                "name": "Total Power Factor"
+            },
+            "inepro_pro380_l1_power_factor": {
+                "name": "L1 Power Factor"
+            },
+            "inepro_pro380_l2_power_factor": {
+                "name": "L2 Power Factor"
+            },
+            "inepro_pro380_l3_power_factor": {
+                "name": "L3 Power Factor"
+            },
+            "inepro_pro380_imported_energy": {
+                "name": "Imported Energy"
+            },
+            "inepro_pro380_exported_energy": {
+                "name": "Exported Energy"
+            }
         },
         "binary_sensor": {
             "keba_vehicle_connected": {
                 "name": "Vehicle connected",
-                "state": {"on": "Connected", "off": "Disconnected"}
+                "state": {
+                    "on": "Connected",
+                    "off": "Disconnected"
+                }
             },
             "keba_charging_active": {
                 "name": "Charging active",
-                "state": {"on": "Charging", "off": "Not charging"}
+                "state": {
+                    "on": "Charging",
+                    "off": "Not charging"
+                }
             },
             "keba_error_present": {
                 "name": "Error present",
-                "state": {"on": "Error", "off": "No error"}
+                "state": {
+                    "on": "Error",
+                    "off": "No error"
+                }
             },
             "keba_plug_locked": {
                 "name": "Plug locked",
-                "state": {"on": "Locked", "off": "Unlocked"}
+                "state": {
+                    "on": "Locked",
+                    "off": "Unlocked"
+                }
             },
             "combined_source_a_available": {
                 "name": "Source A Available"
@@ -1183,47 +1166,121 @@
             "combined_pv_generating_any": {
                 "name": "PV Generating Any"
             },
-            "pichler_lg_es2020_heating_demand": {"name": "Heating Demand"},
-            "pichler_lg_es2020_cooling_demand": {"name": "Cooling Demand"},
-            "pichler_lg_es2020_combined_cooling_coil_circulation_pump": {"name": "Combined/Cooling Coil Circulation Pump"},
-            "pichler_lg_es2020_external_supply_air_temperature_sensor_fault": {"name": "External Supply Air Temperature Sensor Fault"}
-            ,"pichler_lg_es2020_fans_running": {"name": "Fans Running"}
-            ,"pichler_lg_es2020_bypass_damper_open": {"name": "Bypass Damper Open"}
-            ,"pichler_lg_es2020_aggregate_fault": {"name": "Aggregate Fault"}
-            ,"pichler_lg_es2020_filter_indication": {"name": "Filter Indication"}
-            ,"pichler_lg_es2020_preheater_relay": {"name": "Preheater Relay"}
-            ,"pichler_lg_es2020_outdoor_exhaust_dampers_open": {"name": "Outdoor and Exhaust Dampers Open"}
-            ,"pichler_lg_es2020_heating_pump_running": {"name": "Heating Pump Running"}
-            ,"pichler_lg_es2020_external_off_or_fire_alarm": {"name": "External Off or Fire Alarm"}
-            ,"pichler_lg_es2020_external_level_3_active": {"name": "External Level 3 Active"}
-            ,"pichler_lg_es2020_geothermal_heat_exchanger_fault": {"name": "Geothermal Heat Exchanger Fault"}
-            ,"pichler_lg_es2020_operating_panel_fault": {"name": "Operating Panel Fault"}
-            ,"pichler_lg_es2020_reheater_frost_protection_fault": {"name": "Reheater Frost Protection Fault"}
-            ,"pichler_lg_es2020_exhaust_air_fan_fault": {"name": "Exhaust Air Fan Fault"}
-            ,"pichler_lg_es2020_supply_air_fan_fault": {"name": "Supply Air Fan Fault"}
-            ,"pichler_lg_es2020_outdoor_air_temperature_sensor_fault": {"name": "Outdoor Air Temperature Sensor Fault"}
-            ,"pichler_lg_es2020_exhaust_air_temperature_sensor_fault": {"name": "Exhaust Air Temperature Sensor Fault"}
-            ,"pichler_lg_es2020_extract_air_temperature_sensor_fault": {"name": "Extract Air Temperature Sensor Fault"}
-            ,"pichler_lg_es2020_supply_air_temperature_sensor_fault": {"name": "Supply Air Temperature Sensor Fault"}
-            ,"pichler_lg_es2020_preheater_temperature_sensor_fault": {"name": "Preheater Temperature Sensor Fault"}
-            ,"pichler_lg_es2020_external_outdoor_air_temperature_sensor_fault": {"name": "External Outdoor Air Temperature Sensor Fault"}
-            ,"pichler_lg_es2020_external_room_temperature_sensor_fault": {"name": "External Room Temperature Sensor Fault"}
-            ,"pichler_lg_es2020_fan_communication_fault": {"name": "Fan Communication Fault"}
-            ,"pichler_lg_es2020_low_supply_air_temperature_fault": {"name": "Low Supply Air Temperature Fault"}
-            ,"pichler_lg_es2020_filter_fault": {"name": "Filter Fault"}
-            ,"pichler_lg_es2020_low_preheater_temperature_fault": {"name": "Low Preheater Temperature Fault"}
-            ,"pichler_lg_es2020_reheater_frost_protection_active": {"name": "Reheater Frost Protection Active"}
-            ,"pichler_lg_es2020_modbus_sensor_fault": {"name": "Modbus Sensor Fault"}
-            ,"pichler_lg_es2020_external_frost_protection_active": {"name": "External Frost Protection Active"}
+            "pichler_lg_es2020_heating_demand": {
+                "name": "Heating Demand"
+            },
+            "pichler_lg_es2020_cooling_demand": {
+                "name": "Cooling Demand"
+            },
+            "pichler_lg_es2020_combined_cooling_coil_circulation_pump": {
+                "name": "Combined/Cooling Coil Circulation Pump"
+            },
+            "pichler_lg_es2020_external_supply_air_temperature_sensor_fault": {
+                "name": "External Supply Air Temperature Sensor Fault"
+            },
+            "pichler_lg_es2020_fans_running": {
+                "name": "Fans Running"
+            },
+            "pichler_lg_es2020_bypass_damper_open": {
+                "name": "Bypass Damper Open"
+            },
+            "pichler_lg_es2020_aggregate_fault": {
+                "name": "Aggregate Fault"
+            },
+            "pichler_lg_es2020_filter_indication": {
+                "name": "Filter Indication"
+            },
+            "pichler_lg_es2020_preheater_relay": {
+                "name": "Preheater Relay"
+            },
+            "pichler_lg_es2020_outdoor_exhaust_dampers_open": {
+                "name": "Outdoor and Exhaust Dampers Open"
+            },
+            "pichler_lg_es2020_heating_pump_running": {
+                "name": "Heating Pump Running"
+            },
+            "pichler_lg_es2020_external_off_or_fire_alarm": {
+                "name": "External Off or Fire Alarm"
+            },
+            "pichler_lg_es2020_external_level_3_active": {
+                "name": "External Level 3 Active"
+            },
+            "pichler_lg_es2020_geothermal_heat_exchanger_fault": {
+                "name": "Geothermal Heat Exchanger Fault"
+            },
+            "pichler_lg_es2020_operating_panel_fault": {
+                "name": "Operating Panel Fault"
+            },
+            "pichler_lg_es2020_reheater_frost_protection_fault": {
+                "name": "Reheater Frost Protection Fault"
+            },
+            "pichler_lg_es2020_exhaust_air_fan_fault": {
+                "name": "Exhaust Air Fan Fault"
+            },
+            "pichler_lg_es2020_supply_air_fan_fault": {
+                "name": "Supply Air Fan Fault"
+            },
+            "pichler_lg_es2020_outdoor_air_temperature_sensor_fault": {
+                "name": "Outdoor Air Temperature Sensor Fault"
+            },
+            "pichler_lg_es2020_exhaust_air_temperature_sensor_fault": {
+                "name": "Exhaust Air Temperature Sensor Fault"
+            },
+            "pichler_lg_es2020_extract_air_temperature_sensor_fault": {
+                "name": "Extract Air Temperature Sensor Fault"
+            },
+            "pichler_lg_es2020_supply_air_temperature_sensor_fault": {
+                "name": "Supply Air Temperature Sensor Fault"
+            },
+            "pichler_lg_es2020_preheater_temperature_sensor_fault": {
+                "name": "Preheater Temperature Sensor Fault"
+            },
+            "pichler_lg_es2020_external_outdoor_air_temperature_sensor_fault": {
+                "name": "External Outdoor Air Temperature Sensor Fault"
+            },
+            "pichler_lg_es2020_external_room_temperature_sensor_fault": {
+                "name": "External Room Temperature Sensor Fault"
+            },
+            "pichler_lg_es2020_fan_communication_fault": {
+                "name": "Fan Communication Fault"
+            },
+            "pichler_lg_es2020_low_supply_air_temperature_fault": {
+                "name": "Low Supply Air Temperature Fault"
+            },
+            "pichler_lg_es2020_filter_fault": {
+                "name": "Filter Fault"
+            },
+            "pichler_lg_es2020_low_preheater_temperature_fault": {
+                "name": "Low Preheater Temperature Fault"
+            },
+            "pichler_lg_es2020_reheater_frost_protection_active": {
+                "name": "Reheater Frost Protection Active"
+            },
+            "pichler_lg_es2020_modbus_sensor_fault": {
+                "name": "Modbus Sensor Fault"
+            },
+            "pichler_lg_es2020_external_frost_protection_active": {
+                "name": "External Frost Protection Active"
+            }
         },
         "select": {
-            "pichler_lg_es2020_ventilation_level": {"name": "Ventilation Level"}
+            "pichler_lg_es2020_ventilation_level": {
+                "name": "Ventilation Level"
+            }
         },
         "number": {
-            "pichler_lg_es2020_level_1_airflow_setpoint": {"name": "Level 1 Airflow Setpoint"},
-            "pichler_lg_es2020_level_2_airflow_setpoint": {"name": "Level 2 Airflow Setpoint"},
-            "pichler_lg_es2020_level_3_airflow_setpoint": {"name": "Level 3 Airflow Setpoint"},
-            "pichler_lg_es2020_basic_ventilation_airflow_setpoint": {"name": "Basic Ventilation Airflow Setpoint"}
+            "pichler_lg_es2020_level_1_airflow_setpoint": {
+                "name": "Level 1 Airflow Setpoint"
+            },
+            "pichler_lg_es2020_level_2_airflow_setpoint": {
+                "name": "Level 2 Airflow Setpoint"
+            },
+            "pichler_lg_es2020_level_3_airflow_setpoint": {
+                "name": "Level 3 Airflow Setpoint"
+            },
+            "pichler_lg_es2020_basic_ventilation_airflow_setpoint": {
+                "name": "Basic Ventilation Airflow Setpoint"
+            }
         }
     },
     "services": {
