@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Added
+
+- **Sungrow wallbox LAN TLS (HA 2026.9+)**: Hub option **TLS** uses Core `ModbusTlsParams` on the charger Ethernet IP, port **516**, unit **248**, as a dedicated hub with the AC011E template. Not for iHomeManager (it already holds `:516`). Older cores cannot open TLS. `unique_id` unchanged.
+
+### 📚 Documentation
+
+- **[#127](https://github.com/TCzerny/ha-modbus-manager/issues/127) — Sungrow wallbox reachability**: Inverter built-in LAN is not a TCP-to-RTU bridge. SHx there is slave **1** plus proxy **`33540–33549`**. Full AC011E `21xxx` needs **WiNet-S** (forwarding ID from the dongle list, often **2** or **3**) or charger **LAN TLS 516 / 248**. Template note v1.1.5.
+
 ## [1.3.6] - 2026-10-23
 
 ### ✨ Added

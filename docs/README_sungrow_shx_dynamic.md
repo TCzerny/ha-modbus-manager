@@ -87,7 +87,7 @@ The template supports Sungrow SHx hybrid models (RS, RT, T, MG\*RL, SH\*RL). **S
 
 #### **Sungrow AC wallbox (`wallbox_connected`)**
 
-Leave **Wallbox connected = no** unless the charger is on the **inverter RS485 bus** (typical SH-RT, wallbox slave **3**). That option only loads inverter proxy registers **`33540–33549`** (`wb_*`). For live Fast/ECO control and power, add the [AC011E Wallbox template](README_sungrow_ac011e_wallbox.md) on that same inverter/WiNet hub (slave **3**), not this proxy block alone.
+Leave **Wallbox connected = no** unless the charger is on the **inverter RS485 bus** (typical SH-RT). That option only loads inverter proxy registers **`33540–33549`** (`wb_*`) on **slave 1**. The inverter LAN port does **not** forward the charger’s `21xxx` map ([#127](https://github.com/TCzerny/ha-modbus-manager/issues/127)). For the full AC011E template, use **WiNet-S** (forwarding Modbus ID from the dongle device list, often **2** or **3**) or charger **LAN TLS** (slave **248**). Details: [wallbox topologies](README_sungrow_wallbox_connection.md).
 
 **With iHomeManager:** do **not** enable `wallbox_connected` and do **not** use the AC011E template on the inverter. Sungrow does not support charger↔inverter RS485 in that topology; `33540–33549` stay frozen. EMS and charger entities belong on the [iHomeManager template](README_iHomeManager.md) (`charger_enabled`). Details: [Sungrow AC wallbox connection topologies](README_sungrow_wallbox_connection.md).
 

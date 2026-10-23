@@ -12,8 +12,10 @@ from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 
 from .const import (
+    CONF_TLS,
     DEFAULT_DELAY,
     DEFAULT_MESSAGE_WAIT_MS,
     DEFAULT_SLAVE,
@@ -48,6 +50,21 @@ try:
     from homeassistant.components.modbus.const import CALL_TYPE_WRITE_REGISTER
 except ImportError:
     CALL_TYPE_WRITE_REGISTER = CALL_TYPE_WRITE_REGISTERS
+
+
+def tls_requested(data: dict[str, Any] | None) -> bool:
+    """True when the hub entry asked for Modbus TCP inside TLS."""
+    if not data:
+        return False
+    hub = data.get("hub") if isinstance(data.get("hub"), dict) else {}
+    value = data.get(CONF_TLS)
+    if value is None:
+        value = hub.get(CONF_TLS)
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return False
+    return str(value).strip().lower() in {"true", "1", "yes", "on"}
 
 
 def core_units_available() -> bool:
@@ -125,6 +142,15 @@ def connection_params_from_entry(entry: ConfigEntry) -> Any:
         )
     host = data.get("host") or hub.get("host") or ""
     port = int(data.get("port") or hub.get("port") or 502)
+    if tls_requested(dict(data)):
+        from modbus_connection import ModbusTlsParams
+
+        return ModbusTlsParams(
+            host=str(host),
+            port=port,
+            verify=False,
+            check_hostname=False,
+        )
     return ModbusTcpParams(
         host=str(host),
         port=port,
@@ -147,6 +173,15 @@ def connection_params_from_probe(params: dict[str, Any]) -> Any:
             bytesize=int(params.get("data_bits") or 8),  # type: ignore[arg-type]
             parity=parity_raw,  # type: ignore[arg-type]
             stopbits=int(params.get("stop_bits") or 1),  # type: ignore[arg-type]
+        )
+    if tls_requested(params) or connection_type == "tls":
+        from modbus_connection import ModbusTlsParams
+
+        return ModbusTlsParams(
+            host=str(params["host"]),
+            port=int(params.get("port") or 502),
+            verify=False,
+            check_hostname=False,
         )
     framer = "rtu" if connection_type == "rtuovertcp" else "socket"
     return ModbusTcpParams(
@@ -332,6 +367,12 @@ async def async_create_modbus_transport(
     hass: HomeAssistant, entry: ConfigEntry
 ) -> ModbusTransport:
     """Create the I/O backend for a hub config entry."""
+    if tls_requested(dict(entry.data)) and not core_units_available():
+        raise HomeAssistantError(
+            "TLS Modbus hubs need Home Assistant 2026.9 or later "
+            "(Core async_get_unit / ModbusTlsParams)."
+        )
+
     if core_units_available():
         transport = ModbusTransport(hass, entry)
         for slave_id in slave_ids_for_entry(entry):

@@ -22,12 +22,14 @@ from .const import (
     CONF_SCAN_GROUP_FAST,
     CONF_SCAN_GROUP_MEDIUM,
     CONF_SCAN_GROUP_SLOW,
+    CONF_TLS,
     DEFAULT_DELAY,
     DEFAULT_MESSAGE_WAIT_MS,
     DEFAULT_PORT,
     DEFAULT_POST_WRITE_SETTLE_MS,
     DEFAULT_SLAVE,
     DEFAULT_TIMEOUT,
+    DEFAULT_TLS_PORT,
     DOMAIN,
     ENTRY_TYPE_COMBINED_DEVICE,
     ENTRY_TYPE_HUB,
@@ -246,6 +248,51 @@ def _tcp_rtu_modbus_type_selector(hass: HomeAssistant) -> vol.In:
     language = language.split("-", 1)[0].lower()
     catalog = _MODBUS_TYPE_LABELS.get(language, _MODBUS_TYPE_LABELS["en"])
     return vol.In({key: catalog[key] for key in ("tcp", "rtuovertcp")})
+
+
+def _core_tls_available() -> bool:
+    """TLS hubs need Core ``async_get_unit`` (HA 2026.9+)."""
+    from .modbus_client import core_units_available
+
+    return core_units_available()
+
+
+def _tls_schema_field(stored: dict[str, Any] | None) -> dict[Any, Any]:
+    """Optional TLS checkbox, only on cores that can open ModbusTlsParams."""
+    if not _core_tls_available():
+        return {}
+    stored = stored or {}
+    hub = stored.get("hub") if isinstance(stored.get("hub"), dict) else {}
+    default = bool(stored.get(CONF_TLS, hub.get(CONF_TLS, False)))
+    return {vol.Optional(CONF_TLS, default=default): bool}
+
+
+def _persist_tls(target: dict[str, Any], source: dict[str, Any] | None) -> None:
+    """Store ``tls`` on the hub mapping."""
+    source = source or {}
+    if CONF_TLS in source:
+        tls = bool(source.get(CONF_TLS))
+    elif CONF_TLS in target:
+        tls = bool(target.get(CONF_TLS))
+    else:
+        return
+    target[CONF_TLS] = tls
+    hub = target.get("hub")
+    if isinstance(hub, dict):
+        hub = dict(hub)
+        hub[CONF_TLS] = tls
+        target["hub"] = hub
+    if not tls:
+        return
+    try:
+        port = int(target.get("port") or DEFAULT_PORT)
+    except (TypeError, ValueError):
+        port = DEFAULT_PORT
+    if port == DEFAULT_PORT:
+        target["port"] = DEFAULT_TLS_PORT
+        if isinstance(target.get("hub"), dict):
+            target["hub"]["port"] = DEFAULT_TLS_PORT
+    _apply_modbus_type_to_entry_data(target, "tcp")
 
 
 def _apply_modbus_type_to_entry_data(
@@ -1267,6 +1314,7 @@ class ModbusManagerConfigFlow(
             CONF_GENERIC_REGISTERS: rows,
         }
         persist_scan_groups(config_data, user_input)
+        _persist_tls(config_data, user_input)
         config_data["devices"] = [
             self._normalize_device_record(
                 _apply_entry_data_fallbacks_to_device(device, config_data)
@@ -1385,6 +1433,7 @@ class ModbusManagerConfigFlow(
                         }
                     )
                     persist_scan_groups(stored, user_input)
+                    _persist_tls(stored, user_input)
                     self._connection_params = stored
                     try:
                         hit = await async_identify_hub(
@@ -1410,6 +1459,7 @@ class ModbusManagerConfigFlow(
                     vol.Optional(
                         "modbus_type", default=stored.get("modbus_type", "tcp")
                     ): vol.In({"tcp": "TCP", "rtuovertcp": "RTU over TCP"}),
+                    **_tls_schema_field(stored),
                     vol.Optional(
                         "timeout",
                         default=int(stored.get("timeout") or DEFAULT_TIMEOUT),
@@ -1704,6 +1754,7 @@ class ModbusManagerConfigFlow(
                 ),
             )
             persist_scan_groups(new_data, user_input)
+            _persist_tls(new_data, user_input)
             self.hass.config_entries.async_update_entry(config_entry, data=new_data)
             await self.hass.config_entries.async_reload(config_entry.entry_id)
             return self.async_create_entry(title="", data={})
@@ -1713,6 +1764,7 @@ class ModbusManagerConfigFlow(
             schema_fields[
                 vol.Optional("modbus_type", default=current_modbus)
             ] = _tcp_rtu_modbus_type_selector(self.hass)
+        schema_fields.update(_tls_schema_field(config_entry.data))
         schema_fields.update(
             {
                 vol.Required(
@@ -1760,6 +1812,7 @@ class ModbusManagerConfigFlow(
             stored = dict(getattr(self, "_connection_params", {}) or {})
             stored.update(user_input)
             persist_scan_groups(stored, user_input)
+            _persist_tls(stored, user_input)
             self._connection_params = stored
 
             # Proceed to model selection or dynamic config
@@ -1813,6 +1866,7 @@ class ModbusManagerConfigFlow(
                             "rtuovertcp": "RTU over TCP",
                         }
                     ),
+                    **_tls_schema_field(stored),
                     vol.Optional("timeout", default=default_timeout): int,
                     vol.Optional("delay", default=default_delay): int,
                     vol.Optional(
@@ -2061,6 +2115,7 @@ class ModbusManagerConfigFlow(
                         "rtuovertcp": "RTU over TCP",
                     }
                 ),
+                **_tls_schema_field(getattr(self, "_connection_params", {})),
                 vol.Optional("timeout", default=DEFAULT_TIMEOUT): int,
                 vol.Optional("delay", default=DEFAULT_DELAY): int,
                 vol.Optional(
@@ -3467,6 +3522,7 @@ class ModbusManagerConfigFlow(
                 "controls": template_controls,
             }
             persist_scan_groups(config_data, user_input)
+            _persist_tls(config_data, user_input)
 
             # Add dynamic configuration parameters if available
             # Configuration values are already extracted from processed_data above
@@ -5412,6 +5468,8 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     )
                     if chosen in _TCP_RTU_MODBUS_TYPES:
                         _apply_modbus_type_to_entry_data(new_data, chosen)
+                _persist_tls(new_data, user_input)
+                new_port = int(new_data.get("port") or new_port)
                 hub_config = new_data.get("hub")
                 if isinstance(hub_config, dict):
                     hub_config = dict(hub_config)
@@ -5474,6 +5532,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             schema_fields[
                 vol.Optional("modbus_type", default=current_modbus)
             ] = _tcp_rtu_modbus_type_selector(self.hass)
+        schema_fields.update(_tls_schema_field(self.config_entry.data))
         schema_fields.update(
             {
                 vol.Required("host", default=current_host): str,

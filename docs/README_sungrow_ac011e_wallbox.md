@@ -14,11 +14,11 @@ The **Sungrow AC011E Wallbox Template** provides integration for Sungrow EV wall
 
 ## 🔌 Connection
 
-Topologies **with and without iHomeManager**, ports, slave IDs, and what Modbus Manager can poll today: **[Sungrow AC wallbox connection topologies](README_sungrow_wallbox_connection.md)**.
+Full wiring, ports, and slaves: **[Sungrow AC wallbox connection topologies](README_sungrow_wallbox_connection.md)**.
 
-**Without iHM (SH-RT):** RS485 from the charger to the inverter. Point this template at **WiNet, the inverter LAN port, or an inverter RS485 gateway** (port **502**), wallbox **slave ID 3** (verify). Not the wallbox Ethernet IP. New hub Identify probes type-code **21223** on slaves **3, 2, 4, 5** of that same inverter hub (never slave 1, never the SBR slave).
-
-**With iHM:** do **not** use this template. Use the [iHomeManager](README_iHomeManager.md) hub (`charger_enabled`). iHM talks to the charger on TLS internally; Home Assistant polls iHM on plain TCP. The `21xxx` map on the charger IP would need Modbus/TLS, which MM does not support, and would fight the EMS.
+1. **RS485 to hybrid** — SHx on **inverter LAN** only sees proxy **`33540–33549`**. Full `21xxx` (this template): hub host = **WiNet-S IP**, slave = WiNet **Forwarding Modbus ID** (often **2** or **3**, not inverter LAN, not 248). [#127](https://github.com/TCzerny/ha-modbus-manager/issues/127).
+2. **Direct LAN TLS** — charger Ethernet, no iHM. **Own** hub, charger IP, **TLS**, port **516**, slave **248** (HA 2026.9+).
+3. **iHomeManager** — do **not** use this template. [iHomeManager](README_iHomeManager.md) hub, **`charger_enabled`**. iHM already holds charger `:516`.
 
 ## ⚙️ Configuration
 
@@ -28,7 +28,7 @@ Topologies **with and without iHomeManager**, ports, slave IDs, and what Modbus 
 |-----------|------|---------|-------------|
 | **Model** | Select | AC011E-01 | Wallbox model (Output Current limits from datasheet) |
 | **Prefix** | String | WB | Unique prefix for all entities |
-| **Slave ID** | Integer | 3 | Modbus slave address (verify in iSolarCloud) |
+| **Slave ID** | Integer | 3 | WiNet forwarding ID (confirm in dongle Device List; often 2 or 3) or **248** on TLS |
 
 ### Model Selection (config flow / options flow)
 
@@ -46,9 +46,9 @@ Add as a Modbus Manager device with:
 
 - **Template:** Sungrow AC011E Wallbox
 - **Model:** AC011E-01 (or your model)
-- **Host:** WiNet / inverter IP when the charger is on the inverter RS485 bus (**not** the wallbox LAN IP in that topology)
-- **Port:** 502
-- **Slave ID:** 3 via inverter, or **248** on a dedicated RS485/USB/Waveshare hub (see [connection topologies](README_sungrow_wallbox_connection.md))
+- **Host:** **WiNet-S IP** for forwarded `21xxx`, or **charger LAN IP** for TLS — not the inverter Ethernet jack
+- **Port:** 502 (WiNet) or 516 (TLS)
+- **Slave ID:** WiNet forwarding ID (**2** or **3**, confirm in the dongle list), or **248** on charger TLS / USB-RS485 (see [connection topologies](README_sungrow_wallbox_connection.md))
 
 ## 📊 Available Entities
 
