@@ -5,7 +5,7 @@ name: "Sungrow SH Series Inverter"
 display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters: RS, RT, T, MG*RL, SH*RL. SH50–125CX not included yet."
 manufacturer: "Sungrow"
-model: "SHx Series"
+model: "SH Series"
 version: 1.2.24
 default_prefix: "SG"
 default_slave_id: 1
@@ -182,6 +182,7 @@ sensors:
   # Debug: Master/Slave mode raw (holding, read - mirror of controls for availability test)
   - name: Master Slave Mode
     unique_id: master_slave_mode
+    enabled_by_default: false
     translation_key: "shx_master_slave_mode"
     address: 33499
     input_type: holding
@@ -195,6 +196,7 @@ sensors:
 
   - name: Master Slave Role
     unique_id: master_slave_role
+    enabled_by_default: false
     translation_key: "shx_master_slave_role"
     address: 33500
     input_type: holding
@@ -211,6 +213,7 @@ sensors:
 
   - name: Slave Count
     unique_id: slave_count
+    enabled_by_default: false
     translation_key: "shx_slave_count"
     address: 33501
     input_type: holding
@@ -304,6 +307,8 @@ sensors:
 
   - name: Protocol version raw
     unique_id: protocol_version_raw
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_protocol_version_raw"
     address: 4951 # reg 4952-4953
     input_type: input
@@ -319,6 +324,7 @@ sensors:
   # Certification Versions (Protocol V1.1.11)
   - name: Certification version of ARM Software
     unique_id: certification_version_arm_software
+    enabled_by_default: false
     translation_key: "shx_certification_version_arm_software"
     address: 4953 # reg 4954-4968 (15 bytes UTF-8 string)
     input_type: input
@@ -332,6 +338,7 @@ sensors:
 
   - name: Certification version of DSP Software
     unique_id: certification_version_dsp_software
+    enabled_by_default: false
     translation_key: "shx_certification_version_dsp_software"
     address: 4968 # reg 4969-4983 (15 bytes UTF-8 string)
     input_type: input
@@ -377,6 +384,7 @@ sensors:
   # Note: Not available on SH3.0-10RS, MG5-12RL, and SH3-10RL models
   - name: Inverter Firmware Info
     unique_id: inverter_firmware_info
+    enabled_by_default: false
     translation_key: "shx_inverter_firmware_info"
     address: 13249 # reg 13250-13264 (15 bytes UTF-8 string)
     input_type: input
@@ -390,6 +398,7 @@ sensors:
 
   - name: Communication Module Firmware Info
     unique_id: communication_module_firmware_info
+    enabled_by_default: false
     translation_key: "shx_communication_module_firmware_info"
     address: 13264 # reg 13265-13279 (15 bytes UTF-8 string)
     input_type: input
@@ -403,6 +412,7 @@ sensors:
 
   - name: Battery Firmware Info
     unique_id: battery_firmware_info
+    enabled_by_default: false
     translation_key: "shx_battery_firmware_info"
     address: 13279 # reg 13280-13294 (15 bytes UTF-8 string)
     input_type: input
@@ -690,6 +700,8 @@ sensors:
 
   - name: Meter active power raw
     unique_id: meter_active_power_raw
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_meter_active_power_raw"
     address: 5600 # reg 5601
     input_type: input
@@ -706,6 +718,8 @@ sensors:
 
   - name: Meter phase A active power raw
     unique_id: meter_phase_a_active_power_raw
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_meter_phase_a_active_power_raw"
     address: 5602 # reg 5603
     input_type: input
@@ -722,6 +736,8 @@ sensors:
 
   - name: Meter phase B active power raw
     unique_id: meter_phase_b_active_power_raw
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_meter_phase_b_active_power_raw"
     address: 5604 # reg 5605
     input_type: input
@@ -738,6 +754,8 @@ sensors:
 
   - name: Meter phase C active power raw
     unique_id: meter_phase_c_active_power_raw
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_meter_phase_c_active_power_raw"
     address: 5606 # reg 5607
     input_type: input
@@ -758,6 +776,8 @@ sensors:
   # They will show invalid values (0x7FFFFFFF) if no dual-channel meter is present
   - name: Meter Channel 2 Total Active Power raw
     unique_id: meter_channel_2_total_active_power_raw
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_meter_channel_2_total_active_power_raw"
     address: 13199 # reg 13200-13214 (S32, 1W)
     input_type: input
@@ -775,6 +795,8 @@ sensors:
 
   - name: Meter Channel 2 Phase A Active Power raw
     unique_id: meter_channel_2_phase_a_active_power_raw
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_meter_channel_2_phase_a_active_power_raw"
     address: 13201 # reg 13202-13215 (S32, 1W)
     input_type: input
@@ -792,6 +814,8 @@ sensors:
 
   - name: Meter Channel 2 Phase B Active Power raw
     unique_id: meter_channel_2_phase_b_active_power_raw
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_meter_channel_2_phase_b_active_power_raw"
     address: 13203 # reg 13204-13217 (S32, 1W)
     input_type: input
@@ -809,6 +833,8 @@ sensors:
 
   - name: Meter Channel 2 Phase C Active Power raw
     unique_id: meter_channel_2_phase_c_active_power_raw
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_meter_channel_2_phase_c_active_power_raw"
     address: 13205 # reg 13206-13219 (S32, 1W)
     input_type: input
@@ -1154,6 +1180,8 @@ sensors:
   # # Start monthly PV generation
   - name: Monthly PV generation (01 January)
     unique_id: monthly_pv_generation_01_january
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_pv_generation_01_january"
     address: 6226 # reg 6227
     input_type: input
@@ -1169,6 +1197,8 @@ sensors:
 
   - name: Monthly PV generation (02 February)
     unique_id: monthly_pv_generation_02_february
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_pv_generation_02_february"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6227 # reg 6228
@@ -1184,6 +1214,8 @@ sensors:
 
   - name: Monthly PV generation (03 March)
     unique_id: monthly_pv_generation_03_march
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_pv_generation_03_march"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6228 # reg 6229
@@ -1199,6 +1231,8 @@ sensors:
 
   - name: Monthly PV generation (04 April)
     unique_id: monthly_pv_generation_04_april
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_pv_generation_04_april"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6229 # reg 6230
@@ -1214,6 +1248,8 @@ sensors:
 
   - name: Monthly PV generation (05 May)
     unique_id: monthly_pv_generation_05_may
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_pv_generation_05_may"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6230 # reg 6231
@@ -1229,6 +1265,8 @@ sensors:
 
   - name: Monthly PV generation (06 June)
     unique_id: monthly_pv_generation_06_june
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_pv_generation_06_june"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6231 # reg 6232
@@ -1244,6 +1282,8 @@ sensors:
 
   - name: Monthly PV generation (07 July)
     unique_id: monthly_pv_generation_07_july
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_pv_generation_07_july"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6232 # reg 6233
@@ -1259,6 +1299,8 @@ sensors:
 
   - name: Monthly PV generation (08 August)
     unique_id: monthly_pv_generation_08_august
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_pv_generation_08_august"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6233 # reg 6234
@@ -1274,6 +1316,8 @@ sensors:
 
   - name: Monthly PV generation (09 September)
     unique_id: monthly_pv_generation_09_september
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_pv_generation_09_september"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6234 # reg 6235
@@ -1289,6 +1333,8 @@ sensors:
 
   - name: Monthly PV generation (10 October)
     unique_id: monthly_pv_generation_10_october
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_pv_generation_10_october"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6235 # reg 6236
@@ -1304,6 +1350,8 @@ sensors:
 
   - name: Monthly PV generation (11 November)
     unique_id: monthly_pv_generation_11_november
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_pv_generation_11_november"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6236 # reg 6237
@@ -1319,6 +1367,8 @@ sensors:
 
   - name: Monthly PV generation (12 December)
     unique_id: monthly_pv_generation_12_december
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_pv_generation_12_december"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6237 # reg 6238
@@ -1336,6 +1386,8 @@ sensors:
   # Start yearly pv generation
   - name: Yearly PV generation (2019)
     unique_id: yearly_pv_generation_2019
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_pv_generation_2019"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6257 # reg 6258
@@ -1352,6 +1404,8 @@ sensors:
 
   - name: Yearly PV generation (2020)
     unique_id: yearly_pv_generation_2020
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_pv_generation_2020"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6259 # reg 6260
@@ -1368,6 +1422,8 @@ sensors:
 
   - name: Yearly PV generation (2021)
     unique_id: yearly_pv_generation_2021
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_pv_generation_2021"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6261 # reg 6262
@@ -1384,6 +1440,8 @@ sensors:
 
   - name: Yearly PV generation (2022)
     unique_id: yearly_pv_generation_2022
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_pv_generation_2022"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6263 # reg 6264
@@ -1400,6 +1458,8 @@ sensors:
 
   - name: Yearly PV generation (2023)
     unique_id: yearly_pv_generation_2023
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_pv_generation_2023"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6265 # reg 6266
@@ -1416,6 +1476,8 @@ sensors:
 
   - name: Yearly PV generation (2024)
     unique_id: yearly_pv_generation_2024
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_pv_generation_2024"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6267 # reg 6268
@@ -1432,6 +1494,8 @@ sensors:
 
   - name: Yearly PV generation (2025)
     unique_id: yearly_pv_generation_2025
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_pv_generation_2025"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6269 # reg 6270
@@ -1448,6 +1512,8 @@ sensors:
 
   - name: Yearly PV generation (2026)
     unique_id: yearly_pv_generation_2026
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_pv_generation_2026"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6271 # reg 6272
@@ -1464,6 +1530,8 @@ sensors:
 
   - name: Yearly PV generation (2027)
     unique_id: yearly_pv_generation_2027
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_pv_generation_2027"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6273 # reg 6274
@@ -1480,6 +1548,8 @@ sensors:
 
   - name: Yearly PV generation (2028)
     unique_id: yearly_pv_generation_2028
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_pv_generation_2028"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6275 # reg 6276
@@ -1496,6 +1566,8 @@ sensors:
 
   - name: Yearly PV generation (2029)
     unique_id: yearly_pv_generation_2029e
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_pv_generation_2029e"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6277 # reg 6278
@@ -1514,6 +1586,8 @@ sensors:
   # Start monthly export
   - name: Monthly export (01 January)
     unique_id: monthly_export_01_january
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_export_01_january"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6595 # reg 6596
@@ -1529,6 +1603,8 @@ sensors:
 
   - name: Monthly export (02 February)
     unique_id: monthly_export_02_february
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_export_02_february"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6596 # reg 6597
@@ -1544,6 +1620,8 @@ sensors:
 
   - name: Monthly export (03 March)
     unique_id: monthly_export_03_march
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_export_03_march"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6597 # reg 6598
@@ -1559,6 +1637,8 @@ sensors:
 
   - name: Monthly export (04 April)
     unique_id: monthly_export_04_april
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_export_04_april"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6598 # reg 6599
@@ -1574,6 +1654,8 @@ sensors:
 
   - name: Monthly export (05 May)
     unique_id: monthly_export_05_may
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_export_05_may"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6599 # reg 6600
@@ -1589,6 +1671,8 @@ sensors:
 
   - name: Monthly export (06 June)
     unique_id: monthly_export_06_june
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_export_06_june"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6600 # reg 6601
@@ -1604,6 +1688,8 @@ sensors:
 
   - name: Monthly export (07 July)
     unique_id: monthly_export_07_july
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_export_07_july"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6601 # reg 6602
@@ -1619,6 +1705,8 @@ sensors:
 
   - name: Monthly export (08 August)
     unique_id: monthly_export_08_august
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_export_08_august"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6602 # reg 6603
@@ -1634,6 +1722,8 @@ sensors:
 
   - name: Monthly export (09 September)
     unique_id: monthly_export_09_september
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_export_09_september"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6603 # reg 6604
@@ -1649,6 +1739,8 @@ sensors:
 
   - name: Monthly export (10 October)
     unique_id: monthly_export_10_october
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_export_10_october"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6604 # reg 6605
@@ -1664,6 +1756,8 @@ sensors:
 
   - name: Monthly export (11 November)
     unique_id: monthly_export_11_november
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_export_11_november"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6605 # reg 6606
@@ -1679,6 +1773,8 @@ sensors:
 
   - name: Monthly export (12 December)
     unique_id: monthly_export_12_december
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_monthly_export_12_december"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6606 # reg 6607
@@ -1696,6 +1792,8 @@ sensors:
   # Start yearly export energy from PV
   - name: Yearly Export (2019)
     unique_id: yearly_export_2019
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_export_2019"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6615 # reg 6616
@@ -1712,6 +1810,8 @@ sensors:
 
   - name: Yearly Export (2020)
     unique_id: yearly_export_2020
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_export_2020"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6617 # reg 6618
@@ -1728,6 +1828,8 @@ sensors:
 
   - name: Yearly Export (2021)
     unique_id: yearly_export_2021
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_export_2021"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6619 # reg 6620
@@ -1744,6 +1846,8 @@ sensors:
 
   - name: Yearly Export (2022)
     unique_id: yearly_export_2022
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_export_2022"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6621 # reg 6622
@@ -1760,6 +1864,8 @@ sensors:
 
   - name: Yearly Export (2023)
     unique_id: yearly_export_2023
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_export_2023"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6623 # reg 6624
@@ -1776,6 +1882,8 @@ sensors:
 
   - name: Yearly Export (2024)
     unique_id: yearly_export_2024
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_export_2024"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6625 # reg 6626
@@ -1792,6 +1900,8 @@ sensors:
 
   - name: Yearly Export (2025)
     unique_id: yearly_export_2025
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_export_2025"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6627 # reg 6628
@@ -1808,6 +1918,8 @@ sensors:
 
   - name: Yearly Export (2026)
     unique_id: yearly_export_2026
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_export_2026"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6629 # reg 6630
@@ -1824,6 +1936,8 @@ sensors:
 
   - name: Yearly Export (2027)
     unique_id: yearly_export_2027
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_export_2027"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6631 # reg 6632
@@ -1840,6 +1954,8 @@ sensors:
 
   - name: Yearly Export (2028)
     unique_id: yearly_export_2028
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_yearly_export_2028"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6633 # reg 6634
@@ -1928,6 +2044,7 @@ sensors:
 
   - name: "Load Adjustment Mode Raw"
     unique_id: "load_adjustment_mode_selection_raw"
+    enabled_by_default: false
     translation_key: "shx_load_adjustment_mode_selection_raw"
     address: 13001
     input_type: "holding"
@@ -2015,6 +2132,8 @@ sensors:
   # Power delivered by the inverter to the grid
   - name: Export power raw
     unique_id: export_power_raw
+    enabled_by_default: false
+    always_poll: true
     translation_key: "shx_export_power_raw"
     address: 13009 # reg 13010
     input_type: input
@@ -2029,6 +2148,7 @@ sensors:
 
   - name: Load Adjustment Mode ON/OFF Selection raw
     unique_id: load_adjustment_mode_on_off_selection_raw
+    enabled_by_default: false
     translation_key: "shx_load_adjustment_mode_on_off_selection_raw"
     address: 13010 # reg 13011
     input_type: holding
@@ -2608,6 +2728,7 @@ sensors:
   #     7: "BDC Soft Start Perm. Flt"
   - name: Battery fault
     unique_id: battery_fault_raw
+    enabled_by_default: false
     translation_key: "shx_battery_fault_raw"
     address: 13065 # reg 13066-13067 U32
     input_type: input
@@ -2628,6 +2749,7 @@ sensors:
 
   - name: Battery alarm
     unique_id: battery_alarm_raw
+    enabled_by_default: false
     translation_key: "shx_battery_alarm_raw"
     address: 13067 # reg 13068-13069 U32
     input_type: input
@@ -2641,6 +2763,7 @@ sensors:
 
   - name: BMS alarm
     unique_id: bms_alarm_raw
+    enabled_by_default: false
     translation_key: "shx_bms_alarm_raw"
     address: 13069 # reg 13070-13071 U32 - requires battery Modbus address
     input_type: input
@@ -2663,6 +2786,7 @@ sensors:
 
   - name: BMS protection
     unique_id: bms_protection_raw
+    enabled_by_default: false
     translation_key: "shx_bms_protection_raw"
     address: 13071 # reg 13072-13073 U32 - requires battery Modbus address
     input_type: input
@@ -2689,6 +2813,7 @@ sensors:
 
   - name: BMS fault 1
     unique_id: bms_fault_1_raw
+    enabled_by_default: false
     translation_key: "shx_bms_fault_1_raw"
     address: 13073 # reg 13074-13075 U32 - requires battery Modbus address; note Holding 13073=Export Limit
     input_type: input
@@ -2807,6 +2932,7 @@ sensors:
   # EMS Mode sensor
   - name: "EMS Mode"
     unique_id: "ems_mode_selection_raw"
+    enabled_by_default: false
     translation_key: "shx_ems_mode_selection_raw"
     address: 13049
     input_type: "holding"
@@ -2823,6 +2949,7 @@ sensors:
   # Battery control sensors
   - name: Battery forced charge discharge cmd raw
     unique_id: battery_forced_charge_discharge_cmd_raw
+    enabled_by_default: false
     translation_key: "shx_battery_forced_charge_discharge_cmd_raw"
     address: 13050 # reg 13051
     input_type: holding
@@ -2840,6 +2967,7 @@ sensors:
 
   - name: Battery forced charge discharge power raw
     unique_id: battery_forced_charge_discharge_power_raw
+    enabled_by_default: false
     translation_key: "shx_battery_forced_charge_discharge_power_raw"
     address: 13051 # reg 13052
     input_type: holding
@@ -2853,6 +2981,7 @@ sensors:
 
   - name: Global mpp scan manual raw
     unique_id: global_mpp_scan_manual_raw
+    enabled_by_default: false
     translation_key: "shx_global_mpp_scan_manual_raw"
     address: 30229 # reg 30230
     input_type: holding
@@ -2867,6 +2996,7 @@ sensors:
   # mkaiser issue #444 SH10RT no standby mode after latest firmware update
   - name: Forced Startup Under Low SoC Standby raw
     unique_id: forced_startup_under_low_soc_standby_raw
+    enabled_by_default: false
     translation_key: "shx_forced_startup_under_low_soc_standby_raw"
     address: 13016 # reg 13017 (Holding register - read-only for display purposes)
     input_type: holding
@@ -2886,6 +3016,7 @@ sensors:
  ################################################################
   - name: "WB Charging Mode Raw"
     unique_id: "wb_charging_mode_raw"
+    enabled_by_default: false
     translation_key: "shx_wb_charging_mode_raw"
     address: 33540
     input_type: holding
@@ -2902,6 +3033,7 @@ sensors:
 
   - name: "WB Charging Quantity Raw"
     unique_id: "wb_charging_quantity_raw"
+    enabled_by_default: false
     translation_key: "shx_wb_charging_quantity_raw"
     address: 33541
     input_type: holding
@@ -2916,6 +3048,7 @@ sensors:
 
   - name: "WB Charging Duration Raw"
     unique_id: "wb_charging_duration_raw"
+    enabled_by_default: false
     translation_key: "shx_wb_charging_duration_raw"
     address: 33542
     input_type: holding
@@ -2928,6 +3061,7 @@ sensors:
 
   - name: "WB User Defined Charging Current Raw"
     unique_id: "wb_user_defined_charging_current_raw"
+    enabled_by_default: false
     translation_key: "shx_wb_user_defined_charging_current_raw"
     address: 33544
     input_type: holding
@@ -2942,6 +3076,7 @@ sensors:
 
   - name: "WB User Defined Charge Start Time Raw"
     unique_id: "wb_user_defined_charge_start_time_raw"
+    enabled_by_default: false
     translation_key: "shx_wb_user_defined_charge_start_time_raw"
     address: 33545
     input_type: holding
@@ -2954,6 +3089,7 @@ sensors:
 
   - name: "WB User Defined Charge End Time Raw"
     unique_id: "wb_user_defined_charge_end_time_raw"
+    enabled_by_default: false
     translation_key: "shx_wb_user_defined_charge_end_time_raw"
     address: 33547
     input_type: holding
@@ -2966,6 +3102,7 @@ sensors:
 
   - name: "WB Surplus Power From Grid Raw"
     unique_id: "wb_surplus_power_from_grid_raw"
+    enabled_by_default: false
     translation_key: "shx_wb_surplus_power_from_grid_raw"
     address: 33549
     input_type: holding
@@ -3893,12 +4030,39 @@ calculated:
     unique_id: "monthly_pv_generation_current"
     translation_key: "shx_monthly_pv_generation_current"
     type: "sensor"
+    # Month names must stay English unique_id suffixes (not HA locale %B).
     availability: >-
-      {% set currMonth = 'monthly_pv_generation_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
-      {{ states('sensor.{PREFIX}_' ~ currMonth)|is_number }}
-    state: >
-      {% set currMonth = 'monthly_pv_generation_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
-      {{ states('sensor.{PREFIX}_' ~ currMonth) }}
+      {% set vals = [
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_01_january]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_02_february]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_03_march]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_04_april]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_05_may]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_06_june]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_07_july]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_08_august]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_09_september]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_10_october]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_11_november]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_12_december]]')
+      ] %}
+      {{ vals[now().month - 1] | is_number }}
+    state: >-
+      {% set vals = [
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_01_january]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_02_february]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_03_march]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_04_april]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_05_may]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_06_june]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_07_july]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_08_august]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_09_september]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_10_october]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_11_november]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_pv_generation_12_december]]')
+      ] %}
+      {{ vals[now().month - 1] }}
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"
@@ -3911,11 +4075,35 @@ calculated:
     translation_key: "shx_yearly_pv_generation_current"
     type: "sensor"
     availability: >-
-      {% set currYear = 'yearly_pv_generation_' ~ now().year %}
-      {{ states('sensor.{PREFIX}_' ~ currYear)|is_number }}
-    state: >
-      {% set currYear = 'yearly_pv_generation_' ~ now().year %}
-      {{ states('sensor.{PREFIX}_' ~ currYear) }}
+      {% set years = {
+        2019: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2019]]'),
+        2020: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2020]]'),
+        2021: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2021]]'),
+        2022: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2022]]'),
+        2023: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2023]]'),
+        2024: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2024]]'),
+        2025: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2025]]'),
+        2026: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2026]]'),
+        2027: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2027]]'),
+        2028: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2028]]'),
+        2029: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2029e]]')
+      } %}
+      {{ years.get(now().year, none) | is_number }}
+    state: >-
+      {% set years = {
+        2019: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2019]]'),
+        2020: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2020]]'),
+        2021: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2021]]'),
+        2022: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2022]]'),
+        2023: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2023]]'),
+        2024: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2024]]'),
+        2025: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2025]]'),
+        2026: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2026]]'),
+        2027: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2027]]'),
+        2028: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2028]]'),
+        2029: states('[[mm:sensor:{PREFIX}_yearly_pv_generation_2029e]]')
+      } %}
+      {{ years.get(now().year, none) }}
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"
@@ -3928,11 +4116,37 @@ calculated:
     translation_key: "shx_monthly_export_current"
     type: "sensor"
     availability: >-
-      {% set currMonth = 'monthly_export_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
-      {{ states('sensor.{PREFIX}_' ~ currMonth)|is_number }}
-    state: >
-      {% set currMonth = 'monthly_export_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
-      {{ states('sensor.{PREFIX}_' ~ currMonth) }}
+      {% set vals = [
+        states('[[mm:sensor:{PREFIX}_monthly_export_01_january]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_02_february]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_03_march]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_04_april]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_05_may]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_06_june]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_07_july]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_08_august]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_09_september]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_10_october]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_11_november]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_12_december]]')
+      ] %}
+      {{ vals[now().month - 1] | is_number }}
+    state: >-
+      {% set vals = [
+        states('[[mm:sensor:{PREFIX}_monthly_export_01_january]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_02_february]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_03_march]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_04_april]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_05_may]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_06_june]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_07_july]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_08_august]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_09_september]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_10_october]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_11_november]]'),
+        states('[[mm:sensor:{PREFIX}_monthly_export_12_december]]')
+      ] %}
+      {{ vals[now().month - 1] }}
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"
@@ -3945,11 +4159,33 @@ calculated:
     translation_key: "shx_yearly_export_current"
     type: "sensor"
     availability: >-
-      {% set currYear = 'yearly_export_' ~ now().year %}
-      {{ states('sensor.{PREFIX}_' ~ currYear)|is_number }}
-    state: >
-      {% set currYear = 'yearly_export_' ~ now().year %}
-      {{ states('sensor.{PREFIX}_' ~ currYear) }}
+      {% set years = {
+        2019: states('[[mm:sensor:{PREFIX}_yearly_export_2019]]'),
+        2020: states('[[mm:sensor:{PREFIX}_yearly_export_2020]]'),
+        2021: states('[[mm:sensor:{PREFIX}_yearly_export_2021]]'),
+        2022: states('[[mm:sensor:{PREFIX}_yearly_export_2022]]'),
+        2023: states('[[mm:sensor:{PREFIX}_yearly_export_2023]]'),
+        2024: states('[[mm:sensor:{PREFIX}_yearly_export_2024]]'),
+        2025: states('[[mm:sensor:{PREFIX}_yearly_export_2025]]'),
+        2026: states('[[mm:sensor:{PREFIX}_yearly_export_2026]]'),
+        2027: states('[[mm:sensor:{PREFIX}_yearly_export_2027]]'),
+        2028: states('[[mm:sensor:{PREFIX}_yearly_export_2028]]')
+      } %}
+      {{ years.get(now().year, none) | is_number }}
+    state: >-
+      {% set years = {
+        2019: states('[[mm:sensor:{PREFIX}_yearly_export_2019]]'),
+        2020: states('[[mm:sensor:{PREFIX}_yearly_export_2020]]'),
+        2021: states('[[mm:sensor:{PREFIX}_yearly_export_2021]]'),
+        2022: states('[[mm:sensor:{PREFIX}_yearly_export_2022]]'),
+        2023: states('[[mm:sensor:{PREFIX}_yearly_export_2023]]'),
+        2024: states('[[mm:sensor:{PREFIX}_yearly_export_2024]]'),
+        2025: states('[[mm:sensor:{PREFIX}_yearly_export_2025]]'),
+        2026: states('[[mm:sensor:{PREFIX}_yearly_export_2026]]'),
+        2027: states('[[mm:sensor:{PREFIX}_yearly_export_2027]]'),
+        2028: states('[[mm:sensor:{PREFIX}_yearly_export_2028]]')
+      } %}
+      {{ years.get(now().year, none) }}
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"

@@ -117,6 +117,8 @@ sensors:
 
   - name: Protocol version raw
     unique_id: protocol_version_raw
+    enabled_by_default: false
+    always_poll: true
     translation_key: "sg_protocol_version_raw"
     mm_group: "PV_device_info"
     address: 4951 # reg 4952-4953
@@ -129,6 +131,7 @@ sensors:
 
   - name: Certification version of ARM Software
     unique_id: certification_version_arm_software
+    enabled_by_default: false
     translation_key: "sg_certification_version_arm_software"
     mm_group: "PV_device_info"
     address: 4953 # reg 4954-4968 (15 registers UTF-8 string)
@@ -142,6 +145,7 @@ sensors:
 
   - name: Certification version of DSP Software
     unique_id: certification_version_dsp_software
+    enabled_by_default: false
     translation_key: "sg_certification_version_dsp_software"
     mm_group: "PV_device_info"
     address: 4968 # reg 4969-4983 (15 registers UTF-8 string)
@@ -591,6 +595,7 @@ sensors:
 
   - name: "Power Factor raw"
     unique_id: "power_factor_raw"
+    enabled_by_default: false
     translation_key: "sg_power_factor_raw"
     address: 5034
     input_type: "input"
@@ -678,6 +683,8 @@ sensors:
   # Registers 5082-5104 valid for KTL series only (added *RS models even not documented)
   - name: Meter active power raw
     unique_id: meter_active_power_raw
+    enabled_by_default: false
+    always_poll: true
     translation_key: "sg_meter_active_power_raw"
     address: 5082 # reg 5083-5084
     input_type: input
@@ -961,6 +968,7 @@ sensors:
 
   - name: Monthly PV generation
     unique_id: monthly_pv_generation
+    enabled_by_default: false
     translation_key: "sg_monthly_pv_generation"
     address: 5127 # reg 5128-5129
     input_type: input
@@ -1274,6 +1282,8 @@ sensors:
   # int16 at reg 5216/5218 (Issue #63); previous int32 @ 5217-5218 / 5219-5220 was incorrect.
   - name: Export power raw
     unique_id: export_power_raw
+    enabled_by_default: false
+    always_poll: true
     translation_key: "sg_export_power_raw"
     address: 5215 # reg 5216
     input_type: input
@@ -1286,6 +1296,8 @@ sensors:
 
   - name: Meter Power raw
     unique_id: meter_power_raw
+    enabled_by_default: false
+    always_poll: true
     translation_key: "sg_meter_power_raw"
     address: 5217 # reg 5218
     input_type: input

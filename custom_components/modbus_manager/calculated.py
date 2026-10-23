@@ -7,6 +7,7 @@ from typing import Any, Dict
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import callback
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.template import Template
@@ -50,6 +51,72 @@ def _filter_placeholder_entity_deps(entity_ids: set[str]) -> set[str]:
     return {e for e in entity_ids if e and not e.endswith(".unknown")}
 
 
+def _coordinator_value_for_unique_id(data: dict | None, unique_id: str) -> Any:
+    """Value stored as ``{unique_id}_{address}`` when the source entity is disabled."""
+    if not data or not unique_id:
+        return None
+    prefix = f"{unique_id}_"
+    for key, payload in data.items():
+        if key != unique_id and not (isinstance(key, str) and key.startswith(prefix)):
+            continue
+        if not isinstance(payload, dict):
+            return payload
+        for field in ("processed_value", "numeric_value", "value", "raw_value"):
+            if payload.get(field) is not None:
+                return payload[field]
+        return None
+    return None
+
+
+def _literal_for_template(value: Any) -> str:
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        return repr(value)
+    text = str(value).replace("\\", "\\\\").replace("'", "\\'")
+    return f"'{text}'"
+
+
+def _inject_coordinator_states(
+    template_str: str,
+    *,
+    hass,
+    entity_ids: set[str],
+    coordinator_data: dict | None,
+) -> str:
+    """Replace states('entity_id') with coordinator values when HA has no state."""
+    if not template_str or not entity_ids or not coordinator_data:
+        return template_str
+    registry = er.async_get(hass)
+    result = template_str
+    for entity_id in entity_ids:
+        state = hass.states.get(entity_id)
+        if state is not None:
+            try:
+                float(state.state)
+                continue
+            except (TypeError, ValueError):
+                pass
+        entry = registry.async_get(entity_id)
+        if entry is None or not entry.unique_id:
+            continue
+        value = _coordinator_value_for_unique_id(coordinator_data, str(entry.unique_id))
+        if value is None:
+            continue
+        lit = _literal_for_template(value)
+        for quote in ("'", '"'):
+            result = result.replace(f"states({quote}{entity_id}{quote})", lit)
+            result = result.replace(
+                f"is_state({quote}{entity_id}{quote}, {quote}unavailable{quote})",
+                "false",
+            )
+            result = result.replace(
+                f"is_state({quote}{entity_id}{quote}, {quote}unknown{quote})",
+                "false",
+            )
+    return result
+
+
 def _mm_template_fields_have_markers(
     *parts: str | None,
 ) -> bool:
@@ -83,9 +150,7 @@ class ModbusCalculatedSensor(SensorEntity):
         # Home Assistant uses the absent attribute to reach its translation
         # lookup. Keep an independent label for diagnostics instead.
         self._log_label = str(
-            config.get("name")
-            or config.get("unique_id")
-            or "Unknown Calculated Sensor"
+            config.get("name") or config.get("unique_id") or "Unknown Calculated Sensor"
         )
 
         # Extract configuration
@@ -128,6 +193,7 @@ class ModbusCalculatedSensor(SensorEntity):
         # Required before _mm_rebuild_registry_templates (uses _static_icon / _raw_icon)
         self._static_icon = config.get("icon")
         self._unsubscribe_dependency_listener = None
+        self._unsubscribe_coordinator_listener = None
         if self._static_icon:
             self._attr_icon = self._static_icon
             _LOGGER.debug(
@@ -354,6 +420,62 @@ class ModbusCalculatedSensor(SensorEntity):
                 list(new_ids),
                 self._handle_dependency_state_change,
             )
+        self._mm_sync_coordinator_listener()
+
+    def _coordinator_store(self) -> dict | None:
+        coordinator = self._get_coordinator()
+        if not coordinator:
+            return None
+        data = getattr(coordinator, "data", None)
+        if data:
+            return data
+        return getattr(coordinator, "register_data", None)
+
+    def _dependency_needs_coordinator(self) -> bool:
+        """True when a Jinja source has no live HA state (disabled / not loaded)."""
+        if not self._dependency_entity_ids:
+            return False
+        registry = er.async_get(self.hass)
+        for entity_id in self._dependency_entity_ids:
+            entry = registry.async_get(entity_id)
+            if entry is None or entry.disabled:
+                return True
+            state = self.hass.states.get(entity_id)
+            if state is None:
+                return True
+            try:
+                float(state.state)
+            except (TypeError, ValueError):
+                return True
+        return False
+
+    def _mm_sync_coordinator_listener(self) -> None:
+        """Recalculate from coordinator data when source entities are HA-disabled."""
+        if not self._mm_hass_add_done:
+            return
+        need = self._dependency_needs_coordinator()
+        if need and self._unsubscribe_coordinator_listener is None:
+            coordinator = self._get_coordinator()
+            if coordinator is not None:
+                self._unsubscribe_coordinator_listener = coordinator.async_add_listener(
+                    self._handle_dependency_state_change
+                )
+        elif not need and self._unsubscribe_coordinator_listener is not None:
+            self._unsubscribe_coordinator_listener()
+            self._unsubscribe_coordinator_listener = None
+
+    def _render_template_source(self, compiled: Template | None, raw: str | None):
+        source = raw or ""
+        if self._dependency_needs_coordinator():
+            source = _inject_coordinator_states(
+                source,
+                hass=self.hass,
+                entity_ids=self._dependency_entity_ids,
+                coordinator_data=self._coordinator_store(),
+            )
+            if source != raw:
+                return Template(source, self.hass)
+        return compiled
 
     @property
     def extra_state_attributes(self) -> Dict[str, Any]:
@@ -398,6 +520,7 @@ class ModbusCalculatedSensor(SensorEntity):
         self._mm_hass_add_done = True
         self._mm_rebuild_registry_templates()
         self._mm_sync_dependency_listeners()
+        self._mm_sync_coordinator_listener()
         self.async_schedule_update_ha_state(True)
 
     async def async_will_remove_from_hass(self) -> None:
@@ -405,10 +528,13 @@ class ModbusCalculatedSensor(SensorEntity):
         if self._unsubscribe_dependency_listener is not None:
             self._unsubscribe_dependency_listener()
             self._unsubscribe_dependency_listener = None
+        if self._unsubscribe_coordinator_listener is not None:
+            self._unsubscribe_coordinator_listener()
+            self._unsubscribe_coordinator_listener = None
         await super().async_will_remove_from_hass()
 
     @callback
-    def _handle_dependency_state_change(self, _event: Any) -> None:
+    def _handle_dependency_state_change(self, _event: Any = None) -> None:
         """Recalculate only when a referenced source entity changes."""
         self.async_schedule_update_ha_state(True)
 
@@ -421,13 +547,23 @@ class ModbusCalculatedSensor(SensorEntity):
         if not self._mm_registry_frozen:
             self._mm_rebuild_registry_templates()
             self._mm_sync_dependency_listeners()
+        self._mm_sync_coordinator_listener()
+
+        state_template = self._render_template_source(
+            self._template, self._mm_state_res
+        )
+        availability_template = self._availability_template
+        if self._availability_template is not None:
+            availability_template = self._render_template_source(
+                self._availability_template, self._mm_avail_res
+            )
 
         # Update availability first if template exists
-        if self._availability_template is not None:
+        if availability_template is not None:
             try:
                 # Use executor_job to safely run the sync render method
                 availability_result = await self.hass.async_add_executor_job(
-                    self._availability_template.render
+                    availability_template.render
                 )
                 self._availability_result = bool(availability_result)
             except Exception as e:
@@ -446,7 +582,7 @@ class ModbusCalculatedSensor(SensorEntity):
             try:
                 # Use executor_job to safely run the sync render method
                 rendered_value = await self.hass.async_add_executor_job(
-                    self._template.render
+                    state_template.render
                 )
             except Exception as e:
                 if "Cannot be called from within the event loop" in str(e):
@@ -589,9 +725,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         # Home Assistant uses the absent attribute to reach its translation
         # lookup. Keep an independent label for diagnostics instead.
         self._log_label = str(
-            config.get("name")
-            or config.get("unique_id")
-            or "Unknown Binary Sensor"
+            config.get("name") or config.get("unique_id") or "Unknown Binary Sensor"
         )
 
         # Extract configuration
@@ -837,7 +971,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         await super().async_will_remove_from_hass()
 
     @callback
-    def _handle_dependency_state_change(self, _event: Any) -> None:
+    def _handle_dependency_state_change(self, _event: Any = None) -> None:
         """Recalculate only when a referenced source entity changes."""
         self.async_schedule_update_ha_state(True)
 

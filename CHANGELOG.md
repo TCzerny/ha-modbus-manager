@@ -12,6 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **[#109](https://github.com/TCzerny/ha-modbus-manager/issues/109) — config-flow option labels**: `dynamic_config` field names (including Pichler preheater / coil type) and dropdown texts follow the HA UI language. Stored option keys and `unique_id` are unchanged. Select/map **entity** states are still English.
 - **Setup — category step copy**: Manual “choose a template” no longer talks about a failed probe or a previous address. Same step still follows detect-miss.
 
+### 🐛 Fixed
+
+- **SHx monthly/yearly “current” sensors**: Jinja used locale `%B` (`Oktober` vs unique_id `october`) and hardcoded `sensor.{PREFIX}_…` ids, so the calculated entities stayed unavailable on German HA. They now index the month/year source sensors via `[[mm:…]]`. `unique_id` unchanged.
+
+### 🧹 Changed
+
+- **SHx/SG default-disabled clutter**: New installs create monthly/yearly calendar buckets and debug/`*_raw` mirrors **disabled** (`enabled_by_default: false`). Daily/total energy, live power, SoC, EMS/wallbox **selects**, and the four SHx *current* calculated sensors stay enabled. Existing registry rows are unchanged. Sources that calculated sensors still need use `always_poll` so #107 does not drop the Modbus read. Recreating a hub with the same prefix restores previous `disabled_by` from HA `deleted_entities` — YAML default-disable does not override that.
+
 ## [1.3.5] - 2026-10-23
 
 ### ✨ Added

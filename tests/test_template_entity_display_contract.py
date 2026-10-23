@@ -12,7 +12,6 @@ import unittest
 from pathlib import Path
 from typing import Any
 
-
 ROOT = Path(__file__).resolve().parents[1]
 DEVICE_UTILS = ROOT / "custom_components/modbus_manager/device_utils.py"
 PLATFORMS = (
@@ -38,7 +37,7 @@ def _load_display_helper():
         in {"template_enabled_by_default", "apply_template_entity_display"}
     ]
     namespace = {"Any": Any}
-    exec(
+    exec(  # nosec B102
         compile(ast.Module(functions, type_ignores=[]), str(DEVICE_UTILS), "exec"),
         namespace,
     )
@@ -108,9 +107,9 @@ class TemplateEntityDisplayContractTest(unittest.TestCase):
 
     def test_select_never_reads_attr_name_after_display_helper(self):
         """Translated selects must not depend on the intentionally absent name."""
-        select_source = (
-            ROOT / "custom_components/modbus_manager/select.py"
-        ).read_text(encoding="utf-8")
+        select_source = (ROOT / "custom_components/modbus_manager/select.py").read_text(
+            encoding="utf-8"
+        )
         tree = ast.parse(select_source)
         attr_name_reads = [
             node
@@ -139,6 +138,15 @@ class TemplateEntityDisplayContractTest(unittest.TestCase):
         ]
         self.assertEqual(attr_name_reads, [])
         self.assertIn("self._log_label", calculated_source)
+
+    def test_enabled_by_default_false_is_applied(self):
+        entity = _Entity()
+        self.apply_display(
+            entity,
+            {"enabled_by_default": False},
+            fallback_name="Diagnostic raw",
+        )
+        self.assertFalse(entity._attr_entity_registry_enabled_default)
 
 
 if __name__ == "__main__":
