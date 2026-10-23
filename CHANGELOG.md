@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.7] - 2026-10-23
+
 ### ✨ Added
 
-- **Sungrow wallbox LAN TLS (HA 2026.9+)**: Hub option **TLS** uses Core `ModbusTlsParams` on the charger Ethernet IP, port **516**, unit **248**, as a dedicated hub with the AC011E template. Not for iHomeManager (it already holds `:516`). Older cores cannot open TLS. `unique_id` unchanged.
+- **Sungrow wallbox LAN TLS**: Home Assistant **2026.9** now offers Core `ModbusTlsParams`, so a hub can enable **TLS** against the charger Ethernet IP (port **516**, unit **248**, AC011E template). The option is shown only on 2026.9+. Not for iHomeManager (it already holds `:516`). `unique_id` unchanged.
 
 ### 📚 Documentation
 
