@@ -65,6 +65,7 @@ from .device_utils import (
     resolve_device_role_type,
     updated_hub_entry_title,
 )
+from .dynamic_config_i18n import localize_dynamic_options
 from .dynamic_processing import process_dynamic_config
 from .generic_device import (
     GenericRegisterError,
@@ -120,12 +121,15 @@ def _vol_in_from_dynamic_options(
     field_config: dict,
     *,
     current_value: Any | None = None,
+    field_name: str | None = None,
+    hass: Any | None = None,
 ) -> tuple[Any, vol.In]:
     """Build default and vol.In for dynamic_config options (list/tuple or value -> label dict)."""
     options = field_config.get("options", [])
     if not options:
         raise ValueError("options required")
     explicit = field_config.get("default")
+    display = localize_dynamic_options(field_name, options, hass)
 
     if isinstance(options, dict):
         keys = list(options.keys())
@@ -135,7 +139,7 @@ def _vol_in_from_dynamic_options(
             default = explicit
         else:
             default = keys[0]
-        return default, vol.In(options)
+        return default, vol.In(display)
 
     seq = list(options)
     if current_value is not None and current_value in seq:
@@ -144,7 +148,7 @@ def _vol_in_from_dynamic_options(
         default = explicit
     else:
         default = seq[0]
-    return default, vol.In(options)
+    return default, vol.In(display)
 
 
 _WINET_BATTERY_CONFIGS = frozenset({"none", "standard_battery", "sbr_battery", "other"})
@@ -421,7 +425,9 @@ def _normalize_stored_device(device: dict[str, Any]) -> dict[str, Any]:
 
 
 def _device_reconfigure_schema(
-    selected_device: dict[str, Any], template_data: dict[str, Any] | None
+    selected_device: dict[str, Any],
+    template_data: dict[str, Any] | None,
+    hass: HomeAssistant | None = None,
 ) -> vol.Schema:
     """Build prefix / slave / model / dynamic_config schema for one device."""
     dynamic_config = (
@@ -481,7 +487,10 @@ def _device_reconfigure_schema(
                         current, selected_device.get("connection_type")
                     )
                 default, vol_in = _vol_in_from_dynamic_options(
-                    field_config, current_value=current
+                    field_config,
+                    current_value=current,
+                    field_name=field_name,
+                    hass=hass,
                 )
                 schema_fields[vol.Optional(field_name, default=default)] = vol_in
         elif isinstance(field_config, dict) and "default" in field_config:
@@ -733,6 +742,7 @@ def _template_default_connection_type(template_data: dict[str, Any]) -> str | No
 def _connection_type_form_field(
     template_data: dict[str, Any],
     current_value: Any | None = None,
+    hass: HomeAssistant | None = None,
 ) -> tuple[Any, Any] | None:
     """Optional connection_type selector from template dynamic_config options."""
     dynamic = template_data.get("dynamic_config") or {}
@@ -741,7 +751,12 @@ def _connection_type_form_field(
     ct_cfg = dynamic.get("connection_type")
     if not isinstance(ct_cfg, dict) or "options" not in ct_cfg:
         return None
-    default, vol_in = _vol_in_from_dynamic_options(ct_cfg, current_value=current_value)
+    default, vol_in = _vol_in_from_dynamic_options(
+        ct_cfg,
+        current_value=current_value,
+        field_name="connection_type",
+        hass=hass,
+    )
     return vol.Optional("connection_type", default=default), vol_in
 
 
@@ -1517,7 +1532,7 @@ class ModbusManagerConfigFlow(
                 vol.Optional("wallbox_slave_id", default=int(hit.wallbox_slave_id))
             ] = int
         ct_field = _connection_type_form_field(
-            template_data, current_value=hit.connection_type
+            template_data, current_value=hit.connection_type, hass=self.hass
         )
         if ct_field:
             schema_fields[ct_field[0]] = ct_field[1]
@@ -2437,7 +2452,10 @@ class ModbusManagerConfigFlow(
                         ):
                             current_value = probe.battery_config
                         default, vol_in = _vol_in_from_dynamic_options(
-                            field_config, current_value=current_value
+                            field_config,
+                            current_value=current_value,
+                            field_name=field_name,
+                            hass=self.hass,
                         )
                         schema_fields[
                             vol.Optional(field_name, default=default)
@@ -2505,7 +2523,9 @@ class ModbusManagerConfigFlow(
         if "firmware_version" in dynamic_config:
             fw_cfg = dynamic_config["firmware_version"]
             if isinstance(fw_cfg, dict) and "options" in fw_cfg:
-                fw_default, fw_in = _vol_in_from_dynamic_options(fw_cfg)
+                fw_default, fw_in = _vol_in_from_dynamic_options(
+                    fw_cfg, field_name="firmware_version", hass=self.hass
+                )
                 schema_fields[
                     vol.Optional("firmware_version", default=fw_default)
                 ] = fw_in
@@ -2521,7 +2541,7 @@ class ModbusManagerConfigFlow(
                     "connection_type"
                 )
             ct_field = _connection_type_form_field(
-                template_data, current_value=ct_current
+                template_data, current_value=ct_current, hass=self.hass
             )
             if ct_field:
                 schema_fields[ct_field[0]] = ct_field[1]
@@ -3892,7 +3912,9 @@ class ModbusManagerDeviceSubentryFlow(
             if isinstance(field_config, dict) and "options" in field_config:
                 options = field_config.get("options", [])
                 if options:
-                    default, vol_in = _vol_in_from_dynamic_options(field_config)
+                    default, vol_in = _vol_in_from_dynamic_options(
+                        field_config, field_name=field_name, hass=self.hass
+                    )
                     schema_fields[vol.Optional(field_name, default=default)] = vol_in
             elif isinstance(field_config, dict) and "default" in field_config:
                 default = field_config.get("default")
@@ -4483,7 +4505,9 @@ class ModbusManagerDeviceSubentryFlow(
 
         return self.async_show_form(
             step_id="reconfigure",
-            data_schema=_device_reconfigure_schema(selected_device, template_data),
+            data_schema=_device_reconfigure_schema(
+                selected_device, template_data, hass=self.hass
+            ),
             description_placeholders={
                 "device": _device_display_title(selected_device),
             },
@@ -4744,7 +4768,9 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
 
         return self.async_show_form(
             step_id=step_id,
-            data_schema=_device_reconfigure_schema(selected_device, template_data),
+            data_schema=_device_reconfigure_schema(
+                selected_device, template_data, hass=self.hass
+            ),
             errors=errors,
             description_placeholders={
                 "device": _device_display_title(selected_device),

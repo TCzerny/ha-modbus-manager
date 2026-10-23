@@ -164,7 +164,7 @@ dynamic_config:
     description: "How Home Assistant builds entity_id for this device (unique_id always includes the device prefix)"
     options:
       legacy_prefixed: "Prefixed entity_id (default, e.g. sensor.sg_export_power)"
-      legacy_unprefixed: "Unprefixed entity_id (mkaiser-style migration; use add_entity_prefix service when done)"
+      legacy_unprefixed: "Unprefixed entity_id (keep existing unprefixed names; use add_entity_prefix when done)"
       ha_generated: "Let Home Assistant assign entity_id (use [[mm:domain:unique_id]] in templates for cross-refs)"
     default: "legacy_prefixed"
 
