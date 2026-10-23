@@ -7,14 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.5] - 2026-10-23
+
 ### ✨ Added
 
 - **HACS / HA brand icon**: Square icon in `custom_components/modbus_manager/brand/` (`icon.png`, `icon@2x.png`) for HA 2026.3+ local brands and the HACS default-catalog brands check.
 - **CI — hassfest and HACS Action**: `.github/workflows/validate.yml` on push/PR, weekly schedule, and manual run. No `ignore` flags (required before a `hacs/default` PR). Root translation `title`. Checkout action v7. Subentry flow has no deprecated `config_subentries.*.title`.
+- **Release on tag**: `.github/workflows/release.yml` — a `v*` tag must match `manifest.json` and a `CHANGELOG.md` `## [x.y.z]` section, then GitHub publishes the release (HACS needs a release, not only a tag). The workflow does not bump versions.
+- **SHx / SG entity names**: `translation_key` on Sungrow hybrid and string templates; English and German **names** only. Maps and `unique_id` unchanged.
 
 ### 🐛 Fixed
 
 - **Hassfest / HACS validation**: `http` in `after_dependencies`; config-entry-only `CONFIG_SCHEMA`; `hacs.json` drops the obsolete `domains` key; `config_subentries` strings sit under the `device` subentry type; KEBA map/calculated states use slug keys so entity translations validate. `unique_id` unchanged.
+
+### 🧹 Changed
+
+- **HACS store text**: Drop unused `info.md` and both `brand.json` copies. Version lives in `manifest.json` only. `hacs.json` sets `render_readme` so the store shows `README.md`.
 
 ## [1.3.4] - 2026-10-22
 

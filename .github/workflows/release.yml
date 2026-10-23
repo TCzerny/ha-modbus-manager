@@ -1,0 +1,55 @@
+# Tag v* → check manifest.json + CHANGELOG, then create the GitHub release.
+# Does not bump versions. Bump manifest and move Unreleased in CHANGELOG, commit,
+# then: git tag v1.3.5 && git push origin v1.3.5
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to publish, e.g. v1.3.5"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Verify and publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+          fetch-depth: 0
+
+      - name: Resolve version from the tag
+        id: version
+        run: |
+          TAG="${{ github.event.inputs.tag || github.ref_name }}"
+          VERSION="${TAG#v}"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          if printf '%s' "$VERSION" | grep -Eiq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Tag must match manifest.json and CHANGELOG
+        run: |
+          python3 scripts/release_check.py \
+            --expect "${{ steps.version.outputs.version }}" \
+            --notes-file "${{ runner.temp }}/release-notes.md"
+
+      - name: Publish the GitHub release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: ${{ steps.version.outputs.tag }}
+          body_path: ${{ runner.temp }}/release-notes.md
+          draft: false
+          prerelease: ${{ steps.version.outputs.prerelease }}
