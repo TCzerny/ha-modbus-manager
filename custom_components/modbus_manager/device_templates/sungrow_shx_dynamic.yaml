@@ -182,6 +182,7 @@ sensors:
   # Debug: Master/Slave mode raw (holding, read - mirror of controls for availability test)
   - name: Master Slave Mode
     unique_id: master_slave_mode
+    translation_key: "shx_master_slave_mode"
     address: 33499
     input_type: holding
     data_type: uint16
@@ -194,6 +195,7 @@ sensors:
 
   - name: Master Slave Role
     unique_id: master_slave_role
+    translation_key: "shx_master_slave_role"
     address: 33500
     input_type: holding
     data_type: uint16
@@ -209,6 +211,7 @@ sensors:
 
   - name: Slave Count
     unique_id: slave_count
+    translation_key: "shx_slave_count"
     address: 33501
     input_type: holding
     data_type: uint16
@@ -220,6 +223,7 @@ sensors:
   # Device Information
   - name: Inverter Serial
     unique_id: inverter_serial
+    translation_key: "shx_inverter_serial"
     address: 4989 # reg 4990
     input_type: input
     data_type: string
@@ -230,6 +234,7 @@ sensors:
 
   - name: Sungrow device type code
     unique_id: sungrow_device_type_code
+    translation_key: "shx_sungrow_device_type_code"
     address: 4999 # reg 5000
     input_type: input
     data_type: uint16
@@ -299,6 +304,7 @@ sensors:
 
   - name: Protocol version raw
     unique_id: protocol_version_raw
+    translation_key: "shx_protocol_version_raw"
     address: 4951 # reg 4952-4953
     input_type: input
     data_type: uint32
@@ -313,6 +319,7 @@ sensors:
   # Certification Versions (Protocol V1.1.11)
   - name: Certification version of ARM Software
     unique_id: certification_version_arm_software
+    translation_key: "shx_certification_version_arm_software"
     address: 4953 # reg 4954-4968 (15 bytes UTF-8 string)
     input_type: input
     data_type: string
@@ -325,6 +332,7 @@ sensors:
 
   - name: Certification version of DSP Software
     unique_id: certification_version_dsp_software
+    translation_key: "shx_certification_version_dsp_software"
     address: 4968 # reg 4969-4983 (15 bytes UTF-8 string)
     input_type: input
     data_type: string
@@ -337,6 +345,7 @@ sensors:
   # Device Specifications (Protocol V1.1.11)
   - name: Nominal output power
     unique_id: nominal_output_power
+    translation_key: "shx_nominal_output_power"
     address: 5000 # reg 5001
     input_type: input
     data_type: uint16
@@ -351,6 +360,7 @@ sensors:
 
   - name: Output type
     unique_id: output_type
+    translation_key: "shx_output_type"
     address: 5001 # reg 5002
     input_type: input
     data_type: uint16
@@ -367,6 +377,7 @@ sensors:
   # Note: Not available on SH3.0-10RS, MG5-12RL, and SH3-10RL models
   - name: Inverter Firmware Info
     unique_id: inverter_firmware_info
+    translation_key: "shx_inverter_firmware_info"
     address: 13249 # reg 13250-13264 (15 bytes UTF-8 string)
     input_type: input
     data_type: string
@@ -379,6 +390,7 @@ sensors:
 
   - name: Communication Module Firmware Info
     unique_id: communication_module_firmware_info
+    translation_key: "shx_communication_module_firmware_info"
     address: 13264 # reg 13265-13279 (15 bytes UTF-8 string)
     input_type: input
     data_type: string
@@ -391,6 +403,7 @@ sensors:
 
   - name: Battery Firmware Info
     unique_id: battery_firmware_info
+    translation_key: "shx_battery_firmware_info"
     address: 13279 # reg 13280-13294 (15 bytes UTF-8 string)
     input_type: input
     data_type: string
@@ -406,6 +419,7 @@ sensors:
   # How much AC has the Inverter generated today rom PV and Discharge today for consumption?
   - name: Daily PV generation & battery discharge
     unique_id: daily_pv_gen_battery_discharge
+    translation_key: "shx_daily_pv_gen_battery_discharge"
     address: 5002 # reg 5003
     input_type: input
     data_type: uint16
@@ -418,6 +432,7 @@ sensors:
 
   - name: Total PV generation & battery discharge
     unique_id: total_pv_gen_battery_discharge
+    translation_key: "shx_total_pv_gen_battery_discharge"
     address: 5003 # reg 5004
     input_type: input
     data_type: uint32
@@ -432,6 +447,7 @@ sensors:
 
   - name: Inverter temperature
     unique_id: inverter_temperature
+    translation_key: "shx_inverter_temperature"
     address: 5007 # reg 5008
     input_type: input
     data_type: int16
@@ -446,6 +462,7 @@ sensors:
   # MPPT Data (will be filtered based on mppt_count)
   - name: MPPT1 voltage
     unique_id: mppt1_voltage
+    translation_key: "shx_mppt1_voltage"
     address: 5010 # reg 5011
     input_type: input
     data_type: uint16
@@ -458,6 +475,7 @@ sensors:
 
   - name: MPPT1 current
     unique_id: mppt1_current
+    translation_key: "shx_mppt1_current"
     address: 5011 # reg 5012
     input_type: input
     data_type: uint16
@@ -470,6 +488,7 @@ sensors:
 
   - name: MPPT2 voltage
     unique_id: mppt2_voltage
+    translation_key: "shx_mppt2_voltage"
     address: 5012 # reg 5013
     input_type: input
     data_type: uint16
@@ -482,6 +501,7 @@ sensors:
 
   - name: MPPT2 current
     unique_id: mppt2_current
+    translation_key: "shx_mppt2_current"
     address: 5013 # reg 5014
     input_type: input
     data_type: uint16
@@ -495,6 +515,7 @@ sensors:
   # only for SH*T inverters with 3 MPPTs (will be filtered based on mppt_count)
   - name: MPPT3 voltage
     unique_id: mppt3_voltage
+    translation_key: "shx_mppt3_voltage"
     address: 5014 # reg 5015
     input_type: input
     data_type: uint16
@@ -508,6 +529,7 @@ sensors:
 
   - name: MPPT3 current
     unique_id: mppt3_current
+    translation_key: "shx_mppt3_current"
     address: 5015 # reg 5016
     input_type: input
     data_type: uint16
@@ -522,6 +544,7 @@ sensors:
   # MPPT 4 (only SH8.0RS, SH10RS with 4 MPPTs per Protocol V1.1.11)
   - name: MPPT4 voltage
     unique_id: mppt4_voltage
+    translation_key: "shx_mppt4_voltage"
     address: 5114 # reg 5115
     input_type: input
     data_type: uint16
@@ -536,6 +559,7 @@ sensors:
 
   - name: MPPT4 current
     unique_id: mppt4_current
+    translation_key: "shx_mppt4_current"
     address: 5115 # reg 5116
     input_type: input
     data_type: uint16
@@ -550,6 +574,7 @@ sensors:
 
   - name: Total DC power
     unique_id: total_dc_power
+    translation_key: "shx_total_dc_power"
     address: 5016 # reg 5017
     input_type: input
     data_type: uint32
@@ -565,6 +590,7 @@ sensors:
   # Phase Data (will be filtered based on phases)
   - name: Phase A voltage
     unique_id: phase_a_voltage
+    translation_key: "shx_phase_a_voltage"
     address: 5018 # reg: 5019
     input_type: input
     data_type: uint16
@@ -577,6 +603,7 @@ sensors:
 
   - name: Phase B voltage
     unique_id: phase_b_voltage
+    translation_key: "shx_phase_b_voltage"
     address: 5019 # reg: 5020
     input_type: input
     data_type: uint16
@@ -589,6 +616,7 @@ sensors:
 
   - name: Phase C voltage
     unique_id: phase_c_voltage
+    translation_key: "shx_phase_c_voltage"
     address: 5020 # reg: 5021
     input_type: input
     data_type: uint16
@@ -601,6 +629,7 @@ sensors:
 
   - name: Reactive power
     unique_id: reactive_power
+    translation_key: "shx_reactive_power"
     address: 5032 # reg 5033
     input_type: input
     data_type: int32
@@ -617,6 +646,7 @@ sensors:
 
   - name: Power factor
     unique_id: power_factor
+    translation_key: "shx_power_factor"
     address: 5034 # reg 5035
     input_type: input
     data_type: int16
@@ -639,6 +669,7 @@ sensors:
 
   - name: Grid frequency
     unique_id: grid_frequency
+    translation_key: "shx_grid_frequency"
     address: 5241 # reg 5242 - RECOMMENDED: Higher precision (0.01Hz) than register 5036 (0.1Hz) per Protocol V1.1.11
     input_type: input
     data_type: uint16
@@ -659,6 +690,7 @@ sensors:
 
   - name: Meter active power raw
     unique_id: meter_active_power_raw
+    translation_key: "shx_meter_active_power_raw"
     address: 5600 # reg 5601
     input_type: input
     data_type: int32
@@ -674,6 +706,7 @@ sensors:
 
   - name: Meter phase A active power raw
     unique_id: meter_phase_a_active_power_raw
+    translation_key: "shx_meter_phase_a_active_power_raw"
     address: 5602 # reg 5603
     input_type: input
     data_type: int32
@@ -689,6 +722,7 @@ sensors:
 
   - name: Meter phase B active power raw
     unique_id: meter_phase_b_active_power_raw
+    translation_key: "shx_meter_phase_b_active_power_raw"
     address: 5604 # reg 5605
     input_type: input
     data_type: int32
@@ -704,6 +738,7 @@ sensors:
 
   - name: Meter phase C active power raw
     unique_id: meter_phase_c_active_power_raw
+    translation_key: "shx_meter_phase_c_active_power_raw"
     address: 5606 # reg 5607
     input_type: input
     data_type: int32
@@ -723,6 +758,7 @@ sensors:
   # They will show invalid values (0x7FFFFFFF) if no dual-channel meter is present
   - name: Meter Channel 2 Total Active Power raw
     unique_id: meter_channel_2_total_active_power_raw
+    translation_key: "shx_meter_channel_2_total_active_power_raw"
     address: 13199 # reg 13200-13214 (S32, 1W)
     input_type: input
     data_type: int32
@@ -739,6 +775,7 @@ sensors:
 
   - name: Meter Channel 2 Phase A Active Power raw
     unique_id: meter_channel_2_phase_a_active_power_raw
+    translation_key: "shx_meter_channel_2_phase_a_active_power_raw"
     address: 13201 # reg 13202-13215 (S32, 1W)
     input_type: input
     data_type: int32
@@ -755,6 +792,7 @@ sensors:
 
   - name: Meter Channel 2 Phase B Active Power raw
     unique_id: meter_channel_2_phase_b_active_power_raw
+    translation_key: "shx_meter_channel_2_phase_b_active_power_raw"
     address: 13203 # reg 13204-13217 (S32, 1W)
     input_type: input
     data_type: int32
@@ -771,6 +809,7 @@ sensors:
 
   - name: Meter Channel 2 Phase C Active Power raw
     unique_id: meter_channel_2_phase_c_active_power_raw
+    translation_key: "shx_meter_channel_2_phase_c_active_power_raw"
     address: 13205 # reg 13206-13219 (S32, 1W)
     input_type: input
     data_type: int32
@@ -787,6 +826,7 @@ sensors:
 
   - name: BDC rated power
     unique_id: bdc_rated_power
+    translation_key: "shx_bdc_rated_power"
     address: 5627 # reg 5628
     input_type: input
     data_type: uint16
@@ -799,6 +839,7 @@ sensors:
 
   - name: BMS max. charging current
     unique_id: bms_max_charging_current
+    translation_key: "shx_bms_max_charging_current"
     address: 5634 # reg 5635
     input_type: input
     data_type: uint16
@@ -812,6 +853,7 @@ sensors:
 
   - name: BMS max. discharging current
     unique_id: bms_max_discharging_current
+    translation_key: "shx_bms_max_discharging_current"
     address: 5635 # reg 5636
     input_type: input
     data_type: uint16
@@ -825,6 +867,7 @@ sensors:
 
   - name: Battery capacity
     unique_id: battery_capacity
+    translation_key: "shx_battery_capacity"
     address: 5638 # reg 5639 - High Precision version (0.01kWh precision) per Protocol V1.1.11
     input_type: input
     data_type: uint16
@@ -840,6 +883,7 @@ sensors:
   # Export Power Limitation Values (Protocol V1.1.11)
   - name: Min Export Power Limit Value
     unique_id: min_export_power_limit_value
+    translation_key: "shx_min_export_power_limit_value"
     address: 5621 # reg 5622
     input_type: input
     data_type: uint16
@@ -854,6 +898,7 @@ sensors:
 
   - name: Max Export Power Limit Value
     unique_id: max_export_power_limit_value
+    translation_key: "shx_max_export_power_limit_value"
     address: 5622 # reg 5623
     input_type: input
     data_type: uint16
@@ -869,6 +914,7 @@ sensors:
   # Backup Power (will be filtered based on battery_enabled and phases)
   - name: Backup phase A power
     unique_id: backup_phase_a_power
+    translation_key: "shx_backup_phase_a_power"
     address: 5722 # reg 5723
     input_type: input
     data_type: int16
@@ -881,6 +927,7 @@ sensors:
 
   - name: Backup phase B power
     unique_id: backup_phase_b_power
+    translation_key: "shx_backup_phase_b_power"
     address: 5723 # reg 5724
     input_type: input
     data_type: int16
@@ -893,6 +940,7 @@ sensors:
 
   - name: Backup phase C power
     unique_id: backup_phase_c_power
+    translation_key: "shx_backup_phase_c_power"
     address: 5724 # reg 5725
     input_type: input
     data_type: int16
@@ -905,6 +953,7 @@ sensors:
 
   - name: Total backup power
     unique_id: total_backup_power
+    translation_key: "shx_total_backup_power"
     address: 5725 # reg 5726
     input_type: input
     data_type: int32
@@ -919,6 +968,7 @@ sensors:
   # Backup port current, voltage, frequency (off-grid/backup monitoring per Protocol V1.1.11)
   - name: Backup phase A current
     unique_id: backup_phase_a_current
+    translation_key: "shx_backup_phase_a_current"
     address: 5719 # reg 5720
     input_type: input
     data_type: int16
@@ -931,6 +981,7 @@ sensors:
 
   - name: Backup phase B current
     unique_id: backup_phase_b_current
+    translation_key: "shx_backup_phase_b_current"
     address: 5720 # reg 5721
     input_type: input
     data_type: int16
@@ -943,6 +994,7 @@ sensors:
 
   - name: Backup phase C current
     unique_id: backup_phase_c_current
+    translation_key: "shx_backup_phase_c_current"
     address: 5721 # reg 5722
     input_type: input
     data_type: int16
@@ -955,6 +1007,7 @@ sensors:
 
   - name: Backup phase A voltage
     unique_id: backup_phase_a_voltage
+    translation_key: "shx_backup_phase_a_voltage"
     address: 5730 # reg 5731
     input_type: input
     data_type: uint16
@@ -967,6 +1020,7 @@ sensors:
 
   - name: Backup phase B voltage
     unique_id: backup_phase_b_voltage
+    translation_key: "shx_backup_phase_b_voltage"
     address: 5731 # reg 5732
     input_type: input
     data_type: uint16
@@ -979,6 +1033,7 @@ sensors:
 
   - name: Backup phase C voltage
     unique_id: backup_phase_c_voltage
+    translation_key: "shx_backup_phase_c_voltage"
     address: 5732 # reg 5733
     input_type: input
     data_type: uint16
@@ -991,6 +1046,7 @@ sensors:
 
   - name: Backup frequency
     unique_id: backup_frequency
+    translation_key: "shx_backup_frequency"
     address: 5733 # reg 5734
     input_type: input
     data_type: uint16
@@ -1004,6 +1060,7 @@ sensors:
   # Meter Phase Data (will be filtered based on phases)
   - name: Meter phase A voltage
     unique_id: meter_phase_a_voltage
+    translation_key: "shx_meter_phase_a_voltage"
     address: 5740 # reg 5741
     input_type: input
     data_type: int16
@@ -1018,6 +1075,7 @@ sensors:
 
   - name: Meter phase B voltage
     unique_id: meter_phase_b_voltage
+    translation_key: "shx_meter_phase_b_voltage"
     address: 5741 # reg 5742
     input_type: input
     data_type: int16
@@ -1032,6 +1090,7 @@ sensors:
 
   - name: Meter phase C voltage
     unique_id: meter_phase_c_voltage
+    translation_key: "shx_meter_phase_c_voltage"
     address: 5742 # reg 5743
     input_type: input
     data_type: int16
@@ -1046,6 +1105,7 @@ sensors:
 
   - name: Meter phase A current
     unique_id: meter_phase_a_current
+    translation_key: "shx_meter_phase_a_current"
     address: 5743 # reg 5744
     input_type: input
     data_type: uint16
@@ -1060,6 +1120,7 @@ sensors:
 
   - name: Meter phase B current
     unique_id: meter_phase_b_current
+    translation_key: "shx_meter_phase_b_current"
     address: 5744 # reg 5745
     input_type: input
     data_type: uint16
@@ -1074,6 +1135,7 @@ sensors:
 
   - name: Meter phase C current
     unique_id: meter_phase_c_current
+    translation_key: "shx_meter_phase_c_current"
     address: 5745 # reg 5746
     input_type: input
     data_type: uint16
@@ -1092,6 +1154,7 @@ sensors:
   # # Start monthly PV generation
   - name: Monthly PV generation (01 January)
     unique_id: monthly_pv_generation_01_january
+    translation_key: "shx_monthly_pv_generation_01_january"
     address: 6226 # reg 6227
     input_type: input
     data_type: uint16
@@ -1106,6 +1169,7 @@ sensors:
 
   - name: Monthly PV generation (02 February)
     unique_id: monthly_pv_generation_02_february
+    translation_key: "shx_monthly_pv_generation_02_february"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6227 # reg 6228
     input_type: input
@@ -1120,6 +1184,7 @@ sensors:
 
   - name: Monthly PV generation (03 March)
     unique_id: monthly_pv_generation_03_march
+    translation_key: "shx_monthly_pv_generation_03_march"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6228 # reg 6229
     input_type: input
@@ -1134,6 +1199,7 @@ sensors:
 
   - name: Monthly PV generation (04 April)
     unique_id: monthly_pv_generation_04_april
+    translation_key: "shx_monthly_pv_generation_04_april"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6229 # reg 6230
     input_type: input
@@ -1148,6 +1214,7 @@ sensors:
 
   - name: Monthly PV generation (05 May)
     unique_id: monthly_pv_generation_05_may
+    translation_key: "shx_monthly_pv_generation_05_may"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6230 # reg 6231
     input_type: input
@@ -1162,6 +1229,7 @@ sensors:
 
   - name: Monthly PV generation (06 June)
     unique_id: monthly_pv_generation_06_june
+    translation_key: "shx_monthly_pv_generation_06_june"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6231 # reg 6232
     input_type: input
@@ -1176,6 +1244,7 @@ sensors:
 
   - name: Monthly PV generation (07 July)
     unique_id: monthly_pv_generation_07_july
+    translation_key: "shx_monthly_pv_generation_07_july"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6232 # reg 6233
     input_type: input
@@ -1190,6 +1259,7 @@ sensors:
 
   - name: Monthly PV generation (08 August)
     unique_id: monthly_pv_generation_08_august
+    translation_key: "shx_monthly_pv_generation_08_august"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6233 # reg 6234
     input_type: input
@@ -1204,6 +1274,7 @@ sensors:
 
   - name: Monthly PV generation (09 September)
     unique_id: monthly_pv_generation_09_september
+    translation_key: "shx_monthly_pv_generation_09_september"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6234 # reg 6235
     input_type: input
@@ -1218,6 +1289,7 @@ sensors:
 
   - name: Monthly PV generation (10 October)
     unique_id: monthly_pv_generation_10_october
+    translation_key: "shx_monthly_pv_generation_10_october"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6235 # reg 6236
     input_type: input
@@ -1232,6 +1304,7 @@ sensors:
 
   - name: Monthly PV generation (11 November)
     unique_id: monthly_pv_generation_11_november
+    translation_key: "shx_monthly_pv_generation_11_november"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6236 # reg 6237
     input_type: input
@@ -1246,6 +1319,7 @@ sensors:
 
   - name: Monthly PV generation (12 December)
     unique_id: monthly_pv_generation_12_december
+    translation_key: "shx_monthly_pv_generation_12_december"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6237 # reg 6238
     input_type: input
@@ -1262,6 +1336,7 @@ sensors:
   # Start yearly pv generation
   - name: Yearly PV generation (2019)
     unique_id: yearly_pv_generation_2019
+    translation_key: "shx_yearly_pv_generation_2019"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6257 # reg 6258
     input_type: input
@@ -1277,6 +1352,7 @@ sensors:
 
   - name: Yearly PV generation (2020)
     unique_id: yearly_pv_generation_2020
+    translation_key: "shx_yearly_pv_generation_2020"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6259 # reg 6260
     input_type: input
@@ -1292,6 +1368,7 @@ sensors:
 
   - name: Yearly PV generation (2021)
     unique_id: yearly_pv_generation_2021
+    translation_key: "shx_yearly_pv_generation_2021"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6261 # reg 6262
     input_type: input
@@ -1307,6 +1384,7 @@ sensors:
 
   - name: Yearly PV generation (2022)
     unique_id: yearly_pv_generation_2022
+    translation_key: "shx_yearly_pv_generation_2022"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6263 # reg 6264
     input_type: input
@@ -1322,6 +1400,7 @@ sensors:
 
   - name: Yearly PV generation (2023)
     unique_id: yearly_pv_generation_2023
+    translation_key: "shx_yearly_pv_generation_2023"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6265 # reg 6266
     input_type: input
@@ -1337,6 +1416,7 @@ sensors:
 
   - name: Yearly PV generation (2024)
     unique_id: yearly_pv_generation_2024
+    translation_key: "shx_yearly_pv_generation_2024"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6267 # reg 6268
     input_type: input
@@ -1352,6 +1432,7 @@ sensors:
 
   - name: Yearly PV generation (2025)
     unique_id: yearly_pv_generation_2025
+    translation_key: "shx_yearly_pv_generation_2025"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6269 # reg 6270
     input_type: input
@@ -1367,6 +1448,7 @@ sensors:
 
   - name: Yearly PV generation (2026)
     unique_id: yearly_pv_generation_2026
+    translation_key: "shx_yearly_pv_generation_2026"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6271 # reg 6272
     input_type: input
@@ -1382,6 +1464,7 @@ sensors:
 
   - name: Yearly PV generation (2027)
     unique_id: yearly_pv_generation_2027
+    translation_key: "shx_yearly_pv_generation_2027"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6273 # reg 6274
     input_type: input
@@ -1397,6 +1480,7 @@ sensors:
 
   - name: Yearly PV generation (2028)
     unique_id: yearly_pv_generation_2028
+    translation_key: "shx_yearly_pv_generation_2028"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6275 # reg 6276
     input_type: input
@@ -1412,6 +1496,7 @@ sensors:
 
   - name: Yearly PV generation (2029)
     unique_id: yearly_pv_generation_2029e
+    translation_key: "shx_yearly_pv_generation_2029e"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6277 # reg 6278
     input_type: input
@@ -1429,6 +1514,7 @@ sensors:
   # Start monthly export
   - name: Monthly export (01 January)
     unique_id: monthly_export_01_january
+    translation_key: "shx_monthly_export_01_january"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6595 # reg 6596
     input_type: input
@@ -1443,6 +1529,7 @@ sensors:
 
   - name: Monthly export (02 February)
     unique_id: monthly_export_02_february
+    translation_key: "shx_monthly_export_02_february"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6596 # reg 6597
     input_type: input
@@ -1457,6 +1544,7 @@ sensors:
 
   - name: Monthly export (03 March)
     unique_id: monthly_export_03_march
+    translation_key: "shx_monthly_export_03_march"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6597 # reg 6598
     input_type: input
@@ -1471,6 +1559,7 @@ sensors:
 
   - name: Monthly export (04 April)
     unique_id: monthly_export_04_april
+    translation_key: "shx_monthly_export_04_april"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6598 # reg 6599
     input_type: input
@@ -1485,6 +1574,7 @@ sensors:
 
   - name: Monthly export (05 May)
     unique_id: monthly_export_05_may
+    translation_key: "shx_monthly_export_05_may"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6599 # reg 6600
     input_type: input
@@ -1499,6 +1589,7 @@ sensors:
 
   - name: Monthly export (06 June)
     unique_id: monthly_export_06_june
+    translation_key: "shx_monthly_export_06_june"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6600 # reg 6601
     input_type: input
@@ -1513,6 +1604,7 @@ sensors:
 
   - name: Monthly export (07 July)
     unique_id: monthly_export_07_july
+    translation_key: "shx_monthly_export_07_july"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6601 # reg 6602
     input_type: input
@@ -1527,6 +1619,7 @@ sensors:
 
   - name: Monthly export (08 August)
     unique_id: monthly_export_08_august
+    translation_key: "shx_monthly_export_08_august"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6602 # reg 6603
     input_type: input
@@ -1541,6 +1634,7 @@ sensors:
 
   - name: Monthly export (09 September)
     unique_id: monthly_export_09_september
+    translation_key: "shx_monthly_export_09_september"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6603 # reg 6604
     input_type: input
@@ -1555,6 +1649,7 @@ sensors:
 
   - name: Monthly export (10 October)
     unique_id: monthly_export_10_october
+    translation_key: "shx_monthly_export_10_october"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6604 # reg 6605
     input_type: input
@@ -1569,6 +1664,7 @@ sensors:
 
   - name: Monthly export (11 November)
     unique_id: monthly_export_11_november
+    translation_key: "shx_monthly_export_11_november"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6605 # reg 6606
     input_type: input
@@ -1583,6 +1679,7 @@ sensors:
 
   - name: Monthly export (12 December)
     unique_id: monthly_export_12_december
+    translation_key: "shx_monthly_export_12_december"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6606 # reg 6607
     input_type: input
@@ -1599,6 +1696,7 @@ sensors:
   # Start yearly export energy from PV
   - name: Yearly Export (2019)
     unique_id: yearly_export_2019
+    translation_key: "shx_yearly_export_2019"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6615 # reg 6616
     input_type: input
@@ -1614,6 +1712,7 @@ sensors:
 
   - name: Yearly Export (2020)
     unique_id: yearly_export_2020
+    translation_key: "shx_yearly_export_2020"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6617 # reg 6618
     input_type: input
@@ -1629,6 +1728,7 @@ sensors:
 
   - name: Yearly Export (2021)
     unique_id: yearly_export_2021
+    translation_key: "shx_yearly_export_2021"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6619 # reg 6620
     input_type: input
@@ -1644,6 +1744,7 @@ sensors:
 
   - name: Yearly Export (2022)
     unique_id: yearly_export_2022
+    translation_key: "shx_yearly_export_2022"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6621 # reg 6622
     input_type: input
@@ -1659,6 +1760,7 @@ sensors:
 
   - name: Yearly Export (2023)
     unique_id: yearly_export_2023
+    translation_key: "shx_yearly_export_2023"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6623 # reg 6624
     input_type: input
@@ -1674,6 +1776,7 @@ sensors:
 
   - name: Yearly Export (2024)
     unique_id: yearly_export_2024
+    translation_key: "shx_yearly_export_2024"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6625 # reg 6626
     input_type: input
@@ -1689,6 +1792,7 @@ sensors:
 
   - name: Yearly Export (2025)
     unique_id: yearly_export_2025
+    translation_key: "shx_yearly_export_2025"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6627 # reg 6628
     input_type: input
@@ -1704,6 +1808,7 @@ sensors:
 
   - name: Yearly Export (2026)
     unique_id: yearly_export_2026
+    translation_key: "shx_yearly_export_2026"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6629 # reg 6630
     input_type: input
@@ -1719,6 +1824,7 @@ sensors:
 
   - name: Yearly Export (2027)
     unique_id: yearly_export_2027
+    translation_key: "shx_yearly_export_2027"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6631 # reg 6632
     input_type: input
@@ -1734,6 +1840,7 @@ sensors:
 
   - name: Yearly Export (2028)
     unique_id: yearly_export_2028
+    translation_key: "shx_yearly_export_2028"
     condition: "connection_type in ['LAN', 'RS485']"
     address: 6633 # reg 6634
     input_type: input
@@ -1752,6 +1859,7 @@ sensors:
   # System state and status sensors
   - name: "System state"
     unique_id: "system_state"
+    translation_key: "shx_system_state"
     address: 12999
     input_type: "input"
     data_type: "uint16"
@@ -1799,6 +1907,7 @@ sensors:
 
   - name: "Running state"
     unique_id: "running_state"
+    translation_key: "shx_running_state"
     address: 13000
     input_type: input
     data_type: uint16
@@ -1819,6 +1928,7 @@ sensors:
 
   - name: "Load Adjustment Mode Raw"
     unique_id: "load_adjustment_mode_selection_raw"
+    translation_key: "shx_load_adjustment_mode_selection_raw"
     address: 13001
     input_type: "holding"
     data_type: "uint16"
@@ -1835,6 +1945,7 @@ sensors:
   # Energy and power sensors
   - name: Daily PV generation
     unique_id: daily_pv_generation
+    translation_key: "shx_daily_pv_generation"
     address: 13001 # reg 13002
     input_type: input
     data_type: uint16
@@ -1847,6 +1958,7 @@ sensors:
 
   - name: Total PV generation
     unique_id: total_pv_generation
+    translation_key: "shx_total_pv_generation"
     address: 13002 # reg 13003
     input_type: input
     data_type: uint32
@@ -1860,6 +1972,7 @@ sensors:
 
   - name: Daily exported energy from PV
     unique_id: daily_exported_energy_from_PV
+    translation_key: "shx_daily_exported_energy_from_pv"
     address: 13004 # reg 13005
     input_type: input
     data_type: uint16
@@ -1872,6 +1985,7 @@ sensors:
 
   - name: Total exported energy from PV
     unique_id: total_exported_energy_from_pv
+    translation_key: "shx_total_exported_energy_from_pv"
     address: 13005 # reg 13006
     input_type: input
     data_type: uint32
@@ -1886,6 +2000,7 @@ sensors:
   # Power consumed by loads
   - name: Load power
     unique_id: load_power
+    translation_key: "shx_load_power"
     address: 13007 # reg 13008
     input_type: input
     data_type: int32
@@ -1900,6 +2015,7 @@ sensors:
   # Power delivered by the inverter to the grid
   - name: Export power raw
     unique_id: export_power_raw
+    translation_key: "shx_export_power_raw"
     address: 13009 # reg 13010
     input_type: input
     data_type: int32
@@ -1913,6 +2029,7 @@ sensors:
 
   - name: Load Adjustment Mode ON/OFF Selection raw
     unique_id: load_adjustment_mode_on_off_selection_raw
+    translation_key: "shx_load_adjustment_mode_on_off_selection_raw"
     address: 13010 # reg 13011
     input_type: holding
     data_type: uint16
@@ -1926,6 +2043,7 @@ sensors:
   # Battery sensors (will be filtered based on battery_enabled)
   - name: Daily battery charge from PV
     unique_id: daily_battery_charge_from_pv
+    translation_key: "shx_daily_battery_charge_from_pv"
     address: 13011 # reg 13012
     input_type: input
     data_type: uint16
@@ -1938,6 +2056,7 @@ sensors:
 
   - name: Total battery charge from PV
     unique_id: total_battery_charge_from_pv
+    translation_key: "shx_total_battery_charge_from_pv"
     address: 13012 # reg 13013
     input_type: input
     data_type: uint32
@@ -1951,6 +2070,7 @@ sensors:
 
   - name: Daily direct energy consumption
     unique_id: daily_direct_energy_consumption
+    translation_key: "shx_daily_direct_energy_consumption"
     address: 13016 # reg 13017
     input_type: input
     data_type: uint16
@@ -1963,6 +2083,7 @@ sensors:
 
   - name: Total direct energy consumption
     unique_id: total_direct_energy_consumption
+    translation_key: "shx_total_direct_energy_consumption"
     address: 13017 # reg 13018 (Input register - different from holding register 13017 used for control)
     input_type: input
     data_type: uint32
@@ -1976,6 +2097,7 @@ sensors:
 
   - name: Battery voltage
     unique_id: battery_voltage
+    translation_key: "shx_battery_voltage"
     address: 13019 # reg 13020
     input_type: input
     data_type: uint16
@@ -1989,6 +2111,7 @@ sensors:
 
   - name: Battery current
     unique_id: battery_current
+    translation_key: "shx_battery_current"
     address: 5630 # reg 5631 - RECOMMENDED: Per Protocol V1.1.11, register 5631 is recommended instead of 13021
     input_type: input
     data_type: int16
@@ -2002,6 +2125,7 @@ sensors:
 
   - name: Battery power
     unique_id: battery_power
+    translation_key: "shx_battery_power"
     address: 5213 # reg 5214-5215 - RECOMMENDED: Per Protocol V1.1.11, register 5214-5215 (S32) is recommended instead of 13022 (S16)
     input_type: input
     data_type: int32
@@ -2017,6 +2141,7 @@ sensors:
 
   - name: Battery level
     unique_id: battery_level
+    translation_key: "shx_battery_level"
     address: 13022 # reg 13023
     input_type: input
     data_type: uint16
@@ -2030,6 +2155,7 @@ sensors:
 
   - name: Battery state of health
     unique_id: battery_state_of_health
+    translation_key: "shx_battery_state_of_health"
     address: 13023 # reg 13024
     input_type: input
     data_type: uint16
@@ -2043,6 +2169,7 @@ sensors:
 
   - name: Battery state of health
     unique_id: battery_state_of_health
+    translation_key: "shx_battery_state_of_health"
     address: 13023 # reg 13024
     input_type: input
     data_type: uint16
@@ -2056,6 +2183,7 @@ sensors:
 
   - name: Battery temperature
     unique_id: battery_temperature
+    translation_key: "shx_battery_temperature"
     address: 13024 # reg 13025
     input_type: input
     data_type: int16
@@ -2070,6 +2198,7 @@ sensors:
 
   - name: Daily battery discharge
     unique_id: daily_battery_discharge
+    translation_key: "shx_daily_battery_discharge"
     address: 13025 # reg 13026
     input_type: input
     data_type: uint16
@@ -2083,6 +2212,7 @@ sensors:
 
   - name: Total battery discharge
     unique_id: total_battery_discharge
+    translation_key: "shx_total_battery_discharge"
     address: 13026 # reg 13027
     input_type: input
     data_type: uint32
@@ -2097,6 +2227,7 @@ sensors:
 
   - name: Self-consumption of today
     unique_id: self_consumption_of_today
+    translation_key: "shx_self_consumption_of_today"
     address: 13028 # reg 13029
     input_type: input
     data_type: uint16
@@ -2129,6 +2260,7 @@ sensors:
   # Phase current sensors (will be filtered based on phases)
   - name: Phase A current
     unique_id: phase_a_current
+    translation_key: "shx_phase_a_current"
     address: 13030 # reg 13031
     input_type: input
     data_type: int16
@@ -2141,6 +2273,7 @@ sensors:
 
   - name: Phase B current
     unique_id: phase_b_current
+    translation_key: "shx_phase_b_current"
     address: 13031 # reg 13032
     input_type: input
     data_type: int16
@@ -2154,6 +2287,7 @@ sensors:
 
   - name: Phase C current
     unique_id: phase_c_current
+    translation_key: "shx_phase_c_current"
     address: 13032 # reg 13033
     input_type: input
     data_type: int16
@@ -2167,6 +2301,7 @@ sensors:
 
   - name: Total active power
     unique_id: total_active_power
+    translation_key: "shx_total_active_power"
     address: 13033 # reg 13034
     input_type: input
     data_type: int32
@@ -2180,6 +2315,7 @@ sensors:
 
   - name: Daily imported energy
     unique_id: daily_imported_energy
+    translation_key: "shx_daily_imported_energy"
     address: 13035 # reg 13036
     input_type: input
     data_type: uint16
@@ -2194,6 +2330,7 @@ sensors:
 
   - name: Total imported energy
     unique_id: total_imported_energy
+    translation_key: "shx_total_imported_energy"
     address: 13036 # reg 13037
     input_type: input
     data_type: uint32
@@ -2207,6 +2344,7 @@ sensors:
 
   - name: Daily battery charge
     unique_id: daily_battery_charge
+    translation_key: "shx_daily_battery_charge"
     address: 13039 # reg 13040
     input_type: input
     data_type: uint16
@@ -2220,6 +2358,7 @@ sensors:
 
   - name: Total battery charge
     unique_id: total_battery_charge
+    translation_key: "shx_total_battery_charge"
     address: 13040 # reg 13041
     input_type: input
     data_type: uint32
@@ -2234,6 +2373,7 @@ sensors:
 
   - name: Daily exported energy
     unique_id: daily_exported_energy
+    translation_key: "shx_daily_exported_energy"
     address: 13044 # reg 13045
     input_type: input
     data_type: uint16
@@ -2249,6 +2389,7 @@ sensors:
 
   - name: Total exported energy
     unique_id: total_exported_energy
+    translation_key: "shx_total_exported_energy"
     address: 13045 # reg 13046
     input_type: input
     data_type: uint32
@@ -2467,6 +2608,7 @@ sensors:
   #     7: "BDC Soft Start Perm. Flt"
   - name: Battery fault
     unique_id: battery_fault_raw
+    translation_key: "shx_battery_fault_raw"
     address: 13065 # reg 13066-13067 U32
     input_type: input
     data_type: uint32
@@ -2486,6 +2628,7 @@ sensors:
 
   - name: Battery alarm
     unique_id: battery_alarm_raw
+    translation_key: "shx_battery_alarm_raw"
     address: 13067 # reg 13068-13069 U32
     input_type: input
     data_type: uint32
@@ -2498,6 +2641,7 @@ sensors:
 
   - name: BMS alarm
     unique_id: bms_alarm_raw
+    translation_key: "shx_bms_alarm_raw"
     address: 13069 # reg 13070-13071 U32 - requires battery Modbus address
     input_type: input
     data_type: uint32
@@ -2519,6 +2663,7 @@ sensors:
 
   - name: BMS protection
     unique_id: bms_protection_raw
+    translation_key: "shx_bms_protection_raw"
     address: 13071 # reg 13072-13073 U32 - requires battery Modbus address
     input_type: input
     data_type: uint32
@@ -2544,6 +2689,7 @@ sensors:
 
   - name: BMS fault 1
     unique_id: bms_fault_1_raw
+    translation_key: "shx_bms_fault_1_raw"
     address: 13073 # reg 13074-13075 U32 - requires battery Modbus address; note Holding 13073=Export Limit
     input_type: input
     data_type: uint32
@@ -2661,6 +2807,7 @@ sensors:
   # EMS Mode sensor
   - name: "EMS Mode"
     unique_id: "ems_mode_selection_raw"
+    translation_key: "shx_ems_mode_selection_raw"
     address: 13049
     input_type: "holding"
     data_type: "uint16"
@@ -2676,6 +2823,7 @@ sensors:
   # Battery control sensors
   - name: Battery forced charge discharge cmd raw
     unique_id: battery_forced_charge_discharge_cmd_raw
+    translation_key: "shx_battery_forced_charge_discharge_cmd_raw"
     address: 13050 # reg 13051
     input_type: holding
     data_type: uint16
@@ -2692,6 +2840,7 @@ sensors:
 
   - name: Battery forced charge discharge power raw
     unique_id: battery_forced_charge_discharge_power_raw
+    translation_key: "shx_battery_forced_charge_discharge_power_raw"
     address: 13051 # reg 13052
     input_type: holding
     data_type: uint16
@@ -2704,6 +2853,7 @@ sensors:
 
   - name: Global mpp scan manual raw
     unique_id: global_mpp_scan_manual_raw
+    translation_key: "shx_global_mpp_scan_manual_raw"
     address: 30229 # reg 30230
     input_type: holding
     data_type: uint16
@@ -2717,6 +2867,7 @@ sensors:
   # mkaiser issue #444 SH10RT no standby mode after latest firmware update
   - name: Forced Startup Under Low SoC Standby raw
     unique_id: forced_startup_under_low_soc_standby_raw
+    translation_key: "shx_forced_startup_under_low_soc_standby_raw"
     address: 13016 # reg 13017 (Holding register - read-only for display purposes)
     input_type: holding
     data_type: uint16
@@ -2735,6 +2886,7 @@ sensors:
  ################################################################
   - name: "WB Charging Mode Raw"
     unique_id: "wb_charging_mode_raw"
+    translation_key: "shx_wb_charging_mode_raw"
     address: 33540
     input_type: holding
     data_type: uint16
@@ -2750,6 +2902,7 @@ sensors:
 
   - name: "WB Charging Quantity Raw"
     unique_id: "wb_charging_quantity_raw"
+    translation_key: "shx_wb_charging_quantity_raw"
     address: 33541
     input_type: holding
     data_type: uint16
@@ -2763,6 +2916,7 @@ sensors:
 
   - name: "WB Charging Duration Raw"
     unique_id: "wb_charging_duration_raw"
+    translation_key: "shx_wb_charging_duration_raw"
     address: 33542
     input_type: holding
     data_type: uint32
@@ -2774,6 +2928,7 @@ sensors:
 
   - name: "WB User Defined Charging Current Raw"
     unique_id: "wb_user_defined_charging_current_raw"
+    translation_key: "shx_wb_user_defined_charging_current_raw"
     address: 33544
     input_type: holding
     data_type: uint16
@@ -2787,6 +2942,7 @@ sensors:
 
   - name: "WB User Defined Charge Start Time Raw"
     unique_id: "wb_user_defined_charge_start_time_raw"
+    translation_key: "shx_wb_user_defined_charge_start_time_raw"
     address: 33545
     input_type: holding
     data_type: uint32
@@ -2798,6 +2954,7 @@ sensors:
 
   - name: "WB User Defined Charge End Time Raw"
     unique_id: "wb_user_defined_charge_end_time_raw"
+    translation_key: "shx_wb_user_defined_charge_end_time_raw"
     address: 33547
     input_type: holding
     data_type: uint32
@@ -2809,6 +2966,7 @@ sensors:
 
   - name: "WB Surplus Power From Grid Raw"
     unique_id: "wb_surplus_power_from_grid_raw"
+    translation_key: "shx_wb_surplus_power_from_grid_raw"
     address: 33549
     input_type: holding
     data_type: uint16
@@ -2826,6 +2984,7 @@ controls:
   - type: "select"
     name: "Inverter Run Mode"
     unique_id: "inverter_run_mode"
+    translation_key: "shx_inverter_run_mode"
     address: 12999 # reg 13000
     input_type: "holding"
     data_type: "uint16"
@@ -2839,6 +2998,7 @@ controls:
   - type: "select"
     name: "Global MPP scan manual"
     unique_id: "global_mpp_scan_manual"
+    translation_key: "shx_global_mpp_scan_manual"
     address: 30229 # reg 30230
     input_type: "holding"
     data_type: "uint16"
@@ -2853,6 +3013,7 @@ controls:
   - type: "select"
     name: "EMS Mode Selection"
     unique_id: "ems_mode_selection"
+    translation_key: "shx_ems_mode_selection"
     address: 13049
     input_type: "holding"
     data_type: "uint16"
@@ -2868,6 +3029,7 @@ controls:
   - type: "select"
     name: "Battery forced charge discharge cmd"
     unique_id: "battery_forced_charge_discharge_cmd"
+    translation_key: "shx_battery_forced_charge_discharge_cmd"
     address: 13050
     input_type: "holding"
     data_type: "uint16"
@@ -2881,6 +3043,7 @@ controls:
 
   - name: Battery forced charge discharge power
     unique_id: battery_forced_charge_discharge_power
+    translation_key: "shx_battery_forced_charge_discharge_power"
     type: "number"
     address: 13051 # reg 13052
     input_type: holding
@@ -2901,6 +3064,7 @@ controls:
   - type: "select"
     name: "Load Adjustment Mode"
     unique_id: "load_adjustment_mode_selection"
+    translation_key: "shx_load_adjustment_mode_selection"
     address: 13001
     input_type: "holding"
     data_type: "uint16"
@@ -2916,6 +3080,7 @@ controls:
   - type: "number"
     name: "Max SoC"
     unique_id: "max_soc"
+    translation_key: "shx_max_soc"
     address: 13057
     input_type: "holding"
     data_type: "uint16"
@@ -2932,6 +3097,7 @@ controls:
   - type: "number"
     name: "Min SoC"
     unique_id: "min_soc"
+    translation_key: "shx_min_soc"
     address: 13058
     input_type: "holding"
     data_type: "uint16"
@@ -2948,6 +3114,7 @@ controls:
   - type: "select"
     name: "Backup Mode"
     unique_id: "backup_mode"
+    translation_key: "shx_backup_mode"
     address: 13074
     input_type: "holding"
     data_type: "uint16"
@@ -2961,6 +3128,7 @@ controls:
   - type: "number"
     name: "Export Power Limit"
     unique_id: "export_power_limit"
+    translation_key: "shx_export_power_limit"
     address: 13073
     input_type: "holding"
     data_type: "uint16"
@@ -2977,6 +3145,7 @@ controls:
   - type: "select"
     name: "Export Power Limit Mode"
     unique_id: "export_power_limit_mode"
+    translation_key: "shx_export_power_limit_mode"
     address: 13086
     input_type: "holding"
     data_type: "uint16"
@@ -2989,6 +3158,7 @@ controls:
   - type: "number"
     name: "Export Power Limit Ratio"
     unique_id: "export_power_limit_ratio"
+    translation_key: "shx_export_power_limit_ratio"
     address: 13087 # reg 13088 - Protocol V1.1.7
     input_type: "holding"
     data_type: "uint16"
@@ -3007,6 +3177,7 @@ controls:
   - type: "select"
     name: "Active Power Limitation"
     unique_id: "active_power_limitation"
+    translation_key: "shx_active_power_limitation"
     address: 13088 # reg 13089
     input_type: "holding"
     data_type: "uint16"
@@ -3021,6 +3192,7 @@ controls:
   - type: "select"
     name: "Active Power Limitation"
     unique_id: "active_power_limitation"
+    translation_key: "shx_active_power_limitation"
     address: 31203 # reg 31204
     input_type: "holding"
     data_type: "uint16"
@@ -3035,6 +3207,7 @@ controls:
   - type: "number"
     name: "Active Power Limit Ratio"
     unique_id: "active_power_limit_ratio"
+    translation_key: "shx_active_power_limit_ratio"
     address: 13089 # reg 13090
     input_type: "holding"
     data_type: "uint16"
@@ -3052,6 +3225,7 @@ controls:
   - type: "number"
     name: "Active Power Limit Ratio"
     unique_id: "active_power_limit_ratio"
+    translation_key: "shx_active_power_limit_ratio"
     address: 31204 # reg 31205
     input_type: "holding"
     data_type: "uint16"
@@ -3069,6 +3243,7 @@ controls:
   - type: "number"
     name: "Reserved SoC for Backup"
     unique_id: "reserved_soc_for_backup"
+    translation_key: "shx_reserved_soc_for_backup"
     address: 13099
     input_type: "holding"
     data_type: "uint16"
@@ -3083,6 +3258,7 @@ controls:
   - type: "select"
     name: "Load Adjustment Mode ON/OFF"
     unique_id: "load_adjustment_mode_on_off_selection"
+    translation_key: "shx_load_adjustment_mode_on_off_selection"
     address: 13010
     input_type: "holding"
     data_type: "uint16"
@@ -3096,6 +3272,7 @@ controls:
   - type: "number"
     name: "Battery Max Charging Power"
     unique_id: "battery_max_charging_power"
+    translation_key: "shx_battery_max_charging_power"
     address: 33046 # reg 33047
     input_type: "holding"
     data_type: "uint16"
@@ -3114,6 +3291,7 @@ controls:
   - type: "number"
     name: "Battery Max Discharging Power"
     unique_id: "battery_max_discharging_power"
+    translation_key: "shx_battery_max_discharging_power"
     address: 33047 # reg 33048 - Protocol V1.1.11
     input_type: "holding"
     data_type: "uint16"
@@ -3132,6 +3310,7 @@ controls:
   - type: "number"
     name: "Export Power Limit Value Wide Range"
     unique_id: "export_power_limit_value_wide_range"
+    translation_key: "shx_export_power_limit_value_wide_range"
     address: 31221 # reg 31222 - Protocol V1.1.7
     input_type: "holding"
     data_type: "uint16"
@@ -3150,6 +3329,7 @@ controls:
   - type: "number"
     name: "Battery Charging Start Power"
     unique_id: "battery_charging_start_power"
+    translation_key: "shx_battery_charging_start_power"
     address: 33148
     input_type: "holding"
     data_type: "uint16"
@@ -3171,6 +3351,7 @@ controls:
   - type: "number"
     name: "Battery Discharging Start Power"
     unique_id: "battery_discharging_start_power"
+    translation_key: "shx_battery_discharging_start_power"
     address: 33149
     input_type: "holding"
     data_type: "uint16"
@@ -3192,6 +3373,7 @@ controls:
   - type: "select"
     name: "Forced Startup Under Low SoC Standby"
     unique_id: "forced_startup_under_low_soc_standby"
+    translation_key: "shx_forced_startup_under_low_soc_standby"
     address: 13016 # reg 13017 - Protocol V1.1.7 (Control register, not sensor)
     input_type: "holding"
     data_type: "uint16"
@@ -3207,6 +3389,7 @@ controls:
   - type: "select"
     name: "PV Power Limitation"
     unique_id: "pv_power_limitation"
+    translation_key: "shx_pv_power_limitation"
     address: 13017 # reg 13018 - Protocol V1.1.10
     condition: "selected_model in [SH5T, SH6T, SH8T, SH10T, SH12T, SH15T, SH20T, SH25T]"
     input_type: "holding"
@@ -3224,6 +3407,7 @@ controls:
   - type: "select"
     name: "WB charging mode"
     unique_id: "wb_charging_mode"
+    translation_key: "shx_wb_charging_mode"
     address: 33540
     input_type: "holding"
     data_type: "uint16"
@@ -3238,6 +3422,7 @@ controls:
 
   - name: "WB Charging Quantity"
     unique_id: "wb_charging_quantity"
+    translation_key: "shx_wb_charging_quantity"
     type: "number"
     address: 33541
     input_type: holding
@@ -3251,6 +3436,7 @@ controls:
 
   - name: "WB User Defined Charging Current"
     unique_id: "wb_user_defined_charging_current"
+    translation_key: "shx_wb_user_defined_charging_current"
     type: "number"
     address: 33544
     input_type: holding
@@ -3265,6 +3451,7 @@ controls:
   - type: "select"
     name: WB surplus power from grid
     unique_id: "wb_surplus_power_from_grid"
+    translation_key: "shx_wb_surplus_power_from_grid"
     address: 33549
     input_type: "holding"
     data_type: "uint16"
@@ -3284,6 +3471,7 @@ calculated:
   # Net Grid Power
   - name: "Net Grid Power"
     unique_id: "net_grid_power"
+    translation_key: "shx_net_grid_power"
     type: "sensor"
     availability: >-
       {{
@@ -3300,6 +3488,7 @@ calculated:
 
   - name: "Import Power"
     unique_id: "import_power"
+    translation_key: "shx_import_power"
     type: "sensor"
     availability: "{{ not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable') }}"
     state: >-
@@ -3319,6 +3508,7 @@ calculated:
 
   - name: "Export Power"
     unique_id: "export_power"
+    translation_key: "shx_export_power"
     type: "sensor"
     availability: "{{states('[[mm:sensor:{PREFIX}_export_power_raw]]')|is_number }}"
     state: >-
@@ -3335,6 +3525,7 @@ calculated:
 
   - name: "Total Load Power"
     unique_id: "total_load_power"
+    translation_key: "shx_total_load_power"
     type: "sensor"
     availability: >-
       {{ not is_state('[[mm:sensor:{PREFIX}_load_power]]', 'unavailable') }}
@@ -3348,6 +3539,7 @@ calculated:
   # Real load from energy flow balance: Load = PV + Import + Battery_Discharge - Export - Battery_Charge
   - name: "Real Load Power"
     unique_id: "real_load_power"
+    translation_key: "shx_real_load_power"
     type: "sensor"
     availability: >-
       {{
@@ -3372,6 +3564,7 @@ calculated:
   # System Efficiency Calculations
   - name: "Solar to Grid Efficiency"
     unique_id: "solar_to_grid_efficiency"
+    translation_key: "shx_solar_to_grid_efficiency"
     type: "sensor"
     availability: >-
       {{
@@ -3391,6 +3584,7 @@ calculated:
 
   - name: "Battery to Load Efficiency"
     unique_id: "battery_to_load_efficiency"
+    translation_key: "shx_battery_to_load_efficiency"
     type: "sensor"
     availability: >-
       {{
@@ -3423,6 +3617,7 @@ calculated:
   # Power Balance Calculations
   - name: "Power Balance"
     unique_id: "power_balance"
+    translation_key: "shx_power_balance"
     type: "sensor"
     availability: >-
       {{
@@ -3444,6 +3639,7 @@ calculated:
   # Phase Power Calculations
   - name: "Total Meter Phase Power"
     unique_id: "total_meter_phase_power"
+    translation_key: "shx_total_meter_phase_power"
     type: "sensor"
     availability: >-
       {{
@@ -3462,6 +3658,7 @@ calculated:
   # Individual Phase Power Calculations
   - name: "Phase A Power"
     unique_id: "phase_a_power"
+    translation_key: "shx_phase_a_power"
     type: "sensor"
     availability: >-
       {{
@@ -3477,6 +3674,7 @@ calculated:
 
   - name: "Phase B Power"
     unique_id: "phase_b_power"
+    translation_key: "shx_phase_b_power"
     type: "sensor"
     availability: >-
       {{
@@ -3493,6 +3691,7 @@ calculated:
 
   - name: "Phase C Power"
     unique_id: "phase_c_power"
+    translation_key: "shx_phase_c_power"
     type: "sensor"
     availability: >-
       {{
@@ -3511,6 +3710,7 @@ calculated:
   # For DTSU666 and DTSU666-20
   - name: "Meter Active Power"
     unique_id: "meter_active_power"
+    translation_key: "shx_meter_active_power"
     type: "sensor"
     condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
     availability: >-
@@ -3527,6 +3727,7 @@ calculated:
   # For DTSU666 and DTSU666-20
   - name: "Meter Phase A Active Power"
     unique_id: "meter_phase_a_active_power"
+    translation_key: "shx_meter_phase_a_active_power"
     type: "sensor"
     condition: "(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1"
     availability: >-
@@ -3549,6 +3750,7 @@ calculated:
 
   - name: "Meter Phase B Active Power"
     unique_id: "meter_phase_b_active_power"
+    translation_key: "shx_meter_phase_b_active_power"
     type: "sensor"
     condition: "(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1"
     availability: >-
@@ -3571,6 +3773,7 @@ calculated:
 
   - name: "Meter Phase C Active Power"
     unique_id: "meter_phase_c_active_power"
+    translation_key: "shx_meter_phase_c_active_power"
     type: "sensor"
     condition: "(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1"
     availability: >-
@@ -3595,6 +3798,7 @@ calculated:
   # NOTE: These calculated sensors depend on the raw sensors, which are only registered when DTSU666-20 is selected
   - name: "Meter Channel 2 Total Active Power"
     unique_id: "meter_channel_2_total_active_power"
+    translation_key: "shx_meter_channel_2_total_active_power"
     type: "sensor"
     condition: "meter_type == 'DTSU666-20'"
     availability: >-
@@ -3617,6 +3821,7 @@ calculated:
 
   - name: "Meter Channel 2 Phase A Active Power"
     unique_id: "meter_channel_2_phase_a_active_power"
+    translation_key: "shx_meter_channel_2_phase_a_active_power"
     type: "sensor"
     condition: "meter_type == 'DTSU666-20'"
     availability: >-
@@ -3639,6 +3844,7 @@ calculated:
 
   - name: "Meter Channel 2 Phase B Active Power"
     unique_id: "meter_channel_2_phase_b_active_power"
+    translation_key: "shx_meter_channel_2_phase_b_active_power"
     type: "sensor"
     condition: "meter_type == 'DTSU666-20'"
     availability: >-
@@ -3661,6 +3867,7 @@ calculated:
 
   - name: "Meter Channel 2 Phase C Active Power"
     unique_id: "meter_channel_2_phase_c_active_power"
+    translation_key: "shx_meter_channel_2_phase_c_active_power"
     type: "sensor"
     condition: "meter_type == 'DTSU666-20'"
     availability: >-
@@ -3684,6 +3891,7 @@ calculated:
   # Calculated Energy Summary Sensors
   - name: "Monthly PV generation (current)"
     unique_id: "monthly_pv_generation_current"
+    translation_key: "shx_monthly_pv_generation_current"
     type: "sensor"
     availability: >-
       {% set currMonth = 'monthly_pv_generation_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
@@ -3700,6 +3908,7 @@ calculated:
 
   - name: "Yearly PV generation (current)"
     unique_id: "yearly_pv_generation_current"
+    translation_key: "shx_yearly_pv_generation_current"
     type: "sensor"
     availability: >-
       {% set currYear = 'yearly_pv_generation_' ~ now().year %}
@@ -3716,6 +3925,7 @@ calculated:
 
   - name: "Monthly export (current)"
     unique_id: "monthly_export_current"
+    translation_key: "shx_monthly_export_current"
     type: "sensor"
     availability: >-
       {% set currMonth = 'monthly_export_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
@@ -3732,6 +3942,7 @@ calculated:
 
   - name: "Yearly export (current)"
     unique_id: "yearly_export_current"
+    translation_key: "shx_yearly_export_current"
     type: "sensor"
     availability: >-
       {% set currYear = 'yearly_export_' ~ now().year %}
@@ -3749,6 +3960,7 @@ calculated:
   # Battery Level and Charge Calculations
   - name: "Battery level (nominal)"
     unique_id: "battery_level_nom"
+    translation_key: "shx_battery_level_nom"
     type: "sensor"
     availability: >-
       {{
@@ -3775,6 +3987,7 @@ calculated:
 
   - name: "Battery charge (nominal)"
     unique_id: "battery_charge_nom"
+    translation_key: "shx_battery_charge_nom"
     type: "sensor"
     availability: >-
       {{
@@ -3797,6 +4010,7 @@ calculated:
 
   - name: "Battery charge"
     unique_id: "battery_charge"
+    translation_key: "shx_battery_charge"
     type: "sensor"
     unit_of_measurement: kWh
     device_class: energy_storage
@@ -3822,6 +4036,7 @@ calculated:
 
   - name: "Battery charge (health-rated)"
     unique_id: "battery_charge_health_rated"
+    translation_key: "shx_battery_charge_health_rated"
     type: "sensor"
     availability: >-
       {{
@@ -3846,6 +4061,7 @@ calculated:
   # Energy Consumption Calculations
   - name: "Daily consumed energy"
     unique_id: "daily_consumed_energy"
+    translation_key: "shx_daily_consumed_energy"
     type: "sensor"
     availability: >-
       {{
@@ -3873,6 +4089,7 @@ calculated:
 
   - name: "Total consumed energy"
     unique_id: "total_consumed_energy"
+    translation_key: "shx_total_consumed_energy"
     type: "sensor"
     availability: >-
       {{
@@ -3901,6 +4118,7 @@ calculated:
   # Power Flow Calculations
   - name: "Signed battery power"
     unique_id: "signed_battery_power"
+    translation_key: "shx_signed_battery_power"
     type: "sensor"
     availability: >-
       {{
@@ -3924,6 +4142,7 @@ calculated:
 
   - name: "Battery charging power"
     unique_id: "battery_charging_power"
+    translation_key: "shx_battery_charging_power"
     type: "sensor"
     availability: >-
       {{
@@ -3945,6 +4164,7 @@ calculated:
 
   - name: "Battery discharging power"
     unique_id: "battery_discharging_power"
+    translation_key: "shx_battery_discharging_power"
     type: "sensor"
     availability: >-
       {{
@@ -3976,6 +4196,7 @@ calculated:
 
   - name: "Battery charging power signed"
     unique_id: "battery_charging_power_signed"
+    translation_key: "shx_battery_charging_power_signed"
     type: "sensor"
     availability: "{{ states('[[mm:sensor:{PREFIX}_battery_power]]') not in ['unknown','unavailable'] }}"
     state: "{{ states('[[mm:sensor:{PREFIX}_battery_power]]')|int * -1 }}"
@@ -3990,6 +4211,7 @@ calculated:
 
   - name: "Battery discharging power signed"
     unique_id: "battery_discharging_power_signed"
+    translation_key: "shx_battery_discharging_power_signed"
     type: "sensor"
     availability: "{{ states('[[mm:sensor:{PREFIX}_battery_power]]') not in ['unknown','unavailable'] }}"
     state: "{{ states('[[mm:sensor:{PREFIX}_battery_power]]')|int }}"
@@ -4017,6 +4239,7 @@ calculated:
 
   - name: "Grid power signed"
     unique_id: "grid_power_signed"
+    translation_key: "shx_grid_power_signed"
     type: "sensor"
     availability: "{{ states('[[mm:sensor:{PREFIX}_export_power_raw]]') not in ['unknown','unavailable'] }}"
     state: "{{ states('[[mm:sensor:{PREFIX}_export_power_raw]]')|int * -1 }}"
@@ -4032,6 +4255,7 @@ calculated:
 
   - name: "Grid export power signed"
     unique_id: "grid_export_power_signed"
+    translation_key: "shx_grid_export_power_signed"
     type: "sensor"
     availability: "{{ states('[[mm:sensor:{PREFIX}_export_power_raw]]') not in ['unknown','unavailable'] }}"
     state: >-
@@ -4052,6 +4276,7 @@ calculated:
 
   - name: "Grid import power signed"
     unique_id: "grid_import_power_signed"
+    translation_key: "shx_grid_import_power_signed"
     type: "sensor"
     availability: "{{ states('[[mm:sensor:{PREFIX}_export_power_raw]]') not in ['unknown','unavailable'] }}"
     state: >-
@@ -4074,6 +4299,7 @@ calculated:
   # Self-Consumption and Autarky Calculations
   - name: "Self-Consumption Rate"
     unique_id: "self_consumption_rate"
+    translation_key: "shx_self_consumption_rate"
     type: "sensor"
     availability: >-
       {{
@@ -4116,6 +4342,7 @@ calculated:
 
   - name: "Autarky Rate"
     unique_id: "autarky_rate"
+    translation_key: "shx_autarky_rate"
     type: "sensor"
     availability: >-
       {{
@@ -4163,6 +4390,7 @@ calculated:
   # Self-Consumption Rate = (Direct + PV→Battery) / PV Generation × 100
   - name: "Self-Consumption Rate (Today)"
     unique_id: "self_consumption_rate_today"
+    translation_key: "shx_self_consumption_rate_today"
     type: "sensor"
     availability: >-
       {{
@@ -4192,6 +4420,7 @@ calculated:
   # "Welcher Anteil des verbrauchten Stroms stammt aus eigener Produktion (inkl. Speicher)?"
   - name: "Autarky Rate (Today)"
     unique_id: "autarky_rate_today"
+    translation_key: "shx_autarky_rate_today"
     type: "sensor"
     availability: >-
       {{
@@ -4244,6 +4473,7 @@ calculated:
 # DC → AC conversion efficiency (reconstructed PV AC vs total DC; clamped 0–100 %)
   - name: "DC to AC Efficiency"
     unique_id: "dc_to_ac_efficiency"
+    translation_key: "shx_dc_to_ac_efficiency"
     state: >-
       {# Ignore low DC: pv_ac/dc explodes with register noise or async samples #}
       {% set dc_min_w = 300 %}
@@ -4269,6 +4499,7 @@ calculated:
   # MPPT Power Calculations (Voltage * Current for each MPPT)
   - name: "MPPT1 Power"
     unique_id: "mppt1_power"
+    translation_key: "shx_mppt1_power"
     type: "sensor"
     availability: >-
       {{
@@ -4284,6 +4515,7 @@ calculated:
 
   - name: "MPPT2 Power"
     unique_id: "mppt2_power"
+    translation_key: "shx_mppt2_power"
     condition: "mppt_count >= 2"
     type: "sensor"
     availability: >-
@@ -4300,6 +4532,7 @@ calculated:
 
   - name: "MPPT3 Power"
     unique_id: "mppt3_power"
+    translation_key: "shx_mppt3_power"
     condition: "mppt_count >= 3"
     type: "sensor"
     availability: >-
@@ -4316,6 +4549,7 @@ calculated:
 
   - name: "MPPT4 Power"
     unique_id: "mppt4_power"
+    translation_key: "shx_mppt4_power"
     condition: "mppt_count >= 4"
     type: "sensor"
     availability: >-
@@ -4333,6 +4567,7 @@ calculated:
   # Total MPPT Power — split by mppt_count so [[mm:…_mppt3/4…]] is not present when those registers are filtered out
   - name: "Total MPPT Power"
     unique_id: "total_mppt_power"
+    translation_key: "shx_total_mppt_power"
     condition: "mppt_count == 2"
     type: "sensor"
     availability: >-
@@ -4353,6 +4588,7 @@ calculated:
 
   - name: "Total MPPT Power"
     unique_id: "total_mppt_power"
+    translation_key: "shx_total_mppt_power"
     condition: "mppt_count == 3"
     type: "sensor"
     availability: >-
@@ -4375,6 +4611,7 @@ calculated:
 
   - name: "Total MPPT Power"
     unique_id: "total_mppt_power"
+    translation_key: "shx_total_mppt_power"
     condition: "mppt_count >= 4"
     type: "sensor"
     availability: >-
@@ -4401,6 +4638,7 @@ calculated:
   # Energy Flow Analysis
   - name: "PV to Load Direct"
     unique_id: "pv_to_load_direct"
+    translation_key: "shx_pv_to_load_direct"
     type: "sensor"
     availability: >-
       {{
@@ -4437,6 +4675,7 @@ calculated:
 
   - name: "PV to Battery"
     unique_id: "pv_to_battery"
+    translation_key: "shx_pv_to_battery"
     type: "sensor"
     availability: >-
       {{
@@ -4470,6 +4709,7 @@ calculated:
 
   - name: "Grid to Battery"
     unique_id: "grid_to_battery"
+    translation_key: "shx_grid_to_battery"
     type: "sensor"
     availability: >-
       {{
@@ -4503,6 +4743,7 @@ calculated:
 
   - name: "Battery to Load"
     unique_id: "battery_to_load"
+    translation_key: "shx_battery_to_load"
     type: "sensor"
     availability: >-
       {{
@@ -4529,6 +4770,7 @@ calculated:
 
   - name: "PV to Grid"
     unique_id: "pv_to_grid"
+    translation_key: "shx_pv_to_grid"
     type: "sensor"
     availability: >-
       {{
@@ -4554,6 +4796,7 @@ calculated:
 
   - name: "Battery to Grid"
     unique_id: "battery_to_grid"
+    translation_key: "shx_battery_to_grid"
     type: "sensor"
     availability: >-
       {{
@@ -4578,6 +4821,7 @@ calculated:
 
   - name: "Grid to Load"
     unique_id: "grid_to_load"
+    translation_key: "shx_grid_to_load"
     type: "sensor"
     availability: >-
       {{
@@ -4609,6 +4853,7 @@ calculated:
 
   - name: "Net Consumption"
     unique_id: "net_consumption"
+    translation_key: "shx_net_consumption"
     type: "sensor"
     availability: >-
       {{
@@ -4632,6 +4877,7 @@ calculated:
 
   - name: "Grid Dependency"
     unique_id: "grid_dependency"
+    translation_key: "shx_grid_dependency"
     type: "sensor"
     availability: >-
       {{
@@ -4679,6 +4925,7 @@ calculated:
   # MPPT Performance Analysis — split by mppt_count so [[mm:…_mppt3/4…]] is absent when not on device
   - name: "MPPT Deviation from Average"
     unique_id: "mppt_power_deviation"
+    translation_key: "shx_mppt_power_deviation"
     condition: "mppt_count == 2"
     type: "sensor"
     availability: >-
@@ -4712,6 +4959,7 @@ calculated:
 
   - name: "MPPT Deviation from Average"
     unique_id: "mppt_power_deviation"
+    translation_key: "shx_mppt_power_deviation"
     condition: "mppt_count == 3"
     type: "sensor"
     availability: >-
@@ -4747,6 +4995,7 @@ calculated:
 
   - name: "MPPT Deviation from Average"
     unique_id: "mppt_power_deviation"
+    translation_key: "shx_mppt_power_deviation"
     condition: "mppt_count >= 4"
     type: "sensor"
     availability: >-
@@ -4782,6 +5031,7 @@ calculated:
 
   - name: "MPPT Balance"
     unique_id: "mppt_balance"
+    translation_key: "shx_mppt_balance"
     type: "sensor"
     availability: >-
       {{
@@ -4805,6 +5055,7 @@ calculated:
 
   - name: "Active MPPT Count"
     unique_id: "active_mppt_count"
+    translation_key: "shx_active_mppt_count"
     condition: "mppt_count == 2"
     type: "sensor"
     availability: >-
@@ -4824,6 +5075,7 @@ calculated:
 
   - name: "Active MPPT Count"
     unique_id: "active_mppt_count"
+    translation_key: "shx_active_mppt_count"
     condition: "mppt_count == 3"
     type: "sensor"
     availability: >-
@@ -4845,6 +5097,7 @@ calculated:
 
   - name: "Active MPPT Count"
     unique_id: "active_mppt_count"
+    translation_key: "shx_active_mppt_count"
     condition: "mppt_count >= 4"
     type: "sensor"
     availability: >-
@@ -4867,6 +5120,7 @@ calculated:
   # PV System Performance Metrics
   - name: "PV Capacity Factor"
     unique_id: "pv_capacity_factor"
+    translation_key: "shx_pv_capacity_factor"
     type: "sensor"
     availability: >-
       {{
@@ -4894,6 +5148,7 @@ calculated:
 
   - name: "PV Generation Hours Today"
     unique_id: "pv_generation_hours_today"
+    translation_key: "shx_pv_generation_hours_today"
     type: "sensor"
     availability: >-
       {{
@@ -4921,6 +5176,7 @@ calculated:
   # Format per documentation V1.1.7: 0xMMmmppbb
   - name: "Protocol Version"
     unique_id: "protocol_version"
+    translation_key: "shx_protocol_version"
     type: "sensor"
     availability: "{{ not is_state('[[mm:sensor:{PREFIX}_protocol_version_raw]]', 'unavailable') }}"
     state: >-
@@ -4944,6 +5200,7 @@ calculated:
   ## some additional calculated sensors ideas
   - name: "Inverter Status Display"
     unique_id: "inverter_status_display"
+    translation_key: "shx_inverter_status_display"
     type: "sensor"
     state: >-
       {% set power = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) %}
@@ -4980,6 +5237,7 @@ calculated:
 
   - name: "Grid Status"
     unique_id: "grid_status"
+    translation_key: "shx_grid_status"
     type: "sensor"
     state: >-
       {% set import_power = states('[[mm:sensor:{PREFIX}_meter_active_power]]') | float(0) %}
@@ -5007,6 +5265,7 @@ calculated:
 
   - name: "Battery Status Indicator"
     unique_id: "battery_status_indicator"
+    translation_key: "shx_battery_status_indicator"
     condition: "battery_enabled == true"
     type: "sensor"
     state: >-
@@ -5064,6 +5323,7 @@ calculated:
 
   - name: "Battery Health Status"
     unique_id: "battery_health_status"
+    translation_key: "shx_battery_health_status"
     condition: "battery_enabled == true"
     type: "sensor"
     availability: >-
@@ -5104,6 +5364,7 @@ binary_sensors:
   # Binary Sensors for Status Monitoring
   - name: "PV generating"
     unique_id: "pv_generating"
+    translation_key: "shx_pv_generating"
     type: "binary_sensor"
     availability: >-
       {{
@@ -5129,6 +5390,7 @@ binary_sensors:
 
   - name: "PV generating (delay)"
     unique_id: "pv_generating_delay"
+    translation_key: "shx_pv_generating_delay"
     type: "binary_sensor"
     availability: "{{ not is_state('[[mm:binary_sensor:{PREFIX}_pv_generating]]', 'unavailable') }}"
     delay_on:
@@ -5139,6 +5401,7 @@ binary_sensors:
 
   - name: "Battery charging"
     unique_id: "battery_charging"
+    translation_key: "shx_battery_charging"
     condition: "battery_enabled == true"
     type: "binary_sensor"
     availability: >-
@@ -5169,6 +5432,7 @@ binary_sensors:
 
   - name: "Battery charging (delay)"
     unique_id: "battery_charging_delay"
+    translation_key: "shx_battery_charging_delay"
     condition: "battery_enabled == true"
     type: "binary_sensor"
     availability: "{{ not is_state('[[mm:binary_sensor:{PREFIX}_battery_charging]]', 'unavailable') }}"
@@ -5180,6 +5444,7 @@ binary_sensors:
 
   - name: "Battery discharging"
     unique_id: "battery_discharging"
+    translation_key: "shx_battery_discharging"
     condition: "battery_enabled == true"
     type: "binary_sensor"
     availability: >-
@@ -5209,6 +5474,7 @@ binary_sensors:
 
   - name: "Battery discharging (delay)"
     unique_id: "battery_discharging_delay"
+    translation_key: "shx_battery_discharging_delay"
     condition: "battery_enabled == true"
     type: "binary_sensor"
     availability: "{{ not is_state('[[mm:binary_sensor:{PREFIX}_battery_discharging]]', 'unavailable') }}"
@@ -5219,6 +5485,7 @@ binary_sensors:
 
   - name: "Exporting power"
     unique_id: "exporting_power"
+    translation_key: "shx_exporting_power"
     type: "binary_sensor"
     availability: >-
       {{
@@ -5244,6 +5511,7 @@ binary_sensors:
 
   - name: "Exporting power (delay)"
     unique_id: "exporting_power_delay"
+    translation_key: "shx_exporting_power_delay"
     type: "binary_sensor"
     availability: "{{ not is_state('[[mm:binary_sensor:{PREFIX}_exporting_power]]', 'unavailable') }}"
     delay_on:
@@ -5254,6 +5522,7 @@ binary_sensors:
 
   - name: "Importing power"
     unique_id: "importing_power"
+    translation_key: "shx_importing_power"
     type: "binary_sensor"
     availability: >-
       {{
@@ -5279,6 +5548,7 @@ binary_sensors:
 
   - name: "Importing power (delay)"
     unique_id: "importing_power_delay"
+    translation_key: "shx_importing_power_delay"
     type: "binary_sensor"
     availability: "{{ not is_state('[[mm:binary_sensor:{PREFIX}_importing_power]]', 'unavailable') }}"
     delay_on:
@@ -5289,6 +5559,7 @@ binary_sensors:
 
   - name: "Positive load power"
     unique_id: "positive_load_power"
+    translation_key: "shx_positive_load_power"
     type: "binary_sensor"
     availability: >-
       {{
@@ -5313,6 +5584,7 @@ binary_sensors:
 
   - name: "Negative load power"
     unique_id: "negative_load_power"
+    translation_key: "shx_negative_load_power"
     type: "binary_sensor"
     availability: >-
       {{

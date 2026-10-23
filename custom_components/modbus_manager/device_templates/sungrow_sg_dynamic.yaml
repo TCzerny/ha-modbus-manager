@@ -106,6 +106,7 @@ sensors:
   # Device Information
   - name: Protocol num
     unique_id: protocol_num
+    translation_key: "sg_protocol_num"
     mm_group: "PV_device_info"
     address: 4949 # reg 4950-4951
     input_type: input
@@ -116,6 +117,7 @@ sensors:
 
   - name: Protocol version raw
     unique_id: protocol_version_raw
+    translation_key: "sg_protocol_version_raw"
     mm_group: "PV_device_info"
     address: 4951 # reg 4952-4953
     input_type: input
@@ -127,6 +129,7 @@ sensors:
 
   - name: Certification version of ARM Software
     unique_id: certification_version_arm_software
+    translation_key: "sg_certification_version_arm_software"
     mm_group: "PV_device_info"
     address: 4953 # reg 4954-4968 (15 registers UTF-8 string)
     input_type: input
@@ -139,6 +142,7 @@ sensors:
 
   - name: Certification version of DSP Software
     unique_id: certification_version_dsp_software
+    translation_key: "sg_certification_version_dsp_software"
     mm_group: "PV_device_info"
     address: 4968 # reg 4969-4983 (15 registers UTF-8 string)
     input_type: input
@@ -150,6 +154,7 @@ sensors:
 
   - name: Sungrow inverter serial
     unique_id: inverter_serial
+    translation_key: "sg_inverter_serial"
     mm_group: "PV_device_info"
     address: 4989 # reg 4990
     input_type: input
@@ -159,6 +164,7 @@ sensors:
 
   - name: Sungrow device type code
     unique_id: sungrow_device_type_code
+    translation_key: "sg_sungrow_device_type_code"
     mm_group: "PV_device_info"
     address: 4999 # reg 5000
     input_type: input
@@ -283,6 +289,7 @@ sensors:
   # SG-specific Basic Registers
   - name: Output type
     unique_id: output_type
+    translation_key: "sg_output_type"
     mm_group: "PV_device_info"
     address: 5001 # reg 5002
     input_type: input
@@ -295,6 +302,7 @@ sensors:
 
   - name: Daily PV generation
     unique_id: daily_pv_generation
+    translation_key: "sg_daily_pv_generation"
     mm_group: "PV_daily_energy"
     address: 5002 # reg 5003
     input_type: input
@@ -308,6 +316,7 @@ sensors:
 
   - name: Total PV generation
     unique_id: total_pv_generation
+    translation_key: "sg_total_pv_generation"
     mm_group: "PV_total_energy"
     address: 5003 # reg 5004-5005
     input_type: input
@@ -321,6 +330,7 @@ sensors:
 
   - name: Total running time
     unique_id: total_running_time
+    translation_key: "sg_total_running_time"
     mm_group: "PV_status"
     address: 5005 # reg 5006-5007
     input_type: input
@@ -334,6 +344,7 @@ sensors:
 
   - name: Inverter temperature
     unique_id: inverter_temperature
+    translation_key: "sg_inverter_temperature"
     mm_group: "PV_temperature"
     address: 5007 # reg 5008
     input_type: input
@@ -347,6 +358,7 @@ sensors:
 
   - name: Total apparent power
     unique_id: total_apparent_power
+    translation_key: "sg_total_apparent_power"
     mm_group: "PV_total_power"
     address: 5008 # reg 5009-5010
     input_type: input
@@ -362,6 +374,7 @@ sensors:
   # MPPT Data (will be filtered based on mppt_count)
   - name: MPPT1 voltage
     unique_id: mppt1_voltage
+    translation_key: "sg_mppt1_voltage"
     mm_group: "PV_mppt_voltage"
     address: 5010 # reg 5011
     input_type: input
@@ -375,6 +388,7 @@ sensors:
 
   - name: MPPT1 current
     unique_id: mppt1_current
+    translation_key: "sg_mppt1_current"
     mm_group: "PV_mppt_current"
     address: 5011 # reg 5012
     input_type: input
@@ -388,6 +402,7 @@ sensors:
 
   - name: MPPT2 voltage
     unique_id: mppt2_voltage
+    translation_key: "sg_mppt2_voltage"
     mm_group: "PV_mppt_voltage"
     address: 5012 # reg 5013
     input_type: input
@@ -402,6 +417,7 @@ sensors:
 
   - name: MPPT2 current
     unique_id: mppt2_current
+    translation_key: "sg_mppt2_current"
     mm_group: "PV_mppt_current"
     address: 5013 # reg 5014
     input_type: input
@@ -416,6 +432,7 @@ sensors:
 
   - name: MPPT3 voltage
     unique_id: mppt3_voltage
+    translation_key: "sg_mppt3_voltage"
     mm_group: "PV_mppt_voltage"
     address: 5014 # reg 5015
     input_type: input
@@ -430,6 +447,7 @@ sensors:
 
   - name: MPPT3 current
     unique_id: mppt3_current
+    translation_key: "sg_mppt3_current"
     mm_group: "PV_mppt_current"
     address: 5015 # reg 5016
     input_type: input
@@ -444,6 +462,7 @@ sensors:
 
   - name: Total DC power
     unique_id: total_dc_power
+    translation_key: "sg_total_dc_power"
     mm_group: "PV_total_dc_power"
     address: 5016 # reg 5017-5018
     input_type: input
@@ -460,6 +479,7 @@ sensors:
   # Phase Data (will be filtered based on phases)
   - name: Phase A voltage
     unique_id: phase_a_voltage
+    translation_key: "sg_phase_a_voltage"
     address: 5018 # reg 5019
     input_type: input
     data_type: uint16
@@ -472,6 +492,7 @@ sensors:
 
   - name: Phase B voltage
     unique_id: phase_b_voltage
+    translation_key: "sg_phase_b_voltage"
     address: 5019 # reg 5020
     input_type: input
     data_type: uint16
@@ -485,6 +506,7 @@ sensors:
 
   - name: Phase C voltage
     unique_id: phase_c_voltage
+    translation_key: "sg_phase_c_voltage"
     address: 5020 # reg 5021
     input_type: input
     data_type: uint16
@@ -498,6 +520,7 @@ sensors:
 
   - name: Phase A current
     unique_id: phase_a_current
+    translation_key: "sg_phase_a_current"
     address: 5021 # reg 5022
     input_type: input
     data_type: uint16
@@ -510,6 +533,7 @@ sensors:
 
   - name: Phase B current
     unique_id: phase_b_current
+    translation_key: "sg_phase_b_current"
     address: 5022 # reg 5023
     input_type: input
     data_type: uint16
@@ -523,6 +547,7 @@ sensors:
 
   - name: Phase C current
     unique_id: phase_c_current
+    translation_key: "sg_phase_c_current"
     address: 5023 # reg 5024
     input_type: input
     data_type: uint16
@@ -536,6 +561,7 @@ sensors:
 
   - name: Total active power
     unique_id: total_active_power
+    translation_key: "sg_total_active_power"
     address: 5030 # reg 5031-5032
     input_type: input
     data_type: uint32
@@ -549,6 +575,7 @@ sensors:
 
   - name: Reactive power
     unique_id: reactive_power
+    translation_key: "sg_reactive_power"
     address: 5032 # reg 5033
     input_type: input
     data_type: int32
@@ -564,6 +591,7 @@ sensors:
 
   - name: "Power Factor raw"
     unique_id: "power_factor_raw"
+    translation_key: "sg_power_factor_raw"
     address: 5034
     input_type: "input"
     data_type: "int16"
@@ -576,6 +604,7 @@ sensors:
 
   - name: Grid frequency
     unique_id: grid_frequency
+    translation_key: "sg_grid_frequency"
     mm_group: "PV_grid_status"
     address: 5035 # reg 5036
     input_type: input
@@ -590,6 +619,7 @@ sensors:
 
   - name: Work state
     unique_id: work_state
+    translation_key: "sg_work_state"
     address: 5037 # reg 5038
     input_type: input
     data_type: uint16
@@ -620,6 +650,7 @@ sensors:
   # Work State 2 (Appendix 2): U32 bit-based; flags key = bit position
   - name: "Running State"
     unique_id: "running_state"
+    translation_key: "sg_running_state"
     mm_group: "PV_status"
     address: 5080 # reg 5081-5082
     condition: "selected_model != SG5.5RS-JP"
@@ -647,6 +678,7 @@ sensors:
   # Registers 5082-5104 valid for KTL series only (added *RS models even not documented)
   - name: Meter active power raw
     unique_id: meter_active_power_raw
+    translation_key: "sg_meter_active_power_raw"
     address: 5082 # reg 5083-5084
     input_type: input
     data_type: int32
@@ -660,6 +692,7 @@ sensors:
 
   - name: Meter Phase A power
     unique_id: meter_phase_a_power
+    translation_key: "sg_meter_phase_a_power"
     address: 5084 # reg 5085-5086
     input_type: input
     data_type: int32
@@ -673,6 +706,7 @@ sensors:
 
   - name: Meter Phase B power
     unique_id: meter_phase_b_power
+    translation_key: "sg_meter_phase_b_power"
     address: 5086 # reg 5087-5088
     input_type: input
     data_type: int32
@@ -686,6 +720,7 @@ sensors:
 
   - name: Meter Phase C power
     unique_id: meter_phase_c_power
+    translation_key: "sg_meter_phase_c_power"
     address: 5088 # reg 5089-5090
     input_type: input
     data_type: int32
@@ -702,6 +737,7 @@ sensors:
   # Reg 5091-5092: KTL/RT only; RS series uses calculated load_power from meter_power_raw (reg 5218)
   - name: "Load Power"
     unique_id: "load_power"
+    translation_key: "sg_load_power"
     mm_group: "PV_load_power"
     address: 5090 # reg 5091-5092
     input_type: input
@@ -717,6 +753,7 @@ sensors:
 
   - name: Daily exported energy
     unique_id: daily_exported_energy
+    translation_key: "sg_daily_exported_energy"
     address: 5092 # reg 5093-5094
     input_type: input
     data_type: uint32
@@ -730,6 +767,7 @@ sensors:
 
   - name: Total exported energy
     unique_id: total_exported_energy
+    translation_key: "sg_total_exported_energy"
     address: 5094 # reg 5095-5096
     input_type: input
     data_type: uint32
@@ -743,6 +781,7 @@ sensors:
 
   - name: "Daily Imported Energy"
     unique_id: "daily_imported_energy"
+    translation_key: "sg_daily_imported_energy"
     mm_group: "PV_energy_import"
     address: 5096 # reg 5097-5098
     input_type: input
@@ -758,6 +797,7 @@ sensors:
 
   - name: "Total Imported Energy"
     unique_id: "total_imported_energy"
+    translation_key: "sg_total_imported_energy"
     mm_group: "PV_energy_import"
     address: 5098 # reg 5099
     input_type: input
@@ -773,6 +813,7 @@ sensors:
 
   - name: "Daily Direct Energy Consumption"
     unique_id: "daily_direct_energy_consumption"
+    translation_key: "sg_daily_direct_energy_consumption"
     mm_group: "PV_energy_consumption"
     address: 5100 # reg 5101-5102
     input_type: input
@@ -788,6 +829,7 @@ sensors:
 
   - name: "Total Direct Energy Consumption"
     unique_id: "total_direct_energy_consumption"
+    translation_key: "sg_total_direct_energy_consumption"
     mm_group: "PV_energy_consumption"
     address: 5102 # reg 5103
     input_type: input
@@ -803,6 +845,7 @@ sensors:
 
   - name: Daily running time
     unique_id: daily_running_time
+    translation_key: "sg_daily_running_time"
     address: 5112 # reg 5113
     input_type: input
     data_type: uint16
@@ -822,6 +865,7 @@ sensors:
   # Extended MPPT sensors (4-12) - will be filtered based on mppt_count
   - name: MPPT4 voltage
     unique_id: mppt4_voltage
+    translation_key: "sg_mppt4_voltage"
     mm_group: "PV_mppt_voltage"
     address: 5114 # reg 5115
     input_type: input
@@ -837,6 +881,7 @@ sensors:
 
   - name: MPPT4 current
     unique_id: mppt4_current
+    translation_key: "sg_mppt4_current"
     mm_group: "PV_mppt_current"
     address: 5115 # reg 5116
     input_type: input
@@ -852,6 +897,7 @@ sensors:
 
   - name: MPPT5 voltage
     unique_id: mppt5_voltage
+    translation_key: "sg_mppt5_voltage"
     mm_group: "PV_mppt_voltage"
     address: 5116 # reg 5117
     input_type: input
@@ -867,6 +913,7 @@ sensors:
 
   - name: MPPT5 current
     unique_id: mppt5_current
+    translation_key: "sg_mppt5_current"
     mm_group: "PV_mppt_current"
     address: 5117 # reg 5118
     input_type: input
@@ -882,6 +929,7 @@ sensors:
 
   - name: MPPT6 voltage
     unique_id: mppt6_voltage
+    translation_key: "sg_mppt6_voltage"
     mm_group: "PV_mppt_voltage"
     address: 5118 # reg 5119
     input_type: input
@@ -897,6 +945,7 @@ sensors:
 
   - name: MPPT6 current
     unique_id: mppt6_current
+    translation_key: "sg_mppt6_current"
     mm_group: "PV_mppt_current"
     address: 5119 # reg 5120
     input_type: input
@@ -912,6 +961,7 @@ sensors:
 
   - name: Monthly PV generation
     unique_id: monthly_pv_generation
+    translation_key: "sg_monthly_pv_generation"
     address: 5127 # reg 5128-5129
     input_type: input
     data_type: uint32
@@ -925,6 +975,7 @@ sensors:
   # MPPT 7-12 sensors (continuation)
   - name: MPPT7 voltage
     unique_id: mppt7_voltage
+    translation_key: "sg_mppt7_voltage"
     mm_group: "PV_mppt_voltage"
     address: 5120 # reg 5121
     input_type: input
@@ -939,6 +990,7 @@ sensors:
 
   - name: MPPT7 current
     unique_id: mppt7_current
+    translation_key: "sg_mppt7_current"
     mm_group: "PV_mppt_current"
     address: 5121 # reg 5122
     input_type: input
@@ -953,6 +1005,7 @@ sensors:
 
   - name: MPPT8 voltage
     unique_id: mppt8_voltage
+    translation_key: "sg_mppt8_voltage"
     mm_group: "PV_mppt_voltage"
     address: 5122 # reg 5123
     input_type: input
@@ -967,6 +1020,7 @@ sensors:
 
   - name: MPPT8 current
     unique_id: mppt8_current
+    translation_key: "sg_mppt8_current"
     mm_group: "PV_mppt_current"
     address: 5123 # reg 5124
     input_type: input
@@ -981,6 +1035,7 @@ sensors:
 
   - name: MPPT9 voltage
     unique_id: mppt9_voltage
+    translation_key: "sg_mppt9_voltage"
     mm_group: "PV_mppt_voltage"
     address: 5129 # reg 5130
     input_type: input
@@ -995,6 +1050,7 @@ sensors:
 
   - name: MPPT9 current
     unique_id: mppt9_current
+    translation_key: "sg_mppt9_current"
     mm_group: "PV_mppt_current"
     address: 5130 # reg 5131
     input_type: input
@@ -1009,6 +1065,7 @@ sensors:
 
   - name: MPPT10 voltage
     unique_id: mppt10_voltage
+    translation_key: "sg_mppt10_voltage"
     mm_group: "PV_mppt_voltage"
     address: 5131 # reg 5132
     input_type: input
@@ -1023,6 +1080,7 @@ sensors:
 
   - name: MPPT10 current
     unique_id: mppt10_current
+    translation_key: "sg_mppt10_current"
     mm_group: "PV_mppt_current"
     address: 5132 # reg 5133
     input_type: input
@@ -1037,6 +1095,7 @@ sensors:
 
   - name: MPPT11 voltage
     unique_id: mppt11_voltage
+    translation_key: "sg_mppt11_voltage"
     mm_group: "PV_mppt_voltage"
     address: 5133 # reg 5134
     input_type: input
@@ -1051,6 +1110,7 @@ sensors:
 
   - name: MPPT11 current
     unique_id: mppt11_current
+    translation_key: "sg_mppt11_current"
     mm_group: "PV_mppt_current"
     address: 5134 # reg 5135
     input_type: input
@@ -1065,6 +1125,7 @@ sensors:
 
   - name: MPPT12 voltage
     unique_id: mppt12_voltage
+    translation_key: "sg_mppt12_voltage"
     mm_group: "PV_mppt_voltage"
     address: 5135 # reg 5136
     input_type: input
@@ -1079,6 +1140,7 @@ sensors:
 
   - name: MPPT12 current
     unique_id: mppt12_current
+    translation_key: "sg_mppt12_current"
     mm_group: "PV_mppt_current"
     address: 5136 # reg 5137
     input_type: input
@@ -1094,6 +1156,7 @@ sensors:
   # Work Status registers
   - name: Work status 1
     unique_id: work_status_1
+    translation_key: "sg_work_status_1"
     address: 5139 # reg 5140
     input_type: input
     data_type: uint16
@@ -1110,6 +1173,7 @@ sensors:
 
   - name: Work status 2
     unique_id: work_status_2
+    translation_key: "sg_work_status_2"
     address: 5140 # reg 5141
     input_type: input
     data_type: uint16
@@ -1132,6 +1196,7 @@ sensors:
 
   - name: Total PV Generation (high precision)
     unique_id: total_pv_generation_high_precision
+    translation_key: "sg_total_pv_generation_high_precision"
     mm_group: "PV_total_energy"
     address: 5143 # reg 5144-5145
     input_type: input
@@ -1145,6 +1210,7 @@ sensors:
 
   - name: Negative voltage to ground
     unique_id: negative_voltage_ground
+    translation_key: "sg_negative_voltage_ground"
     address: 5145 # reg 5146
     input_type: input
     data_type: int16
@@ -1156,6 +1222,7 @@ sensors:
 
   - name: Bus voltage
     unique_id: bus_voltage
+    translation_key: "sg_bus_voltage"
     address: 5146 # reg 5147
     input_type: input
     data_type: uint16
@@ -1167,6 +1234,7 @@ sensors:
 
   - name: Grid frequency (high precision)
     unique_id: grid_frequency_hp
+    translation_key: "sg_grid_frequency_hp"
     address: 5147 # reg 5148
     input_type: input
     data_type: uint16
@@ -1179,6 +1247,7 @@ sensors:
 
   - name: PID work state
     unique_id: pid_work_state
+    translation_key: "sg_pid_work_state"
     address: 5149 # reg 5150
     input_type: input
     data_type: uint16
@@ -1190,6 +1259,7 @@ sensors:
 
   - name: PID alarm code
     unique_id: pid_alarm_code
+    translation_key: "sg_pid_alarm_code"
     address: 5150 # reg 5151
     input_type: input
     data_type: uint16
@@ -1204,6 +1274,7 @@ sensors:
   # int16 at reg 5216/5218 (Issue #63); previous int32 @ 5217-5218 / 5219-5220 was incorrect.
   - name: Export power raw
     unique_id: export_power_raw
+    translation_key: "sg_export_power_raw"
     address: 5215 # reg 5216
     input_type: input
     data_type: int16
@@ -1215,6 +1286,7 @@ sensors:
 
   - name: Meter Power raw
     unique_id: meter_power_raw
+    translation_key: "sg_meter_power_raw"
     address: 5217 # reg 5218
     input_type: input
     data_type: int16
@@ -1227,6 +1299,7 @@ sensors:
   # String Current sensors (7013-7044) - Important for diagnostics
   - name: String 1 current
     unique_id: string_1_current
+    translation_key: "sg_string_1_current"
     address: 7012 # reg 7013
     input_type: input
     data_type: uint16
@@ -1241,6 +1314,7 @@ sensors:
 
   - name: String 2 current
     unique_id: string_2_current
+    translation_key: "sg_string_2_current"
     address: 7013 # reg 7014
     input_type: input
     data_type: uint16
@@ -1255,6 +1329,7 @@ sensors:
 
   - name: String 3 current
     unique_id: string_3_current
+    translation_key: "sg_string_3_current"
     address: 7014 # reg 7015
     input_type: input
     data_type: uint16
@@ -1269,6 +1344,7 @@ sensors:
 
   - name: String 4 current
     unique_id: string_4_current
+    translation_key: "sg_string_4_current"
     address: 7015 # reg 7016
     input_type: input
     data_type: uint16
@@ -1283,6 +1359,7 @@ sensors:
 
   - name: String 5 current
     unique_id: string_5_current
+    translation_key: "sg_string_5_current"
     address: 7016 # reg 7017
     input_type: input
     data_type: uint16
@@ -1297,6 +1374,7 @@ sensors:
 
   - name: String 6 current
     unique_id: string_6_current
+    translation_key: "sg_string_6_current"
     address: 7017 # reg 7018
     input_type: input
     data_type: uint16
@@ -1311,6 +1389,7 @@ sensors:
 
   - name: String 7 current
     unique_id: string_7_current
+    translation_key: "sg_string_7_current"
     address: 7018 # reg 7019
     input_type: input
     data_type: uint16
@@ -1325,6 +1404,7 @@ sensors:
 
   - name: String 8 current
     unique_id: string_8_current
+    translation_key: "sg_string_8_current"
     condition: "string_count >= 8"
     address: 7019 # reg 7020
     input_type: input
@@ -1399,6 +1479,7 @@ controls:
   - type: "select"
     name: "Start/Stop Control"
     unique_id: "start_stop_control"
+    translation_key: "sg_start_stop_control"
     address: 5005 # reg 5006
     input_type: "holding"
     data_type: "uint16"
@@ -1411,6 +1492,7 @@ controls:
   - type: "select"
     name: "Power Limitation Switch"
     unique_id: "power_limitation_switch"
+    translation_key: "sg_power_limitation_switch"
     address: 5006 # reg 5007
     input_type: "holding"
     data_type: "uint16"
@@ -1423,6 +1505,7 @@ controls:
   - type: "number"
     name: "Power Limitation Setting"
     unique_id: "power_limitation_setting"
+    translation_key: "sg_power_limitation_setting"
     address: 5007 # reg 5008
     input_type: "holding"
     data_type: "uint16"
@@ -1438,6 +1521,7 @@ controls:
   - type: "select"
     name: "Export Power Limitation"
     unique_id: "export_power_limitation"
+    translation_key: "sg_export_power_limitation"
     address: 5009 # reg 5010
     input_type: "holding"
     data_type: "uint16"
@@ -1451,6 +1535,7 @@ controls:
   - type: "number"
     name: "Export Power Limitation Value"
     unique_id: "export_power_limitation_value"
+    translation_key: "sg_export_power_limitation_value"
     address: 5010 # reg 5011
     input_type: "holding"
     data_type: "uint16"
@@ -1467,6 +1552,7 @@ controls:
   - type: "number"
     name: "Current Transformer Output Current"
     unique_id: "ct_output_current"
+    translation_key: "sg_ct_output_current"
     address: 5011 # reg 5012
     input_type: "holding"
     data_type: "uint16"
@@ -1482,6 +1568,7 @@ controls:
   - type: "number"
     name: "Current Transformer Range"
     unique_id: "ct_range"
+    translation_key: "sg_ct_range"
     address: 5012 # reg 5013
     input_type: "holding"
     data_type: "uint16"
@@ -1498,6 +1585,7 @@ controls:
   - type: "select"
     name: "Current Transformer Type"
     unique_id: "ct_type"
+    translation_key: "sg_ct_type"
     address: 5013 # reg 5014
     input_type: "holding"
     data_type: "uint16"
@@ -1511,6 +1599,7 @@ controls:
   - type: "number"
     name: "Export Power Limitation Percentage"
     unique_id: "export_power_limitation_percentage"
+    translation_key: "sg_export_power_limitation_percentage"
     address: 5014 # reg 5015
     input_type: "holding"
     data_type: "uint16"
@@ -1541,6 +1630,7 @@ controls:
   - type: "number"
     name: "Power Factor Setting"
     unique_id: "power_factor_setting"
+    translation_key: "sg_power_factor_setting"
     address: 5018 # reg 5019
     input_type: "holding"
     data_type: "int16"
@@ -1584,6 +1674,7 @@ controls:
   - type: "select"
     name: "Night SVG Switch"
     unique_id: "night_svg_switch"
+    translation_key: "sg_night_svg_switch"
     address: 5034 # reg 5035
     input_type: "holding"
     data_type: "uint16"
@@ -1598,6 +1689,7 @@ controls:
   - type: "select"
     name: "Reactive power adjustment mode"
     unique_id: "reactive_power_adjustment_mode"
+    translation_key: "sg_reactive_power_adjustment_mode"
     address: 5035 # reg 5036
     input_type: "holding"
     data_type: "uint16"
@@ -1614,6 +1706,7 @@ controls:
   - type: "number"
     name: "Reactive power percentage setting"
     unique_id: "reactive_power_percentage_setting"
+    translation_key: "sg_reactive_power_percentage_setting"
     address: 5036 # reg 5037
     input_type: "holding"
     data_type: "int16"
@@ -1626,6 +1719,7 @@ controls:
   - type: "number"
     name: "Power limitation adjustment"
     unique_id: "power_limitation_adjustment"
+    translation_key: "sg_power_limitation_adjustment"
     address: 5038 # reg 5039
     input_type: "holding"
     data_type: "uint16"
@@ -1637,6 +1731,7 @@ controls:
   - type: "number"
     name: "Reactive power adjustment"
     unique_id: "reactive_power_adjustment"
+    translation_key: "sg_reactive_power_adjustment"
     address: 5039 # reg 5040
     input_type: "holding"
     data_type: "int16"
@@ -1649,6 +1744,7 @@ controls:
   - type: "select"
     name: "PID Recovery"
     unique_id: "pid_recovery"
+    translation_key: "sg_pid_recovery"
     address: 5040 # reg 5041
     input_type: "holding"
     data_type: "uint16"
@@ -1663,6 +1759,7 @@ controls:
   - type: "select"
     name: "Anti-PID"
     unique_id: "anti_pid"
+    translation_key: "sg_anti_pid"
     address: 5041 # reg 5042
     input_type: "holding"
     data_type: "uint16"
@@ -1677,6 +1774,7 @@ controls:
   - type: "select"
     name: "Full-Day PID Suppression"
     unique_id: "full_day_pid_suppression"
+    translation_key: "sg_full_day_pid_suppression"
     address: 5042 # reg 5043
     input_type: "holding"
     data_type: "uint16"
@@ -1692,6 +1790,7 @@ controls:
   - type: "select"
     name: "Quick grid dispatch mode"
     unique_id: "quick_grid_dispatch_mode"
+    translation_key: "sg_quick_grid_dispatch_mode"
     address: 32568 # reg 32569
     input_type: "holding"
     data_type: "uint16"
@@ -1706,6 +1805,7 @@ controls:
   - type: "select"
     name: "Swift grid dispatch mode"
     unique_id: "swift_grid_dispatch_mode"
+    translation_key: "sg_swift_grid_dispatch_mode"
     address: 32569 # reg 32570
     input_type: "holding"
     data_type: "uint16"
@@ -1722,6 +1822,7 @@ calculated:
   # Protocol Version (formatted) - from protocol_version_raw
   - name: "Protocol Version"
     unique_id: "protocol_version"
+    translation_key: "sg_protocol_version"
     type: "sensor"
     availability: "{{ not is_state('[[mm:sensor:{PREFIX}_protocol_version_raw]]', 'unavailable') }}"
     state: >-
@@ -1745,6 +1846,7 @@ calculated:
   # MPPT Power Calculations
   - name: "MPPT1 Power"
     unique_id: "mppt1_power"
+    translation_key: "sg_mppt1_power"
     type: "sensor"
     availability: >-
       {{
@@ -1759,6 +1861,7 @@ calculated:
 
   - name: "MPPT2 Power"
     unique_id: "mppt2_power"
+    translation_key: "sg_mppt2_power"
     type: "sensor"
     condition: "mppt_count >= 2"
     availability: >-
@@ -1774,6 +1877,7 @@ calculated:
 
   - name: "MPPT3 Power"
     unique_id: "mppt3_power"
+    translation_key: "sg_mppt3_power"
     type: "sensor"
     condition: "mppt_count >= 3"
     availability: >-
@@ -1790,6 +1894,7 @@ calculated:
   # Extended MPPT Power calculations (4-12)
   - name: "MPPT4 Power"
     unique_id: "mppt4_power"
+    translation_key: "sg_mppt4_power"
     type: "sensor"
     condition: "mppt_count >= 4"
     availability: >-
@@ -1805,6 +1910,7 @@ calculated:
 
   - name: "MPPT5 Power"
     unique_id: "mppt5_power"
+    translation_key: "sg_mppt5_power"
     type: "sensor"
     condition: "mppt_count >= 5"
     availability: >-
@@ -1820,6 +1926,7 @@ calculated:
 
   - name: "MPPT6 Power"
     unique_id: "mppt6_power"
+    translation_key: "sg_mppt6_power"
     type: "sensor"
     condition: "mppt_count >= 6"
     availability: >-
@@ -1835,6 +1942,7 @@ calculated:
 
   - name: "Total MPPT Power"
     unique_id: "total_mppt_power"
+    translation_key: "sg_total_mppt_power"
     type: "sensor"
     availability: >-
       {{
@@ -1911,6 +2019,7 @@ calculated:
   # RS series: documented load power (reg 5091-5092) is unavailable; mirror meter_power_raw (reg 5218)
   - name: "Load Power"
     unique_id: "load_power"
+    translation_key: "sg_load_power"
     type: "sensor"
     condition: "selected_model in [SG3.0RS, SG3.6RS, SG4.0RS, SG5.0RS, SG6.0RS, SG8.0RS, SG10RS]"
     availability: "{{ not is_state('[[mm:sensor:{PREFIX}_meter_power_raw]]', 'unavailable') }}"
@@ -1922,6 +2031,7 @@ calculated:
 
   - name: "Import Power"
     unique_id: "import_power"
+    translation_key: "sg_import_power"
     type: "sensor"
     availability: "{{ not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable') }}"
     state: >-
@@ -1940,6 +2050,7 @@ calculated:
 
   - name: "Export Power"
     unique_id: "export_power"
+    translation_key: "sg_export_power"
     type: "sensor"
     availability: "{{states('[[mm:sensor:{PREFIX}_export_power_raw]]')|is_number }}"
     state: >-
@@ -1964,6 +2075,7 @@ calculated:
 
   - name: "Grid power signed"
     unique_id: "grid_power_signed"
+    translation_key: "sg_grid_power_signed"
     type: "sensor"
     availability: "{{ states('[[mm:sensor:{PREFIX}_export_power_raw]]') not in ['unknown','unavailable'] }}"
     state: "{{ states('[[mm:sensor:{PREFIX}_export_power_raw]]')|int * -1 }}"
@@ -1978,6 +2090,7 @@ calculated:
 
   - name: "Total Load Power"
     unique_id: "total_load_power"
+    translation_key: "sg_total_load_power"
     type: "sensor"
     availability: >-
       {{ not is_state('[[mm:sensor:{PREFIX}_load_power]]', 'unavailable') }}
@@ -1990,6 +2103,7 @@ calculated:
   # System Efficiency Calculations
   - name: "Solar to Grid Efficiency"
     unique_id: "solar_to_grid_efficiency"
+    translation_key: "sg_solar_to_grid_efficiency"
     type: "sensor"
     availability: >-
       {{
@@ -2014,6 +2128,7 @@ calculated:
 
   - name: "Battery to Load Efficiency"
     unique_id: "battery_to_load_efficiency"
+    translation_key: "sg_battery_to_load_efficiency"
     type: "sensor"
     availability: >-
       {{
@@ -2029,6 +2144,7 @@ calculated:
   # Power Balance Calculations
   - name: "Power Balance"
     unique_id: "power_balance"
+    translation_key: "sg_power_balance"
     type: "sensor"
     availability: >-
       {{
@@ -2056,6 +2172,7 @@ calculated:
   # Individual Phase Power Calculations
   - name: "Phase A Power"
     unique_id: "phase_a_power"
+    translation_key: "sg_phase_a_power"
     mm_group: "PV_phase_power"
     type: "sensor"
     availability: >-
@@ -2071,6 +2188,7 @@ calculated:
 
   - name: "Phase B Power"
     unique_id: "phase_b_power"
+    translation_key: "sg_phase_b_power"
     mm_group: "PV_phase_power"
     type: "sensor"
     condition: "phases >= 2"
@@ -2087,6 +2205,7 @@ calculated:
 
   - name: "Phase C Power"
     unique_id: "phase_c_power"
+    translation_key: "sg_phase_c_power"
     mm_group: "PV_phase_power"
     type: "sensor"
     condition: "phases >= 2"
@@ -2104,6 +2223,7 @@ calculated:
   # calculated sensor in case the meter is not available (grid is off) and returns 0x7FFFFF
   - name: "Meter Active Power"
     unique_id: "meter_active_power"
+    translation_key: "sg_meter_active_power"
     type: "sensor"
     availability: >-
       {{
@@ -2129,6 +2249,7 @@ calculated:
   # Energy Consumption Calculations
   - name: "Daily consumed energy"
     unique_id: "daily_consumed_energy"
+    translation_key: "sg_daily_consumed_energy"
     type: "sensor"
     availability: >-
       {{
@@ -2151,6 +2272,7 @@ calculated:
 
   - name: "Total consumed energy"
     unique_id: "total_consumed_energy"
+    translation_key: "sg_total_consumed_energy"
     type: "sensor"
     availability: >-
       {{
@@ -2174,6 +2296,7 @@ calculated:
   ## some additional calculated sensors ideas
   - name: "Inverter Status Display"
     unique_id: "inverter_status_display"
+    translation_key: "sg_inverter_status_display"
     type: "sensor"
     availability: >-
       {{
@@ -2210,6 +2333,7 @@ calculated:
 
   - name: "Grid Status"
     unique_id: "grid_status"
+    translation_key: "sg_grid_status"
     type: "sensor"
     availability: >-
       {{
@@ -2242,6 +2366,7 @@ calculated:
   # Additional MPPT Power Calculations (MPPT 7-16)
   - name: "MPPT7 Power"
     unique_id: "mppt7_power"
+    translation_key: "sg_mppt7_power"
     type: "sensor"
     condition: "mppt_count >= 7"
     availability: >-
@@ -2257,6 +2382,7 @@ calculated:
 
   - name: "MPPT8 Power"
     unique_id: "mppt8_power"
+    translation_key: "sg_mppt8_power"
     type: "sensor"
     condition: "mppt_count >= 8"
     availability: >-
@@ -2272,6 +2398,7 @@ calculated:
 
   - name: "MPPT9 Power"
     unique_id: "mppt9_power"
+    translation_key: "sg_mppt9_power"
     type: "sensor"
     condition: "mppt_count >= 9"
     availability: >-
@@ -2287,6 +2414,7 @@ calculated:
 
   - name: "MPPT10 Power"
     unique_id: "mppt10_power"
+    translation_key: "sg_mppt10_power"
     type: "sensor"
     condition: "mppt_count >= 10"
     availability: >-
@@ -2302,6 +2430,7 @@ calculated:
 
   - name: "MPPT11 Power"
     unique_id: "mppt11_power"
+    translation_key: "sg_mppt11_power"
     type: "sensor"
     condition: "mppt_count >= 11"
     availability: >-
@@ -2317,6 +2446,7 @@ calculated:
 
   - name: "MPPT12 Power"
     unique_id: "mppt12_power"
+    translation_key: "sg_mppt12_power"
     type: "sensor"
     condition: "mppt_count >= 12"
     availability: >-
@@ -2335,6 +2465,7 @@ binary_sensors:
   # Binary Sensors for Status Monitoring
   - name: "PV generating"
     unique_id: "pv_generating"
+    translation_key: "sg_pv_generating"
     type: "binary_sensor"
     availability: >-
       {{
@@ -2361,6 +2492,7 @@ binary_sensors:
 
   - name: "PV generating (delay)"
     unique_id: "pv_generating_delay"
+    translation_key: "sg_pv_generating_delay"
     type: "binary_sensor"
     availability: "{{ not is_state('[[mm:binary_sensor:{PREFIX}_pv_generating]]', 'unavailable') }}"
     delay_on:
@@ -2371,6 +2503,7 @@ binary_sensors:
 
   - name: "Exporting power"
     unique_id: "exporting_power"
+    translation_key: "sg_exporting_power"
     type: "binary_sensor"
     availability: >-
       {{
@@ -2397,6 +2530,7 @@ binary_sensors:
 
   - name: "Exporting power (delay)"
     unique_id: "exporting_power_delay"
+    translation_key: "sg_exporting_power_delay"
     type: "binary_sensor"
     availability: "{{ not is_state('[[mm:binary_sensor:{PREFIX}_exporting_power]]', 'unavailable') }}"
     delay_on:
@@ -2407,6 +2541,7 @@ binary_sensors:
 
   - name: "Importing power"
     unique_id: "importing_power"
+    translation_key: "sg_importing_power"
     type: "binary_sensor"
     availability: >-
       {{
@@ -2433,6 +2568,7 @@ binary_sensors:
 
   - name: "Importing power (delay)"
     unique_id: "importing_power_delay"
+    translation_key: "sg_importing_power_delay"
     type: "binary_sensor"
     availability: "{{ not is_state('[[mm:binary_sensor:{PREFIX}_importing_power]]', 'unavailable') }}"
     delay_on:
@@ -2443,6 +2579,7 @@ binary_sensors:
 
   - name: "Positive load power"
     unique_id: "positive_load_power"
+    translation_key: "sg_positive_load_power"
     type: "binary_sensor"
     availability: >-
       {{
@@ -2468,6 +2605,7 @@ binary_sensors:
 
   - name: "Negative load power"
     unique_id: "negative_load_power"
+    translation_key: "sg_negative_load_power"
     type: "binary_sensor"
     availability: >-
       {{
