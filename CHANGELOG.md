@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### ✨ Added
 
 - **[#109](https://github.com/TCzerny/ha-modbus-manager/issues/109) — config-flow option labels**: `dynamic_config` field names (including Pichler preheater / coil type) and dropdown texts follow the HA UI language. Stored option keys and `unique_id` are unchanged. Select/map **entity** states are still English.
+- **Setup — category step copy**: Manual “choose a template” no longer talks about a failed probe or a previous address. Same step still follows detect-miss.
 
 ## [1.3.5] - 2026-10-23
 
