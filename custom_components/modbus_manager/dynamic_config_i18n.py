@@ -46,6 +46,10 @@ _DE_BY_VALUE: dict[str, dict[str, str]] = {
         "EU": "Europa (Modi 160–163)",
         "AU": "Australien (Modi 164–167)",
     },
+    "battery_registers": {
+        "recommended": "Register 5214–5215 (S32) und 5631 — Protokoll V1.1.x, empfohlen",
+        "legacy": "Register 13021/13022 — ältere Firmware ohne 5214–5215 (z. B. Protokoll V1.0.7)",
+    },
     "protocol_version": {
         "1.0.0": "V1.0.0 — erste Karte",
         "1.0.1": "V1.0.1 — Zählerkanal 2, App-Softwareversion, Wirkleistungsgrenze; Einspeiseverhältnis S32",

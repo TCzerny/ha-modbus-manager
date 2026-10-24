@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### 🐛 Fixed
+
+- **Sungrow SHx — battery power on older firmware**: Inverters with protocol V1.0.x (seen on an SH20T with protocol V1.0.7) do not answer the recommended registers 5214–5215 / 5631, so `battery_power` stayed unknown and battery charging/discharging and the signed/energy battery sensors stayed at 0/off. New option **Battery registers** (`battery_registers`): **legacy** reads battery current from 13021 and the unsigned battery power from 13022 and calculates `battery_power` with the usual sign (negative = charging) from `running_state` bits 1/2, else from the current. Default **recommended** keeps 5214–5215 / 5631; existing setups are unchanged. Template v1.2.25. `unique_id` unchanged.
+
 ## [1.3.7] - 2026-10-23
 
 ### ✨ Added
