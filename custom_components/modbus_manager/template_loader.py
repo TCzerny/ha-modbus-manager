@@ -89,6 +89,36 @@ BASE_TEMPLATE_DIR = os.path.join(TEMPLATE_DIR, "base_templates")
 MAPPING_DIR = os.path.join(TEMPLATE_DIR, "manufacturer_mappings")
 
 
+def _list_yaml_files(directory: str) -> List[str]:
+    """Return YAML file paths in ``directory`` (blocking; call from executor)."""
+    try:
+        names = os.listdir(directory)
+    except OSError:
+        return []
+    paths: List[str] = []
+    for filename in names:
+        if not filename.endswith((".yaml", ".yml")):
+            continue
+        path = os.path.join(directory, filename)
+        if os.path.isdir(path):
+            continue
+        paths.append(path)
+    return paths
+
+
+def _ensure_directory(path: str) -> bool:
+    """Create ``path`` if missing. Return True if it already existed."""
+    if os.path.exists(path):
+        return True
+    os.makedirs(path)
+    return False
+
+
+def _yaml_paths_cache_valid(paths: List[str]) -> bool:
+    """True when every path still matches the stored mtime (blocking)."""
+    return all(_is_cache_valid(path) for path in paths)
+
+
 def _register_template_name_stem(template_name: str, template_path: str) -> None:
     """Cache mapping from template YAML name to file stem."""
     if not template_name or not template_path:
@@ -213,7 +243,8 @@ async def get_custom_template_dir() -> Optional[str]:
     try:
         config_dir = _hass_instance.config.config_dir
         custom_dir = os.path.join(config_dir, "modbus_manager", "templates")
-        if os.path.exists(custom_dir):
+        loop = asyncio.get_running_loop()
+        if await loop.run_in_executor(None, os.path.exists, custom_dir):
             return custom_dir
         return None
     except Exception as e:
@@ -228,28 +259,19 @@ async def load_templates_from_dir(
     templates = []
     try:
         loop = asyncio.get_running_loop()
-        filenames = await loop.run_in_executor(None, os.listdir, template_dir)
+        yaml_paths = await loop.run_in_executor(None, _list_yaml_files, template_dir)
 
-        for filename in filenames:
-            if filename.endswith((".yaml", ".yml")):
-                # Skip directories
-                if os.path.isdir(os.path.join(template_dir, filename)):
-                    continue
-
-                template_path = os.path.join(template_dir, filename)
-                template_data = await load_single_template(
-                    template_path, base_templates
+        for template_path in yaml_paths:
+            template_data = await load_single_template(template_path, base_templates)
+            if template_data:
+                template_data["_is_custom"] = True
+                template_data["_custom_path"] = template_path
+                templates.append(template_data)
+                _LOGGER.debug(
+                    "Loaded template from %s: %s",
+                    template_dir,
+                    template_data.get("name"),
                 )
-                if template_data:
-                    # Mark as custom template
-                    template_data["_is_custom"] = True
-                    template_data["_custom_path"] = template_path
-                    templates.append(template_data)
-                    _LOGGER.debug(
-                        "Loaded template from %s: %s",
-                        template_dir,
-                        template_data.get("name"),
-                    )
 
     except Exception as e:
         _LOGGER.error("Error loading templates from %s: %s", template_dir, str(e))
@@ -273,47 +295,40 @@ async def load_templates() -> List[Dict[str, Any]]:
         templates_dict: Dict[str, Dict[str, Any]] = {}
 
         # 1. Load built-in templates first (PRIORITY 1)
-        if not os.path.exists(TEMPLATE_DIR):
+        loop = asyncio.get_running_loop()
+        if not await loop.run_in_executor(None, os.path.exists, TEMPLATE_DIR):
             _LOGGER.error("Template directory %s does not exist", TEMPLATE_DIR)
         else:
-            loop = asyncio.get_running_loop()
-            filenames = await loop.run_in_executor(None, os.listdir, TEMPLATE_DIR)
+            yaml_paths = await loop.run_in_executor(
+                None, _list_yaml_files, TEMPLATE_DIR
+            )
 
-            for filename in filenames:
-                if filename.endswith((".yaml", ".yml")):
-                    # Skip directories
-                    if os.path.isdir(os.path.join(TEMPLATE_DIR, filename)):
-                        continue
-
-                    template_path = os.path.join(TEMPLATE_DIR, filename)
-                    template_data = await load_single_template(
-                        template_path, base_templates
-                    )
-                    if template_data:
-                        template_name = template_data.get("name")
-                        if template_name:
-                            templates_dict[template_name] = template_data
-                            _LOGGER.debug("Loaded built-in template: %s", template_name)
-
-            # Load manufacturer mappings
-            if os.path.exists(MAPPING_DIR):
-                mapping_files = await loop.run_in_executor(
-                    None, os.listdir, MAPPING_DIR
+            for template_path in yaml_paths:
+                template_data = await load_single_template(
+                    template_path, base_templates
                 )
-                for filename in mapping_files:
-                    if filename.endswith((".yaml", ".yml")):
-                        mapping_path = os.path.join(MAPPING_DIR, filename)
-                        mapping_data = await load_mapping_template(
-                            mapping_path, base_templates
-                        )
-                        if mapping_data:
-                            template_name = mapping_data.get("name")
-                            if template_name:
-                                templates_dict[template_name] = mapping_data
-                                _LOGGER.debug(
-                                    "Loaded built-in mapping template: %s",
-                                    template_name,
-                                )
+                if template_data:
+                    template_name = template_data.get("name")
+                    if template_name:
+                        templates_dict[template_name] = template_data
+                        _LOGGER.debug("Loaded built-in template: %s", template_name)
+
+            if await loop.run_in_executor(None, os.path.exists, MAPPING_DIR):
+                mapping_paths = await loop.run_in_executor(
+                    None, _list_yaml_files, MAPPING_DIR
+                )
+                for mapping_path in mapping_paths:
+                    mapping_data = await load_mapping_template(
+                        mapping_path, base_templates
+                    )
+                    if mapping_data:
+                        template_name = mapping_data.get("name")
+                        if template_name:
+                            templates_dict[template_name] = mapping_data
+                            _LOGGER.debug(
+                                "Loaded built-in mapping template: %s",
+                                template_name,
+                            )
 
         # 2. Load custom templates (PRIORITY 2 - can override built-in)
         custom_dir = await get_custom_template_dir()
@@ -352,51 +367,36 @@ async def load_base_templates() -> Dict[str, Dict[str, Any]]:
     global _base_template_cache
 
     try:
-        # Check if cache is valid by checking all base template files
-        if _base_template_cache is not None:
-            cache_valid = True
-            if os.path.exists(BASE_TEMPLATE_DIR):
-                loop = asyncio.get_running_loop()
-                filenames = await loop.run_in_executor(
-                    None, os.listdir, BASE_TEMPLATE_DIR
-                )
-                for filename in filenames:
-                    if filename.endswith((".yaml", ".yml")):
-                        template_path = os.path.join(BASE_TEMPLATE_DIR, filename)
-                        if not _is_cache_valid(template_path):
-                            cache_valid = False
-                            break
-
-            if cache_valid:
-                _LOGGER.debug("Using cached base templates")
-                return _base_template_cache
-
-        # Create base templates directory if it doesn't exist
-        if not os.path.exists(BASE_TEMPLATE_DIR):
-            os.makedirs(BASE_TEMPLATE_DIR)
+        loop = asyncio.get_running_loop()
+        existed = await loop.run_in_executor(None, _ensure_directory, BASE_TEMPLATE_DIR)
+        if not existed:
             _LOGGER.debug("BASE template directory %s created", BASE_TEMPLATE_DIR)
             _base_template_cache = {}
             return _base_template_cache
 
-        # List files in thread-safe way
-        loop = asyncio.get_running_loop()
-        filenames = await loop.run_in_executor(None, os.listdir, BASE_TEMPLATE_DIR)
+        yaml_paths = await loop.run_in_executor(
+            None, _list_yaml_files, BASE_TEMPLATE_DIR
+        )
+
+        if _base_template_cache is not None:
+            cache_valid = await loop.run_in_executor(
+                None, _yaml_paths_cache_valid, yaml_paths
+            )
+            if cache_valid:
+                _LOGGER.debug("Using cached base templates")
+                return _base_template_cache
 
         base_templates = {}
-        for filename in filenames:
-            if filename.endswith((".yaml", ".yml")):
-                template_path = os.path.join(BASE_TEMPLATE_DIR, filename)
-                template_data = await load_single_template(template_path, {})
-                if template_data:
-                    base_name = template_data.get("name")
-                    if base_name:
-                        base_templates[base_name] = template_data
-                        # Track file modification time for cache invalidation
-                        _cache_file_mtimes[template_path] = _get_file_mtime(
-                            template_path
-                        )
+        for template_path in yaml_paths:
+            template_data = await load_single_template(template_path, {})
+            if template_data:
+                base_name = template_data.get("name")
+                if base_name:
+                    base_templates[base_name] = template_data
+                    _cache_file_mtimes[template_path] = await loop.run_in_executor(
+                        None, _get_file_mtime, template_path
+                    )
 
-        # Cache the result
         _base_template_cache = base_templates
         _LOGGER.debug("Loaded and cached %d base templates", len(base_templates))
         return base_templates
@@ -484,14 +484,13 @@ async def load_single_template(
 ) -> Optional[Dict[str, Any]]:
     """Load a single template file asynchronously with caching."""
     try:
-        # Check cache first
         cache_key = template_path
-        if cache_key in _template_cache and _is_cache_valid(template_path):
-            _LOGGER.debug("Using cached template: %s", template_path)
-            return _template_cache[cache_key]
-
-        # Read file in thread-safe way
         loop = asyncio.get_running_loop()
+        if cache_key in _template_cache:
+            if await loop.run_in_executor(None, _is_cache_valid, template_path):
+                _LOGGER.debug("Using cached template: %s", template_path)
+                return _template_cache[cache_key]
+
         data = await loop.run_in_executor(None, _read_template_file, template_path)
 
         if not data:
@@ -734,7 +733,9 @@ async def load_single_template(
         # Cache the result
         cache_key = template_path
         _template_cache[cache_key] = result
-        _cache_file_mtimes[template_path] = _get_file_mtime(template_path)
+        _cache_file_mtimes[template_path] = await loop.run_in_executor(
+            None, _get_file_mtime, template_path
+        )
         # Cache template name to path mapping
         if template_name:
             _template_name_to_path[template_name] = template_path
@@ -1669,52 +1670,42 @@ async def get_template_by_name(template_name: str) -> Optional[Dict[str, Any]]:
                     return template_data
 
         # 2. Check cache first - if we know the path, load directly
+        loop = asyncio.get_running_loop()
         if template_name in _template_name_to_path:
             cached_path = _template_name_to_path[template_name]
-            if _is_cache_valid(cached_path) and cached_path in _template_cache:
+            if cached_path in _template_cache and await loop.run_in_executor(
+                None, _is_cache_valid, cached_path
+            ):
                 _LOGGER.debug("Using cached template: %s", template_name)
                 return _template_cache[cached_path]
-            # Path exists but cache invalid, load from that path
             template_data = await load_single_template(cached_path, base_templates)
             if template_data and template_data.get("name") == template_name:
                 return template_data
 
-        # 3. Check built-in templates (only if not in cache)
-        if os.path.exists(TEMPLATE_DIR):
-            loop = asyncio.get_running_loop()
-            filenames = await loop.run_in_executor(None, os.listdir, TEMPLATE_DIR)
+        if await loop.run_in_executor(None, os.path.exists, TEMPLATE_DIR):
+            yaml_paths = await loop.run_in_executor(
+                None, _list_yaml_files, TEMPLATE_DIR
+            )
 
-            for filename in filenames:
-                if filename.endswith((".yaml", ".yml")):
-                    # Skip directories
-                    if os.path.isdir(os.path.join(TEMPLATE_DIR, filename)):
-                        continue
-
-                    template_path = os.path.join(TEMPLATE_DIR, filename)
-                    template_data = await load_single_template(
-                        template_path, base_templates
+            for template_path in yaml_paths:
+                template_data = await load_single_template(
+                    template_path, base_templates
+                )
+                if template_data and template_data.get("name") == template_name:
+                    _LOGGER.debug(
+                        "Loaded specific built-in template: %s", template_name
                     )
-                    if template_data and template_data.get("name") == template_name:
-                        _LOGGER.debug(
-                            "Loaded specific built-in template: %s", template_name
-                        )
-                        return template_data
+                    return template_data
 
-        # 4. Check manufacturer mappings if not found in device templates
-        if os.path.exists(MAPPING_DIR):
-            loop = asyncio.get_running_loop()
-            mapping_files = await loop.run_in_executor(None, os.listdir, MAPPING_DIR)
-            for filename in mapping_files:
-                if filename.endswith((".yaml", ".yml")):
-                    mapping_path = os.path.join(MAPPING_DIR, filename)
-                    mapping_data = await load_mapping_template(
-                        mapping_path, base_templates
-                    )
-                    if mapping_data and mapping_data.get("name") == template_name:
-                        _LOGGER.debug(
-                            "Loaded specific mapping template: %s", template_name
-                        )
-                        return mapping_data
+        if await loop.run_in_executor(None, os.path.exists, MAPPING_DIR):
+            mapping_paths = await loop.run_in_executor(
+                None, _list_yaml_files, MAPPING_DIR
+            )
+            for mapping_path in mapping_paths:
+                mapping_data = await load_mapping_template(mapping_path, base_templates)
+                if mapping_data and mapping_data.get("name") == template_name:
+                    _LOGGER.debug("Loaded specific mapping template: %s", template_name)
+                    return mapping_data
 
         _LOGGER.warning("Template %s not found", template_name)
         return None
