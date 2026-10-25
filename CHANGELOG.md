@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.8] - 2026-10-25
+
+### 🐛 Fixed
+
+- **Template load on the event loop**: `load_base_templates` and the other async template loaders no longer call `os.path.exists` / `os.makedirs` / `os.path.isdir` / `os.path.getmtime` on the Home Assistant loop. Directory checks, creation, listings, and mtime cache use the executor (HACS default review).
+
 ## [1.3.7] - 2026-10-23
 
 ### ✨ Added
