@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Added
+
+- **Sungrow SHx — meter phase U/I on the SH5.0–10RT family ([Discussion #133](https://github.com/TCzerny/ha-modbus-manager/discussions/133))**: Undocumented meter phase voltage/current (5740–5745) for **SH5.0RT–SH10RT** including **-20**, **V112**, and **V122**, still gated to DTSU666 / DTSU666-20 and **LAN|RS485**. Live reads: SH10RT, SH10RT-20 ([#120](https://github.com/TCzerny/ha-modbus-manager/issues/120)), SH10RT-V112. Not T / RS / MG / RL. `unique_id` unchanged. Template v1.2.25.
+
 ## [1.3.8] - 2026-10-25
 
 ### 🐛 Fixed

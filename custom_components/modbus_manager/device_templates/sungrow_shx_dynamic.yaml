@@ -6,7 +6,7 @@ display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters: RS, RT, T, MG*RL, SH*RL. SH50–125CX not included yet."
 manufacturer: "Sungrow"
 model: "SH Series"
-version: 1.2.24
+version: 1.2.25
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -1096,8 +1096,9 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_group: fast
-    # Undocumented registers, reengineered by forum; tested: SH10RT + LAN, SH10RT-20 ([#120])
-    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT, SH10RT-20]"
+    # Undocumented registers, reengineered by forum; SH5.0–10RT family (incl. -20 / V112 / V122).
+    # Live: SH10RT + LAN, SH10RT-20 ([#120]), SH10RT-V112 ([#133]). Not T / RS / MG / RL.
+    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH5.0RT, SH6.0RT, SH8.0RT, SH10RT, SH5.0RT-20, SH6.0RT-20, SH8.0RT-20, SH10RT-20, SH5.0RT-V112, SH6.0RT-V112, SH8.0RT-V112, SH10RT-V112, SH5.0RT-V122, SH6.0RT-V122, SH8.0RT-V122, SH10RT-V122]"
 
   - name: Meter phase B voltage
     unique_id: meter_phase_b_voltage
@@ -1111,8 +1112,9 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_group: fast
-    # Undocumented registers, reengineered by forum; tested: SH10RT + LAN, SH10RT-20 ([#120])
-    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT, SH10RT-20]"
+    # Undocumented registers, reengineered by forum; SH5.0–10RT family (incl. -20 / V112 / V122).
+    # Live: SH10RT + LAN, SH10RT-20 ([#120]), SH10RT-V112 ([#133]). Not T / RS / MG / RL.
+    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH5.0RT, SH6.0RT, SH8.0RT, SH10RT, SH5.0RT-20, SH6.0RT-20, SH8.0RT-20, SH10RT-20, SH5.0RT-V112, SH6.0RT-V112, SH8.0RT-V112, SH10RT-V112, SH5.0RT-V122, SH6.0RT-V122, SH8.0RT-V122, SH10RT-V122]"
 
   - name: Meter phase C voltage
     unique_id: meter_phase_c_voltage
@@ -1126,8 +1128,9 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_group: fast
-    # Undocumented registers, reengineered by forum; tested: SH10RT + LAN, SH10RT-20 ([#120])
-    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT, SH10RT-20]"
+    # Undocumented registers, reengineered by forum; SH5.0–10RT family (incl. -20 / V112 / V122).
+    # Live: SH10RT + LAN, SH10RT-20 ([#120]), SH10RT-V112 ([#133]). Not T / RS / MG / RL.
+    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH5.0RT, SH6.0RT, SH8.0RT, SH10RT, SH5.0RT-20, SH6.0RT-20, SH8.0RT-20, SH10RT-20, SH5.0RT-V112, SH6.0RT-V112, SH8.0RT-V112, SH10RT-V112, SH5.0RT-V122, SH6.0RT-V122, SH8.0RT-V122, SH10RT-V122]"
 
   - name: Meter phase A current
     unique_id: meter_phase_a_current
@@ -1141,8 +1144,9 @@ sensors:
     state_class: measurement
     scale: 0.01
     scan_group: fast
-    # Undocumented registers, reengineered by forum; tested: SH10RT + LAN, SH10RT-20 ([#120])
-    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT, SH10RT-20]"
+    # Undocumented registers, reengineered by forum; SH5.0–10RT family (incl. -20 / V112 / V122).
+    # Live: SH10RT + LAN, SH10RT-20 ([#120]), SH10RT-V112 ([#133]). Not T / RS / MG / RL.
+    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH5.0RT, SH6.0RT, SH8.0RT, SH10RT, SH5.0RT-20, SH6.0RT-20, SH8.0RT-20, SH10RT-20, SH5.0RT-V112, SH6.0RT-V112, SH8.0RT-V112, SH10RT-V112, SH5.0RT-V122, SH6.0RT-V122, SH8.0RT-V122, SH10RT-V122]"
 
   - name: Meter phase B current
     unique_id: meter_phase_b_current
@@ -1156,8 +1160,9 @@ sensors:
     state_class: measurement
     scale: 0.01
     scan_group: fast
-    # Undocumented registers, reengineered by forum; tested: SH10RT + LAN, SH10RT-20 ([#120])
-    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT, SH10RT-20]"
+    # Undocumented registers, reengineered by forum; SH5.0–10RT family (incl. -20 / V112 / V122).
+    # Live: SH10RT + LAN, SH10RT-20 ([#120]), SH10RT-V112 ([#133]). Not T / RS / MG / RL.
+    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH5.0RT, SH6.0RT, SH8.0RT, SH10RT, SH5.0RT-20, SH6.0RT-20, SH8.0RT-20, SH10RT-20, SH5.0RT-V112, SH6.0RT-V112, SH8.0RT-V112, SH10RT-V112, SH5.0RT-V122, SH6.0RT-V122, SH8.0RT-V122, SH10RT-V122]"
 
   - name: Meter phase C current
     unique_id: meter_phase_c_current
@@ -1171,8 +1176,9 @@ sensors:
     state_class: measurement
     scale: 0.01
     scan_group: fast
-    # Undocumented registers, reengineered by forum; tested: SH10RT + LAN, SH10RT-20 ([#120])
-    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH10RT, SH10RT-20]"
+    # Undocumented registers, reengineered by forum; SH5.0–10RT family (incl. -20 / V112 / V122).
+    # Live: SH10RT + LAN, SH10RT-20 ([#120]), SH10RT-V112 ([#133]). Not T / RS / MG / RL.
+    condition: "meter_type in ['DTSU666', 'DTSU666-20'] and connection_type in ['LAN', 'RS485'] and selected_model in [SH5.0RT, SH6.0RT, SH8.0RT, SH10RT, SH5.0RT-20, SH6.0RT-20, SH8.0RT-20, SH10RT-20, SH5.0RT-V112, SH6.0RT-V112, SH8.0RT-V112, SH10RT-V112, SH5.0RT-V122, SH6.0RT-V122, SH8.0RT-V122, SH10RT-V122]"
 
   # following statistic sensors only work on some SH*RT inverters
   # (only LAN attached devices)
