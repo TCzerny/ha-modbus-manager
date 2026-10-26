@@ -106,14 +106,6 @@ def _list_yaml_files(directory: str) -> List[str]:
     return paths
 
 
-def _ensure_directory(path: str) -> bool:
-    """Create ``path`` if missing. Return True if it already existed."""
-    if os.path.exists(path):
-        return True
-    os.makedirs(path)
-    return False
-
-
 def _yaml_paths_cache_valid(paths: List[str]) -> bool:
     """True when every path still matches the stored mtime (blocking)."""
     return all(_is_cache_valid(path) for path in paths)
@@ -368,9 +360,9 @@ async def load_base_templates() -> Dict[str, Dict[str, Any]]:
 
     try:
         loop = asyncio.get_running_loop()
-        existed = await loop.run_in_executor(None, _ensure_directory, BASE_TEMPLATE_DIR)
-        if not existed:
-            _LOGGER.debug("BASE template directory %s created", BASE_TEMPLATE_DIR)
+        # base_templates/ is optional and not shipped. Missing means none.
+        # Do not create it under custom_components (HACS replaces that tree).
+        if not await loop.run_in_executor(None, os.path.isdir, BASE_TEMPLATE_DIR):
             _base_template_cache = {}
             return _base_template_cache
 
