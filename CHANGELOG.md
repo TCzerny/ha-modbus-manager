@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### 🐛 Fixed
+
+- **Sungrow SHx — battery power on protocol V1.0.x**: Inverters with protocol V1.0.x (seen on an SH20T with protocol V1.0.7) do not answer the recommended registers 5214–5215 / 5631, so `battery_power` stayed unknown and battery charging/discharging and the signed/energy battery sensors stayed at 0/off. New SHx option **Modbus protocol version** (`protocol_version`, like iHomeManager): **1.0** reads battery current from 13021 and the unsigned battery power from 13022 and calculates `battery_power` with the usual sign (negative = charging) from `running_state` bits 1/2, else from the current. **1.1** (default) keeps 5214–5215 / 5631; existing setups without a stored value are unchanged. Hub identify reads the protocol version (reg 4952–4953) and only pre-fills the dropdown for a new setup. The `protocol_version` field label is now generic. Template v1.2.26. `unique_id` unchanged.
+
 ## [1.3.9] - 2026-10-26
 
 ### ✨ Added

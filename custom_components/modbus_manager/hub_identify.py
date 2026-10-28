@@ -14,6 +14,7 @@ from typing import Any
 
 from homeassistant.core import HomeAssistant
 
+from .device_utils import find_applicable_version
 from .logger import ModbusManagerLogger
 from .modbus_client import TemporaryRegisterReader
 from .modbus_utils import decode_string_registers
@@ -55,6 +56,7 @@ class IdentifyHit:
     wallbox_model: str | None = None
     wallbox_prefix: str | None = None
     charger_enabled: bool | None = None
+    protocol_version: str | None = None
     extras: dict[str, Any] = field(default_factory=dict)
 
 
@@ -434,6 +436,44 @@ async def _fill_connection_path(
         hit.extras["connection_path_value"] = value
 
 
+def sungrow_protocol_version(raw: Any) -> str | None:
+    """Decode SHx reg 4952-4953 (0xMMmmppbb, one BCD byte each) to M.m.p."""
+    if not isinstance(raw, int) or isinstance(raw, bool):
+        return None
+    if raw <= 0 or raw >= 0xFFFFFFFF:
+        return None
+    parts = []
+    for shift in (24, 16, 8):
+        byte = (raw >> shift) & 0xFF
+        parts.append((byte >> 4) * 10 + (byte & 0x0F))
+    return ".".join(str(part) for part in parts)
+
+
+async def _fill_protocol_version(
+    cache: _ReadCache,
+    template_data: dict[str, Any],
+    hit: IdentifyHit,
+) -> None:
+    """Pre-fill the protocol_version dropdown; the user still confirms it."""
+    if _manufacturer(template_data) != "sungrow":
+        return
+    dynamic = template_data.get("dynamic_config") or {}
+    section = dynamic.get("protocol_version") if isinstance(dynamic, dict) else None
+    options = section.get("options") if isinstance(section, dict) else None
+    if not isinstance(options, dict) or not options:
+        return
+    entity = _entity_by_unique_id(template_data, "protocol_version_raw")
+    if entity is None:
+        return
+    detected = sungrow_protocol_version(await cache.read(hit.slave_id, entity))
+    if detected is None:
+        return
+    hit.extras["protocol_version_detected"] = detected
+    mapped = find_applicable_version(detected, [str(key) for key in options])
+    if mapped is not None:
+        hit.protocol_version = mapped
+
+
 async def _fill_battery_model(
     cache: _ReadCache,
     parent_data: dict[str, Any],
@@ -579,6 +619,7 @@ async def _step2_fill(
     if template_type not in INVERTER_TYPES:
         return
     await _fill_connection_path(reader, parent, hit)
+    await _fill_protocol_version(cache, parent, hit)
     await _fill_battery(cache, hit, parent, templates)
     await _fill_wallbox(cache, hit, parent, templates)
 
@@ -605,12 +646,13 @@ async def async_identify_hub(
         else:
             ev_charger = "none"
         _LOGGER.info(
-            "Identified %s (%s) slave=%s model=%s connection=%s battery=%s/%s ev_charger=%s",
+            "Identified %s (%s) slave=%s model=%s connection=%s protocol=%s battery=%s/%s ev_charger=%s",
             hit.display_name,
             hit.template_name,
             hit.slave_id,
             hit.selected_model,
             hit.connection_type,
+            hit.protocol_version,
             hit.battery_model or hit.battery_config,
             hit.battery_slave_id,
             ev_charger,

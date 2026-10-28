@@ -6,7 +6,7 @@ display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters: RS, RT, T, MG*RL, SH*RL. SH50–125CX not included yet."
 manufacturer: "Sungrow"
 model: "SH Series"
-version: 1.2.25
+version: 1.2.26
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -45,6 +45,8 @@ firmware_version: "03011.95.01"
 # SH50–125CX (MPPT 5–10, type 0xE51/E52/E39/E3A/E3D) not mapped yet.
 # V1.2.16: inverter_status_display uses {MAX_AC_OUTPUT_POWER} from selected model (not device_type string)
 # V1.2.19: hub detect reads sungrow_device_type_code (reg 5000) and valid_models.type_code.
+# V1.2.26: protocol_version option. V1.0.x (e.g. V1.0.7) has no 5214-5215/5631: battery current from 13021,
+# battery power from 13022 (unsigned, signed via running_state/current). Unset/V1.1.x keeps 5214/5631.
 
 # Dynamic configuration support
 dynamic_config:
@@ -137,6 +139,13 @@ dynamic_config:
           scale: 1
           swap: word
           description: "Battery power signed in firmware v2+"
+
+  protocol_version:
+    description: "SHx Modbus protocol map (not app firmware). Match the Protocol version sensor (reg 4952-4953). Unset counts as V1.1.x."
+    options:
+      "1.0": "V1.0.x — battery current/power from 13021/13022 (no 5214-5215 / 5631, e.g. V1.0.7)"
+      "1.1": "V1.1.x or newer — battery power/current from 5214-5215 / 5631 (default)"
+    default: "1.1"
 
   connection_type:
     description: "Physical Modbus path (LAN, WiNet-S, or RS485 gateway); affects which registers and scales apply"
@@ -2247,7 +2256,25 @@ sensors:
     device_class: "current"
     scale: 0.1
     scan_group: fast
+    protocol_min_version: "1.1"
     condition: "battery_enabled == true"
+
+  # Protocol V1.0.x (protocol_version: 1.0): 5631 is not answered; reg 13021 has the same
+  # scale and sign (negative = charging).
+  - name: Battery current
+    unique_id: battery_current
+    translation_key: "shx_battery_current"
+    address: 13020 # reg 13021
+    input_type: input
+    data_type: int16
+    precision: 1
+    unit_of_measurement: A
+    state_class: measurement
+    device_class: "current"
+    scale: 0.1
+    scan_group: fast
+    protocol_max_version: "1.0.99"
+    condition: "battery_enabled == true and protocol_version == '1.0'"
 
   - name: Battery power
     unique_id: battery_power
@@ -2263,7 +2290,30 @@ sensors:
     scale: 1
     scan_group: fast
     mm_group: "PV_battery_power"
+    protocol_min_version: "1.1"
     condition: "battery_enabled == true"
+
+  # Protocol V1.0.x (protocol_version: 1.0): 5214-5215 is not answered. Reg 13022 holds the
+  # battery power without a sign; the calculated battery_power below adds it.
+  - name: Battery power (unsigned)
+    unique_id: battery_power_unsigned_raw
+    translation_key: "shx_battery_power_unsigned_raw"
+    enabled_by_default: false
+    # Disabled rows are not polled; the calculated battery_power needs this value.
+    always_poll: true
+    address: 13021 # reg 13022
+    input_type: input
+    data_type: uint16
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_group: fast
+    entity_category: "diagnostic"
+    mm_group: "PV_battery_power"
+    protocol_max_version: "1.0.99"
+    condition: "battery_enabled == true and protocol_version == '1.0'"
 
   - name: Battery level
     unique_id: battery_level
@@ -3611,6 +3661,34 @@ controls:
 # For legacy_unprefixed, [[mm:…]] markers are expanded before {PREFIX} is cleared.
 # Month/year "current" sensors use states('sensor.{PREFIX}_' ~ …) (Jinja appends the suffix at runtime).
 calculated:
+  # Protocol V1.0.x (protocol_version: 1.0): battery_power from the unsigned reg 13022, signed
+  # like 5214-5215 (negative = charging). Direction from running_state bits 1/2 (raw value), else
+  # from the sign of the battery current (reg 13021).
+  - name: Battery power
+    unique_id: battery_power
+    translation_key: "shx_battery_power"
+    type: "sensor"
+    availability: "{{ states('[[mm:sensor:{PREFIX}_battery_power_unsigned_raw]]') | is_number }}"
+    state: >-
+      {% set p = states('[[mm:sensor:{PREFIX}_battery_power_unsigned_raw]]') | float(0) | abs %}
+      {% set rs = state_attr('[[mm:sensor:{PREFIX}_running_state]]', 'raw_value') %}
+      {% if rs is number and (rs | int | bitwise_and(0x2)) > 0 %}
+        {{ (p * -1) | round(0) }}
+      {% elif rs is number and (rs | int | bitwise_and(0x4)) > 0 %}
+        {{ p | round(0) }}
+      {% elif (states('[[mm:sensor:{PREFIX}_battery_current]]') | float(0)) < 0 %}
+        {{ (p * -1) | round(0) }}
+      {% else %}
+        {{ p | round(0) }}
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    precision: 0
+    mm_group: "PV_battery_power"
+    protocol_max_version: "1.0.99"
+    condition: "battery_enabled == true and protocol_version == '1.0'"
+
   # Net Grid Power
   - name: "Net Grid Power"
     unique_id: "net_grid_power"

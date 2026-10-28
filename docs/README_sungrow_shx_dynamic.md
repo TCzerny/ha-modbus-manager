@@ -63,6 +63,7 @@ The template supports Sungrow SHx hybrid models (RS, RT, T, MG\*RL, SH\*RL). **S
 | **Firmware** | String | "03011.95.01" | Firmware version (e.g. "03011.95.01") |
 | **Strings** | 1-24 | Auto | Number of PV strings (auto-detected from model) |
 | **Connection** | LAN, WINET, RS485 | LAN | Physical Modbus path |
+| **Modbus protocol version** | 1.0, 1.1 | 1.1 | Protocol map of the inverter (sensor *Protocol version*, reg 4952–4953), not the app firmware. **1.0** for protocol V1.0.x (e.g. V1.0.7), which does not answer 5214–5215 / 5631: battery current from 13021, battery power from 13022 (unsigned), signed from `running_state` or the current. Unset counts as 1.1. |
 
 ### 🔄 Automatic Filtering
 
@@ -469,8 +470,8 @@ This section contains all entities that will be created by this template, includ
 | 13016 | Forced Startup Under Low SoC Standby raw | forced_startup_under_low_soc_standby_raw |
 | 13017 | Total direct energy consumption | total_direct_energy_consumption |
 | 13019 | Battery voltage | battery_voltage |
-| 13020 | Battery current *(we use 5630 instead)* | - |
-| 13021 | Battery power *(we use 5213 instead)* | - |
+| 13020 | Battery current *(5630 by default; used with protocol version **1.0**)* | battery_current |
+| 13021 | Battery power, unsigned *(5213 by default; used with protocol version **1.0**)* | battery_power_unsigned_raw |
 | 13022 | Battery level | battery_level |
 | 13023 | Battery state of health | battery_state_of_health |
 | 13024 | Battery temperature | battery_temperature |
@@ -513,7 +514,7 @@ This section contains all entities that will be created by this template, includ
 - **Grid frequency 0.1 Hz (5035)** is commented out: template uses reg 5242 (address 5241) for higher precision 0.01 Hz
 - **Fault/alarm registers** (13049–13067): commented out; fault codes per Appendix 4; uncomment for diagnostics
 - **DRM State (13042)**, **BMS fault 2/alarm 2 (13075, 13077)**, **External EMS heartbeat (13079)** are commented out
-- **Battery current (5630)** and **Battery power (5213)** are used instead of 13020/13021 per Protocol V1.1.11 documentation recommendation
+- **Battery current (5630)** and **Battery power (5213)** are used instead of 13020/13021 per Protocol V1.1.11 documentation recommendation. Older firmware that does not answer them (e.g. protocol V1.0.7: `battery_power` stays unknown, battery charging/discharging stay off) can set **Modbus protocol version** to **1.0**: `battery_power` is then calculated from 13021 (unsigned) with the same sign (negative = charging).
 - **Firmware Information** (13249, 13264, 13279) and **Protocol version raw** (4951) are only available on RT/T/K6 models, not on RS/MG models
 - Monthly and yearly statistical sensors are available with **LAN** or **RS485** (not WiNet-S)
 - Battery SOH (13024): **scale 0.1** on LAN/WiNet-S, **scale 1** on RS485 ([#82](https://github.com/TCzerny/ha-modbus-manager/issues/82))

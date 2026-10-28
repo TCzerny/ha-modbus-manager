@@ -2506,6 +2506,14 @@ class ModbusManagerConfigFlow(
                             and probe.battery_config
                         ):
                             current_value = probe.battery_config
+                        elif (
+                            field_name == "protocol_version"
+                            and probe is not None
+                            and probe.protocol_version
+                            and probe.template_name == self._selected_template
+                        ):
+                            # Pre-fill only; the user confirms the dropdown.
+                            current_value = probe.protocol_version
                         default, vol_in = _vol_in_from_dynamic_options(
                             field_config,
                             current_value=current_value,
