@@ -82,12 +82,12 @@ class ShxProtocolVersionRowTests(unittest.TestCase):
             [("sensors", "battery_current", 5630), ("sensors", "battery_power", 5213)],
         )
 
-    def test_v11_matches_unset(self) -> None:
-        self.assertEqual(sorted(_battery_rows("1.1")), sorted(_battery_rows(None)))
+    def test_v1011_matches_unset(self) -> None:
+        self.assertEqual(sorted(_battery_rows("1.0.11")), sorted(_battery_rows(None)))
 
-    def test_v10_uses_13021_13022_and_calculated_power(self) -> None:
+    def test_v107_uses_13021_13022_and_calculated_power(self) -> None:
         self.assertEqual(
-            sorted(_battery_rows("1.0")),
+            sorted(_battery_rows("1.0.7")),
             [
                 ("calculated", "battery_power", None),
                 ("sensors", "battery_current", 13020),
@@ -106,8 +106,8 @@ class ShxProtocolVersionRowTests(unittest.TestCase):
 
     def test_option_keys_are_strings(self) -> None:
         section = _template()["dynamic_config"]["protocol_version"]
-        self.assertEqual(list(section["options"]), ["1.0", "1.1"])
-        self.assertEqual(section["default"], "1.1")
+        self.assertEqual(list(section["options"]), ["1.0.7", "1.0.11"])
+        self.assertEqual(section["default"], "1.0.11")
 
 
 class ShxProtocolProbeTests(unittest.TestCase):
@@ -126,9 +126,11 @@ class ShxProtocolProbeTests(unittest.TestCase):
     def test_detected_version_maps_to_option(self) -> None:
         keys = list(_template()["dynamic_config"]["protocol_version"]["options"])
         pick = NS["find_applicable_version"]
-        self.assertEqual(pick("1.0.7", keys), "1.0")
-        self.assertEqual(pick("1.1.11", keys), "1.1")
-        self.assertEqual(pick("1.2.0", keys), "1.1")
+        self.assertEqual(pick("1.0.7", keys), "1.0.7")
+        self.assertEqual(pick("1.0.11", keys), "1.0.11")
+        self.assertEqual(pick("1.0.8", keys), "1.0.7")
+        self.assertEqual(pick("1.1.11", keys), "1.0.11")
+        self.assertEqual(pick("1.2.0", keys), "1.0.11")
         self.assertIsNone(pick("0.9.0", keys))
 
 

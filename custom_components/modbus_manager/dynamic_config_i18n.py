@@ -50,9 +50,9 @@ _DE_BY_VALUE: dict[str, dict[str, str]] = {
         "1.0.0": "V1.0.0 — erste Karte",
         "1.0.1": "V1.0.1 — Zählerkanal 2, App-Softwareversion, Wirkleistungsgrenze; Einspeiseverhältnis S32",
         "1.0.2": "V1.0.2 — Einspeisebegrenzung aktivieren (8028); Einspeiseverhältnis S16",
-        # Sungrow SHx (keys are major.minor of the protocol, not app firmware)
-        "1.0": "V1.0.x — Batteriestrom/-leistung aus 13021/13022 (ohne 5214–5215 / 5631, z. B. V1.0.7)",
-        "1.1": "V1.1.x oder neuer — Batterieleistung/-strom aus 5214–5215 / 5631 (Standard)",
+        # Sungrow SHx: device Protocol version sensor (reg 4952-4953), not the PDF title
+        "1.0.7": "V1.0.7 — 5214–5215 / 5631 unbeantwortet; Batteriestrom/-leistung aus 13021/13022",
+        "1.0.11": "V1.0.11 oder neuer — Batterieleistung/-strom aus 5214–5215 / 5631 (Standard; PDF V1.1.15)",
     },
     "connection_type": {
         "LAN": "Dedizierter Ethernet-Anschluss am Wechselrichter (RJ45)",

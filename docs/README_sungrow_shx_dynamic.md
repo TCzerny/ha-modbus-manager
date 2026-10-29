@@ -63,7 +63,22 @@ The template supports Sungrow SHx hybrid models (RS, RT, T, MG\*RL, SH\*RL). **S
 | **Firmware** | String | "03011.95.01" | Firmware version (e.g. "03011.95.01") |
 | **Strings** | 1-24 | Auto | Number of PV strings (auto-detected from model) |
 | **Connection** | LAN, WINET, RS485 | LAN | Physical Modbus path |
-| **Modbus protocol version** | 1.0, 1.1 | 1.1 | Protocol map of the inverter (sensor *Protocol version*, reg 4952–4953), not the app firmware. **1.0** for protocol V1.0.x (e.g. V1.0.7), which does not answer 5214–5215 / 5631: battery current from 13021, battery power from 13022 (unsigned), signed from `running_state` or the current. Unset counts as 1.1. |
+| **Modbus protocol version** | 1.0.7, 1.0.11 | 1.0.11 | **Device** *Protocol version* sensor (reg 4952–4953, `Vmajor.minor.patch`), **not** the PDF booklet title and not app firmware. See [Device protocol vs PDF](#device-protocol-version-vs-pdf). Unset counts as **1.0.11**. |
+
+### Device protocol version vs PDF
+
+The SHx template is coded against Sungrow **PDF V1.1.15** (*Communication Protocol of Residential Hybrid Inverter*, 2026-05-28). Older V1.1.11 and later V1.1.16 (RL / small industrial) are other **document** revisions. That PDF number is **not** stored on the device.
+
+`protocol_version` is the inverter’s **Protocol version** sensor (input 4952–4953). The PDF example for that register is still `0x01010700` = V1.1.7; the documents do **not** name device V1.0.7 or V1.0.11. Do not treat PDF V1.1.15 as sensor V1.1.15.
+
+| Device sensor | Battery current / power |
+| --- | --- |
+| **V1.0.7** (SH20T, [#131](https://github.com/TCzerny/ha-modbus-manager/pull/131)) | 5214–5215 / 5631 not answered. Current from **13021**, unsigned power from **13022**, calculated `battery_power` (negative = charging) from `running_state` bits 1/2, else current sign. |
+| **V1.0.11** (default) | **5631** / **5214–5215** — the addresses PDF V1.1.15 *recommends*, gated by the **sensor**. |
+| **V1.1.x** on the sensor | Same rows as 1.0.11 until another map is proven. Probe pre-fills **1.0.11**. |
+| Unset (existing installs) | Same as 1.0.11. |
+
+V1.0.8–1.0.10 is untested; probe would pre-fill **1.0.7** until someone measures 5214 there.
 
 ### 🔄 Automatic Filtering
 
@@ -470,8 +485,8 @@ This section contains all entities that will be created by this template, includ
 | 13016 | Forced Startup Under Low SoC Standby raw | forced_startup_under_low_soc_standby_raw |
 | 13017 | Total direct energy consumption | total_direct_energy_consumption |
 | 13019 | Battery voltage | battery_voltage |
-| 13020 | Battery current *(5630 by default; used with protocol version **1.0**)* | battery_current |
-| 13021 | Battery power, unsigned *(5213 by default; used with protocol version **1.0**)* | battery_power_unsigned_raw |
+| 13020 | Battery current *(5630 by default; used with device protocol **1.0.7**)* | battery_current |
+| 13021 | Battery power, unsigned *(5213 by default; used with device protocol **1.0.7**)* | battery_power_unsigned_raw |
 | 13022 | Battery level | battery_level |
 | 13023 | Battery state of health | battery_state_of_health |
 | 13024 | Battery temperature | battery_temperature |
@@ -514,7 +529,7 @@ This section contains all entities that will be created by this template, includ
 - **Grid frequency 0.1 Hz (5035)** is commented out: template uses reg 5242 (address 5241) for higher precision 0.01 Hz
 - **Fault/alarm registers** (13049–13067): commented out; fault codes per Appendix 4; uncomment for diagnostics
 - **DRM State (13042)**, **BMS fault 2/alarm 2 (13075, 13077)**, **External EMS heartbeat (13079)** are commented out
-- **Battery current (5630)** and **Battery power (5213)** are used instead of 13020/13021 per Protocol V1.1.11 documentation recommendation. Older firmware that does not answer them (e.g. protocol V1.0.7: `battery_power` stays unknown, battery charging/discharging stay off) can set **Modbus protocol version** to **1.0**: `battery_power` is then calculated from 13021 (unsigned) with the same sign (negative = charging).
+- **Battery current (5630)** and **Battery power (5213)** are PDF V1.1.15 recommended addresses, used when the **device** protocol sensor is **1.0.11** or newer (or unset). Device **V1.0.7** does not answer them: set **Modbus protocol version** to **1.0.7** so `battery_power` is calculated from 13022 (unsigned) with the same sign (negative = charging). See [Device protocol vs PDF](#device-protocol-version-vs-pdf).
 - **Firmware Information** (13249, 13264, 13279) and **Protocol version raw** (4951) are only available on RT/T/K6 models, not on RS/MG models
 - Monthly and yearly statistical sensors are available with **LAN** or **RS485** (not WiNet-S)
 - Battery SOH (13024): **scale 0.1** on LAN/WiNet-S, **scale 1** on RS485 ([#82](https://github.com/TCzerny/ha-modbus-manager/issues/82))

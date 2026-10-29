@@ -45,8 +45,9 @@ firmware_version: "03011.95.01"
 # SH50–125CX (MPPT 5–10, type 0xE51/E52/E39/E3A/E3D) not mapped yet.
 # V1.2.16: inverter_status_display uses {MAX_AC_OUTPUT_POWER} from selected model (not device_type string)
 # V1.2.19: hub detect reads sungrow_device_type_code (reg 5000) and valid_models.type_code.
-# V1.2.26: protocol_version option. V1.0.x (e.g. V1.0.7) has no 5214-5215/5631: battery current from 13021,
-# battery power from 13022 (unsigned, signed via running_state/current). Unset/V1.1.x keeps 5214/5631.
+# V1.2.26: protocol_version option follows the device sensor (reg 4952-4953, Vmajor.minor.patch),
+# not the PDF booklet title. Current map is coded against PDF V1.1.15. Device V1.0.7 has no
+# 5214-5215/5631 (13021/13022 + calculated signed power). Device V1.0.11+ (default, unset) keeps 5214/5631.
 
 # Dynamic configuration support
 dynamic_config:
@@ -141,11 +142,11 @@ dynamic_config:
           description: "Battery power signed in firmware v2+"
 
   protocol_version:
-    description: "SHx Modbus protocol map (not app firmware). Match the Protocol version sensor (reg 4952-4953). Unset counts as V1.1.x."
+    description: "Device Protocol version sensor (reg 4952-4953), not the PDF booklet title and not app firmware. Current register map is PDF V1.1.15. Unset counts as V1.0.11."
     options:
-      "1.0": "V1.0.x — battery current/power from 13021/13022 (no 5214-5215 / 5631, e.g. V1.0.7)"
-      "1.1": "V1.1.x or newer — battery power/current from 5214-5215 / 5631 (default)"
-    default: "1.1"
+      "1.0.7": "V1.0.7 — 5214-5215 / 5631 not answered; battery current/power from 13021/13022"
+      "1.0.11": "V1.0.11 or newer — battery power/current from 5214-5215 / 5631 (default; PDF V1.1.15 recommended addresses)"
+    default: "1.0.11"
 
   connection_type:
     description: "Physical Modbus path (LAN, WiNet-S, or RS485 gateway); affects which registers and scales apply"
@@ -2247,7 +2248,7 @@ sensors:
   - name: Battery current
     unique_id: battery_current
     translation_key: "shx_battery_current"
-    address: 5630 # reg 5631 - RECOMMENDED: Per Protocol V1.1.11, register 5631 is recommended instead of 13021
+    address: 5630 # reg 5631 - PDF V1.1.15 recommended instead of 13021; device protocol V1.0.11+
     input_type: input
     data_type: int16
     precision: 1
@@ -2256,11 +2257,10 @@ sensors:
     device_class: "current"
     scale: 0.1
     scan_group: fast
-    protocol_min_version: "1.1"
+    protocol_min_version: "1.0.11"
     condition: "battery_enabled == true"
 
-  # Protocol V1.0.x (protocol_version: 1.0): 5631 is not answered; reg 13021 has the same
-  # scale and sign (negative = charging).
+  # Device protocol V1.0.7: 5631 is not answered; reg 13021 has the same scale and sign (negative = charging).
   - name: Battery current
     unique_id: battery_current
     translation_key: "shx_battery_current"
@@ -2273,13 +2273,13 @@ sensors:
     device_class: "current"
     scale: 0.1
     scan_group: fast
-    protocol_max_version: "1.0.99"
-    condition: "battery_enabled == true and protocol_version == '1.0'"
+    protocol_max_version: "1.0.7"
+    condition: "battery_enabled == true and protocol_version == '1.0.7'"
 
   - name: Battery power
     unique_id: battery_power
     translation_key: "shx_battery_power"
-    address: 5213 # reg 5214-5215 - RECOMMENDED: Per Protocol V1.1.11, register 5214-5215 (S32) is recommended instead of 13022 (S16)
+    address: 5213 # reg 5214-5215 - PDF V1.1.15 recommended S32 instead of 13022; device protocol V1.0.11+
     input_type: input
     data_type: int32
     swap: word
@@ -2290,10 +2290,10 @@ sensors:
     scale: 1
     scan_group: fast
     mm_group: "PV_battery_power"
-    protocol_min_version: "1.1"
+    protocol_min_version: "1.0.11"
     condition: "battery_enabled == true"
 
-  # Protocol V1.0.x (protocol_version: 1.0): 5214-5215 is not answered. Reg 13022 holds the
+  # Device protocol V1.0.7: 5214-5215 is not answered. Reg 13022 holds the
   # battery power without a sign; the calculated battery_power below adds it.
   - name: Battery power (unsigned)
     unique_id: battery_power_unsigned_raw
@@ -2312,8 +2312,8 @@ sensors:
     scan_group: fast
     entity_category: "diagnostic"
     mm_group: "PV_battery_power"
-    protocol_max_version: "1.0.99"
-    condition: "battery_enabled == true and protocol_version == '1.0'"
+    protocol_max_version: "1.0.7"
+    condition: "battery_enabled == true and protocol_version == '1.0.7'"
 
   - name: Battery level
     unique_id: battery_level
@@ -3661,7 +3661,7 @@ controls:
 # For legacy_unprefixed, [[mm:…]] markers are expanded before {PREFIX} is cleared.
 # Month/year "current" sensors use states('sensor.{PREFIX}_' ~ …) (Jinja appends the suffix at runtime).
 calculated:
-  # Protocol V1.0.x (protocol_version: 1.0): battery_power from the unsigned reg 13022, signed
+  # Device protocol V1.0.7: battery_power from the unsigned reg 13022, signed
   # like 5214-5215 (negative = charging). Direction from running_state bits 1/2 (raw value), else
   # from the sign of the battery current (reg 13021).
   - name: Battery power
@@ -3686,8 +3686,8 @@ calculated:
     state_class: "measurement"
     precision: 0
     mm_group: "PV_battery_power"
-    protocol_max_version: "1.0.99"
-    condition: "battery_enabled == true and protocol_version == '1.0'"
+    protocol_max_version: "1.0.7"
+    condition: "battery_enabled == true and protocol_version == '1.0.7'"
 
   # Net Grid Power
   - name: "Net Grid Power"
