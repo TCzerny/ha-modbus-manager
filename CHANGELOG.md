@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.10] - 2026-10-29
+
 ### 🐛 Fixed
 
 - **SBR pack vs inverter options**: Adding a pack sets the inverter `battery_config`. While the pack exists, inverter options do not show or overwrite it. Removing the pack clears the inverter flag.
