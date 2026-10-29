@@ -367,6 +367,41 @@ def _apply_hub_battery_from_pack_device(
     entry_data["battery_config"] = _hub_battery_config_for_pack(
         template, entry_data.get("connection_type")
     )
+    _sync_inverter_battery_flags(entry_data)
+
+
+def _hub_has_separate_pack(
+    devices: list[Any] | None, selected_device: dict[str, Any] | None = None
+) -> bool:
+    """True when a pack device exists besides the inverter being edited."""
+    if not isinstance(devices, list):
+        return False
+    selected_id = None
+    if isinstance(selected_device, dict):
+        if resolve_device_role_type(selected_device) != "inverter":
+            return False
+        selected_id = selected_device.get("device_entry_id")
+    for device in devices:
+        if not isinstance(device, dict):
+            continue
+        if selected_id and device.get("device_entry_id") == selected_id:
+            continue
+        if resolve_device_role_type(device) == "battery":
+            return True
+    return False
+
+
+def _sync_inverter_battery_flags(entry_data: dict[str, Any]) -> None:
+    """Copy hub battery_config / battery_enabled onto inverter devices[] rows."""
+    devices = entry_data.get("devices")
+    if not isinstance(devices, list):
+        return
+    config = entry_data.get("battery_config", "none")
+    enabled = bool(entry_data.get("battery_enabled"))
+    for device in devices:
+        if isinstance(device, dict) and resolve_device_role_type(device) == "inverter":
+            device["battery_config"] = config
+            device["battery_enabled"] = enabled
 
 
 def _apply_hub_keys_after_device_removed(
@@ -380,6 +415,13 @@ def _apply_hub_keys_after_device_removed(
         entry_data["battery_template"] = "none"
         entry_data["battery_config"] = "none"
         entry_data["battery_enabled"] = False
+        for device in remaining:
+            if (
+                isinstance(device, dict)
+                and resolve_device_role_type(device) == "inverter"
+            ):
+                device["battery_config"] = "none"
+                device["battery_enabled"] = False
         return
     if role in {"wallbox", "ev_charger"}:
         still_has_charger = any(
@@ -475,6 +517,7 @@ def _device_reconfigure_schema(
     selected_device: dict[str, Any],
     template_data: dict[str, Any] | None,
     hass: HomeAssistant | None = None,
+    devices: list[Any] | None = None,
 ) -> vol.Schema:
     """Build prefix / slave / model / dynamic_config schema for one device."""
     dynamic_config = (
@@ -503,8 +546,12 @@ def _device_reconfigure_schema(
             model_options
         )
 
+    hide_battery_config = _hub_has_separate_pack(devices, selected_device)
+
     for field_name, field_config in dynamic_config.items():
         if field_name in ("valid_models", "selected_model"):
+            continue
+        if field_name == "battery_config" and hide_battery_config:
             continue
         if isinstance(field_config, dict) and "options" in field_config:
             options = field_config.get("options", [])
@@ -596,16 +643,36 @@ def _apply_device_reconfigure(
     if "selected_model" in user_input:
         updated_device["selected_model"] = user_input["selected_model"]
 
+    pack_locked = _hub_has_separate_pack(devices, updated_device)
     for field_name in dynamic_config:
         if field_name == "valid_models":
+            continue
+        if field_name == "battery_config" and pack_locked:
             continue
         if field_name in user_input:
             updated_device[field_name] = user_input[field_name]
 
-    updated_device["battery_config"] = _clamp_battery_config_for_connection(
-        updated_device.get("battery_config"),
-        updated_device.get("connection_type"),
-    )
+    if pack_locked:
+        pack = next(
+            (
+                device
+                for device in devices
+                if isinstance(device, dict)
+                and device.get("device_entry_id") != selected_device_id
+                and resolve_device_role_type(device) == "battery"
+            ),
+            None,
+        )
+        updated_device["battery_config"] = _hub_battery_config_for_pack(
+            (pack or {}).get("template"),
+            updated_device.get("connection_type") or entry_data.get("connection_type"),
+        )
+        updated_device["battery_enabled"] = True
+    else:
+        updated_device["battery_config"] = _clamp_battery_config_for_connection(
+            updated_device.get("battery_config"),
+            updated_device.get("connection_type"),
+        )
     updated_device = _normalize_stored_device(updated_device)
 
     new_devices = [
@@ -632,6 +699,9 @@ def _apply_device_reconfigure(
         for field_name in dynamic_config:
             if field_name in updated_device:
                 new_data[field_name] = updated_device[field_name]
+        if _hub_has_separate_pack(new_devices, updated_device):
+            new_data["battery_enabled"] = True
+            new_data["battery_config"] = updated_device.get("battery_config")
 
     return new_data
 
@@ -4570,7 +4640,7 @@ class ModbusManagerDeviceSubentryFlow(
         return self.async_show_form(
             step_id="reconfigure",
             data_schema=_device_reconfigure_schema(
-                selected_device, template_data, hass=self.hass
+                selected_device, template_data, hass=self.hass, devices=devices
             ),
             description_placeholders={
                 "device": _device_display_title(selected_device),
@@ -4833,7 +4903,10 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         return self.async_show_form(
             step_id=step_id,
             data_schema=_device_reconfigure_schema(
-                selected_device, template_data, hass=self.hass
+                selected_device,
+                template_data,
+                hass=self.hass,
+                devices=self.config_entry.data.get("devices"),
             ),
             errors=errors,
             description_placeholders={

@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🐛 Fixed
 
+- **SBR pack vs inverter options**: Adding a pack sets the inverter `battery_config`. While the pack exists, inverter options do not show or overwrite it. Removing the pack clears the inverter flag.
+
 - **Sungrow SHx — battery power on device protocol V1.0.7 ([#131](https://github.com/TCzerny/ha-modbus-manager/pull/131))**: `protocol_version` follows the device sensor (4952–4953), not PDF V1.1.15. **1.0.7** uses 13021/13022; **1.0.11** (default) keeps 5214/5631. Same `unique_id`. Template v1.2.26.
 
 ## [1.3.9] - 2026-10-26
