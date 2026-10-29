@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🐛 Fixed
 
-- **Sungrow SHx — battery power on device protocol V1.0.7 ([#131](https://github.com/TCzerny/ha-modbus-manager/pull/131))**: The **Protocol version** sensor (reg 4952–4953) is not the PDF booklet title. The template is coded against **PDF V1.1.15**. Option **Modbus protocol version** (`protocol_version`, like iHomeManager) uses three-part **sensor** keys, not `1.0`/`1.1`. **1.0.7** (SH20T) does not answer 5214–5215 / 5631: current from 13021, unsigned power from 13022, calculated `battery_power` (negative = charging). **1.0.11** (default, also when unset; live SH10RT-V112) keeps 5214–5215 / 5631 (`register_address` 5213). Probe only pre-fills a new setup. Same `unique_id` (`battery_power` / `battery_current`) on both maps. Template v1.2.26.
+- **Sungrow SHx — battery power on device protocol V1.0.7 ([#131](https://github.com/TCzerny/ha-modbus-manager/pull/131))**: `protocol_version` follows the device sensor (4952–4953), not PDF V1.1.15. **1.0.7** uses 13021/13022; **1.0.11** (default) keeps 5214/5631. Same `unique_id`. Template v1.2.26.
 
 ## [1.3.9] - 2026-10-26
 
