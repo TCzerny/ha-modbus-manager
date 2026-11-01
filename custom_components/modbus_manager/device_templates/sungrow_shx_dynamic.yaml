@@ -3530,15 +3530,21 @@ controls:
     precision: 2
     unit_of_measurement: "kW"
     scale: 0.01
-    min_value: 0
-    max_value: 100
+    min_value: 0.01
+    max_value: 50
     step: 0.01
     mode: "box"  # Explicitly set to box for consistent UI display
     scan_group: medium
     mm_group: "PV_control"
     # Grid-side import cap (iSolarCloud "Site import power limit"); not bounded by max_ac_output_power.
-    # Undocumented register. Verified read/write and import limiting on SH10RS (WiNet-S + RS485);
-    # same register reported on SH10RT-V112 (mkaiser discussion #546).
+    # iSolarCloud tooltip: "Set the upper limit for energy purchasing power. This parameter is
+    # usually determined by the max. current of the circuit breaker, allowable energy purchasing
+    # power of the grid company, and so on. In the scenario of multiple inverters, only the
+    # master needs to be configured."
+    # max_value 50 kW matches the iSolarCloud-reported range [0.01, 50.00] on a tested SH10RS;
+    # this is a site/grid-contract parameter, not an inverter hardware spec, so the real ceiling
+    # may vary by install or model (register's raw U16 ceiling is 655.35 kW)..
+    # Undocumented register. Verified read/write and import limiting on SH10RS.
 
   - type: "number"
     name: "Battery Charging Start Power"
