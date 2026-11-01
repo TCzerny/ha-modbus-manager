@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Added
+
+- **Sungrow SHx — Site Import Power Limit (holding reg 32998, U16, 0.01 kW)**: Undocumented grid-side import cap exposed by iSolarCloud as "Site import power limit"; not bounded by `max_ac_output_power`. Verified read/write and import limiting on **SH10RS** (WiNet-S + RS485); same register reported on **SH10RT-V112** ([discussion #546](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant/discussions/546)). Template v1.2.27.
+
 ## [1.3.10] - 2026-10-29
 
 ### 🐛 Fixed

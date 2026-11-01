@@ -6,7 +6,7 @@ display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters: RS, RT, T, MG*RL, SH*RL. SH50–125CX not included yet."
 manufacturer: "Sungrow"
 model: "SH Series"
-version: 1.2.26
+version: 1.2.27
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -48,6 +48,7 @@ firmware_version: "03011.95.01"
 # V1.2.26: protocol_version option follows the device sensor (reg 4952-4953, Vmajor.minor.patch),
 # not the PDF booklet title. Current map is coded against PDF V1.1.15. Device V1.0.7 has no
 # 5214-5215/5631 (13021/13022 + calculated signed power). Device V1.0.11+ (default, unset) keeps 5214/5631.
+# V1.2.27: Site Import Power Limit control (holding reg 32998, U16, 0.01 kW; undocumented, verified RS/RT).
 
 # Dynamic configuration support
 dynamic_config:
@@ -3518,6 +3519,26 @@ controls:
     mm_group: "PV_control"
     # Placeholder will be replaced with model-specific value from dynamic_config.valid_models
     # For SH10RT: 10000 W -> 10.0 kW
+
+  - type: "number"
+    name: "Site Import Power Limit"
+    unique_id: "site_import_power_limit"
+    translation_key: "shx_site_import_power_limit"
+    address: 32997 # reg 32998
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 2
+    unit_of_measurement: "kW"
+    scale: 0.01
+    min_value: 0
+    max_value: 100
+    step: 0.01
+    mode: "box"  # Explicitly set to box for consistent UI display
+    scan_group: medium
+    mm_group: "PV_control"
+    # Grid-side import cap (iSolarCloud "Site import power limit"); not bounded by max_ac_output_power.
+    # Undocumented register. Verified read/write and import limiting on SH10RS (WiNet-S + RS485);
+    # same register reported on SH10RT-V112 (mkaiser discussion #546).
 
   - type: "number"
     name: "Battery Charging Start Power"
