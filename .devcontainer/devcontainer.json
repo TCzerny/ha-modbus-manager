@@ -1,32 +1,40 @@
 {
   "name": "HA Modbus Manager Dev",
-  "dockerComposeFile": "../docker-compose.yml",
-  "service": "homeassistant",
-  "workspaceFolder": "/workspace",
-  "shutdownAction": "stopCompose",
-  "mounts": [
-    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
-  ],
+  "image": "mcr.microsoft.com/devcontainers/base:debian",
+  "postCreateCommand": "scripts/setup",
+  "forwardPorts": [8123],
+  "portsAttributes": {
+    "8123": {
+      "label": "Home Assistant",
+      "onAutoForward": "notify"
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.14"
+    },
+    "ghcr.io/devcontainers-extra/features/apt-packages:1": {
+      "packages": "ffmpeg,libturbojpeg0,libpcap-dev"
+    }
+  },
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-python.python",
         "ms-python.vscode-pylance",
         "esbenp.prettier-vscode",
-        "ms-azuretools.vscode-docker",
         "ms-python.flake8",
         "ms-python.black-formatter",
         "charliermarsh.ruff",
         "redhat.vscode-yaml"
       ],
       "settings": {
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
-        "python.linting.enabled": true,
-        "python.linting.flake8Enabled": true,
-        "python.formatting.provider": "black"
+        "python.defaultInterpreterPath": "/usr/local/python/current/bin/python",
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.black-formatter"
+        }
       }
     }
   },
-  "postCreateCommand": "pip install pre-commit flake8 black ruff && pre-commit install && (apk add --no-cache docker-cli 2>/dev/null || (apt-get update && apt-get install -y docker.io) 2>/dev/null || true)",
-  "remoteUser": "root"
+  "remoteUser": "vscode"
 }

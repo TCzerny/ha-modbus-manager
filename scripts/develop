@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Start Home Assistant with the integration loaded from this repo.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+# Put the repo root on the import path so Home Assistant finds
+# <repo>/custom_components/modbus_manager without symlinks or bind mounts.
+export PYTHONPATH="${PWD}${PYTHONPATH:+:${PYTHONPATH}}"
+
+hass --config "${PWD}/config" --debug
