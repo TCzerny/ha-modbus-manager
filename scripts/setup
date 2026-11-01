@@ -5,6 +5,11 @@ set -e
 
 cd "$(dirname "$0")/.."
 
+# Home Assistant installs runtime packages into the user site-packages
+# directory, and Python only puts that directory on sys.path if it exists
+# at startup. Create it now so the first boot can import what it installs.
+mkdir -p "$(python3 -m site --user-site)"
+
 python3 -m pip install --upgrade pip
 python3 -m pip install --requirement requirements_dev.txt
 pre-commit install
