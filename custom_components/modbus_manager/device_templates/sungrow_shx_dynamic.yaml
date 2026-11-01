@@ -3541,10 +3541,17 @@ controls:
     # usually determined by the max. current of the circuit breaker, allowable energy purchasing
     # power of the grid company, and so on. In the scenario of multiple inverters, only the
     # master needs to be configured."
-    # max_value 50 kW matches the iSolarCloud-reported range [0.01, 50.00] on a tested SH10RS;
-    # this is a site/grid-contract parameter, not an inverter hardware spec, so the real ceiling
-    # may vary by install or model (register's raw U16 ceiling is 655.35 kW)..
-    # Undocumented register. Verified read/write and import limiting on SH10RS.
+    # max_value 50 kW is DEVICE-ENFORCED, not just an app/cosmetic bound: on a tested SH10RS,
+    # writing 50.00 kW succeeded and 50.01 kW was rejected by the inverter (Modbus exception),
+    # matching the iSolarCloud-reported range [0.01, 50.00] exactly. This is a site/grid-contract
+    # parameter (breaker rating, utility allowance), not an inverter hardware spec, so the real
+    # per-model ceiling is unverified elsewhere and may differ (register's raw U16 ceiling is
+    # 655.35 kW). 50 kW is kept as a flat, known-safe floor across all models in this template
+    # rather than guessing a per-model formula from a single data point — it won't block anyone
+    # with a sub-50kW import allowance; larger three-phase installs (SH12T+) may need a locally
+    # raised value until more models are reported.
+    # Undocumented register. Verified read/write and import limiting on SH10RS (WiNet-S + RS485);
+    # same register reported on SH10RT-V112 (mkaiser discussion #546).
 
   - type: "number"
     name: "Battery Charging Start Power"
