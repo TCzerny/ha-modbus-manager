@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Sungrow SHx - SH15T missing from `battery_capacity`**: the model list at register 5638 omitted SH15T, so the entity was never created and `battery_charge`, `battery_charge_nom` and `battery_charge_health_rated` (which reference it in their availability) stayed `unknown`/`unavailable` on every SH15T. The high-precision register reads fine on device protocol V1.1.7. Template v1.2.27.
+
 ## [1.3.11] - 2026-11-05
 
 ### 🐛 Fixed

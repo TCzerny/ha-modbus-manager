@@ -6,7 +6,7 @@ display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters: RS, RT, T, MG*RL, SH*RL. SH50–125CX not included yet."
 manufacturer: "Sungrow"
 model: "SH Series"
-version: 1.2.26
+version: 1.2.27
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -913,8 +913,9 @@ sensors:
     scale: 0.01
     scan_group: slow
     entity_category: "diagnostic"
-    condition: "selected_model in [SH20T, SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, SH5.0RT, SH6.0RT, SH8.0RT, SH10RT, SH5.0RT-20, SH6.0RT-20, SH8.0RT-20, SH10RT-20, SH5.0RT-V112, SH6.0RT-V112, SH8.0RT-V112, SH10RT-V112, SH5.0RT-V122, SH6.0RT-V122, SH8.0RT-V122, SH10RT-V122]"
+    condition: "selected_model in [SH20T, SH15T, SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, SH5.0RT, SH6.0RT, SH8.0RT, SH10RT, SH5.0RT-20, SH6.0RT-20, SH8.0RT-20, SH10RT-20, SH5.0RT-V112, SH6.0RT-V112, SH8.0RT-V112, SH10RT-V112, SH5.0RT-V122, SH6.0RT-V122, SH8.0RT-V122, SH10RT-V122]"
     # Added SH20T om request of user
+    # Added SH15T: battery_charge, battery_charge_nom and battery_charge_health_rated reference it in availability
 
   # Export Power Limitation Values (Protocol V1.1.11)
   - name: Min Export Power Limit Value
