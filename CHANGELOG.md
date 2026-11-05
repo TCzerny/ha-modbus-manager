@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Sungrow SHx - dead primary branch in the `PV_binary_status` sensors**: since `running_state` got its `flags` mapping the state is text, so `states('..._running_state') | is_number` is never true. All seven bit-mask binary sensors (`pv_generating`, `battery_charging`, `battery_discharging`, `exporting_power`, `importing_power`, `positive_load_power`, `negative_load_power`) silently fell back to the hysterisis-free SH*RS workarounds, causing flapping around zero and permanently off values when the referenced raw sensor was disabled. They now read the numeric register from the `raw_value` attribute (`state_attr(..., 'raw_value') is number`), the same pattern `battery_power` already uses. SH*RS fallback branches unchanged. Template v1.2.27.
+
 ## [1.3.11] - 2026-11-05
 
 ### 🐛 Fixed

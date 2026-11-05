@@ -6,7 +6,7 @@ display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters: RS, RT, T, MG*RL, SH*RL. SH50–125CX not included yet."
 manufacturer: "Sungrow"
 model: "SH Series"
-version: 1.2.26
+version: 1.2.27
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -5692,8 +5692,9 @@ binary_sensors:
       and not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
       }}
     state: >-
-      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
-        {{ (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x1)) > 0 }}
+      {% set rs = state_attr('[[mm:sensor:{PREFIX}_running_state]]', 'raw_value') %}
+      {% if rs is number %}
+        {{ (rs | int | bitwise_and(0x1)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
         {% set total_dc_power = states('[[mm:sensor:{PREFIX}_total_dc_power]]') %}
@@ -5730,8 +5731,9 @@ binary_sensors:
       or not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
       }}
     state: >-
-      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
-        {% if (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x2)) > 0 %}
+      {% set rs = state_attr('[[mm:sensor:{PREFIX}_running_state]]', 'raw_value') %}
+      {% if rs is number %}
+        {% if (rs | int | bitwise_and(0x2)) > 0 %}
           on
         {% else %}
           off
@@ -5773,8 +5775,9 @@ binary_sensors:
       or not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
       }}
     state: >-
-      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
-        {% if (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x4)) > 0 %}
+      {% set rs = state_attr('[[mm:sensor:{PREFIX}_running_state]]', 'raw_value') %}
+      {% if rs is number %}
+        {% if (rs | int | bitwise_and(0x4)) > 0 %}
           on
         {% else %}
           off
@@ -5813,8 +5816,9 @@ binary_sensors:
       and not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
       }}
     state: >-
-      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
-        {{ (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x10)) > 0 }}
+      {% set rs = state_attr('[[mm:sensor:{PREFIX}_running_state]]', 'raw_value') %}
+      {% if rs is number %}
+        {{ (rs | int | bitwise_and(0x10)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
         {% set export_power = states('[[mm:sensor:{PREFIX}_export_power_raw]]') %}
@@ -5850,8 +5854,9 @@ binary_sensors:
       and not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
       }}
     state: >-
-      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
-        {{ (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x20)) > 0 }}
+      {% set rs = state_attr('[[mm:sensor:{PREFIX}_running_state]]', 'raw_value') %}
+      {% if rs is number %}
+        {{ (rs | int | bitwise_and(0x20)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
         {% set export_power = states('[[mm:sensor:{PREFIX}_export_power_raw]]') %}
@@ -5886,8 +5891,9 @@ binary_sensors:
       not is_state('[[mm:sensor:{PREFIX}_running_state]]', 'unavailable')
       }}
     state: >-
-      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
-        {{ (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x8)) > 0 }}
+      {% set rs = state_attr('[[mm:sensor:{PREFIX}_running_state]]', 'raw_value') %}
+      {% if rs is number %}
+        {{ (rs | int | bitwise_and(0x8)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
         {% set load_power = states('[[mm:sensor:{PREFIX}_load_power]]') %}
@@ -5911,8 +5917,9 @@ binary_sensors:
       not is_state('[[mm:sensor:{PREFIX}_running_state]]', 'unavailable')
       }}
     state: >-
-      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
-        {{ (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x80)) > 0 }}
+      {% set rs = state_attr('[[mm:sensor:{PREFIX}_running_state]]', 'raw_value') %}
+      {% if rs is number %}
+        {{ (rs | int | bitwise_and(0x80)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
         {% set load_power = states('[[mm:sensor:{PREFIX}_load_power]]') %}
