@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Added
+
+- **Sungrow SHx — Import Power Limit (holding reg 32998, U16, 0.01 kW)**: Undocumented site import cap for **RS, RT, and T** (not MG*RL or SH*RL). Range 0.01–50.00 kW. Read/write and actual import limiting verified on **SH10RS**. Template v1.2.27.
+
 ## [1.3.11] - 2026-11-05
 
 ### 🐛 Fixed

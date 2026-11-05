@@ -538,6 +538,7 @@ This section contains all entities that will be created by this template, includ
 - Battery-related sensors are only available when battery is enabled
 - Meter Channel 2 sensors (13199-13205) are only available when meter_type is set to "DTSU666-20"
 - Meter phase voltage/current sensors (5740-5745) are only available for meter types `DTSU666` and `DTSU666-20`, connection **LAN** or **RS485**, and the **SH5.0–10RT** family (including **-20**, **V112**, **V122**). Live: SH10RT, SH10RT-20 ([#120](https://github.com/TCzerny/ha-modbus-manager/issues/120)), SH10RT-V112 ([Discussion #133](https://github.com/TCzerny/ha-modbus-manager/discussions/133)). Not T / RS / MG / RL.
+- **Import Power Limit** (address 32997, Sungrow reg 32998) is an undocumented U16 in 0.01 kW, range 0.01–50.00. iSolarCloud calls the same setting "Site import power limit". Exposed on **RS, RT, and T** only (not MG*RL or SH*RL). Import limiting was verified on SH10RS; a readback on SH10RT-V112 does not by itself prove the inverter honors the cap during forced charge.
 - `Load power` (13007), `Export power raw` (13009), `Daily/Total import` (13035/13036), and `Daily/Total export` (13044/13045) are no longer meter-type-filtered
 - Battery control/diagnostic entities around 13050/13051, 33046/33047, and 33148/33149 are available when `battery_enabled == true` (independent of `meter_type`)
 - **iHomeManager is a separate template** (`sungrow_ihomemanager.yaml`) — do not use meter_type "iHomeManager" with this template
@@ -564,6 +565,7 @@ This section contains all entities that will be created by this template, includ
 | 13099 | Reserved SoC for Backup | reserved_soc_for_backup |
 | 30229 | Global MPP scan manual | global_mpp_scan_manual |
 | 31221 | Export Power Limit Value Wide Range | export_power_limit_value_wide_range |
+| 32997 | Import Power Limit | import_power_limit |
 | 33046 | Battery Max Charging Power | battery_max_charging_power | kW (scale 0.01; was W in many mkaiser setups |
 | 33047 | Battery Max Discharging Power | battery_max_discharging_power | kW (scale 0.01; mkaiser used `battery_max_discharge_power` in W) |
 | 33148 | Battery Charging Start Power | battery_charging_start_power |
