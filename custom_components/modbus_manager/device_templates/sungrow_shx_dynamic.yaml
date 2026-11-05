@@ -6,7 +6,7 @@ display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters: RS, RT, T, MG*RL, SH*RL. SH50–125CX not included yet."
 manufacturer: "Sungrow"
 model: "SH Series"
-version: 1.2.27
+version: 1.2.29
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -38,8 +38,9 @@ firmware_version: "03011.95.01"
 # - Meter Channel 2 registers: Only available with DTSU666-20 meter AND not on RS/MG models
 # - Battery capacity register: Only available on SH3.0-6.0RS, SH8.0-10RS, and SH5.0-10RT models
 # - PV Power Limitation control: Only available on SHT models (SH5T-SH25T), not RT/RS models
-# Battery charging/discharging binomials: running_state (reg 13000) is uint16 — use |int + bitwise_and; do not require
-# value > 0 (0 is valid). If state is not numeric (e.g. unavailable), fallback: register 5213 battery_power sign only.
+# Battery charging/discharging binomials: running_state (reg 13000) is a flags sensor, so the
+# entity state is text. Bit tests use the raw_value attribute. 0 is valid (all bits clear).
+# If raw_value is not a number, fallback: register 5213 battery_power sign only.
 # V1.2.14: RS485 connection type (#82 / #87) — SOH scale, MPPT4 hide, LAN-gated stats on RS485, daily import/export not on SH10RS+WINET
 # V1.2.15: Protocol V1.1.16 — SH3/3.6/4/5/6/8/10RL + MG7.5/12RL in valid_models.
 # SH50–125CX (MPPT 5–10, type 0xE51/E52/E39/E3A/E3D) not mapped yet.
@@ -49,6 +50,8 @@ firmware_version: "03011.95.01"
 # not the PDF booklet title. Current map is coded against PDF V1.1.15. Device V1.0.7 has no
 # 5214-5215/5631 (13021/13022 + calculated signed power). Device V1.0.11+ (default, unset) keeps 5214/5631.
 # V1.2.27: Import Power Limit (holding address 32997, reg 32998) on RS, RT, and T only.
+# V1.2.28: battery_capacity (address 5638) includes SH15T. Other T sizes stay out until a reading exists.
+# V1.2.29: PV_binary_status bit tests read running_state raw_value. The flags state is text.
 
 # Dynamic configuration support
 dynamic_config:
@@ -914,8 +917,9 @@ sensors:
     scale: 0.01
     scan_group: slow
     entity_category: "diagnostic"
-    condition: "selected_model in [SH20T, SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, SH5.0RT, SH6.0RT, SH8.0RT, SH10RT, SH5.0RT-20, SH6.0RT-20, SH8.0RT-20, SH10RT-20, SH5.0RT-V112, SH6.0RT-V112, SH8.0RT-V112, SH10RT-V112, SH5.0RT-V122, SH6.0RT-V122, SH8.0RT-V122, SH10RT-V122]"
+    condition: "selected_model in [SH20T, SH15T, SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, SH5.0RT, SH6.0RT, SH8.0RT, SH10RT, SH5.0RT-20, SH6.0RT-20, SH8.0RT-20, SH10RT-20, SH5.0RT-V112, SH6.0RT-V112, SH8.0RT-V112, SH10RT-V112, SH5.0RT-V122, SH6.0RT-V122, SH8.0RT-V122, SH10RT-V122]"
     # Added SH20T om request of user
+    # SH15T: live read 20.27 kWh. battery_charge* availability needs this entity.
 
   # Export Power Limitation Values (Protocol V1.1.11)
   - name: Min Export Power Limit Value
@@ -5714,8 +5718,9 @@ binary_sensors:
       and not is_state('[[mm:sensor:{PREFIX}_total_dc_power]]', 'unavailable')
       }}
     state: >-
-      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
-        {{ (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x1)) > 0 }}
+      {% set rs = state_attr('[[mm:sensor:{PREFIX}_running_state]]', 'raw_value') %}
+      {% if rs is number %}
+        {{ (rs | int | bitwise_and(0x1)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
         {% set total_dc_power = states('[[mm:sensor:{PREFIX}_total_dc_power]]') %}
@@ -5752,8 +5757,9 @@ binary_sensors:
       or not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
       }}
     state: >-
-      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
-        {% if (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x2)) > 0 %}
+      {% set rs = state_attr('[[mm:sensor:{PREFIX}_running_state]]', 'raw_value') %}
+      {% if rs is number %}
+        {% if (rs | int | bitwise_and(0x2)) > 0 %}
           on
         {% else %}
           off
@@ -5795,8 +5801,9 @@ binary_sensors:
       or not is_state('[[mm:sensor:{PREFIX}_battery_power]]', 'unavailable')
       }}
     state: >-
-      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
-        {% if (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x4)) > 0 %}
+      {% set rs = state_attr('[[mm:sensor:{PREFIX}_running_state]]', 'raw_value') %}
+      {% if rs is number %}
+        {% if (rs | int | bitwise_and(0x4)) > 0 %}
           on
         {% else %}
           off
@@ -5835,8 +5842,9 @@ binary_sensors:
       and not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
       }}
     state: >-
-      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
-        {{ (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x10)) > 0 }}
+      {% set rs = state_attr('[[mm:sensor:{PREFIX}_running_state]]', 'raw_value') %}
+      {% if rs is number %}
+        {{ (rs | int | bitwise_and(0x10)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
         {% set export_power = states('[[mm:sensor:{PREFIX}_export_power_raw]]') %}
@@ -5872,8 +5880,9 @@ binary_sensors:
       and not is_state('[[mm:sensor:{PREFIX}_export_power_raw]]', 'unavailable')
       }}
     state: >-
-      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
-        {{ (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x20)) > 0 }}
+      {% set rs = state_attr('[[mm:sensor:{PREFIX}_running_state]]', 'raw_value') %}
+      {% if rs is number %}
+        {{ (rs | int | bitwise_and(0x20)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
         {% set export_power = states('[[mm:sensor:{PREFIX}_export_power_raw]]') %}
@@ -5908,8 +5917,9 @@ binary_sensors:
       not is_state('[[mm:sensor:{PREFIX}_running_state]]', 'unavailable')
       }}
     state: >-
-      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
-        {{ (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x8)) > 0 }}
+      {% set rs = state_attr('[[mm:sensor:{PREFIX}_running_state]]', 'raw_value') %}
+      {% if rs is number %}
+        {{ (rs | int | bitwise_and(0x8)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
         {% set load_power = states('[[mm:sensor:{PREFIX}_load_power]]') %}
@@ -5933,8 +5943,9 @@ binary_sensors:
       not is_state('[[mm:sensor:{PREFIX}_running_state]]', 'unavailable')
       }}
     state: >-
-      {% if states('[[mm:sensor:{PREFIX}_running_state]]') | is_number %}
-        {{ (states('[[mm:sensor:{PREFIX}_running_state]]') | int | bitwise_and(0x80)) > 0 }}
+      {% set rs = state_attr('[[mm:sensor:{PREFIX}_running_state]]', 'raw_value') %}
+      {% if rs is number %}
+        {{ (rs | int | bitwise_and(0x80)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
         {% set load_power = states('[[mm:sensor:{PREFIX}_load_power]]') %}
