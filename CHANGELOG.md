@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### 🐛 Fixed
+
+- **Template stem lookup on the event loop**: `async_setup` scans template names once in the executor. `resolve_template_key` then reads that cache only. Loading a template registers its file stem again. Generic YAML download path checks also run in the executor (HACS default review).
+
 ## [1.3.10] - 2026-10-29
 
 ### 🐛 Fixed

@@ -57,6 +57,7 @@ from .modbus_client import async_create_modbus_transport
 from .performance_monitor import PerformanceMonitor
 from .register_optimizer import RegisterOptimizer
 from .template_loader import (
+    async_ensure_template_name_stems,
     get_template_by_name,
     resolve_template_key,
     set_hass_instance,
@@ -282,14 +283,10 @@ class GenericExportDownloadView(HomeAssistantView):
 
         if not GENERIC_EXPORT_FILENAME_RE.match(filename):
             return web.Response(status=400, text="Invalid filename")
-        path = os.path.join(
-            self.hass.config.config_dir, "modbus_manager", "templates", filename
+        real_path = await self.hass.async_add_executor_job(
+            _safe_generic_export_path, self.hass.config.config_dir, filename
         )
-        real_path = os.path.realpath(path)
-        root = os.path.realpath(
-            os.path.join(self.hass.config.config_dir, "modbus_manager", "templates")
-        )
-        if not real_path.startswith(root + os.sep) or not os.path.isfile(real_path):
+        if not real_path:
             return web.Response(status=404, text="Export not found")
         return web.FileResponse(
             real_path,
@@ -300,12 +297,23 @@ class GenericExportDownloadView(HomeAssistantView):
         )
 
 
+def _safe_generic_export_path(config_dir: str, filename: str) -> str | None:
+    """Return the export file path, or None. Blocking; call from the executor."""
+    path = os.path.join(config_dir, "modbus_manager", "templates", filename)
+    real_path = os.path.realpath(path)
+    root = os.path.realpath(os.path.join(config_dir, "modbus_manager", "templates"))
+    if not real_path.startswith(root + os.sep) or not os.path.isfile(real_path):
+        return None
+    return real_path
+
+
 async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
     """Set up the Modbus Manager component."""
     hass.data.setdefault(DOMAIN, {})
 
     # Set Home Assistant instance for custom template loading
     set_hass_instance(hass)
+    await async_ensure_template_name_stems(hass)
 
     # Set up services
     await async_setup_services(hass)

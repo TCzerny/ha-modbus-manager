@@ -73,6 +73,7 @@ from .const import (
     DEFAULT_MIN_VALUE,
     DEFAULT_PRECISION,
     DEFAULT_UPDATE_INTERVAL,
+    GENERIC_TEMPLATE_SENTINEL,
     ControlType,
     DataType,
     RegisterType,
@@ -120,7 +121,7 @@ def _register_template_name_stem(template_name: str, template_path: str) -> None
 
 
 def _scan_template_directory_for_name_stems(template_dir: str) -> None:
-    """Scan a template directory and map YAML name fields to file stems."""
+    """Map YAML name fields to file stems. Blocking; call from the executor."""
     if not template_dir or not os.path.isdir(template_dir):
         return
     for filename in os.listdir(template_dir):
@@ -134,9 +135,18 @@ def _scan_template_directory_for_name_stems(template_dir: str) -> None:
                 data = yaml.safe_load(handle) or {}
         except (OSError, yaml.YAMLError):
             continue
+        if not isinstance(data, dict):
+            continue
         template_name = data.get("name")
-        if template_name:
-            _register_template_name_stem(str(template_name).strip(), template_path)
+        if isinstance(template_name, str) and template_name.strip():
+            _register_template_name_stem(template_name.strip(), template_path)
+
+
+def _scan_template_name_stems(custom_dir: Optional[str]) -> None:
+    """Scan built-in and custom template dirs. Blocking; executor only."""
+    _scan_template_directory_for_name_stems(TEMPLATE_DIR)
+    if custom_dir:
+        _scan_template_directory_for_name_stems(custom_dir)
 
 
 def resolve_template_key(template_name: str) -> str:
@@ -144,27 +154,24 @@ def resolve_template_key(template_name: str) -> str:
 
     Device registry identifiers use the file stem (e.g. sungrow_shx_dynamic),
     not the human-readable template name (e.g. Sungrow SH Series Inverter).
+
+    Reads the in-memory cache filled at setup and when a template is loaded.
+    No filesystem access.
     """
     if not template_name or not str(template_name).strip():
         return "template"
 
     name = str(template_name).strip()
-    if name in _template_name_to_stem:
-        return _template_name_to_stem[name]
+    if name == GENERIC_TEMPLATE_SENTINEL:
+        return name
 
-    if name in _template_name_to_path:
-        _register_template_name_stem(name, _template_name_to_path[name])
-        return _template_name_to_stem[name]
+    cached = _template_name_to_stem.get(name)
+    if cached:
+        return cached
 
-    _scan_template_directory_for_name_stems(TEMPLATE_DIR)
-    if name in _template_name_to_stem:
-        return _template_name_to_stem[name]
-
-    if _hass_instance is not None:
-        custom_dir = _hass_instance.config.path("modbus_manager/templates")
-        _scan_template_directory_for_name_stems(custom_dir)
-
-    if name in _template_name_to_stem:
+    template_path = _template_name_to_path.get(name)
+    if template_path:
+        _register_template_name_stem(name, template_path)
         return _template_name_to_stem[name]
 
     # Already a stem-like key (no spaces) — keep as-is.
@@ -173,6 +180,23 @@ def resolve_template_key(template_name: str) -> str:
 
     slug = re.sub(r"[^\w]+", "_", name).strip("_").lower()
     return slug or "template"
+
+
+async def async_ensure_template_name_stems(
+    hass: Optional[HomeAssistant] = None,
+) -> None:
+    """Scan template names once during setup, off the event loop.
+
+    Later lookups use the cache. Loading a template registers its stem again.
+    """
+    if hass is not None:
+        set_hass_instance(hass)
+    custom_dir = None
+    hass_ref = hass if hass is not None else _hass_instance
+    if hass_ref is not None:
+        custom_dir = hass_ref.config.path("modbus_manager/templates")
+    loop = asyncio.get_running_loop()
+    await loop.run_in_executor(None, _scan_template_name_stems, custom_dir)
 
 
 REQUIRED_FIELDS = {"name", "address"}
