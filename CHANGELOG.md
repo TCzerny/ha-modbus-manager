@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Added
+
+- **KOSTAL Smart Energy Meter (read-only)**: New template `kostal_smart_energy_meter.yaml` for the KSEM G1/G2 Modbus TCP interface (port 502, unit 1): device info, total and per-phase values, import/export energy and the KOSTAL energy flow block, 70 sensors (31 enabled by default). Big-endian, fixed scaling from the internal registers; the uint64 energy counters are read as their lower 32 bits. Validated on a KSEM G2, FW 2.7.2, with Modbus Manager 1.3.12. See [KOSTAL Smart Energy Meter](docs/README_kostal_smart_energy_meter.md).
+
 ## [1.3.12] - 2026-11-05
 
 ### ✨ Added

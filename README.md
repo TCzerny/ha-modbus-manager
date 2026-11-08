@@ -91,6 +91,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 - **[Growatt MIN/MOD/MAX](docs/README_growatt_min_mod_max_dynamic.md)** – Inverter template
 - **[SMA Sunny Tripower/Boy](docs/README_sma_dynamic.md)** – SMA inverter template
 - **[SolaX Inverter](docs/README_solax_dynamic.md)** – GEN2–GEN6 dynamic template
+- **[KOSTAL Smart Energy Meter](docs/README_kostal_smart_energy_meter.md)** – KSEM G1/G2, read-only Modbus TCP (grid, phases, energy, KOSTAL energy flow); validated on KSEM G2 FW 2.7.2
 
 ### 🔮 Future Support
 - **Kostal** (Piko, Plenticore)
