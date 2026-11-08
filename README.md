@@ -91,9 +91,10 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 - **[Growatt MIN/MOD/MAX](docs/README_growatt_min_mod_max_dynamic.md)** – Inverter template
 - **[SMA Sunny Tripower/Boy](docs/README_sma_dynamic.md)** – SMA inverter template
 - **[SolaX Inverter](docs/README_solax_dynamic.md)** – GEN2–GEN6 dynamic template
+- **[KOSTAL PLENTICORE G3](docs/README_kostal_plenticore_g3.md)** – Read-only Modbus TCP monitoring (PV, AC, battery, meter, energy); validated on PLENTICORE G3 M FW 3.07.03
 
 ### 🔮 Future Support
-- **Kostal** (Piko, Plenticore)
+- **Kostal** (Piko, Plenticore plus G2; battery controls for PLENTICORE G3)
 - **Victron** (other products, e.g. MultiPlus, Quattro — **EV Charging Station** is [supported](docs/README_victron_ev_charging_station.md) above)
 
 ## 🔧 Installation
