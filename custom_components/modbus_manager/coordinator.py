@@ -2509,6 +2509,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
     _FIRMWARE_REGISTER_ROLES = {
         "inverter_firmware_info": "inverter",
         "battery_firmware_info": "battery",
+        "meter_firmware_info": "energy_meter",
     }
 
     def _extract_firmware_register_value(self, key_substring: str) -> Optional[str]:
