@@ -38,7 +38,7 @@ sensors:
   - {name: "Product Name", unique_id: "product_name", address: 8212, input_type: holding, read_function_code: 3, data_type: string, count: 16, encoding: latin1, scan_group: slow, entity_category: diagnostic}
   - {name: "Serial Number", unique_id: "serial_number", address: 8228, input_type: holding, read_function_code: 3, data_type: string, count: 16, encoding: latin1, scan_group: slow, entity_category: diagnostic}
   - {name: "Measuring Interval", unique_id: "measuring_interval", address: 8244, input_type: holding, read_function_code: 3, data_type: uint16, unit_of_measurement: "ms", precision: 0, scan_group: slow, entity_category: diagnostic, enabled_by_default: false}
-  - {name: "Firmware Version", unique_id: "firmware_version", address: 40044, input_type: holding, read_function_code: 3, data_type: string, count: 8, encoding: latin1, scan_group: slow, entity_category: diagnostic}
+  - {name: "Firmware Version", unique_id: "meter_firmware_info", address: 40044, input_type: holding, read_function_code: 3, data_type: string, count: 8, encoding: latin1, scan_group: slow, entity_category: diagnostic}
 
   # Instantaneous values, sum of all phases (0x0000-0x001B). + = import, - = export
   - {name: "Active Power Import", unique_id: "active_power_import", address: 0, input_type: holding, read_function_code: 3, data_type: uint32, count: 2, byte_order: big, swap: none, unit_of_measurement: "W", device_class: power, state_class: measurement, precision: 0, scale: 0.1, scan_group: fast}
