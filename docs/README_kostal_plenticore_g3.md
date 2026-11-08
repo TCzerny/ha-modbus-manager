@@ -21,9 +21,13 @@ The inverter answers with exception 2 (illegal data address) when a read starts 
 
 ## Entities
 
-61 entities are enabled by default (power, energy, battery, meter totals, state). Per-phase currents, reactive/apparent power, per-string energy and the battery-management read-backs (1034–1044, 1076/1078, 1280–1288) are present but disabled by default.
+66 entities are enabled by default (power, energy, battery, battery bank state, meter totals, state). Per-phase currents, reactive/apparent power, per-string energy and the battery-management read-backs (1034–1044, 1076/1078, 1280–1288) are present but disabled by default.
 
 Sign conventions from the spec: battery current and power are negative while charging. Meter values at the grid connection are positive for import and negative for feed-in.
+
+## Battery bank state (SunSpec model 802)
+
+The inverter's SunSpec chain is 1, 103, 113, 120, 123, 160, 203, 802 (at 40415), 65535. From the battery base model 802 the template reads the bank state (`State`, 40437: DISCONNECTED / INITIALIZING / CONNECTED / STANDBY / SOC PROTECTION / SUSPENDING / FAULT), the event bitfield `Evt1` (40441, shown as active flags such as COMMUNICATION_ERROR or OTHER_ALARM, raw value in the `numeric_value` attribute), max/min cell voltage (40452/40455, `CellV_SF` = −3 on the tested unit) and the battery's inverter state request (`ReqInvState`, 40463). Vendor state, vendor events and `SetOp` are present but disabled by default. Enum and bitfield points need no scale factor; 32-bit points arrive high word first like the other U32 values from 0x200 on. On the tested unit the bank state shows STANDBY while a BYD battery idles at its minimum SoC (event 1033 in the inverter log) and FAULT after a failed reconnect from battery sleep mode.
 
 ## Why there are no controls
 

@@ -106,6 +106,14 @@ class KostalPlenticoreG3TemplateTest(unittest.TestCase):
             with self.subTest(address=address):
                 self.assertAlmostEqual(struct.unpack(fmt, raw)[0], expected, places=2)
 
+    def test_battery_bank_state_map(self):
+        state = self.by_address[40437]  # SunSpec model 802 State, captured value 3
+        self.assertEqual(state["map"][3], "CONNECTED")
+        self.assertEqual(state["map"][99], "FAULT")
+        events = self.by_address[40441]  # Evt1, uint32 high word first
+        self.assertEqual(events["swap"], "none")
+        self.assertEqual(events["flags"][0], "COMMUNICATION_ERROR")
+
     def test_captured_strings_decode(self):
         words = [16985, 17440, 8224, 8224, 8224, 8224, 8224, 8224]  # 517: "BYD" + spaces
         text = MODBUS_UTILS.registers_to_bytes(words).decode("latin1").strip()
