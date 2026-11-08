@@ -50,7 +50,7 @@ sensors:
   - {name: "Hardware Version", unique_id: "hardware_version", address: 36, input_type: holding, read_function_code: 3, data_type: uint32, count: 2, byte_order: big, swap: word, scan_group: slow, entity_category: diagnostic, enabled_by_default: false}
   - {name: "Software Version MC", unique_id: "software_version_mc", address: 38, input_type: holding, read_function_code: 3, data_type: string, count: 8, encoding: latin1, scan_group: slow, entity_category: diagnostic, enabled_by_default: false}
   - {name: "Software Version IOC", unique_id: "software_version_ioc", address: 46, input_type: holding, read_function_code: 3, data_type: string, count: 8, encoding: latin1, scan_group: slow, entity_category: diagnostic, enabled_by_default: false}
-  - {name: "Software Version", unique_id: "software_version", address: 58, input_type: holding, read_function_code: 3, data_type: string, count: 13, encoding: latin1, scan_group: slow, entity_category: diagnostic}
+  - {name: "Software Version", unique_id: "inverter_firmware_info", address: 58, input_type: holding, read_function_code: 3, data_type: string, count: 13, encoding: latin1, scan_group: slow, entity_category: diagnostic}
   - {name: "Inverter State", unique_id: "inverter_state", address: 56, input_type: holding, read_function_code: 3, data_type: uint32, count: 2, byte_order: big, swap: word, scan_group: fast, icon: "mdi:solar-power-variant", map: {0: "Off", 1: "Init", 2: "IsoMeas", 3: "GridCheck", 4: "StartUp", 6: "FeedIn", 7: "Throttled", 8: "ExtSwitchOff", 9: "Update", 10: "Standby", 11: "GridSync", 12: "GridPreCheck", 13: "GridSwitchOff", 14: "Overheating", 15: "Shutdown", 16: "ImproperDcVoltage", 17: "ESB", 18: "Unknown"}}
 
   # Inverter, home consumption (0x62-0x7C)
