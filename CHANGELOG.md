@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### ✨ Added
 
-- **KOSTAL PLENTICORE G3 (read-only)**: New template `kostal_plenticore_g3.yaml` for the Modbus TCP map (port 1502, unit 71): device info, inverter state, PV inputs, AC side, battery, power meter and energy counters, 132 sensors (66 enabled by default), including the battery bank state, events and cell voltages from SunSpec model 802. Float32 CDAB; U32 values from 0x200 on are high word first. Validated on a PLENTICORE G3 M, FW 3.07.03.27599, with Modbus Manager 1.3.12. No controls: external battery management needs cyclic writes. See [KOSTAL PLENTICORE G3](docs/README_kostal_plenticore_g3.md).
+- **KOSTAL PLENTICORE G3 (read-only)**: New template `kostal_plenticore_g3.yaml` for the Modbus TCP map (port 1502, unit 71): device info, inverter state, PV inputs, AC side, battery, power meter and energy counters, 137 sensors (71 enabled by default), including the battery bank state, events and cell voltages from SunSpec model 802 and the cabinet/heat sink/transformer temperatures and inverter events from SunSpec model 113. Float32 CDAB; U32 values from 0x200 on are high word first. Validated on a PLENTICORE G3 M, FW 3.07.03.27599, with Modbus Manager 1.3.12. No controls: external battery management needs cyclic writes. See [KOSTAL PLENTICORE G3](docs/README_kostal_plenticore_g3.md).
 
 ## [1.3.12] - 2026-11-05
 

@@ -21,9 +21,13 @@ The inverter answers with exception 2 (illegal data address) when a read starts 
 
 ## Entities
 
-66 entities are enabled by default (power, energy, battery, battery bank state, meter totals, state). Per-phase currents, reactive/apparent power, per-string energy and the battery-management read-backs (1034–1044, 1076/1078, 1280–1288) are present but disabled by default.
+71 entities are enabled by default (power, energy, battery, battery bank state, temperatures, meter totals, state). Per-phase currents, reactive/apparent power, per-string energy and the battery-management read-backs (1034–1044, 1076/1078, 1280–1288) are present but disabled by default.
 
 Sign conventions from the spec: battery current and power are negative while charging. Meter values at the grid connection are positive for import and negative for feed-in.
+
+## Temperatures and inverter events (SunSpec model 113)
+
+The KOSTAL register map only has the controller board temperature (98). From the SunSpec inverter model 113 (float, at 40122) the template adds cabinet, heat sink and transformer temperature (40162/40164/40166) and the event bitfields `Evt1` (40172, GROUND_FAULT, GRID_DISCONNECT, OVER_TEMP …) and `EvtVnd1` (40176). The floats in this model follow the CDAB setting. Both event fields read 0 on the tested unit, so their word order is assumed to match the floats and is not verified; the raw value stays in the `numeric_value` attribute.
 
 ## Battery bank state (SunSpec model 802)
 

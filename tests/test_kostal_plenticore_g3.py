@@ -36,6 +36,7 @@ CAPTURED = {
     529: ([0, 29200], 29200),  # battery work capacity Wh (U32, high word first)
     577: ([239, 27430], 15690534),  # generation energy Wh, matches total yield (320)
     1288: ([0, 60], 60),  # time until fallback s (U32, high word first)
+    40164: ([11776, 16952], 46.045),  # heat sink temperature, SunSpec model 113 float (CDAB)
     40346: ([184, 53559], 12112183),  # total energy exported Wh
 }
 

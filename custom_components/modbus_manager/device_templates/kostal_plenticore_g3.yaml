@@ -151,6 +151,15 @@ sensors:
   - {name: "Product Name", unique_id: "product_name", address: 768, input_type: holding, read_function_code: 3, data_type: string, count: 32, encoding: latin1, scan_group: slow, entity_category: diagnostic}
   - {name: "Power Class", unique_id: "power_class", address: 800, input_type: holding, read_function_code: 3, data_type: string, count: 32, encoding: latin1, scan_group: slow, entity_category: diagnostic}
 
+  # SunSpec inverter model 113 (float) at 40122: temperatures and event bitfields not in the
+  # KOSTAL register map. Floats are CDAB here. Evt1/EvtVnd1 read 0 on the tested unit, so their
+  # word order is assumed (CDAB like the floats), not verified; numeric_value keeps the raw value.
+  - {name: "Cabinet Temperature", unique_id: "cabinet_temperature", address: 40162, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: word, unit_of_measurement: "°C", device_class: temperature, state_class: measurement, precision: 1, scan_group: medium}
+  - {name: "Heat Sink Temperature", unique_id: "heat_sink_temperature", address: 40164, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: word, unit_of_measurement: "°C", device_class: temperature, state_class: measurement, precision: 1, scan_group: medium}
+  - {name: "Transformer Temperature", unique_id: "transformer_temperature", address: 40166, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: word, unit_of_measurement: "°C", device_class: temperature, state_class: measurement, precision: 1, scan_group: medium}
+  - {name: "Inverter Events", unique_id: "inverter_events", address: 40172, input_type: holding, read_function_code: 3, data_type: uint32, count: 2, byte_order: big, swap: word, scan_group: medium, entity_category: diagnostic, flags: {0: "GROUND_FAULT", 1: "DC_OVER_VOLT", 2: "AC_DISCONNECT", 3: "DC_DISCONNECT", 4: "GRID_DISCONNECT", 5: "CABINET_OPEN", 6: "MANUAL_SHUTDOWN", 7: "OVER_TEMP", 8: "OVER_FREQUENCY", 9: "UNDER_FREQUENCY", 10: "AC_OVER_VOLT", 11: "AC_UNDER_VOLT", 12: "BLOWN_STRING_FUSE", 13: "UNDER_TEMP", 14: "MEMORY_LOSS", 15: "HW_TEST_FAILURE"}}
+  - {name: "Inverter Vendor Events", unique_id: "inverter_vendor_events", address: 40176, input_type: holding, read_function_code: 3, data_type: uint32, count: 2, byte_order: big, swap: word, scan_group: medium, entity_category: diagnostic}
+
   # SunSpec battery base model 802 at 40415 (chain 1, 103, 113, 120, 123, 160, 203, 802).
   # Enums/bitfields need no scale factor; cell voltages use CellV_SF = -3 (read at 40475).
   - {name: "Battery Bank State", unique_id: "battery_bank_state", address: 40437, input_type: holding, read_function_code: 3, data_type: uint16, scan_group: fast, icon: "mdi:battery-sync", map: {1: "DISCONNECTED", 2: "INITIALIZING", 3: "CONNECTED", 4: "STANDBY", 5: "SOC PROTECTION", 6: "SUSPENDING", 99: "FAULT"}}
