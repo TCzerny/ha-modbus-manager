@@ -22,6 +22,10 @@ The KSEM energy counters (0x0200–0x0317) are `uint64` in 0.1 Wh. Modbus Manage
 
 The static block at 40960 (KSEM SW ≥ 2.6.0) holds the KOSTAL system as the KSEM sees it: grid, inverter AC, PV DC, home consumption, battery (negative while charging), system SoC, wallbox, and a curtailment flag. Generators outside the KOSTAL system (for example a second inverter brand) are not part of it.
 
+## Firmware on the device page
+
+The firmware sensor uses the `unique_id` `meter_firmware_info`. With the energy meter role from [#142](https://github.com/TCzerny/ha-modbus-manager/pull/142), Modbus Manager copies its value into the device's `sw_version` (2.7.2 on the tested unit). Without it, the sensor still shows the firmware, but the device page keeps the 1.0.0 placeholder.
+
 ## Entities
 
 31 entities are enabled by default: grid power and frequency, per-phase active power, current and voltage, import/export energy, the energy flow block, and device info. Reactive and apparent values, power factors, per-phase energy and wallbox values are present but disabled by default.
