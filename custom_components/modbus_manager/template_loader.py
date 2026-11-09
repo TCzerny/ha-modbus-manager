@@ -694,6 +694,12 @@ async def load_single_template(
         ):
             _LOGGER.warning("Template %s: No entities found", template_name)
 
+        from .keepalive import KEEPALIVE_GROUPS_KEY, validate_template_keepalive
+
+        keepalive_groups = validate_template_keepalive(
+            data.get(KEEPALIVE_GROUPS_KEY), controls, template_name
+        )
+
         result = {
             "name": template_name,
             "sensors": validated_registers,
@@ -713,6 +719,8 @@ async def load_single_template(
         detect_slave_ids = data.get("detect_slave_ids")
         if isinstance(detect_slave_ids, list):
             result["detect_slave_ids"] = detect_slave_ids
+        if keepalive_groups:
+            result[KEEPALIVE_GROUPS_KEY] = keepalive_groups
 
         # Include dynamic_config if present
         if "dynamic_config" in data:

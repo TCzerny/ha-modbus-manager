@@ -362,6 +362,11 @@ async def async_setup_entry(
         # Get all entities from coordinator (structured dict)
         entities_dict = await coordinator._collect_all_registers()
 
+        # Status sensors of keepalive groups (cyclic writes), if the template has any
+        from .keepalive_entities import add_keepalive_entities
+
+        add_keepalive_entities(coordinator, async_add_entities, "sensor")
+
         # Get regular sensors with addresses
         regular_sensors = entities_dict.get("sensors", [])
 

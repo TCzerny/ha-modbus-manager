@@ -7,7 +7,7 @@ import json
 import re
 import struct
 from datetime import timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 from homeassistant.components.modbus.const import (
     CALL_TYPE_REGISTER_HOLDING,
@@ -48,6 +48,7 @@ from .generic_device import (
     is_generic_device_template,
     template_from_generic_device,
 )
+from .keepalive import KEEPALIVE_KEY, KeepaliveManager
 from .logger import ModbusManagerLogger
 from .modbus_utils import (
     decode_string_registers,
@@ -173,6 +174,9 @@ class ModbusCoordinator(DataUpdateCoordinator):
         # Serialize Modbus reads/writes; writes hold through post-write settle delay
         self._modbus_io_lock = asyncio.Lock()
 
+        # Cyclic writes for controls with a device-side timeout (opt-in per template)
+        self.keepalive = KeepaliveManager(self)
+
         # Start with a short interval - will be adjusted after register analysis
         # Use 5 seconds as base to ensure we can update frequently
         update_interval = timedelta(seconds=5)
@@ -257,6 +261,8 @@ class ModbusCoordinator(DataUpdateCoordinator):
         """Mark coordinator as unloading to stop further updates."""
         _LOGGER.debug("Marking coordinator as unloading")
         self._is_unloading = True
+        # Stop cyclic writes without a final write; the device falls back on its own
+        self.keepalive.stop_all("unload")
         unsub = self._unsub_registry
         self._unsub_registry = None
         if unsub:
@@ -298,11 +304,19 @@ class ModbusCoordinator(DataUpdateCoordinator):
         call_type: str,
         *,
         refresh: bool = True,
+        guard: Optional[Callable[[], bool]] = None,
     ) -> bool:
-        """Write a Modbus register with IO lock and post-write settle delay."""
+        """Write a Modbus register with IO lock and post-write settle delay.
+
+        ``guard`` is evaluated after the IO lock is acquired, right before the
+        request is sent; if it returns False nothing is written (used by
+        keepalive so queued writes cannot run after a stop or unload).
+        """
         settle_s = self._post_write_settle_seconds()
         success = False
         async with self._modbus_io_lock:
+            if guard is not None and (self._is_unloading or not guard()):
+                return False
             result = await self.hub.async_pb_call(
                 slave_id,
                 address,
@@ -706,6 +720,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
             all_controls = []
             all_calculated = []
             all_binary_sensors = []
+            keepalive_groups: Dict[str, Dict[str, Any]] = {}
 
             # Check if there's an SBR Battery device in the devices array
             # This is needed for backward compatibility with existing configurations
@@ -1366,6 +1381,16 @@ class ModbusCoordinator(DataUpdateCoordinator):
                                 )
                                 register[ref_field] = ref_config
 
+                    if register.get(KEEPALIVE_KEY):
+                        self._attach_keepalive_group(
+                            register,
+                            template.get("keepalive_groups") or {},
+                            prefix,
+                            device_info,
+                            config_subentry_id,
+                            keepalive_groups,
+                        )
+
                     # Only add if it has a valid address (for Modbus reading)
                     if is_valid_modbus_address(register.get("address")):
                         all_controls.append(register)
@@ -1432,6 +1457,8 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     len(processed_calculated),
                     len(processed_binary_sensors),
                 )
+
+            self.keepalive.register_groups(keepalive_groups)
 
             # Return structured dict with all entity categories
             return {
@@ -2278,6 +2305,44 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
         except Exception as e:
             _LOGGER.error("Error distributing data: %s", str(e))
+
+    def _attach_keepalive_group(
+        self,
+        register: Dict[str, Any],
+        template_groups: Dict[str, Dict[str, Any]],
+        prefix: str,
+        device_info: Dict[str, Any],
+        config_subentry_id: Optional[str],
+        keepalive_groups: Dict[str, Dict[str, Any]],
+    ) -> None:
+        """Resolve a control's keepalive block to a per-device group id."""
+        keepalive = dict(register.get(KEEPALIVE_KEY) or {})
+        group_key = keepalive.get("group")
+        group_cfg = template_groups.get(group_key)
+        if not group_cfg:
+            _LOGGER.error(
+                "Control %s refers to unknown keepalive group %s; it stays write-once",
+                register.get("unique_id"),
+                group_key,
+            )
+            register.pop(KEEPALIVE_KEY, None)
+            return
+        group_id = generate_unique_id(prefix, f"{group_key}_keepalive", group_key)
+        keepalive["group_id"] = group_id
+        for clamp_key in ("clamp_max_to_register", "clamp_min_to_register"):
+            source = keepalive.get(clamp_key)
+            if isinstance(source, str) and source:
+                stripped = source.replace("{PREFIX}_", "", 1) if source.startswith("{PREFIX}_") else source
+                keepalive[f"{clamp_key}_source"] = generate_unique_id(
+                    prefix, stripped, stripped
+                )
+        register[KEEPALIVE_KEY] = keepalive
+        keepalive_groups[group_id] = {
+            **group_cfg,
+            "prefix": prefix,
+            "device_info": device_info,
+            "config_subentry_id": config_subentry_id,
+        }
 
     def _create_register_key(self, register: Dict[str, Any]) -> str:
         """Create unique key for register."""

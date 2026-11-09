@@ -22,6 +22,7 @@ from .device_utils import (
     is_coordinator_connected,
     is_register_dependency_met,
 )
+from .keepalive import store_keepalive_setpoint
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -366,6 +367,13 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
 
             if result:
                 _LOGGER.debug("Successfully set %s to %s", self._log_label, option)
+                store_keepalive_setpoint(
+                    self.coordinator,
+                    self.register_key,
+                    self.register_config,
+                    numeric_value,
+                    "raw",
+                )
             else:
                 _LOGGER.error("Failed to set %s to %s", self._log_label, option)
 
