@@ -92,6 +92,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 - **[SMA Sunny Tripower/Boy](docs/README_sma_dynamic.md)** – SMA inverter template
 - **[SolaX Inverter](docs/README_solax_dynamic.md)** – GEN2–GEN6 dynamic template
 - **[KOSTAL PLENTICORE G3](docs/README_kostal_plenticore_g3.md)** – Read-only Modbus TCP monitoring (PV, AC, battery, meter, energy); validated on PLENTICORE G3 M FW 3.07.03
+- **[KOSTAL Smart Energy Meter](docs/README_kostal_smart_energy_meter.md)** – KSEM G1/G2, read-only Modbus TCP (grid, phases, energy, KOSTAL energy flow); validated on KSEM G2 FW 2.7.2
 
 ### 🔮 Future Support
 - **Kostal** (Piko, Plenticore plus G2; battery controls for PLENTICORE G3)
