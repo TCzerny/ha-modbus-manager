@@ -625,6 +625,13 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         if is_reload:
             _LOGGER.debug("🔄 Reload detected - keeping Modbus connection alive")
 
+        # Stop cyclic keepalive writes before the platforms go away.
+        hub_entry_data = hass.data.get(DOMAIN, {}).get(entry.entry_id)
+        if isinstance(hub_entry_data, dict):
+            keepalive = getattr(hub_entry_data.get("coordinator"), "keepalive", None)
+            if keepalive is not None:
+                keepalive.stop_all("unload")
+
         # Unload all platforms
         try:
             unload_ok = await hass.config_entries.async_unload_platforms(

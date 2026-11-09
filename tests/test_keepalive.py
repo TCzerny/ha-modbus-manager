@@ -597,5 +597,126 @@ class StopAndRaceTest(unittest.TestCase):
         run(scenario)
 
 
+
+class SecondReviewTest(unittest.TestCase):
+    def test_switch_off_while_off_keeps_values_and_writes_nothing(self):
+        async def scenario():
+            coordinator, manager, _ = make_manager()
+            config = number_config(release="write", release_value=13500.0)
+            ka.store_keepalive_setpoint(coordinator, "k", config, 0, "number")
+            self.assertIsNone(manager.async_deactivate(GID))  # already off
+            await asyncio.sleep(0)
+            self.assertEqual(coordinator.writes, [])
+            self.assertIn("k", manager.groups[GID].setpoints)
+
+        run(scenario)
+
+    def test_switch_off_after_stop_resets_state_without_writing(self):
+        async def scenario():
+            coordinator, manager, _ = make_manager()
+            config = number_config(release="write", release_value=13500.0)
+            ka.store_keepalive_setpoint(coordinator, "k", config, 0, "number")
+            await settle(manager.async_activate(GID))
+            manager.stop_group(GID, "test")
+            writes_before = len(coordinator.writes)
+            self.assertIsNone(manager.async_deactivate(GID))
+            self.assertEqual(len(coordinator.writes), writes_before)
+            self.assertEqual(manager.groups[GID].state, ka.STATE_OFF)
+
+        run(scenario)
+
+    def test_spacing_holds_across_concurrent_groups(self):
+        async def scenario():
+            coordinator, manager, clock = make_manager()
+            gid2 = "t_other_keepalive"
+            manager.register_groups({GID: dict(GROUP_CFG), gid2: dict(GROUP_CFG)})
+            send_times = []
+            original = coordinator.async_pb_write
+
+            async def recording(*args, **kwargs):
+                result = await original(*args, **kwargs)
+                if result:
+                    send_times.append(clock.now)
+                return result
+
+            coordinator.async_pb_write = recording
+            ka.store_keepalive_setpoint(coordinator, "k1", number_config("a", 1038), 0, "number")
+            other = number_config("b", 1040)
+            other["keepalive"]["group_id"] = gid2
+            ka.store_keepalive_setpoint(coordinator, "k2", other, 0, "number")
+            t1 = manager.async_activate(GID)
+            t2 = manager.async_activate(gid2)
+            await settle(t1)
+            await settle(t2)
+            self.assertEqual(len(send_times), 2)
+            self.assertGreaterEqual(send_times[1] - send_times[0], 1.0)
+
+        run(scenario)
+
+    def test_stop_does_not_abort_write_in_flight(self):
+        async def scenario():
+            coordinator, manager, _ = make_manager()
+            entered = asyncio.Event()
+            proceed = asyncio.Event()
+            finished = []
+
+            async def slow_write(*args, guard=None, **kwargs):
+                async with coordinator.lock:
+                    if guard is not None and not guard():
+                        return False
+                    entered.set()
+                    await proceed.wait()
+                    finished.append(args[1])
+                    return True
+
+            coordinator.async_pb_write = slow_write
+            ka.store_keepalive_setpoint(coordinator, "k", number_config(), 0, "number")
+            task = manager.async_activate(GID)
+            await entered.wait()
+            manager.stop_group(GID, "test")  # cancels the round task
+            proceed.set()
+            await settle(task)
+            for _ in range(5):
+                await asyncio.sleep(0)
+            self.assertEqual(finished, [1026])  # transaction completed, not torn down
+
+        run(scenario)
+
+    def test_home_assistant_stop_stops_groups(self):
+        async def scenario():
+            coordinator, manager, _ = make_manager()
+            ka.store_keepalive_setpoint(coordinator, "k", number_config(), 0, "number")
+            await settle(manager.async_activate(GID))
+            manager._handle_hass_stop(None)
+            self.assertEqual(manager.groups[GID].state, ka.STATE_STOPPED)
+
+        run(scenario)
+
+    def test_switch_mismatch_uses_raw_value(self):
+        async def scenario():
+            coordinator, manager, clock = make_manager()
+            config = {
+                "unique_id": "t_switch",
+                "type": "switch",
+                "address": 1080,
+                "slave_id": 71,
+                "data_type": "uint16",
+                "count": 1,
+                "keepalive": {"group": "bat", "group_id": GID, "release": "stop"},
+            }
+            ka.store_keepalive_setpoint(coordinator, "s", config, 1, "raw")
+            await settle(manager.async_activate(GID))
+            clock.now += 15
+            coordinator.register_data["s"] = {
+                "processed_value": False,
+                "raw_value": 0,
+                "timestamp": clock.now,
+            }
+            await manager.async_run_round(GID)
+            self.assertEqual(manager.groups[GID].mismatches, 1)
+
+        run(scenario)
+
+
 if __name__ == "__main__":
     unittest.main()

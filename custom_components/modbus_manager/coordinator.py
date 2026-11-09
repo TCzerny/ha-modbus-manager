@@ -1381,18 +1381,17 @@ class ModbusCoordinator(DataUpdateCoordinator):
                                 )
                                 register[ref_field] = ref_config
 
-                    if register.get(KEEPALIVE_KEY):
-                        self._attach_keepalive_group(
-                            register,
-                            template.get("keepalive_groups") or {},
-                            prefix,
-                            device_info,
-                            config_subentry_id,
-                            keepalive_groups,
-                        )
-
                     # Only add if it has a valid address (for Modbus reading)
                     if is_valid_modbus_address(register.get("address")):
+                        if register.get(KEEPALIVE_KEY):
+                            self._attach_keepalive_group(
+                                register,
+                                template.get("keepalive_groups") or {},
+                                prefix,
+                                device_info,
+                                config_subentry_id,
+                                keepalive_groups,
+                            )
                         all_controls.append(register)
 
                 # Calculated: entities without address, type="calculated"

@@ -337,6 +337,9 @@ class KeepaliveManager:
         self._listeners: Dict[str, list] = {}
         self._unsub_timer: Optional[Callable[[], None]] = None
         self._last_send: Optional[float] = None  # loop time of the last keepalive write
+        # Serializes "wait for the gap -> send" across all groups of this hub.
+        self._send_lock = asyncio.Lock()
+        self._unsub_stop: Optional[Callable[[], None]] = None
 
     # -- registration -------------------------------------------------------
 
@@ -491,6 +494,14 @@ class KeepaliveManager:
         state = self._groups.get(group_id)
         if state is None:
             return None
+        if state.state != STATE_ACTIVE:
+            # Already off or stopped: nothing to release. Keep values the user
+            # set while the group was off.
+            if state.state == STATE_STOPPED:
+                state.state = STATE_OFF
+                state.stop_reason = None
+                self._notify(group_id)
+            return None
         releases = [
             sp
             for sp in state.setpoints.values()
@@ -533,6 +544,9 @@ class KeepaliveManager:
         if self._unsub_timer is not None:
             self._unsub_timer()
             self._unsub_timer = None
+        if self._unsub_stop is not None:
+            self._unsub_stop()
+            self._unsub_stop = None
 
     # -- tasks and timer ----------------------------------------------------
 
@@ -565,6 +579,18 @@ class KeepaliveManager:
         self._unsub_timer = async_track_time_interval(
             hass, self._handle_tick, timedelta(seconds=TICK_SECONDS)
         )
+        if self._unsub_stop is None:
+            from homeassistant.const import EVENT_HOMEASSISTANT_STOP
+
+            self._unsub_stop = hass.bus.async_listen_once(
+                EVENT_HOMEASSISTANT_STOP, self._handle_hass_stop
+            )
+
+    @_ha_callback
+    def _handle_hass_stop(self, _event: Any = None) -> None:
+        # Home Assistant does not unload config entries on stop; stop writing here.
+        self._unsub_stop = None  # a fired once-listener must not be removed again
+        self.stop_all("Home Assistant stopping")
 
     def _maybe_stop_timer(self) -> None:
         if self._unsub_timer is None:
@@ -594,6 +620,10 @@ class KeepaliveManager:
             self._start_task(state, self.async_run_round(group_id, state.generation))
 
     # -- guards -------------------------------------------------------------
+
+    def link_ok(self) -> bool:
+        """Public form of the link check (used by the group switch)."""
+        return self._link_ok()
 
     def _link_ok(self) -> bool:
         """False while unloading, after a failed poll, or with a disconnected hub."""
@@ -742,7 +772,15 @@ class KeepaliveManager:
         if setpoint.kind == "number":
             actual = data.get("processed_value")
         else:
-            actual = data.get("numeric_value", data.get("processed_value"))
+            # select/switch repeat a raw register value; compare against the raw read.
+            actual = None
+            for key in ("raw_value", "numeric_value", "processed_value"):
+                candidate = data.get(key)
+                if isinstance(candidate, bool):
+                    candidate = int(candidate)
+                if _as_float(candidate) is not None:
+                    actual = candidate
+                    break
         actual_f = _as_float(actual)
         if actual_f is None:
             return False
@@ -836,15 +874,6 @@ class KeepaliveManager:
         """Send one write. Returns True/False, or None if the guard blocked it."""
         from .modbus_utils import encode_register_write_value, get_write_call_type
 
-        # Minimum gap since the last keepalive write of this hub (any group).
-        gap = state.min_write_spacing_ms / 1000.0
-        if self._last_send is not None and gap > 0:
-            wait = gap - (self._loop_time() - self._last_send)
-            if wait > 0:
-                await self._sleep(wait)
-        if not guard():
-            return None
-
         config = setpoint.config
         try:
             if setpoint.kind == "number":
@@ -867,35 +896,59 @@ class KeepaliveManager:
             )
             return False
 
-        blocked = False
+        # The send runs shielded: cancelling a round or release task never
+        # aborts a Modbus transaction mid-flight. A stopped group is still
+        # caught by the guard, which is checked again under the I/O lock.
+        return await asyncio.shield(
+            self._send(state, config, payload, call_type, guard)
+        )
 
-        def checked_guard() -> bool:
-            nonlocal blocked
-            if guard():
-                return True
-            blocked = True
-            return False
+    async def _send(
+        self,
+        state: GroupState,
+        config: Dict[str, Any],
+        payload: Any,
+        call_type: Any,
+        guard: Callable[[], bool],
+    ) -> Optional[bool]:
+        async with self._send_lock:
+            # Minimum gap since the last keepalive write of this hub (any group).
+            gap = state.min_write_spacing_ms / 1000.0
+            if self._last_send is not None and gap > 0:
+                wait = gap - (self._loop_time() - self._last_send)
+                if wait > 0:
+                    await self._sleep(wait)
+            if not guard():
+                return None
 
-        try:
-            result = await self._coordinator.async_pb_write(
-                config.get("slave_id", 1),
-                config.get("address"),
-                payload,
-                call_type,
-                refresh=False,
-                guard=checked_guard,
-            )
-        except asyncio.CancelledError:
-            raise
-        except Exception as err:
-            _LOGGER.warning(
-                "Keepalive write to %s failed: %s", config.get("unique_id"), err
-            )
-            return False
-        if blocked:
-            return None
-        self._last_send = self._loop_time()
-        return bool(result)
+            blocked = False
+
+            def checked_guard() -> bool:
+                nonlocal blocked
+                if guard():
+                    return True
+                blocked = True
+                return False
+
+            try:
+                result = await self._coordinator.async_pb_write(
+                    config.get("slave_id", 1),
+                    config.get("address"),
+                    payload,
+                    call_type,
+                    refresh=False,
+                    guard=checked_guard,
+                )
+            except Exception as err:
+                _LOGGER.warning(
+                    "Keepalive write to %s failed: %s", config.get("unique_id"), err
+                )
+                self._last_send = self._loop_time()
+                return False
+            if blocked:
+                return None
+            self._last_send = self._loop_time()
+            return bool(result)
 
 
 def store_keepalive_setpoint(

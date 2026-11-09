@@ -5,8 +5,9 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.components.switch import SwitchEntity
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -83,6 +84,10 @@ class KeepaliveGroupSwitch(_KeepaliveGroupEntity, SwitchEntity):
         return self._manager.is_active(self._group_id)
 
     async def async_turn_on(self, **kwargs: Any) -> None:
+        if not self._manager.is_active(self._group_id) and not self._manager.link_ok():
+            raise HomeAssistantError(
+                "Keepalive not started: Modbus link down or last poll failed"
+            )
         # Starts a tracked round task; state updates arrive through the listener.
         self._manager.async_activate(self._group_id)
         self.async_write_ha_state()
@@ -91,12 +96,30 @@ class KeepaliveGroupSwitch(_KeepaliveGroupEntity, SwitchEntity):
         self._manager.async_deactivate(self._group_id)
         self.async_write_ha_state()
 
+    async def async_will_remove_from_hass(self) -> None:
+        # Without its switch a group could not be turned off any more.
+        self._manager.stop_group(self._group_id, "group switch removed")
+        await super().async_will_remove_from_hass()
+
 
 class KeepaliveGroupStatusSensor(_KeepaliveGroupEntity, SensorEntity):
     """Shows whether a group is off, active or stopped, plus counters."""
 
     _attr_entity_category = EntityCategory.DIAGNOSTIC
     _attr_icon = "mdi:repeat-variant"
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_options = ["off", "active", "stopped"]
+    # Counters and timestamps change every round; keep them out of the recorder.
+    _unrecorded_attributes = frozenset(
+        {
+            "writes",
+            "failed_writes",
+            "mismatches",
+            "consecutive_failures",
+            "last_write",
+            "setpoints",
+        }
+    )
 
     def __init__(self, manager: KeepaliveManager, group: GroupState) -> None:
         super().__init__(manager, group)

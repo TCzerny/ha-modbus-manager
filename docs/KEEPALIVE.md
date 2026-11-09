@@ -44,8 +44,17 @@ controls:
 - If a clamp source is unavailable or older than `clamp_max_age`, the group stops instead of writing a guessed value.
 - If the link is down or the integration unloads, the group stops. No final write is sent; the device falls back through its own timeout.
 - Turning the switch off stops the writes. Only controls with `release: write` get one release write, and only while the link is up.
+- Turning the switch off while the group is already off or stopped writes nothing and keeps any values set in the meantime.
+- Home Assistant shutdown, unloading the entry, and removing or disabling the group switch all stop the group without writing.
+- A write that is already on the wire is never aborted. A stopped group is caught by the check under the I/O lock right before sending.
+- The minimum gap applies to all keepalive writes of a hub, across groups.
+- Turning the switch on while the link is down or the last poll failed is refused with an error.
+- A stop clears the stored values, including a stop after a single failed poll. Set the values again before turning the switch back on.
 
 ## Notes for template authors
+
+- Put clamp sources in a scan group that polls more often than `clamp_max_age`, otherwise the group stops on every round.
+- With the Home Assistant core Modbus backend a dead device is often only noticed through failed writes (`max_failures`), because the hub can report "connected" while reads fail.
 
 - Choose `interval` well below the device timeout. Some devices ignore writes that come in quick succession; use `min_write_spacing_ms` for that.
 - Several writers on the same device (another integration, an automation) can keep each other's values alive through a shared timeout. Document this in the device README.
