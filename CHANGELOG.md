@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.13] - 2026-11-09
+
 ### ✨ Added
 
 - **Energy meter firmware on the device page**: A live register whose `unique_id` contains `meter_firmware_info` now updates `sw_version` of `energy_meter` devices, like `inverter_firmware_info` and `battery_firmware_info` already do for inverters and batteries. Without it, meter devices showed the `1.0.0` placeholder.
