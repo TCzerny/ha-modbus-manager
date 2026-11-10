@@ -80,6 +80,43 @@ def _as_float(value: Any) -> Optional[float]:
         return None
     return result if math.isfinite(result) else None
 
+_FLOAT_TYPES = ("float", "float32", "float64")
+
+
+def _number_scale_offset(config: Dict[str, Any]) -> tuple[float, float]:
+    """Scale and offset as number.py applies them (scale, else multiplier)."""
+    scale = config.get("scale")
+    if scale is None:
+        scale = config.get("multiplier")
+    scale_f = _as_float(scale)
+    if not scale_f:
+        scale_f = 1.0
+    offset_f = _as_float(config.get("offset")) or 0.0
+    return scale_f, offset_f
+
+
+def effective_number_value(config: Dict[str, Any], value: float) -> float:
+    """Display value the device holds after writing ``value`` (integer truncation)."""
+    if str(config.get("data_type", "uint16")).lower() in _FLOAT_TYPES:
+        return float(value)
+    scale, offset = _number_scale_offset(config)
+    return int((value - offset) / scale) * scale + offset
+
+
+def mismatch_tolerance(config: Dict[str, Any], kind: str) -> float:
+    """Read-back tolerance; at least as lenient as the number entity's verify."""
+    explicit = _as_float((config.get(KEEPALIVE_KEY) or {}).get("mismatch_tolerance"))
+    if explicit is not None:
+        return abs(explicit)
+    if kind != "number":
+        return 1e-6  # select/switch: raw register values must match exactly
+    scale, _ = _number_scale_offset(config)
+    step = _as_float(config.get("step"))
+    if step is None:
+        step = 1.0  # number.py default
+    return max(abs(scale), abs(step), 1e-6)
+
+
 
 def validate_keepalive_groups(raw: Any, template_name: str) -> Dict[str, Dict[str, Any]]:
     """Return the valid ``keepalive_groups`` of a template; log and drop invalid ones."""
@@ -254,14 +291,35 @@ def validate_control_keepalive(
 
 
 def validate_template_keepalive(
-    raw_groups: Any, controls: list, template_name: str
+    raw_groups: Any,
+    controls: list,
+    template_name: str,
+    other_unique_ids: Optional[set] = None,
 ) -> Dict[str, Dict[str, Any]]:
     """Validate groups and the keepalive blocks of ``controls`` in place.
 
     Invalid control blocks are removed, so the control stays write-once.
-    Returns the valid groups.
+    Groups whose switch or status unique_id collides with another entity of
+    the template are dropped. Returns the valid groups.
     """
     groups = validate_keepalive_groups(raw_groups, template_name)
+    taken = {
+        str(c.get("unique_id", "")).lower()
+        for c in controls or []
+        if isinstance(c, dict)
+    }
+    taken |= {str(uid).lower() for uid in other_unique_ids or ()}
+    for group_key in list(groups):
+        own_ids = {f"{group_key}_keepalive".lower(), f"{group_key}_keepalive_status".lower()}
+        clash = own_ids & taken
+        if clash:
+            _LOGGER.warning(
+                "Template %s: keepalive group %s collides with unique_id %s; group ignored",
+                template_name,
+                group_key,
+                ", ".join(sorted(clash)),
+            )
+            groups.pop(group_key)
     for control in controls or []:
         if not isinstance(control, dict) or KEEPALIVE_KEY not in control:
             continue
@@ -300,7 +358,6 @@ class GroupState:
     interval: float
     min_write_spacing_ms: float
     max_failures: int
-    prefix: str = ""
     device_info: Optional[Dict[str, Any]] = None
     config_subentry_id: Optional[str] = None
     state: str = STATE_OFF
@@ -340,6 +397,7 @@ class KeepaliveManager:
         # Serializes "wait for the gap -> send" across all groups of this hub.
         self._send_lock = asyncio.Lock()
         self._unsub_stop: Optional[Callable[[], None]] = None
+        self._inflight: set = set()  # shielded sends, referenced until done
 
     # -- registration -------------------------------------------------------
 
@@ -362,7 +420,6 @@ class KeepaliveManager:
                     interval=float(info["interval"]),
                     min_write_spacing_ms=float(info["min_write_spacing_ms"]),
                     max_failures=int(info["max_failures"]),
-                    prefix=info.get("prefix", ""),
                     device_info=info.get("device_info"),
                     config_subentry_id=info.get("config_subentry_id"),
                 )
@@ -442,13 +499,14 @@ class KeepaliveManager:
         numeric = _as_float(value)
         if numeric is None:
             return
+        written = effective_number_value(config, numeric) if kind == "number" else numeric
         state.setpoints[register_key] = Setpoint(
             register_key=register_key,
             config=config,
             value=numeric,
             kind=kind,
             last_write_loop_time=self._safe_loop_time(),
-            last_written_value=numeric,
+            last_written_value=written,
         )
         self._notify(group_id)
 
@@ -468,7 +526,7 @@ class KeepaliveManager:
         state = self._groups.get(group_id)
         if state is None or state.state == STATE_ACTIVE:
             return None
-        if not self._link_ok():
+        if not self.link_ok():
             _LOGGER.warning(
                 "Keepalive group %s not started: link down, last poll failed or unloading",
                 group_id,
@@ -524,7 +582,8 @@ class KeepaliveManager:
         was_active = state.state == STATE_ACTIVE
         if was_active or new_state == STATE_OFF:
             state.state = new_state
-        state.stop_reason = reason
+        if was_active:
+            state.stop_reason = reason
         state.generation += 1  # invalidates queued writes of the old generation
         state.setpoints.clear()
         self._cancel_task(state)
@@ -622,13 +681,12 @@ class KeepaliveManager:
     # -- guards -------------------------------------------------------------
 
     def link_ok(self) -> bool:
-        """Public form of the link check (used by the group switch)."""
-        return self._link_ok()
-
-    def _link_ok(self) -> bool:
-        """False while unloading, after a failed poll, or with a disconnected hub."""
+        """False while unloading or stopping, after a failed poll, or with a disconnected hub."""
         coordinator = self._coordinator
         if getattr(coordinator, "_is_unloading", False):
+            return False
+        hass = getattr(coordinator, "hass", None)
+        if hass is not None and getattr(hass, "is_stopping", False):
             return False
         if getattr(coordinator, "last_update_success", True) is False:
             return False
@@ -650,7 +708,7 @@ class KeepaliveManager:
                 state.state == STATE_ACTIVE
                 and state.generation == generation
                 and state.setpoints.get(setpoint.register_key) is setpoint
-                and self._link_ok()
+                and self.link_ok()
             )
 
         return guard
@@ -660,7 +718,7 @@ class KeepaliveManager:
             return (
                 state.state != STATE_ACTIVE
                 and state.generation == generation
-                and self._link_ok()
+                and self.link_ok()
             )
 
         return guard
@@ -679,7 +737,7 @@ class KeepaliveManager:
         state.last_round = self._loop_time()
         if not state.setpoints:
             return
-        if not self._link_ok():
+        if not self.link_ok():
             self.stop_group(group_id, "link down or unloading")
             return
 
@@ -709,7 +767,7 @@ class KeepaliveManager:
                 # Not sent: group stopped, link lost or setpoint replaced meanwhile.
                 if state.state != STATE_ACTIVE or state.generation != generation:
                     return
-                if not self._link_ok():
+                if not self.link_ok():
                     self.stop_group(group_id, "link down or unloading")
                     return
                 continue
@@ -717,7 +775,11 @@ class KeepaliveManager:
                 state.writes += 1
                 state.last_write = self._wall_time()
                 setpoint.last_write_loop_time = self._loop_time()
-                setpoint.last_written_value = float(value)
+                setpoint.last_written_value = (
+                    effective_number_value(setpoint.config, value)
+                    if setpoint.kind == "number"
+                    else float(value)
+                )
             else:
                 state.failed_writes += 1
                 round_failed = True
@@ -746,7 +808,7 @@ class KeepaliveManager:
         if state is None:
             return
         for setpoint in releases:
-            if state.generation != generation or not self._link_ok():
+            if state.generation != generation or not self.link_ok():
                 return
             release_value = setpoint.config[KEEPALIVE_KEY]["release_value"]
             result = await self._write(
@@ -790,11 +852,8 @@ class KeepaliveManager:
             if setpoint.last_written_value is not None
             else setpoint.value
         )
-        tolerance = setpoint.config.get(KEEPALIVE_KEY, {}).get("mismatch_tolerance")
-        if tolerance is None:
-            step = _as_float(setpoint.config.get("step")) or 0.0
-            tolerance = max(abs(step) / 2.0, abs(expected) * 0.005, 1e-6)
-        if math.isclose(actual_f, expected, abs_tol=tolerance):
+        tolerance = mismatch_tolerance(setpoint.config, setpoint.kind)
+        if math.isclose(actual_f, expected, rel_tol=0.0, abs_tol=tolerance + 1e-9):
             setpoint.mismatch_streak = 0
             return False
 
@@ -877,11 +936,7 @@ class KeepaliveManager:
         config = setpoint.config
         try:
             if setpoint.kind == "number":
-                scale = config.get("scale")
-                if scale is None:
-                    scale = config.get("multiplier")
-                scale = float(scale) if scale not in (None, 0) else 1.0
-                offset = float(config.get("offset", 0.0) or 0.0)
+                scale, offset = _number_scale_offset(config)
                 payload_value: Any = (value - offset) / scale
             else:
                 payload_value = int(value)
@@ -899,9 +954,12 @@ class KeepaliveManager:
         # The send runs shielded: cancelling a round or release task never
         # aborts a Modbus transaction mid-flight. A stopped group is still
         # caught by the guard, which is checked again under the I/O lock.
-        return await asyncio.shield(
+        send = asyncio.ensure_future(
             self._send(state, config, payload, call_type, guard)
         )
+        self._inflight.add(send)
+        send.add_done_callback(self._inflight.discard)
+        return await asyncio.shield(send)
 
     async def _send(
         self,
@@ -945,8 +1003,8 @@ class KeepaliveManager:
                 )
                 self._last_send = self._loop_time()
                 return False
-            if blocked:
-                return None
+            if blocked or (not result and not self.link_ok()):
+                return None  # not sent: guard blocked it or the hub is unloading
             self._last_send = self._loop_time()
             return bool(result)
 

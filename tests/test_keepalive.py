@@ -718,5 +718,176 @@ class SecondReviewTest(unittest.TestCase):
         run(scenario)
 
 
+
+class FakeBus:
+    def __init__(self):
+        self.once = []
+
+    def async_listen_once(self, event, callback):
+        entry = (event, callback)
+        self.once.append(entry)
+
+        def remove():
+            self.once.remove(entry)
+
+        return remove
+
+
+class FakeHass:
+    def __init__(self):
+        self.bus = FakeBus()
+        self.is_stopping = False
+        self.background = []
+
+    def async_create_background_task(self, coro, name):
+        task = asyncio.ensure_future(coro)
+        self.background.append(name)
+        return task
+
+
+def install_ha_stubs():
+    """Stub the HA modules keepalive.py imports lazily; return the timer registry."""
+    timers = []
+    event = types.ModuleType("homeassistant.helpers.event")
+
+    def async_track_time_interval(hass, action, interval):
+        entry = (action, interval)
+        timers.append(entry)
+        return lambda: timers.remove(entry)
+
+    event.async_track_time_interval = async_track_time_interval
+    sys.modules.setdefault("homeassistant.helpers", types.ModuleType("homeassistant.helpers"))
+    sys.modules["homeassistant.helpers.event"] = event
+    const = sys.modules.get("homeassistant.const") or types.ModuleType("homeassistant.const")
+    const.EVENT_HOMEASSISTANT_STOP = "homeassistant_stop"
+    sys.modules["homeassistant.const"] = const
+    return timers
+
+
+def uint16_config(uid="t_int", address=1100, **extra):
+    config = number_config(uid, address)
+    config.update({"data_type": "uint16", "count": 1})
+    config.pop("swap")
+    config.update(extra)
+    return config
+
+
+class ThirdReviewTest(unittest.TestCase):
+    def test_integer_register_truncation_is_not_a_mismatch(self):
+        async def scenario():
+            coordinator, manager, clock = make_manager()
+            config = uint16_config()
+            config["keepalive"]["clamp_max_to_register"] = "soc"
+            config["keepalive"]["clamp_max_to_register_source"] = "soc"
+            coordinator.register_data["soc_key"] = {
+                "register_config": {"unique_id": "soc"},
+                "processed_value": 47.6,
+                "timestamp": clock.now,
+            }
+            ka.store_keepalive_setpoint(coordinator, "k", config, 80, "number")
+            await settle(manager.async_activate(GID))
+            for _ in range(4):
+                clock.now += 15
+                coordinator.register_data["soc_key"]["timestamp"] = clock.now
+                coordinator.register_data["k"] = {"processed_value": 47, "timestamp": clock.now}
+                await manager.async_run_round(GID)
+            group = manager.groups[GID]
+            self.assertEqual(group.mismatches, 0)
+            self.assertTrue(manager.is_active(GID))
+            self.assertIn(coordinator.writes[-1][2], (47, [47]))
+
+        run(scenario)
+
+    def test_tolerance_matches_number_verify(self):
+        config = number_config()
+        self.assertEqual(ka.mismatch_tolerance(config, "number"), 1.0)  # step default 1
+        config["step"] = 100
+        self.assertEqual(ka.mismatch_tolerance(config, "number"), 100.0)
+        config["keepalive"]["mismatch_tolerance"] = 5
+        self.assertEqual(ka.mismatch_tolerance(config, "number"), 5.0)
+        self.assertLess(ka.mismatch_tolerance(number_config(), "raw"), 0.001)
+
+    def test_unique_id_collision_drops_group(self):
+        groups = {"bat": dict(GROUP_CFG)}
+        controls = [dict(number_config(), keepalive={"group": "bat"})]
+        result = ka.validate_template_keepalive(groups, controls, "t", {"bat_keepalive"})
+        self.assertEqual(result, {})
+        self.assertNotIn("keepalive", controls[0])
+
+    def test_stop_reason_only_for_active_group(self):
+        _, manager, _ = make_manager()
+        manager.stop_group(GID, "group switch removed")
+        self.assertIsNone(manager.groups[GID].stop_reason)
+
+    def test_no_activation_while_home_assistant_stops(self):
+        async def scenario():
+            coordinator, manager, _ = make_manager()
+            coordinator.hass = FakeHass()
+            coordinator.hass.is_stopping = True
+            ka.store_keepalive_setpoint(coordinator, "k", number_config(), 0, "number")
+            self.assertIsNone(manager.async_activate(GID))
+            self.assertEqual(coordinator.writes, [])
+
+        run(scenario)
+
+    def test_unload_refusal_is_not_counted_as_failure(self):
+        async def scenario():
+            coordinator, manager, clock = make_manager()
+            ka.store_keepalive_setpoint(coordinator, "k", number_config(), 0, "number")
+            await settle(manager.async_activate(GID))
+
+            async def refusing(*args, **kwargs):
+                coordinator._is_unloading = True  # unload began while waiting
+                return False
+
+            coordinator.async_pb_write = refusing
+            clock.now += 15
+            await manager.async_run_round(GID)
+            self.assertEqual(manager.groups[GID].failed_writes, 0)
+
+        run(scenario)
+
+    def test_timer_stop_listener_and_background_tasks_with_hass(self):
+        async def scenario():
+            timers = install_ha_stubs()
+            coordinator, manager, clock = make_manager()
+            hass = FakeHass()
+            coordinator.hass = hass
+            ka.store_keepalive_setpoint(coordinator, "k", number_config(), 0, "number")
+            await settle(manager.async_activate(GID))
+            self.assertEqual(len(timers), 1)
+            self.assertEqual(len(hass.bus.once), 1)
+            self.assertEqual(hass.background, [f"modbus_manager keepalive {GID}"])
+            # The tick starts the next round once the interval has elapsed.
+            clock.now += 15
+            timers[0][0](None)
+            await settle(manager.groups[GID].task)
+            self.assertEqual(len(coordinator.writes), 2)
+            # Turning the only group off stops the timer; the stop listener stays.
+            manager.async_deactivate(GID)
+            self.assertEqual(timers, [])
+            self.assertEqual(len(hass.bus.once), 1)
+            # Unload removes the stop listener too.
+            manager.stop_all("unload")
+            self.assertEqual(hass.bus.once, [])
+
+        run(scenario)
+
+    def test_home_assistant_stop_event_handler_via_bus(self):
+        async def scenario():
+            install_ha_stubs()
+            coordinator, manager, _ = make_manager()
+            hass = FakeHass()
+            coordinator.hass = hass
+            ka.store_keepalive_setpoint(coordinator, "k", number_config(), 0, "number")
+            await settle(manager.async_activate(GID))
+            _event, callback = hass.bus.once.pop()  # the bus drops a fired once-listener
+            callback(None)
+            self.assertEqual(manager.groups[GID].state, ka.STATE_STOPPED)
+            self.assertEqual(manager.groups[GID].stop_reason, "Home Assistant stopping")
+
+        run(scenario)
+
+
 if __name__ == "__main__":
     unittest.main()

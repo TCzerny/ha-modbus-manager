@@ -697,7 +697,14 @@ async def load_single_template(
         from .keepalive import KEEPALIVE_GROUPS_KEY, validate_template_keepalive
 
         keepalive_groups = validate_template_keepalive(
-            data.get(KEEPALIVE_GROUPS_KEY), controls, template_name
+            data.get(KEEPALIVE_GROUPS_KEY),
+            controls,
+            template_name,
+            {
+                entity.get("unique_id")
+                for entity in [*validated_registers, *calculated_entities, *binary_sensors]
+                if isinstance(entity, dict) and entity.get("unique_id")
+            },
         )
 
         result = {

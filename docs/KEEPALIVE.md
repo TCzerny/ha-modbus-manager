@@ -36,26 +36,26 @@ controls:
 
 ## Behavior
 
-- Each group gets a **switch** (`<prefix>_<group>_keepalive`) and a **status sensor** (`…_status`: `off`, `active` or `stopped`, with counters as attributes).
-- Setting a control writes it once as before, including the normal read-back verify, and stores the value as the group's setpoint.
+- Each group gets a **switch** (unique_id `<prefix>_<group>_keepalive`, named after the group) and a **status sensor** (unique_id `…_status`: `off`, `active` or `stopped`, with counters as attributes). Their entity_ids follow the device and group name. A template entity with one of these unique_ids makes the group invalid.
+- Setting a control writes it once as before, including the normal read-back verify, and stores the value as the group's setpoint. If that write or its verify fails, the previous setpoint stays.
 - While the group switch is **on**, all stored setpoints of the group are rewritten every `interval` seconds, spaced by `min_write_spacing_ms`. Cyclic writes use the normal write path (same encoding, same I/O lock) without the number entity's read-back verify.
 - The switch **starts off** after every restart, and setpoints are never restored from the recorder. Turning the switch off clears the setpoints; set the controls again before turning it back on.
 - Before each round, the latest polled value of each control is compared with the last written value. A mismatch is logged and counted. A clean read resets the count. `max_failures` consecutive mismatches of one control, or `max_failures` consecutive rounds with failed writes, stop the group.
 - If a clamp source is unavailable or older than `clamp_max_age`, the group stops instead of writing a guessed value.
 - If the link is down or the integration unloads, the group stops. No final write is sent; the device falls back through its own timeout.
-- Turning the switch off stops the writes. Only controls with `release: write` get one release write, and only while the link is up.
+- Turning the switch off stops the writes. Controls with `release: write` that have a stored setpoint get one release write, and only while the link is up.
 - Turning the switch off while the group is already off or stopped writes nothing and keeps any values set in the meantime.
-- Home Assistant shutdown, unloading the entry, and removing or disabling the group switch all stop the group without writing.
+- Home Assistant shutdown, unloading the entry, and removing, disabling or renaming the group switch all stop the group without writing.
 - A write that is already on the wire is never aborted. A stopped group is caught by the check under the I/O lock right before sending.
-- The minimum gap applies to all keepalive writes of a hub, across groups.
+- The minimum gap applies to all keepalive writes of a hub, across groups. It does not delay a write the user makes through the entity.
 - Turning the switch on while the link is down or the last poll failed is refused with an error.
 - A stop clears the stored values, including a stop after a single failed poll. Set the values again before turning the switch back on.
 
 ## Notes for template authors
 
 - Put clamp sources in a scan group that polls more often than `clamp_max_age`, otherwise the group stops on every round.
+- A clamp source that is disabled in the entity registry is not polled, so the group always stops. Keep clamp sources enabled.
 - With the Home Assistant core Modbus backend a dead device is often only noticed through failed writes (`max_failures`), because the hub can report "connected" while reads fail.
-
 - Choose `interval` well below the device timeout. Some devices ignore writes that come in quick succession; use `min_write_spacing_ms` for that.
 - Several writers on the same device (another integration, an automation) can keep each other's values alive through a shared timeout. Document this in the device README.
-- A read-back may show the effective value instead of the written one (for example a power limit that reads 999.1 W after writing 1000 W). Set `mismatch_tolerance` if the default tolerance (half the `step`, at least 0.5 % of the value) is too tight.
+- A read-back may show the effective value instead of the written one (for example a power limit that reads 999.1 W after writing 1000 W). The default tolerance matches the number entity's verify: the larger of `scale` and `step` (`step` defaults to 1). Integer registers are compared after truncation. Set `mismatch_tolerance` if that is too tight; select and switch values must match exactly unless it is set.
