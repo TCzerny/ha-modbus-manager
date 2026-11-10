@@ -80,6 +80,7 @@ def _as_float(value: Any) -> Optional[float]:
         return None
     return result if math.isfinite(result) else None
 
+
 _FLOAT_TYPES = ("float", "float32", "float64")
 
 
@@ -117,14 +118,16 @@ def mismatch_tolerance(config: Dict[str, Any], kind: str) -> float:
     return max(abs(scale), abs(step), 1e-6)
 
 
-
-def validate_keepalive_groups(raw: Any, template_name: str) -> Dict[str, Dict[str, Any]]:
+def validate_keepalive_groups(
+    raw: Any, template_name: str
+) -> Dict[str, Dict[str, Any]]:
     """Return the valid ``keepalive_groups`` of a template; log and drop invalid ones."""
     if raw is None:
         return {}
     if not isinstance(raw, dict):
         _LOGGER.error(
-            "Template %s: keepalive_groups must be a mapping, ignoring it", template_name
+            "Template %s: keepalive_groups must be a mapping, ignoring it",
+            template_name,
         )
         return {}
 
@@ -149,7 +152,9 @@ def validate_keepalive_groups(raw: Any, template_name: str) -> Dict[str, Dict[st
             )
             continue
 
-        spacing = _as_float(cfg.get("min_write_spacing_ms", DEFAULT_MIN_WRITE_SPACING_MS))
+        spacing = _as_float(
+            cfg.get("min_write_spacing_ms", DEFAULT_MIN_WRITE_SPACING_MS)
+        )
         if spacing is None or spacing < 0:
             _LOGGER.error(
                 "Template %s: keepalive group %s has an invalid min_write_spacing_ms, ignoring it",
@@ -159,7 +164,11 @@ def validate_keepalive_groups(raw: Any, template_name: str) -> Dict[str, Dict[st
             continue
 
         max_failures = cfg.get("max_failures", DEFAULT_MAX_FAILURES)
-        if isinstance(max_failures, bool) or not isinstance(max_failures, int) or max_failures < 1:
+        if (
+            isinstance(max_failures, bool)
+            or not isinstance(max_failures, int)
+            or max_failures < 1
+        ):
             _LOGGER.error(
                 "Template %s: keepalive group %s needs max_failures >= 1, ignoring it",
                 template_name,
@@ -254,7 +263,11 @@ def validate_control_keepalive(
         source = raw.get(clamp_key)
         if source is None:
             continue
-        if control_type != "number" or not isinstance(source, str) or not source.strip():
+        if (
+            control_type != "number"
+            or not isinstance(source, str)
+            or not source.strip()
+        ):
             _LOGGER.error(
                 "Template %s: %s on control %s needs a number control and a unique_id string; "
                 "control stays write-once",
@@ -310,7 +323,10 @@ def validate_template_keepalive(
     }
     taken |= {str(uid).lower() for uid in other_unique_ids or ()}
     for group_key in list(groups):
-        own_ids = {f"{group_key}_keepalive".lower(), f"{group_key}_keepalive_status".lower()}
+        own_ids = {
+            f"{group_key}_keepalive".lower(),
+            f"{group_key}_keepalive_status".lower(),
+        }
         clash = own_ids & taken
         if clash:
             _LOGGER.warning(
@@ -433,7 +449,9 @@ class KeepaliveManager:
                     "config_subentry_id", state.config_subentry_id
                 )
 
-    def add_listener(self, group_id: str, callback: Callable[[], None]) -> Callable[[], None]:
+    def add_listener(
+        self, group_id: str, callback: Callable[[], None]
+    ) -> Callable[[], None]:
         self._listeners.setdefault(group_id, []).append(callback)
 
         def _remove() -> None:
@@ -499,7 +517,9 @@ class KeepaliveManager:
         numeric = _as_float(value)
         if numeric is None:
             return
-        written = effective_number_value(config, numeric) if kind == "number" else numeric
+        written = (
+            effective_number_value(config, numeric) if kind == "number" else numeric
+        )
         state.setpoints[register_key] = Setpoint(
             register_key=register_key,
             config=config,
@@ -725,7 +745,9 @@ class KeepaliveManager:
 
     # -- rounds -------------------------------------------------------------
 
-    async def async_run_round(self, group_id: str, generation: Optional[int] = None) -> None:
+    async def async_run_round(
+        self, group_id: str, generation: Optional[int] = None
+    ) -> None:
         """Write every setpoint of an active group once."""
         state = self._groups.get(group_id)
         if state is None or state.state != STATE_ACTIVE:
@@ -909,10 +931,14 @@ class KeepaliveManager:
         ok_min, min_v = self._clamp_source_value(setpoint, "clamp_min_to_register")
         uid = setpoint.config.get("unique_id")
         if not (ok_max and ok_min):
-            self.stop_group(state.group_id, f"clamp source for {uid} is stale or unavailable")
+            self.stop_group(
+                state.group_id, f"clamp source for {uid} is stale or unavailable"
+            )
             return None
         if max_v is not None and min_v is not None and min_v > max_v:
-            self.stop_group(state.group_id, f"clamp sources for {uid} contradict (min > max)")
+            self.stop_group(
+                state.group_id, f"clamp sources for {uid} contradict (min > max)"
+            )
             return None
         value = setpoint.value
         if max_v is not None:
@@ -1026,7 +1052,9 @@ def store_keepalive_setpoint(
     numeric = _as_float(value)
     if numeric is None:
         return
-    manager.set_setpoint(keepalive["group_id"], register_key, register_config, numeric, kind)
+    manager.set_setpoint(
+        keepalive["group_id"], register_key, register_config, numeric, kind
+    )
 
 
 def _current_task() -> Optional[asyncio.Task]:

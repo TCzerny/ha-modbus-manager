@@ -85,7 +85,9 @@ class KeepaliveGroupSwitch(_KeepaliveGroupEntity, SwitchEntity):
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         if self._group_id not in self._manager.groups:
-            raise HomeAssistantError("Keepalive group no longer exists; reload the entry")
+            raise HomeAssistantError(
+                "Keepalive group no longer exists; reload the entry"
+            )
         if not self._manager.is_active(self._group_id) and not self._manager.link_ok():
             raise HomeAssistantError(
                 "Keepalive not started: Modbus link down or last poll failed"

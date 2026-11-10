@@ -2331,7 +2331,11 @@ class ModbusCoordinator(DataUpdateCoordinator):
         for clamp_key in ("clamp_max_to_register", "clamp_min_to_register"):
             source = keepalive.get(clamp_key)
             if isinstance(source, str) and source:
-                stripped = source.replace("{PREFIX}_", "", 1) if source.startswith("{PREFIX}_") else source
+                stripped = (
+                    source.replace("{PREFIX}_", "", 1)
+                    if source.startswith("{PREFIX}_")
+                    else source
+                )
                 keepalive[f"{clamp_key}_source"] = generate_unique_id(
                     prefix, stripped, stripped
                 )

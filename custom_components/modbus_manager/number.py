@@ -443,7 +443,11 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                 )
 
             store_keepalive_setpoint(
-                self.coordinator, self.register_key, self.register_config, requested, "number"
+                self.coordinator,
+                self.register_key,
+                self.register_config,
+                requested,
+                "number",
             )
 
         except HomeAssistantError:

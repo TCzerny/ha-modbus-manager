@@ -702,7 +702,11 @@ async def load_single_template(
             template_name,
             {
                 entity.get("unique_id")
-                for entity in [*validated_registers, *calculated_entities, *binary_sensors]
+                for entity in [
+                    *validated_registers,
+                    *calculated_entities,
+                    *binary_sensors,
+                ]
                 if isinstance(entity, dict) and entity.get("unique_id")
             },
         )

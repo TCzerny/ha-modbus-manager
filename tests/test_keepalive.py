@@ -23,7 +23,11 @@ PKG = "keepalive_test_pkg"
 
 def _load_package():
     """Load keepalive.py with the real logger/modbus_utils and stubbed HA modules."""
-    for name in ("homeassistant", "homeassistant.components", "homeassistant.components.modbus"):
+    for name in (
+        "homeassistant",
+        "homeassistant.components",
+        "homeassistant.components.modbus",
+    ):
         sys.modules.setdefault(name, types.ModuleType(name))
     const = types.ModuleType("homeassistant.components.modbus.const")
     for attr in (
@@ -44,7 +48,9 @@ def _load_package():
     sys.modules[device_utils.__name__] = device_utils
 
     for module in ("logger", "modbus_utils", "keepalive"):
-        spec = importlib.util.spec_from_file_location(f"{PKG}.{module}", PKG_DIR / f"{module}.py")
+        spec = importlib.util.spec_from_file_location(
+            f"{PKG}.{module}", PKG_DIR / f"{module}.py"
+        )
         loaded = importlib.util.module_from_spec(spec)
         sys.modules[spec.name] = loaded
         spec.loader.exec_module(loaded)
@@ -76,7 +82,9 @@ class FakeCoordinator:
     def get_register_data(self, key):
         return self.register_data.get(key)
 
-    async def async_pb_write(self, slave_id, address, value, call_type, *, refresh=True, guard=None):
+    async def async_pb_write(
+        self, slave_id, address, value, call_type, *, refresh=True, guard=None
+    ):
         async with self.lock:
             if guard is not None and (self._is_unloading or not guard()):
                 return False
@@ -99,7 +107,12 @@ class Clock:
         await asyncio.sleep(0)
 
 
-GROUP_CFG = {"name": "External battery control", "interval": 15.0, "min_write_spacing_ms": 1000.0, "max_failures": 3}
+GROUP_CFG = {
+    "name": "External battery control",
+    "interval": 15.0,
+    "min_write_spacing_ms": 1000.0,
+    "max_failures": 3,
+}
 
 
 def number_config(uid="t_limit", address=1026, **keepalive):
@@ -119,7 +132,9 @@ def number_config(uid="t_limit", address=1026, **keepalive):
 def make_manager():
     coordinator = FakeCoordinator()
     clock = Clock()
-    manager = ka.KeepaliveManager(coordinator, loop_time=clock.time, wall_time=clock.time, sleep=clock.sleep)
+    manager = ka.KeepaliveManager(
+        coordinator, loop_time=clock.time, wall_time=clock.time, sleep=clock.sleep
+    )
     manager.register_groups({GID: dict(GROUP_CFG)})
     coordinator.keepalive = manager
     return coordinator, manager, clock
@@ -146,15 +161,41 @@ class ValidationTest(unittest.TestCase):
         controls = [
             {"type": "number", "unique_id": "a", "keepalive": {"group": "bat"}},
             {"type": "number", "unique_id": "b", "keepalive": {"group": "missing"}},
-            {"type": "select", "unique_id": "c", "keepalive": {"group": "bat", "clamp_max_to_register": "soc"}},
+            {
+                "type": "select",
+                "unique_id": "c",
+                "keepalive": {"group": "bat", "clamp_max_to_register": "soc"},
+            },
             {"type": "button", "unique_id": "d", "keepalive": {"group": "bat"}},
-            {"type": "number", "unique_id": "e", "keepalive": {"group": "bat", "release": "write"}},
-            {"type": "number", "unique_id": "f", "input_type": "input", "keepalive": {"group": "bat"}},
+            {
+                "type": "number",
+                "unique_id": "e",
+                "keepalive": {"group": "bat", "release": "write"},
+            },
+            {
+                "type": "number",
+                "unique_id": "f",
+                "input_type": "input",
+                "keepalive": {"group": "bat"},
+            },
             {"type": "number", "unique_id": "g"},
-            {"type": "number", "unique_id": "h", "keepalive": {"group": "bat", "release": "write", "release_value": "nan"}},
+            {
+                "type": "number",
+                "unique_id": "h",
+                "keepalive": {
+                    "group": "bat",
+                    "release": "write",
+                    "release_value": "nan",
+                },
+            },
         ]
         groups = ka.validate_template_keepalive(
-            {"bat": {"interval": 15}, "fast": {"interval": 1}, "bad": "x", "inf": {"interval": "inf"}},
+            {
+                "bat": {"interval": 15},
+                "fast": {"interval": 1},
+                "bad": "x",
+                "inf": {"interval": "inf"},
+            },
             controls,
             "t",
         )
@@ -192,13 +233,17 @@ class ValidationTest(unittest.TestCase):
         )
 
     def test_resume_after_restart_is_not_supported_but_group_kept(self):
-        groups = ka.validate_keepalive_groups({"bat": {"interval": 15, "resume_after_restart": True}}, "t")
+        groups = ka.validate_keepalive_groups(
+            {"bat": {"interval": 15, "resume_after_restart": True}}, "t"
+        )
         self.assertIn("bat", groups)
         self.assertNotIn("resume_after_restart", groups["bat"])
 
     def test_tick_runs_in_event_loop(self):
         # Home Assistant runs non-callback timer targets in an executor thread.
-        self.assertTrue(getattr(ka.KeepaliveManager._handle_tick, "_hass_callback", False))
+        self.assertTrue(
+            getattr(ka.KeepaliveManager._handle_tick, "_hass_callback", False)
+        )
 
 
 class BasicRuntimeTest(unittest.TestCase):
@@ -225,12 +270,18 @@ class BasicRuntimeTest(unittest.TestCase):
     def test_activate_writes_all_setpoints_with_spacing(self):
         async def scenario():
             coordinator, manager, clock = make_manager()
-            ka.store_keepalive_setpoint(coordinator, "k1", number_config("a", 1038), 0, "number")
-            ka.store_keepalive_setpoint(coordinator, "k2", number_config("b", 1040), 2500, "number")
+            ka.store_keepalive_setpoint(
+                coordinator, "k1", number_config("a", 1038), 0, "number"
+            )
+            ka.store_keepalive_setpoint(
+                coordinator, "k2", number_config("b", 1040), 2500, "number"
+            )
             await settle(manager.async_activate(GID))
             self.assertTrue(manager.is_active(GID))
             self.assertEqual([w[1] for w in coordinator.writes], [1038, 1040])
-            self.assertTrue(all(w[4] is False for w in coordinator.writes))  # refresh=False
+            self.assertTrue(
+                all(w[4] is False for w in coordinator.writes)
+            )  # refresh=False
             self.assertEqual(clock.sleeps, [1.0])
             self.assertAlmostEqual(decode_float_cdab(coordinator.writes[1][2]), 2500.0)
 
@@ -297,7 +348,10 @@ class BasicRuntimeTest(unittest.TestCase):
             group = manager.groups[GID]
 
             clock.now += 15
-            coordinator.register_data["k"] = {"processed_value": 15300.0, "timestamp": clock.now - 1}
+            coordinator.register_data["k"] = {
+                "processed_value": 15300.0,
+                "timestamp": clock.now - 1,
+            }
             await manager.async_run_round(GID)
             self.assertEqual(group.mismatches, 1)
             self.assertIn("k", group.setpoints)
@@ -305,7 +359,10 @@ class BasicRuntimeTest(unittest.TestCase):
 
             for _ in range(2):
                 clock.now += 15
-                coordinator.register_data["k"] = {"processed_value": 15300.0, "timestamp": clock.now - 1}
+                coordinator.register_data["k"] = {
+                    "processed_value": 15300.0,
+                    "timestamp": clock.now - 1,
+                }
                 await manager.async_run_round(GID)
             self.assertEqual(group.state, ka.STATE_STOPPED)
             self.assertEqual(group.stop_reason, "repeated read-back mismatches")
@@ -315,10 +372,15 @@ class BasicRuntimeTest(unittest.TestCase):
     def test_effective_value_within_tolerance_is_not_a_mismatch(self):
         async def scenario():
             coordinator, manager, clock = make_manager()
-            ka.store_keepalive_setpoint(coordinator, "k", number_config(), 1000, "number")
+            ka.store_keepalive_setpoint(
+                coordinator, "k", number_config(), 1000, "number"
+            )
             await settle(manager.async_activate(GID))
             clock.now += 15
-            coordinator.register_data["k"] = {"processed_value": 999.1, "timestamp": clock.now - 1}
+            coordinator.register_data["k"] = {
+                "processed_value": 999.1,
+                "timestamp": clock.now - 1,
+            }
             await manager.async_run_round(GID)
             self.assertEqual(manager.groups[GID].mismatches, 0)
 
@@ -328,8 +390,21 @@ class BasicRuntimeTest(unittest.TestCase):
         async def scenario():
             coordinator, manager, _ = make_manager()
             keepalive = {"group": "bat", "group_id": GID, "release": "stop"}
-            select_cfg = {"unique_id": "mode", "type": "select", "address": 2000, "data_type": "uint16", "keepalive": keepalive}
-            scaled_cfg = {"unique_id": "power", "type": "number", "address": 3000, "data_type": "uint16", "scale": 0.1, "keepalive": keepalive}
+            select_cfg = {
+                "unique_id": "mode",
+                "type": "select",
+                "address": 2000,
+                "data_type": "uint16",
+                "keepalive": keepalive,
+            }
+            scaled_cfg = {
+                "unique_id": "power",
+                "type": "number",
+                "address": 3000,
+                "data_type": "uint16",
+                "scale": 0.1,
+                "keepalive": keepalive,
+            }
             ka.store_keepalive_setpoint(coordinator, "k1", select_cfg, 2, "raw")
             ka.store_keepalive_setpoint(coordinator, "k2", scaled_cfg, 50, "number")
             await settle(manager.async_activate(GID))
@@ -341,7 +416,9 @@ class BasicRuntimeTest(unittest.TestCase):
     def test_non_finite_setpoint_is_ignored(self):
         async def scenario():
             coordinator, manager, _ = make_manager()
-            ka.store_keepalive_setpoint(coordinator, "k", number_config(), math.nan, "number")
+            ka.store_keepalive_setpoint(
+                coordinator, "k", number_config(), math.nan, "number"
+            )
             self.assertEqual(manager.groups[GID].setpoints, {})
 
         run(scenario)
@@ -379,7 +456,11 @@ class ClampTest(unittest.TestCase):
 
     def _cfg(self, **extra):
         return number_config(
-            "min_soc", 1042, clamp_max_to_register="battery_soc", clamp_max_to_register_source="t_battery_soc", **extra
+            "min_soc",
+            1042,
+            clamp_max_to_register="battery_soc",
+            clamp_max_to_register_source="t_battery_soc",
+            **extra,
         )
 
     def test_clamp_limits_written_value(self):
@@ -419,7 +500,12 @@ class ClampTest(unittest.TestCase):
     def test_missing_clamp_source_stops_without_write(self):
         async def scenario():
             coordinator, manager, _ = make_manager()
-            config = number_config("min_soc", 1042, clamp_min_to_register="x", clamp_min_to_register_source="t_x")
+            config = number_config(
+                "min_soc",
+                1042,
+                clamp_min_to_register="x",
+                clamp_min_to_register_source="t_x",
+            )
             ka.store_keepalive_setpoint(coordinator, "k", config, 15, "number")
             await settle(manager.async_activate(GID))
             self.assertEqual(coordinator.writes, [])
@@ -436,7 +522,9 @@ class ClampTest(unittest.TestCase):
                 "timestamp": clock.now,
                 "register_config": {"unique_id": "t_floor"},
             }
-            config = self._cfg(clamp_min_to_register="floor", clamp_min_to_register_source="t_floor")
+            config = self._cfg(
+                clamp_min_to_register="floor", clamp_min_to_register_source="t_floor"
+            )
             ka.store_keepalive_setpoint(coordinator, "k", config, 15, "number")
             await settle(manager.async_activate(GID))
             self.assertEqual(coordinator.writes, [])
@@ -467,7 +555,9 @@ class StopAndRaceTest(unittest.TestCase):
             ka.store_keepalive_setpoint(coordinator, "k", config, 0, "number")
             await settle(manager.async_activate(GID))
             await settle(manager.async_deactivate(GID))
-            self.assertAlmostEqual(decode_float_cdab(coordinator.writes[-1][2]), 13500.0)
+            self.assertAlmostEqual(
+                decode_float_cdab(coordinator.writes[-1][2]), 13500.0
+            )
             self.assertEqual(len(coordinator.writes), 2)
 
         run(scenario)
@@ -533,7 +623,9 @@ class StopAndRaceTest(unittest.TestCase):
             await coordinator.lock.acquire()
             release_task = manager.async_deactivate(GID)
             await asyncio.sleep(0)
-            manager.async_activate(GID)  # no setpoints after switch-off, so no round writes
+            manager.async_activate(
+                GID
+            )  # no setpoints after switch-off, so no round writes
             coordinator.lock.release()
             await settle(release_task)
             self.assertEqual(len(coordinator.writes), writes_before)
@@ -543,19 +635,29 @@ class StopAndRaceTest(unittest.TestCase):
     def test_newer_setpoint_is_not_overwritten_by_running_round(self):
         async def scenario():
             coordinator, manager, clock = make_manager()
-            ka.store_keepalive_setpoint(coordinator, "k1", number_config("a", 1038), 0, "number")
-            ka.store_keepalive_setpoint(coordinator, "k2", number_config("b", 1040), 100, "number")
+            ka.store_keepalive_setpoint(
+                coordinator, "k1", number_config("a", 1038), 0, "number"
+            )
+            ka.store_keepalive_setpoint(
+                coordinator, "k2", number_config("b", 1040), 100, "number"
+            )
             task = manager.async_activate(GID)
             # After the first write, the round sleeps for the spacing gap.
             while len(coordinator.writes) < 1:
                 await asyncio.sleep(0)
-            ka.store_keepalive_setpoint(coordinator, "k2", number_config("b", 1040), 200, "number")
+            ka.store_keepalive_setpoint(
+                coordinator, "k2", number_config("b", 1040), 200, "number"
+            )
             await settle(task)
-            values = [decode_float_cdab(w[2]) for w in coordinator.writes if w[1] == 1040]
+            values = [
+                decode_float_cdab(w[2]) for w in coordinator.writes if w[1] == 1040
+            ]
             self.assertNotIn(100.0, values)
             clock.now += 15
             await manager.async_run_round(GID)
-            values = [decode_float_cdab(w[2]) for w in coordinator.writes if w[1] == 1040]
+            values = [
+                decode_float_cdab(w[2]) for w in coordinator.writes if w[1] == 1040
+            ]
             self.assertEqual(values[-1], 200.0)
 
         run(scenario)
@@ -565,7 +667,9 @@ class StopAndRaceTest(unittest.TestCase):
             coordinator, manager, clock = make_manager()
             ka.store_keepalive_setpoint(coordinator, "k", number_config(), 0, "number")
             await settle(manager.async_activate(GID))
-            coordinator.last_update_success = False  # e.g. core unit backend lost the link
+            coordinator.last_update_success = (
+                False  # e.g. core unit backend lost the link
+            )
             clock.now += 15
             await manager.async_run_round(GID)
             self.assertEqual(len(coordinator.writes), 1)
@@ -595,7 +699,6 @@ class StopAndRaceTest(unittest.TestCase):
             self.assertFalse(manager.is_active(GID))
 
         run(scenario)
-
 
 
 class SecondReviewTest(unittest.TestCase):
@@ -640,7 +743,9 @@ class SecondReviewTest(unittest.TestCase):
                 return result
 
             coordinator.async_pb_write = recording
-            ka.store_keepalive_setpoint(coordinator, "k1", number_config("a", 1038), 0, "number")
+            ka.store_keepalive_setpoint(
+                coordinator, "k1", number_config("a", 1038), 0, "number"
+            )
             other = number_config("b", 1040)
             other["keepalive"]["group_id"] = gid2
             ka.store_keepalive_setpoint(coordinator, "k2", other, 0, "number")
@@ -718,7 +823,6 @@ class SecondReviewTest(unittest.TestCase):
         run(scenario)
 
 
-
 class FakeBus:
     def __init__(self):
         self.once = []
@@ -756,9 +860,13 @@ def install_ha_stubs():
         return lambda: timers.remove(entry)
 
     event.async_track_time_interval = async_track_time_interval
-    sys.modules.setdefault("homeassistant.helpers", types.ModuleType("homeassistant.helpers"))
+    sys.modules.setdefault(
+        "homeassistant.helpers", types.ModuleType("homeassistant.helpers")
+    )
     sys.modules["homeassistant.helpers.event"] = event
-    const = sys.modules.get("homeassistant.const") or types.ModuleType("homeassistant.const")
+    const = sys.modules.get("homeassistant.const") or types.ModuleType(
+        "homeassistant.const"
+    )
     const.EVENT_HOMEASSISTANT_STOP = "homeassistant_stop"
     sys.modules["homeassistant.const"] = const
     return timers
@@ -789,7 +897,10 @@ class ThirdReviewTest(unittest.TestCase):
             for _ in range(4):
                 clock.now += 15
                 coordinator.register_data["soc_key"]["timestamp"] = clock.now
-                coordinator.register_data["k"] = {"processed_value": 47, "timestamp": clock.now}
+                coordinator.register_data["k"] = {
+                    "processed_value": 47,
+                    "timestamp": clock.now,
+                }
                 await manager.async_run_round(GID)
             group = manager.groups[GID]
             self.assertEqual(group.mismatches, 0)
@@ -810,7 +921,9 @@ class ThirdReviewTest(unittest.TestCase):
     def test_unique_id_collision_drops_group(self):
         groups = {"bat": dict(GROUP_CFG)}
         controls = [dict(number_config(), keepalive={"group": "bat"})]
-        result = ka.validate_template_keepalive(groups, controls, "t", {"bat_keepalive"})
+        result = ka.validate_template_keepalive(
+            groups, controls, "t", {"bat_keepalive"}
+        )
         self.assertEqual(result, {})
         self.assertNotIn("keepalive", controls[0])
 
@@ -881,7 +994,10 @@ class ThirdReviewTest(unittest.TestCase):
             coordinator.hass = hass
             ka.store_keepalive_setpoint(coordinator, "k", number_config(), 0, "number")
             await settle(manager.async_activate(GID))
-            _event, callback = hass.bus.once.pop()  # the bus drops a fired once-listener
+            (
+                _event,
+                callback,
+            ) = hass.bus.once.pop()  # the bus drops a fired once-listener
             callback(None)
             self.assertEqual(manager.groups[GID].state, ka.STATE_STOPPED)
             self.assertEqual(manager.groups[GID].stop_reason, "Home Assistant stopping")
