@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Added
+
+- **Cyclic writes (`keepalive`) for controls with a device-side timeout ([#145](https://github.com/TCzerny/ha-modbus-manager/issues/145))**: Opt-in per control with a `keepalive` block and `keepalive_groups` in the template. Each group has a switch (starts off, nothing restored after restart) and a status sensor. While on, user-set values are rewritten every `interval` seconds through the normal write path, without the number read-back verify; read-back mismatches are counted, repeated failures, a stale clamp source, a dropped link or unload stop the group without a final write. Optional `clamp_max_to_register` / `clamp_min_to_register` and `release: write`. Templates without `keepalive` stay write-once. See [docs/KEEPALIVE.md](docs/KEEPALIVE.md).
+
 ### 🔄 Changed
 
 - **Setup category labels**: Device category dropdowns in setup and add-device use `selector.device_category` in the translation files, including Italian. The stored category key is unchanged.

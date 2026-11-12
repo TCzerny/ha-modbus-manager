@@ -18,6 +18,7 @@ from .device_utils import (
     is_coordinator_connected,
     is_register_dependency_met,
 )
+from .keepalive import store_keepalive_setpoint
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -64,6 +65,9 @@ async def async_setup_entry(
             async_add_entities(entities, config_subentry_id=subentry_id)
         else:
             async_add_entities(entities)
+    from .keepalive_entities import add_keepalive_entities
+
+    entities_count += add_keepalive_entities(coordinator, async_add_entities, "switch")
     if entities_count:
         _LOGGER.debug("Created %d coordinator switches", entities_count)
     else:
@@ -287,12 +291,20 @@ class ModbusCoordinatorSwitch(SwitchEntity):
             slave_id = self._register_config.get("slave_id", 1)
 
             # Write to register
-            await self._coordinator.async_pb_write(
+            result = await self._coordinator.async_pb_write(
                 slave_id,
                 self._address,
                 write_value,
                 call_type,
             )
+            if result:
+                store_keepalive_setpoint(
+                    self._coordinator,
+                    self._register_key,
+                    self._register_config,
+                    value,
+                    "raw",
+                )
 
             _LOGGER.debug(
                 "Wrote value %d to register %d (slave_id: %d)",

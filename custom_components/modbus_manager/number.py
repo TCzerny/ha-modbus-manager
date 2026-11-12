@@ -23,6 +23,7 @@ from .device_utils import (
     is_coordinator_connected,
     is_register_dependency_met,
 )
+from .keepalive import store_keepalive_setpoint
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -440,6 +441,14 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                         "actual": str(actual_f),
                     },
                 )
+
+            store_keepalive_setpoint(
+                self.coordinator,
+                self.register_key,
+                self.register_config,
+                requested,
+                "number",
+            )
 
         except HomeAssistantError:
             raise
