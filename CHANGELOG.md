@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### 🔄 Changed
+
+- **Setup category labels**: Device category dropdowns in setup and add-device use `selector.device_category` in the translation files, including Italian. The stored category key is unchanged.
+
 ### 🐛 Fixed
 
 - **Sungrow SHx — invalid power sentinels**: `load_power`, `export_power_raw`, and the meter power raw registers set Core `nan_value: 0x7FFFFFFF`. A decoded match, or its negation, becomes `unknown` before scale and offset, so the sample is not written to statistics. Calculated sensors that read those values no longer substitute `0` while the source is `unknown`. Template v1.2.30.

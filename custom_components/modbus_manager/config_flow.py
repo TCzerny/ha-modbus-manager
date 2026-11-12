@@ -14,6 +14,7 @@ from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import selector
 
 from .combined_specs import resolve_combination_type
 from .const import (
@@ -90,7 +91,8 @@ from .logger import ModbusManagerLogger
 from .scan_groups import persist_scan_groups, scan_group_seconds_from_config
 from .template_catalog import (
     DEVICE_CATEGORY_GENERIC,
-    category_labels,
+    add_device_categories,
+    category_option_label,
     present_categories,
     template_picker_label,
     templates_in_category,
@@ -106,6 +108,19 @@ from .template_loader import (
 
 _LOGGER = ModbusManagerLogger(__name__)
 COMBINED_TEMPLATE_SENTINEL = "__combined_device__"
+
+
+def _device_category_selector(options: list[str]) -> selector.SelectSelector:
+    """Dropdown whose option labels come from selector.device_category."""
+    return selector.SelectSelector(
+        selector.SelectSelectorConfig(
+            options=options,
+            translation_key="device_category",
+            mode=selector.SelectSelectorMode.DROPDOWN,
+        )
+    )
+
+
 # Dev-only: allow a second hub on the same host:port (local combined-device testing).
 # CONF_TEST_ALLOW_SAME_ENDPOINT_NEW_HUB = "test_allow_same_endpoint_new_hub"
 
@@ -1254,9 +1269,9 @@ class ModbusManagerConfigFlow(
             choices[COMBINED_TEMPLATE_SENTINEL] = "Combined Device (cross-hub)"
         return choices
 
-    def _template_category_choices(self) -> dict[str, str]:
+    def _template_category_keys(self) -> list[str]:
         """Categories that currently have at least one YAML template."""
-        return category_labels(self.hass, present_categories(self._templates))
+        return present_categories(self._templates)
 
     async def _continue_after_template_choice(self, template_name: str) -> FlowResult:
         """Route a chosen template into connection or simple device config."""
@@ -1421,23 +1436,22 @@ class ModbusManagerConfigFlow(
             self._template_category = str(user_input["template_category"])
             return await self.async_step_template_pick()
 
-        categories = self._template_category_choices()
+        categories = self._template_category_keys()
         if not categories:
             return self.async_abort(reason="no_templates")
         if len(categories) == 1:
-            self._template_category = next(iter(categories))
+            self._template_category = categories[0]
             return await self.async_step_template_pick()
 
         return self.async_show_form(
             step_id="template",
             data_schema=vol.Schema(
-                {vol.Required("template_category"): vol.In(categories)}
+                {
+                    vol.Required("template_category"): _device_category_selector(
+                        categories
+                    )
+                }
             ),
-            description_placeholders={
-                "config_flow_note": "",
-                "template_count": str(len(self._templates)),
-                "template_list": ", ".join(categories.values()),
-            },
         )
 
     async def async_step_template_pick(
@@ -1466,9 +1480,7 @@ class ModbusManagerConfigFlow(
                 {vol.Required("template"): vol.In(template_choices)}
             ),
             description_placeholders={
-                "category": category_labels(self.hass, [category]).get(
-                    category, category
-                ),
+                "category": category_option_label(self.hass, category),
             },
         )
 
@@ -4078,12 +4090,7 @@ class ModbusManagerDeviceSubentryFlow(
     async def _show_add_template_select_form(self) -> FlowResult:
         """First add-device step: device category (then a short model list)."""
         templates = await self._add_device_templates()
-        categories = {
-            DEVICE_CATEGORY_GENERIC: category_labels(
-                self.hass, [DEVICE_CATEGORY_GENERIC]
-            )[DEVICE_CATEGORY_GENERIC],
-            **category_labels(self.hass, present_categories(templates)),
-        }
+        categories = add_device_categories(templates)
         self._add_form_template_name = None
         self._add_template_candidate = None
         self._add_form_prefix_default = None
@@ -4095,7 +4102,7 @@ class ModbusManagerDeviceSubentryFlow(
                 {
                     vol.Required(
                         "template_category", default=DEVICE_CATEGORY_GENERIC
-                    ): vol.In(categories)
+                    ): _device_category_selector(categories)
                 }
             ),
         )
@@ -4111,9 +4118,7 @@ class ModbusManagerDeviceSubentryFlow(
                 {vol.Required("template"): vol.In(template_choices)}
             ),
             description_placeholders={
-                "category": category_labels(self.hass, [category]).get(
-                    category, category
-                ),
+                "category": category_option_label(self.hass, category),
             },
         )
 

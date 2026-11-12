@@ -7,17 +7,13 @@ between those without changing template identity or unique_id.
 
 from __future__ import annotations
 
+import json
 from collections import defaultdict
+from functools import lru_cache
+from pathlib import Path
 from typing import Any
 
-
-def _ui_language(hass: Any | None) -> str:
-    """Home Assistant UI language, limited to catalogs we ship (en/de)."""
-    language = str(getattr(getattr(hass, "config", None), "language", "en") or "en")
-    language = language.split("-", 1)[0].lower()
-    if language not in ("de", "en"):
-        return "en"
-    return language
+_TRANSLATIONS = Path(__file__).parent / "translations"
 
 
 DEVICE_CATEGORY_INVERTER = "inverter"
@@ -42,30 +38,43 @@ DEVICE_CATEGORIES: tuple[str, ...] = (
     DEVICE_CATEGORY_OTHER,
 )
 
-DEVICE_CATEGORY_LABELS = {
-    "en": {
-        DEVICE_CATEGORY_INVERTER: "Inverter",
-        DEVICE_CATEGORY_BATTERY: "Battery storage",
-        DEVICE_CATEGORY_EV_CHARGER: "EV charger",
-        DEVICE_CATEGORY_ENERGY_METER: "Energy meter",
-        DEVICE_CATEGORY_ENERGY_MANAGER: "Energy manager",
-        DEVICE_CATEGORY_VENTILATION: "Ventilation",
-        DEVICE_CATEGORY_HEATING: "Heating",
-        DEVICE_CATEGORY_OTHER: "Other",
-        DEVICE_CATEGORY_GENERIC: "Generic Modbus Device",
-    },
-    "de": {
-        DEVICE_CATEGORY_INVERTER: "Wechselrichter",
-        DEVICE_CATEGORY_BATTERY: "Batteriespeicher",
-        DEVICE_CATEGORY_EV_CHARGER: "Wallbox / EV-Ladegerät",
-        DEVICE_CATEGORY_ENERGY_METER: "Energiezähler",
-        DEVICE_CATEGORY_ENERGY_MANAGER: "Energy Manager",
-        DEVICE_CATEGORY_VENTILATION: "Lüftung",
-        DEVICE_CATEGORY_HEATING: "Heizung",
-        DEVICE_CATEGORY_OTHER: "Sonstiges",
-        DEVICE_CATEGORY_GENERIC: "Generisches Modbus-Gerät",
-    },
-}
+
+def _language_code(hass: Any | None) -> str:
+    """UI language code. Any shipped translations file can match."""
+    language = str(getattr(getattr(hass, "config", None), "language", "en") or "en")
+    return language.split("-", 1)[0].lower()
+
+
+@lru_cache(maxsize=8)
+def _category_option_labels(language: str) -> dict[str, str]:
+    """Labels from translations/<language>.json selector.device_category."""
+    path = _TRANSLATIONS / f"{language}.json"
+    if not path.is_file():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError, UnicodeError):
+        return {}
+    raw = data.get("selector", {}).get("device_category", {}).get("options", {})
+    if not isinstance(raw, dict):
+        return {}
+    return {
+        str(key): str(label) for key, label in raw.items() if isinstance(label, str)
+    }
+
+
+def category_option_label(hass: Any | None, key: str) -> str:
+    """Translated category name for a description placeholder.
+
+    The dropdown itself is translated by Home Assistant from the same
+    selector key. This lookup is only for ``{category}`` in step text.
+    """
+    for language in (_language_code(hass), "en"):
+        label = _category_option_labels(language).get(key)
+        if label:
+            return label
+    return key
+
 
 # YAML `type:` (case-insensitive) → discovery category.
 _TYPE_TO_CATEGORY: dict[str, str] = {
@@ -112,20 +121,21 @@ def template_picker_label(template_data: dict[str, Any] | None, name: str) -> st
     return model_part
 
 
-def category_labels(
-    hass: Any | None,
-    categories: list[str],
-) -> dict[str, str]:
-    """vol.In mapping of category key → UI label (en/de)."""
-    language = _ui_language(hass)
-    catalog = DEVICE_CATEGORY_LABELS.get(language) or DEVICE_CATEGORY_LABELS["en"]
-    return {key: catalog.get(key, key) for key in categories}
-
-
 def present_categories(templates: dict[str, dict[str, Any]]) -> list[str]:
     """Categories that have at least one template, in display order."""
     found = {template_device_category(data) for data in templates.values()}
     return [key for key in DEVICE_CATEGORIES if key in found]
+
+
+def add_device_categories(templates: dict[str, dict[str, Any]]) -> list[str]:
+    """Generic first, then categories that have a YAML template."""
+    keys = [DEVICE_CATEGORY_GENERIC]
+    seen = set(keys)
+    for key in present_categories(templates):
+        if key not in seen:
+            keys.append(key)
+            seen.add(key)
+    return keys
 
 
 def templates_in_category(
