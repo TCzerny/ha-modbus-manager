@@ -1,0 +1,2632 @@
+{
+  "title": "Modbus Manager",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Modbus Manager",
+        "description": "Identifica un dispositivo a un indirizzo noto, scegli un modello, crea un dispositivo generico oppure crea un dispositivo combinato (senza I/O Modbus).",
+        "menu_options": {
+          "detect": "Identifica un dispositivo a un indirizzo noto",
+          "template": "Scegli un modello",
+          "generic_device": "Crea un dispositivo generico",
+          "combined_device": "Dispositivo combinato (tra hub)"
+        },
+        "data": {
+          "template": "Modello del dispositivo",
+          "name": "Nome",
+          "host": "Host",
+          "port": "Porta",
+          "slave": "ID slave",
+          "device_type": "Tipo di dispositivo"
+        }
+      },
+      "detect": {
+        "title": "Connessione hub",
+        "description": "Inserisci host e porta. Modbus Manager proverà a identificare il dispositivo. Per la modalità seriale RTU, scegli invece un modello.",
+        "data": {
+          "host": "Indirizzo IP",
+          "port": "Porta Modbus TCP",
+          "modbus_type": "Tipo di connessione Modbus",
+          "tls": "Modbus TCP su TLS",
+          "timeout": "Timeout in secondi",
+          "delay": "Ritardo dopo la connessione (secondi)",
+          "message_wait_milliseconds": "Attesa tra le richieste (millisecondi)",
+          "scan_group_fast": "Gruppo di polling rapido (secondi)",
+          "scan_group_medium": "Gruppo di polling medio (secondi)",
+          "scan_group_slow": "Gruppo di polling lento (secondi)"
+        }
+      },
+      "template": {
+        "title": "Scegli una categoria di dispositivo",
+        "description": "Scegli una categoria di dispositivo. Poi selezionerai il produttore e il modello appartenenti a questa categoria.",
+        "data": {
+          "template": "Modello di dispositivo",
+          "template_category": "Categoria di dispositivo"
+        }
+      },
+      "template_pick": {
+        "title": "Scegli un modello",
+        "description": "Categoria: {category}. Le etichette sono «produttore» e «modello». «Dispositivo combinato» rimane nel primo menu di configurazione.",
+        "data": {
+          "template": "Produttore — modello"
+        }
+      },
+      "generic_entity": {
+        "title": "Tipo di entità generica",
+        "description": "Entità aggiunte finora: {entity_count}. Solo registri Holding e Input (nessuna bobina).",
+        "data": {
+          "entity_type": "Tipo di entità"
+        }
+      },
+      "generic_entity_core": {
+        "title": "Registro generico",
+        "description": "Tipo: {entity_type}. L'indirizzo è lo stesso numero indicato in YAML come `address:`: l'indirizzo Modbus che leggiamo, senza offset. unique_id è la chiave della cronologia e non deve essere modificato in seguito.",
+        "data": {
+          "unique_id": "unique_id (slug stabile)",
+          "name": "Nome visualizzato",
+          "address": "Indirizzo Modbus (uguale a YAML address:)",
+          "input_type": "Tipo di registro",
+          "data_type": "Tipo di dato",
+          "scan_interval": "Intervallo di scansione (secondi)",
+          "scan_group": "Gruppo di polling (veloce / medio / lento)",
+          "entity_category": "Categoria dell'entità",
+          "icon": "Icona",
+          "mm_group": "mm_group",
+          "translation_key": "Chiave di traduzione (facoltativa)",
+          "enabled_by_default": "Abilitato per impostazione predefinita"
+        }
+      },
+      "generic_entity_fields": {
+        "title": "Campi aggiuntivi del registro",
+        "description": "Tipo: {entity_type}, tipo di dato: {data_type}. Sono mostrati solo i campi applicabili a questa combinazione.",
+        "data": {
+          "unique_id": "unique_id (slug stabile)",
+          "name": "Nome visualizzato",
+          "address": "Indirizzo Modbus (uguale all'indirizzo YAML:)",
+          "input_type": "Tipo di registro",
+          "data_type": "Tipo di dato",
+          "count": "Numero di registri",
+          "scale": "Fattore di scala",
+          "offset": "Offset",
+          "precision": "Precisione",
+          "unit_of_measurement": "Unità di misura",
+          "device_class": "Classe del dispositivo",
+          "state_class": "Classe dello stato",
+          "scan_interval": "Intervallo di scansione (secondi)",
+          "scan_group": "Gruppo di polling (veloce / medio / lento)",
+          "encoding": "Codifica della stringa (utf-8 o esadecimale)",
+          "byte_order": "Ordine dei byte",
+          "swap": "Scambio delle word",
+          "entity_category": "Categoria dell’entità",
+          "icon": "Icona",
+          "mm_group": "mm_group",
+          "bitmask": "Maschera di bit",
+          "bit_position": "Posizione del bit",
+          "map_text": "Mappa (una riga, valori separati da virgole: 0xAA: Abilitato, 0x55: Disabilitato)",
+          "flags_text": "Flag (posizioni dei bit, separate da virgole: 0: Generazione FV, 1: Batteria in carica)",
+          "read_function_code": "Codice funzione di lettura (3 o 4)",
+          "write_function_code": "Codice funzione di scrittura (6 o 16)",
+          "never_resets": "Non si azzera mai",
+          "force_update": "Forza aggiornamento",
+          "min_value": "Minimo",
+          "max_value": "Massimo",
+          "step": "Passo",
+          "write_value": "Valore scritto su ON",
+          "write_value_off": "Valore scritto su OFF",
+          "on_value": "Valore dello stato ON",
+          "off_value": "Valore dello stato OFF",
+          "button_press_value": "Valore alla pressione del pulsante",
+          "options_text": "Opzioni (una riga, separate da virgole: 0: Off, 1: On)",
+          "max_length": "Lunghezza massima (byte)"
+        }
+      },
+      "generic_entity_confirm": {
+        "title": "Aggiungere un'altra entità?",
+        "description": "{entity_count} entità pronte. Aggiungine un'altra o crea l'hub.",
+        "data": {
+          "action": "Avanti"
+        }
+      },
+      "identify_confirm": {
+        "title": "Conferma il dispositivo identificato",
+        "description": "Trovato {found_name} all'indirizzo {found_host}:{found_port}.\n\n{found_details}\n\nInvia per usare questi valori oppure seleziona “Scegli un modello manualmente” per ignorare il rilevamento. Gli hub esistenti non verranno modificati. Qui puoi confermare il tipo di connessione (LAN / WiNet-S / RS485): WiNet è il collegamento tramite dongle, non indica TCP o RTU.",
+        "data": {
+          "template": "Modello del dispositivo",
+          "prefix": "Prefisso del dispositivo (deve essere univoco)",
+          "slave_id": "ID slave Modbus",
+          "selected_model": "Modello",
+          "battery_slave_id": "ID slave della batteria",
+          "wallbox_slave_id": "ID slave della wallbox",
+          "connection_type": "Tipo di connessione (LAN, WiNet-S o RS485)",
+          "choose_template_instead": "Scegli un modello manualmente (ignora questa corrispondenza)"
+        }
+      },
+      "firmware": {
+        "title": "Versione del firmware",
+        "description": "Seleziona la versione del firmware per il tuo {device_type}",
+        "data": {
+          "firmware_version": "Mappatura dei registri (profilo firmware)"
+        }
+      },
+      "connection": {
+        "title": "Parametri di connessione",
+        "description": "Configura la connessione Modbus per il modello: {template_name}",
+        "data": {
+          "prefix": "Prefisso del dispositivo (deve essere univoco)",
+          "host": "Indirizzo IP del dispositivo Modbus",
+          "port": "Porta Modbus TCP",
+          "slave_id": "ID slave Modbus",
+          "modbus_type": "Tipo di connessione Modbus",
+          "tls": "Modbus TCP su TLS",
+          "timeout": "Timeout in secondi",
+          "delay": "Ritardo dopo la connessione (secondi)",
+          "message_wait_milliseconds": "Attesa tra le richieste (millisecondi)",
+          "post_write_settle_milliseconds": "Ritardo dopo le scritture di controllo (millisecondi, 0 = disattivato)",
+          "scan_group_fast": "Gruppo di polling rapido (secondi)",
+          "scan_group_medium": "Gruppo di polling medio (secondi)",
+          "scan_group_slow": "Gruppo di polling lento (secondi)",
+          "use_coordinator": "Usa la modalità coordinatore (sperimentale)",
+          "baudrate": "Velocità di trasmissione",
+          "data_bits": "Bit di dati",
+          "stop_bits": "Bit di stop",
+          "parity": "Parità"
+        },
+        "data_description": {
+          "post_write_settle_milliseconds": "Attendi dopo una scrittura di controllo prima di eseguire di nuovo il polling. 0 = disattivato. Se necessario, usa 1000 o più su WiNet-S."
+        }
+      },
+      "dynamic_config": {
+        "title": "Opzioni dispositivo",
+        "description": "Configura la connessione e le opzioni per {template_name}{model_note}",
+        "data": {
+          "connector_type": "Connettore di ricarica",
+          "rfid": "Informazioni RFID",
+          "phase_switching_registers": "Supporto dei registri di commutazione di fase",
+          "selected_model": "Seleziona modello",
+          "phases": "Numero di fasi",
+          "mppt_count": "Numero di inseguitori MPPT",
+          "string_count": "Numero di stringhe",
+          "modules": "Numero di moduli",
+          "max_current": "Corrente massima",
+          "connectors": "Numero di connettori",
+          "connection_type": "Tipo di connessione",
+          "firmware_version": "Mappatura dei registri (profilo firmware)",
+          "battery_config": "Configurazione della batteria",
+          "battery_slave_id": "ID slave della batteria",
+          "dual_channel_meter": "Contatore a doppio canale abilitato",
+          "battery_enabled": "Abilita i registri relativi alla batteria",
+          "channel_2_enabled": "Abilita i registri del canale 2 PROD.CT",
+          "charger_enabled": "Abilita i registri relativi al caricabatterie",
+          "charger_phases": "Numero di fasi del caricabatterie EV",
+          "charger_region": "Mappa delle modalità regionali del caricabatterie EV",
+          "protocol_version": "Versione del protocollo Modbus",
+          "meter_type": "Tipo di contatore",
+          "wallbox_connected": "Wallbox connessa",
+          "hkr2_enabled": "Abilita il circuito di riscaldamento 2 (HKR2)",
+          "hkr3_enabled": "Abilita il circuito di riscaldamento 3 (HKR3)",
+          "solar_enabled": "Abilita i registri del collettore solare",
+          "heat_pump_enabled": "Abilita i registri della pompa di calore",
+          "pv2heat_enabled": "Abilita i registri PV2Heat",
+          "heat_meter_enabled": "Abilita il registro della potenza del contatore di calore",
+          "entity_ids_without_prefix": "ID delle entità senza prefisso",
+          "entity_id_strategy": "Strategia degli ID delle entità",
+          "preheater_type": "Preriscaldatore integrato",
+          "post_heating_cooling_type": "Apparecchiatura esterna di riscaldamento/raffreddamento",
+          "display": "La stazione di ricarica è dotata di schermo",
+          "sunspec_model_103_address": "Indirizzo SunSpec Model 103 (inverter principale - dati FV) - Facoltativo, modificare solo se necessario",
+          "sunspec_model_160_address": "Indirizzo SunSpec Model 160 (estensione per MPPT multipli) - Facoltativo, modificare solo se necessario",
+          "sunspec_model_124_address": "Indirizzo SunSpec Model 124 (controllo dell'accumulo a batteria) - Facoltativo, modificare solo se necessario"
+        }
+      },
+      "model_selection": {
+        "title": "Seleziona il modello del dispositivo",
+        "description": "Scegli il modello esatto per {template_name}",
+        "data": {
+          "selected_model": "Seleziona il modello"
+        }
+      },
+      "battery_slave_id": {
+        "title": "Configurazione della batteria SBR/SBH",
+        "description": "Configura lo Slave ID della batteria SBR/SBH",
+        "data": {
+          "battery_slave_id": "Slave ID della batteria (predefinito: 200)"
+        }
+      },
+      "device_config": {
+        "title": "Configurazione del dispositivo",
+        "description": "Configura la connessione al dispositivo Modbus",
+        "data": {
+          "prefix": "Prefisso del dispositivo (ad es. 'Device_1')",
+          "host": "Indirizzo IP del dispositivo Modbus",
+          "port": "Porta Modbus TCP (predefinita: 502)",
+          "slave_id": "Slave ID Modbus (predefinito: 1)",
+          "tls": "Modbus TCP con TLS",
+          "timeout": "Timeout in secondi",
+          "delay": "Ritardo dopo la connessione (secondi)",
+          "message_wait_milliseconds": "Attesa tra le richieste (millisecondi)",
+          "post_write_settle_milliseconds": "Ritardo dopo le scritture di controllo (millisecondi, 0 = disattivato)",
+          "scan_group_fast": "Gruppo di interrogazione rapida (secondi)",
+          "scan_group_medium": "Gruppo di interrogazione media (secondi)",
+          "scan_group_slow": "Gruppo di interrogazione lenta (secondi)",
+          "phases": "Numero di fasi (1 o 3)",
+          "mppt_count": "Numero di tracker MPPT",
+          "battery_config": "Configurazione della batteria",
+          "battery_slave_id": "ID slave della batteria (necessario solo per le batterie SBR/SBH)",
+          "firmware_version": "Mappatura dei registri (profilo firmware)",
+          "connection_type": "Tipo di connessione",
+          "dual_channel_meter": "Contatore a doppio canale abilitato",
+          "wallbox_connected": "Wallbox collegata",
+          "protocol_version": "Versione del protocollo Modbus",
+          "preheater_type": "Preriscaldatore integrato",
+          "post_heating_cooling_type": "Apparecchiatura esterna per riscaldamento/raffreddamento post-riscaldamento",
+          "display": "La stazione di ricarica è dotata di schermo",
+          "name": "Nome del dispositivo (ad es. 'Sungrow Inverter')",
+          "common_model_address": "Indirizzo del registro Common Model (predefinito: 40001)",
+          "inverter_model_address": "Indirizzo del registro Inverter Model (predefinito: 40069)",
+          "storage_model_address": "Indirizzo del registro del modello di accumulo (facoltativo)",
+          "meter_model_address": "Indirizzo del registro del modello di contatore (facoltativo)",
+          "use_coordinator": "Usa la modalità coordinatore (sperimentale)"
+        }
+      },
+      "combined_device": {
+        "title": "Dispositivo combinato",
+        "description": "Crea un dispositivo combinato virtuale tra hub a partire da due fonti esistenti.",
+        "data": {
+          "source_entry_id_a": "Voce sorgente A",
+          "source_entry_id_b": "Voce sorgente B",
+          "combined_prefix": "Prefisso combinato"
+        }
+      },
+      "battery_detection": {
+        "title": "Batteria disponibile?",
+        "description": "È collegata una batteria al tuo inverter {template_name}?\n\nInverter: {inverter_prefix} ({inverter_host})\n\n{config_flow_note}",
+        "data": {
+          "battery_available": "Batteria disponibile"
+        }
+      },
+      "battery_template_selection": {
+        "title": "Seleziona il modello della batteria",
+        "description": "Scegli il modello per la batteria:\n\nInverter: {inverter_prefix}\nModelli disponibili: {available_templates}\n\n{config_flow_note}",
+        "data": {
+          "battery_template": "Modello della batteria"
+        }
+      },
+      "battery_config": {
+        "title": "Configurazione della batteria",
+        "description": "Configura la batteria:\n\nInverter: {inverter_prefix}\nModello: {battery_template}\n\n{config_flow_note}",
+        "data": {
+          "battery_prefix": "Prefisso della batteria",
+          "battery_slave_id": "ID slave della batteria",
+          "battery_model": "Modello della batteria",
+          "battery_modules": "Numero di moduli della batteria"
+        }
+      },
+      "rtu_parameters": {
+        "title": "Parametri RTU",
+        "description": "Configura i parametri RTU over TCP per il modello: {template_name}",
+        "data": {
+          "baudrate": "Velocità di trasmissione",
+          "data_bits": "Bit di dati",
+          "stop_bits": "Bit di stop",
+          "parity": "Parità"
+        }
+      },
+      "rtu_parameters_device": {
+        "title": "Parametri RTU",
+        "description": "Configura i parametri RTU over TCP per il modello: {template_name}",
+        "data": {
+          "baudrate": "Velocità di trasmissione",
+          "data_bits": "Bit di dati",
+          "stop_bits": "Bit di stop",
+          "parity": "Parità"
+        }
+      },
+      "reconfigure": {
+        "title": "Riconfigura hub",
+        "description": "Tipo di connessione attuale: {current_modbus_type}. Cambia qui tra Modbus TCP e RTU over TCP. La connessione RTU seriale non può essere modificata da questa schermata. Host, porta e dispositivi restano invariati.",
+        "data": {
+          "modbus_type": "Tipo di connessione Modbus (TCP o RTU over TCP)",
+          "tls": "Modbus TCP su TLS",
+          "prefix": "Prefisso dispositivo",
+          "slave_id": "ID slave",
+          "selected_model": "Seleziona modello",
+          "phases": "Numero di fasi",
+          "mppt_count": "Numero di inseguitori MPPT",
+          "string_count": "Numero di stringhe",
+          "modules": "Numero di moduli",
+          "firmware_version": "Mappatura dei registri (profilo firmware)",
+          "connection_type": "Tipo di connessione",
+          "meter_type": "Tipo di contatore",
+          "wallbox_connected": "Wallbox connessa",
+          "protocol_version": "Versione del protocollo Modbus",
+          "battery_config": "Configurazione della batteria",
+          "battery_slave_id": "ID slave della batteria",
+          "timeout": "Timeout (secondi)",
+          "delay": "Ritardo dopo la connessione (secondi)",
+          "message_wait_milliseconds": "Attesa tra le richieste (millisecondi)",
+          "post_write_settle_milliseconds": "Ritardo dopo le scritture di controllo (millisecondi, 0 = disattivato)",
+          "scan_group_fast": "Gruppo di polling rapido (secondi)",
+          "scan_group_medium": "Gruppo di polling medio (secondi)",
+          "scan_group_slow": "Gruppo di polling lento (secondi)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Impossibile connettersi",
+      "invalid_host": "Nome host o indirizzo IP non valido",
+      "invalid_port": "La porta deve essere un numero valido.",
+      "unknown": "Errore imprevisto",
+      "firmware_not_detected": "Impossibile rilevare la versione del firmware",
+      "invalid_firmware": "Versione del firmware non valida",
+      "device_exists": "Esiste già un dispositivo con questo nome",
+      "no_device_definitions": "Non è stata trovata alcuna definizione di dispositivo",
+      "same_source_selected": "La sorgente A e la sorgente B devono essere diverse",
+      "source_not_found": "La voce della sorgente selezionata non esiste più",
+      "invalid_pair": "Questo tipo di coppia di sorgenti non è supportato",
+      "invalid_generic_register": "Questo registro non è valido. Verifica che unique_id sia nel formato lettera + a-z/0-9/_, che register sia >= 1 e che sia di tipo holding o input."
+    },
+    "abort": {
+      "no_device_definitions": "Non è stata trovata alcuna definizione di dispositivo. Assicurati che nella directory device_definitions sia presente almeno un file YAML.",
+      "already_configured": "Il dispositivo è già configurato",
+      "reconfigure_successful": "Dispositivo riconfigurato correttamente.",
+      "invalid_config": "Configurazione non valida. {error}",
+      "no_available_devices_for_subentry": "Tutti i dispositivi sono già configurati.",
+      "template_not_found": "Template {template_name} non trovato.",
+      "no_registers": "Il template {template_name} non contiene entità definite.",
+      "generic_no_registers": "Il dispositivo generico deve avere almeno un registro valido. {error}",
+      "update_error": "Errore durante l'aggiornamento del template: {error}",
+      "no_template_selected": "Nessun template selezionato",
+      "device_added_to_existing_hub": "Dispositivo aggiunto correttamente all'hub esistente. Per attivare il nuovo dispositivo è necessario riavviare.",
+      "no_eligible_sources": "Nessuna fonte idonea disponibile per un dispositivo combinato."
+    },
+    "progress": {
+      "firmware_detect": "Rilevamento della versione del firmware in corso..."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opzioni di Modbus Manager",
+        "description": "Che cosa vuoi modificare?",
+        "menu_options": {
+          "connection": "Connessione — tipo, host, porta e tempi delle richieste",
+          "inverter": "Inverter — modello, MPPT e connessione",
+          "device": "Opzioni del dispositivo",
+          "battery": "Batteria — modello, prefisso e slave",
+          "battery_template": "Batteria — aggiungi, modifica o rimuovi un modello",
+          "reload_template": "Ricarica i modelli dei registri",
+          "generic_registers": "Dispositivo generico — aggiungi o modifica i registri",
+          "generic_export": "Dispositivo generico — esporta il modello YAML",
+          "remove_device": "Rimuovi dispositivo — scollegalo da questo hub"
+        }
+      },
+      "connection": {
+        "title": "Connessione",
+        "description": "Tipo di connessione attuale: {current_modbus_type}. Da qui puoi passare da Modbus TCP a RTU su TCP e viceversa. Host, porta e dispositivi rimangono invariati. Da questa schermata non è possibile modificare RTU seriale. Le voci dei dispositivi combinati vengono ricaricate quando cambia l'endpoint.",
+        "data": {
+          "modbus_type": "Tipo di connessione Modbus (TCP o RTU su TCP)",
+          "tls": "Modbus TCP su TLS",
+          "host": "Indirizzo IP / nome host",
+          "port": "Porta Modbus TCP",
+          "timeout": "Timeout (secondi)",
+          "delay": "Ritardo dopo la connessione (secondi)",
+          "message_wait_milliseconds": "Attesa tra le richieste (millisecondi)",
+          "post_write_settle_milliseconds": "Ritardo dopo la scrittura dei comandi (millisecondi, 0 = disattivato)",
+          "scan_group_fast": "Gruppo di polling rapido (secondi)",
+          "scan_group_medium": "Gruppo di polling medio (secondi)",
+          "scan_group_slow": "Gruppo di polling lento (secondi)"
+        }
+      },
+      "inverter": {
+        "title": "Opzioni inverter",
+        "description": "Modifica le impostazioni dell’inverter per: {device}",
+        "data": {
+          "device_entry_id": "Dispositivo",
+          "prefix": "Prefisso del dispositivo",
+          "slave_id": "ID slave",
+          "selected_model": "Seleziona il modello",
+          "phases": "Numero di fasi",
+          "mppt_count": "Numero di tracker MPPT",
+          "string_count": "Numero di stringhe",
+          "modules": "Numero di moduli",
+          "firmware_version": "Mappatura dei registri (profilo firmware)",
+          "connection_type": "Tipo di connessione",
+          "meter_type": "Tipo di contatore",
+          "wallbox_connected": "Wallbox collegata",
+          "entity_ids_without_prefix": "ID delle entità senza prefisso",
+          "entity_id_strategy": "Strategia degli ID delle entità",
+          "battery_config": "Configurazione della batteria",
+          "battery_slave_id": "ID slave della batteria",
+          "channel_2_enabled": "Abilita i registri del canale 2 di PROD.CT",
+          "charger_enabled": "Abilita i registri relativi al caricabatterie",
+          "charger_phases": "Numero di fasi del caricabatterie per veicoli elettrici",
+          "charger_region": "Mappa delle modalità regionali del caricabatterie per veicoli elettrici",
+          "protocol_version": "Versione del protocollo Modbus"
+        }
+      },
+      "battery": {
+        "title": "Opzioni della batteria",
+        "description": "Modifica le impostazioni della batteria per: {device}",
+        "data": {
+          "device_entry_id": "Dispositivo",
+          "prefix": "Prefisso del dispositivo",
+          "slave_id": "ID slave",
+          "selected_model": "Seleziona modello",
+          "modules": "Numero di moduli",
+          "firmware_version": "Mappatura dei registri (profilo firmware)",
+          "battery_config": "Configurazione della batteria",
+          "entity_ids_without_prefix": "ID delle entità senza prefisso",
+          "entity_id_strategy": "Strategia degli ID delle entità"
+        }
+      },
+      "device": {
+        "title": "Opzioni dispositivo",
+        "description": "Modifica le impostazioni del dispositivo: {device}",
+        "data": {
+          "connector_type": "Connettore di ricarica",
+          "rfid": "Informazioni RFID",
+          "phase_switching_registers": "Supporto per i registri di commutazione delle fasi",
+          "device_entry_id": "Dispositivo",
+          "prefix": "Prefisso del dispositivo",
+          "slave_id": "ID slave",
+          "selected_model": "Seleziona modello",
+          "firmware_version": "Mappatura dei registri (profilo firmware)",
+          "connection_type": "Tipo di connessione",
+          "hkr2_enabled": "Abilita il circuito di riscaldamento 2 (HKR2)",
+          "hkr3_enabled": "Abilita il circuito di riscaldamento 3 (HKR3)",
+          "solar_enabled": "Abilita i registri del collettore solare",
+          "heat_pump_enabled": "Abilita i registri della pompa di calore",
+          "pv2heat_enabled": "Abilita i registri PV2Heat",
+          "heat_meter_enabled": "Abilita il registro della potenza del contatore di calore",
+          "entity_ids_without_prefix": "ID entità senza prefisso",
+          "entity_id_strategy": "Strategia per gli ID entità",
+          "preheater_type": "Preriscaldatore integrato",
+          "post_heating_cooling_type": "Apparecchiatura esterna di riscaldamento/raffrescamento",
+          "display": "La stazione di ricarica è dotata di schermo"
+        }
+      },
+      "update_template": {
+        "title": "Ricarica i modelli dei registri",
+        "description": "Ricarica le mappe dei registri YAML per ogni dispositivo collegato a questo hub:\n\n{template_summary}\n\nL’integrazione verrà ricaricata dopo l’invio."
+      },
+      "battery_config": {
+        "title": "Configurazione della batteria",
+        "description": "Configura il modello della batteria:\n\nModello: {battery_template}\n\n{config_flow_note}",
+        "data": {
+          "battery_prefix": "Prefisso batteria",
+          "battery_slave_id": "ID slave della batteria",
+          "battery_model": "Modello della batteria",
+          "battery_modules": "Numero di moduli batteria"
+        }
+      },
+      "battery_options_selection": {
+        "title": "Configurazione della batteria",
+        "description": "Seleziona la configurazione della batteria",
+        "data": {
+          "battery_selection": "Selezione della batteria"
+        }
+      },
+      "generic_registers": {
+        "title": "Registri generici",
+        "description": "Dispositivo: {device}. Entità in questa bozza: {entity_count}. Aggiungi, modifica o rimuovi, quindi salva per ricaricare. unique_id non cambia quando modifichi. La rimozione non elimina la riga dal registro (la cronologia viene mantenuta).",
+        "data": {
+          "device_entry_id": "Dispositivo",
+          "action": "Avanti"
+        }
+      },
+      "generic_opt_pick": {
+        "title": "Seleziona entità",
+        "description": "Modalità: {mode}. unique_id è la chiave della cronologia.",
+        "data": {
+          "unique_id": "Entità (unique_id)"
+        }
+      },
+      "generic_opt_remove": {
+        "title": "Rimuovere il registro?",
+        "description": "Rimuovi {unique_id} da questo dispositivo generico. La riga nel registro delle entità non verrà eliminata; l'entità diventerà non disponibile, così la cronologia non verrà suddivisa.",
+        "data": {
+          "confirm": "Rimuovi da questo dispositivo"
+        }
+      },
+      "generic_opt_entity": {
+        "title": "Tipo di entità generica",
+        "description": "Entità in questa bozza: {entity_count}. Solo registri di mantenimento e di input (nessuna bobina).",
+        "data": {
+          "entity_type": "Tipo di entità"
+        }
+      },
+      "generic_opt_core": {
+        "title": "Registro generico",
+        "description": "Tipo: {entity_type}. In modifica, unique_id è {unique_id} e non può essere modificato. L'indirizzo è lo stesso del campo YAML address: — l'indirizzo Modbus che leggiamo.",
+        "data": {
+          "unique_id": "unique_id (slug stabile)",
+          "name": "Nome visualizzato",
+          "address": "Indirizzo Modbus (uguale a YAML address:)",
+          "input_type": "Tipo di registro",
+          "data_type": "Tipo di dato",
+          "scan_interval": "Intervallo di scansione (secondi)",
+          "scan_group": "Gruppo di polling (veloce / medio / lento)",
+          "entity_category": "Categoria dell'entità",
+          "icon": "Icona",
+          "mm_group": "mm_group",
+          "translation_key": "Chiave di traduzione (facoltativa)",
+          "enabled_by_default": "Abilitato per impostazione predefinita"
+        }
+      },
+      "generic_opt_fields": {
+        "title": "Campi aggiuntivi del registro",
+        "description": "Tipo: {entity_type}, tipo di dato: {data_type}, unique_id: {unique_id}. Sono mostrati solo i campi applicabili a questa combinazione.",
+        "data": {
+          "count": "Numero di registri",
+          "scale": "Fattore di scala",
+          "offset": "Offset",
+          "precision": "Precisione",
+          "unit_of_measurement": "Unità di misura",
+          "device_class": "Classe del dispositivo",
+          "state_class": "Classe dello stato",
+          "encoding": "Codifica della stringa (utf-8 o hex)",
+          "byte_order": "Ordine dei byte",
+          "swap": "Scambio di word",
+          "bitmask": "Maschera di bit",
+          "bit_position": "Posizione del bit",
+          "map_text": "Mappa (una riga, valori separati da virgole: 0xAA: Abilitato, 0x55: Disabilitato)",
+          "flags_text": "Flag (posizioni dei bit, separate da virgole: 0: Produzione fotovoltaica, 1: Batteria in carica)",
+          "read_function_code": "Codice funzione di lettura (3 o 4)",
+          "write_function_code": "Codice funzione di scrittura (6 o 16)",
+          "never_resets": "Non si azzera mai",
+          "force_update": "Forza aggiornamento",
+          "min_value": "Minimo",
+          "max_value": "Massimo",
+          "step": "Passo",
+          "write_value": "Valore di scrittura ON",
+          "write_value_off": "Valore di scrittura OFF",
+          "on_value": "Valore dello stato ON",
+          "off_value": "Valore dello stato OFF",
+          "button_press_value": "Valore alla pressione del pulsante",
+          "options_text": "Opzioni (una riga, separate da virgole: 0: Spento, 1: Acceso)",
+          "max_length": "Lunghezza massima (byte)"
+        }
+      },
+      "generic_export": {
+        "title": "Esporta modello YAML",
+        "description": "Dispositivo: {device}. Scrive un normale modello di Modbus Manager (con gli stessi suffissi unique_id) in config/modbus_manager/templates/. Il download è disponibile tramite un link firmato nella notifica (valido per 1 ora).",
+        "data": {
+          "device_entry_id": "Dispositivo",
+          "confirm": "Scrivi i file YAML e invia una notifica"
+        },
+        "menu_options": {
+          "generic_export_write": "Scrivi YAML e invia una notifica",
+          "generic_export_cancel": "Annulla",
+          "generic_export_close": "Fatto — YAML scritto. Scarica il file YAML dalla notifica (link valido per 1 ora)."
+        }
+      },
+      "remove_device": {
+        "title": "Rimuovi dispositivo",
+        "description": "Scegli un dispositivo da rimuovere da questo hub. Gli altri dispositivi rimarranno. Non è possibile rimuovere l'ultimo dispositivo rimasto: elimina invece l'hub.",
+        "data": {
+          "device_entry_id": "Dispositivo"
+        }
+      },
+      "remove_device_confirm": {
+        "title": "Rimuovere questo dispositivo?",
+        "description": "Rimuovi {device} da questo hub. Il dispositivo Home Assistant verrà eliminato. Al ricaricamento, le voci del registro delle entità relative a questo dispositivo verranno rimosse. Gli altri dispositivi e le voci dei dispositivi combinati non verranno modificati.",
+        "data": {
+          "confirm": "Rimuovi questo dispositivo dall’hub"
+        }
+      }
+    },
+    "error": {
+      "endpoint_in_use": "Un altro hub Modbus Manager utilizza già questo host e questa porta.",
+      "invalid_host": "L’host è obbligatorio.",
+      "invalid_port": "La porta deve essere un numero valido.",
+      "already_configured": "Questo prefisso è già utilizzato da un altro dispositivo.",
+      "invalid_generic_register": "Questo registro non è valido. Controlla unique_id (lettera + a-z/0-9/_) e che sia di tipo holding o input.",
+      "duplicate_generic_unique_id": "Questo unique_id è già utilizzato su questo dispositivo.",
+      "last_generic_register": "Un dispositivo generico deve avere almeno un registro.",
+      "generic_export_failed": "Impossibile scrivere i file YAML.",
+      "unknown_device": "Questo dispositivo non appartiene a questo hub.",
+      "not_confirmed": "Seleziona la casella per confermare la rimozione."
+    },
+    "abort": {
+      "combined_device": "I dispositivi combinati non hanno una connessione Modbus. Modifica IP/porta nelle voci dell’hub di origine.",
+      "cannot_remove_last_device": "Non è possibile rimuovere l’ultimo dispositivo di un hub. Elimina invece l’hub.",
+      "config_error": "Questo hub non contiene dispositivi corrispondenti da configurare.",
+      "template_not_found": "Template {template_name} non trovato.",
+      "update_error": "Errore durante l’aggiornamento dei template: {error}",
+      "generic_export_done": "File YAML generato. Usa Scarica YAML nella notifica (il link è valido per 1 ora). Ricarica i template per usarlo come dispositivo YAML.",
+      "generic_export_failed": "Impossibile scrivere i file YAML."
+    }
+  },
+  "config_subentries": {
+    "device": {
+      "entry_type": "Dispositivo",
+      "initiate_flow": {
+        "user": "Aggiungi dispositivo",
+        "reconfigure": "Riconfigura dispositivo"
+      },
+      "step": {
+        "user": {
+          "title": "Aggiungi dispositivo",
+          "description": "Questo dispositivo usa la connessione di questo hub. Scegli una categoria (oppure Dispositivo Modbus generico), poi il produttore e il modello, quindi il prefisso e l’ID slave.",
+          "data": {
+            "template": "Modello di dispositivo",
+            "template_category": "Categoria del dispositivo",
+            "prefix": "Prefisso del dispositivo",
+            "slave_id": "ID slave",
+            "selected_model": "Seleziona modello",
+            "wallbox_connected": "Wallbox connessa",
+            "protocol_version": "Versione del protocollo Modbus",
+            "hkr2_enabled": "Abilita il circuito di riscaldamento 2 (HKR2)",
+            "hkr3_enabled": "Abilita il circuito di riscaldamento 3 (HKR3)",
+            "solar_enabled": "Abilita i registri del collettore solare",
+            "heat_pump_enabled": "Abilita i registri della pompa di calore",
+            "pv2heat_enabled": "Abilita i registri PV2Heat",
+            "heat_meter_enabled": "Abilita il registro della potenza del contatore di calore",
+            "connector_type": "Connettore di ricarica",
+            "rfid": "Informazioni RFID",
+            "phase_switching_registers": "Supporto per i registri di commutazione di fase"
+          }
+        },
+        "template_pick": {
+          "title": "Scegli un modello",
+          "description": "Categoria: {category}. Le etichette indicano produttore e modello.",
+          "data": {
+            "template": "Produttore — modello"
+          }
+        },
+        "reconfigure": {
+          "title": "Riconfigura dispositivo",
+          "description": "Modifica le impostazioni del dispositivo: {device}",
+          "data": {
+            "prefix": "Prefisso del dispositivo",
+            "slave_id": "ID slave",
+            "selected_model": "Seleziona il modello",
+            "phases": "Numero di fasi",
+            "mppt_count": "Numero di inseguitori MPPT",
+            "string_count": "Numero di stringhe",
+            "modules": "Numero di moduli",
+            "firmware_version": "Mappatura dei registri (profilo firmware)",
+            "connection_type": "Tipo di connessione",
+            "meter_type": "Tipo di contatore",
+            "wallbox_connected": "Wallbox collegata",
+            "entity_ids_without_prefix": "ID delle entità senza prefisso",
+            "entity_id_strategy": "Strategia degli ID delle entità",
+            "battery_config": "Configurazione della batteria",
+            "battery_slave_id": "ID slave della batteria",
+            "channel_2_enabled": "Abilita i registri del canale 2 di PROD.CT",
+            "charger_enabled": "Abilita i registri relativi al caricabatterie",
+            "charger_phases": "Numero di fasi del caricabatterie per veicoli elettrici",
+            "charger_region": "Mappa delle modalità regionali del caricabatterie per veicoli elettrici",
+            "protocol_version": "Versione del protocollo Modbus",
+            "hkr2_enabled": "Abilita il circuito di riscaldamento 2 (HKR2)",
+            "hkr3_enabled": "Abilita il circuito di riscaldamento 3 (HKR3)",
+            "solar_enabled": "Abilita i registri del collettore solare",
+            "heat_pump_enabled": "Abilita i registri della pompa di calore",
+            "pv2heat_enabled": "Abilita i registri PV2Heat",
+            "heat_meter_enabled": "Abilita il registro della potenza del contatore di calore",
+            "connector_type": "Connettore di ricarica",
+            "rfid": "Informazioni RFID",
+            "phase_switching_registers": "Supporto dei registri per la commutazione delle fasi"
+          }
+        },
+        "generic_entity": {
+          "title": "Tipo di entità generica",
+          "description": "Entità aggiunte finora: {entity_count}. Solo registri di mantenimento e di ingresso (nessuna bobina).",
+          "data": {
+            "entity_type": "Tipo di entità"
+          }
+        },
+        "generic_entity_core": {
+          "title": "Registro generico",
+          "description": "Tipo: {entity_type}. L'indirizzo è lo stesso valore indicato in YAML con `address:`: l'indirizzo Modbus letto, senza offset. unique_id è la chiave della cronologia e non deve essere modificato in seguito.",
+          "data": {
+            "unique_id": "unique_id (slug stabile)",
+            "name": "Nome visualizzato",
+            "address": "Indirizzo Modbus (uguale all’indirizzo YAML:)",
+            "input_type": "Tipo di registro",
+            "data_type": "Tipo di dato",
+            "scan_interval": "Intervallo di scansione (secondi)",
+            "scan_group": "Gruppo di polling (veloce / medio / lento)",
+            "entity_category": "Categoria dell’entità",
+            "icon": "Icona",
+            "mm_group": "mm_group",
+            "translation_key": "Chiave di traduzione (facoltativa)",
+            "enabled_by_default": "Abilitato per impostazione predefinita"
+          }
+        },
+        "generic_entity_fields": {
+          "title": "Campi aggiuntivi del registro",
+          "description": "Tipo: {entity_type}, tipo di dato: {data_type}. Sono mostrati solo i campi applicabili a questa combinazione.",
+          "data": {
+            "count": "Numero di registri",
+            "scale": "Scala",
+            "offset": "Offset",
+            "precision": "Precisione",
+            "unit_of_measurement": "Unità",
+            "device_class": "Classe del dispositivo",
+            "state_class": "Classe dello stato",
+            "encoding": "Codifica della stringa (UTF-8 o esadecimale)",
+            "byte_order": "Ordine dei byte",
+            "swap": "Scambio delle parole",
+            "bitmask": "Maschera di bit",
+            "bit_position": "Posizione del bit",
+            "map_text": "Mappatura (una riga, separata da virgole: 0xAA: Abilitato, 0x55: Disabilitato)",
+            "flags_text": "Flag (posizioni dei bit, separate da virgole: 0: Produzione FV, 1: Batteria in carica)",
+            "read_function_code": "Codice funzione di lettura (3 o 4)",
+            "write_function_code": "Codice funzione di scrittura (6 o 16)",
+            "never_resets": "Non si reimposta mai",
+            "force_update": "Forza aggiornamento",
+            "min_value": "Minimo",
+            "max_value": "Massimo",
+            "step": "Passo",
+            "write_value": "Valore di scrittura ON",
+            "write_value_off": "Valore di scrittura OFF",
+            "on_value": "Valore dello stato ON",
+            "off_value": "Valore dello stato OFF",
+            "button_press_value": "Valore alla pressione del pulsante",
+            "options_text": "Opzioni (una riga, separate da virgole: 0: Disattivato, 1: Attivato)",
+            "max_length": "Lunghezza massima (byte)"
+          }
+        },
+        "generic_entity_confirm": {
+          "title": "Aggiungere un’altra entità?",
+          "description": "{entity_count} entità pronte. Aggiungine un’altra o collega questo dispositivo all’hub.",
+          "data": {
+            "action": "Avanti"
+          }
+        }
+      },
+      "abort": {
+        "reconfigure_successful": "Dispositivo riconfigurato correttamente.",
+        "already_configured": "Questo prefisso è già utilizzato da un altro dispositivo.",
+        "invalid_config": "Configurazione non valida. {error}",
+        "no_available_devices_for_subentry": "Tutti i dispositivi sono già configurati.",
+        "config_error": "Errore di configurazione.",
+        "nested_device_attached": "Dispositivo aggiunto sotto l’inverter. Non avrà una riga dedicata nell’hub.",
+        "device_attached": "Dispositivo aggiunto all’hub.",
+        "combined_device": "I dispositivi combinati non dispongono di una connessione Modbus. Aggiungi il dispositivo nell’hub sorgente.",
+        "no_templates": "Nessun modello di dispositivo trovato.",
+        "generic_no_registers": "Il dispositivo generico richiede almeno un registro valido. {error}"
+      },
+      "error": {
+        "invalid_generic_register": "Questo registro non è valido. Verifica che unique_id sia composto da una lettera seguita da a-z/0-9/_ e che sia di tipo holding o input."
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "keba_charging_state_raw": {
+        "name": "Stato di ricarica (grezzo)"
+      },
+      "keba_cable_state_raw": {
+        "name": "Stato del cavo (grezzo)"
+      },
+      "keba_error_code": {
+        "name": "Codice di errore"
+      },
+      "keba_current_l1": {
+        "name": "Corrente L1"
+      },
+      "keba_current_l2": {
+        "name": "L2 corrente"
+      },
+      "keba_current_l3": {
+        "name": "L3 corrente"
+      },
+      "keba_serial_number": {
+        "name": "Numero di serie"
+      },
+      "keba_product_type_and_features": {
+        "name": "Tipo di prodotto e caratteristiche"
+      },
+      "keba_firmware_version_raw": {
+        "name": "Versione del firmware (grezza)"
+      },
+      "keba_firmware_version": {
+        "name": "Versione del firmware"
+      },
+      "keba_active_power": {
+        "name": "Potenza attiva"
+      },
+      "keba_total_energy": {
+        "name": "Energia totale"
+      },
+      "keba_session_energy": {
+        "name": "Energia della sessione"
+      },
+      "keba_voltage_l1": {
+        "name": "Tensione L1"
+      },
+      "keba_voltage_l2": {
+        "name": "Tensione L2"
+      },
+      "keba_voltage_l3": {
+        "name": "Tensione L3"
+      },
+      "keba_power_factor": {
+        "name": "Fattore di potenza"
+      },
+      "keba_maximum_charging_current": {
+        "name": "Corrente di carica massima"
+      },
+      "keba_supported_charging_current": {
+        "name": "Corrente di carica supportata"
+      },
+      "keba_rfid_card_raw": {
+        "name": "Scheda RFID (grezza)"
+      },
+      "keba_rfid_uid_prefix": {
+        "name": "Prefisso UID RFID"
+      },
+      "keba_failsafe_current_setting": {
+        "name": "Impostazione della corrente di sicurezza"
+      },
+      "keba_failsafe_timeout_setting": {
+        "name": "Impostazione del timeout di sicurezza"
+      },
+      "keba_hardware_revision_device": {
+        "name": "Revisione hardware del dispositivo"
+      },
+      "keba_hardware_revision_ms10": {
+        "name": "Revisione hardware KC-MS10"
+      },
+      "keba_charging_state": {
+        "name": "Stato di ricarica",
+        "state": {
+          "starting": "Avvio in corso",
+          "not_ready": "Non pronto",
+          "ready": "Pronto",
+          "charging": "In carica",
+          "error": "Errore",
+          "suspended": "Sospeso"
+        }
+      },
+      "keba_cable_state": {
+        "name": "Stato del cavo",
+        "state": {
+          "disconnected": "Disconnesso",
+          "station_connected": "Collegato alla stazione di ricarica",
+          "station_connected_locked": "Collegato alla stazione di ricarica e bloccato",
+          "vehicle_connected_unlocked": "Collegato al veicolo, sbloccato",
+          "vehicle_connected_locked": "Collegato al veicolo e bloccato",
+          "vehicle_connected": "Collegato al veicolo"
+        }
+      },
+      "keba_fast_charging_status": {
+        "name": "Stato della ricarica rapida",
+        "state": {
+          "inactive": "Inattivo",
+          "active_no_modbus_current": "Attivo (controllo della corrente tramite Modbus non disponibile)"
+        }
+      },
+      "keba_phase_switching_source": {
+        "name": "Origine della commutazione di fase",
+        "state": {
+          "unavailable": "Nessuna origine di commutazione di fase",
+          "ocpp": "OCPP",
+          "rest_api": "API REST",
+          "modbus_tcp": "Modbus TCP"
+        }
+      },
+      "keba_phase_switching_state": {
+        "name": "Stato della commutazione di fase",
+        "state": {
+          "single_phase": "Ricarica monofase",
+          "three_phase": "Ricarica trifase disponibile"
+        }
+      },
+      "combined_pair_type": {
+        "name": "Tipo di combinazione",
+        "state": {
+          "inverter_inverter": "Inverter + inverter",
+          "inverter_ihm": "Inverter + iHomeManager"
+        }
+      },
+      "combined_total_active_power": {
+        "name": "Potenza attiva totale combinata"
+      },
+      "combined_total_dc_power": {
+        "name": "Potenza CC totale combinata"
+      },
+      "combined_daily_pv_generation": {
+        "name": "Produzione fotovoltaica giornaliera combinata"
+      },
+      "combined_total_pv_generation": {
+        "name": "Produzione fotovoltaica totale combinata"
+      },
+      "combined_daily_exported_energy": {
+        "name": "Energia immessa in rete giornaliera combinata"
+      },
+      "combined_total_exported_energy": {
+        "name": "Energia immessa in rete totale combinata"
+      },
+      "combined_daily_imported_energy": {
+        "name": "Energia prelevata dalla rete giornaliera combinata"
+      },
+      "combined_total_imported_energy": {
+        "name": "Energia prelevata dalla rete totale combinata"
+      },
+      "combined_daily_direct_energy_consumption": {
+        "name": "Consumo diretto di energia giornaliero combinato"
+      },
+      "combined_inverter_temperature_max": {
+        "name": "Temperatura massima degli inverter combinati"
+      },
+      "combined_grid_frequency_avg": {
+        "name": "Frequenza media della rete combinata"
+      },
+      "combined_inverter_total_active_power": {
+        "name": "Potenza attiva totale dell’inverter"
+      },
+      "combined_inverter_total_dc_power": {
+        "name": "Potenza CC totale dell’inverter"
+      },
+      "combined_inverter_daily_pv_generation": {
+        "name": "Produzione fotovoltaica giornaliera dell’inverter"
+      },
+      "combined_inverter_total_pv_generation": {
+        "name": "Produzione fotovoltaica totale dell’inverter"
+      },
+      "combined_inverter_daily_battery_charge": {
+        "name": "Carica giornaliera della batteria dell’inverter"
+      },
+      "combined_inverter_daily_battery_discharge": {
+        "name": "Scarica giornaliera della batteria dell’inverter"
+      },
+      "combined_inverter_total_battery_charge": {
+        "name": "Carica totale della batteria dell’inverter"
+      },
+      "combined_inverter_total_battery_discharge": {
+        "name": "Scarica totale della batteria dell’inverter"
+      },
+      "combined_inverter_battery_power": {
+        "name": "Potenza della batteria dell’inverter"
+      },
+      "combined_inverter_battery_level": {
+        "name": "Livello della batteria dell’inverter"
+      },
+      "combined_inverter_load_power": {
+        "name": "Potenza del carico dell’inverter"
+      },
+      "combined_ihm_meter_active_power": {
+        "name": "Potenza attiva di rete iHM"
+      },
+      "combined_ihm_import_power": {
+        "name": "Potenza prelevata dalla rete iHM"
+      },
+      "combined_ihm_export_power": {
+        "name": "Potenza immessa in rete iHM"
+      },
+      "combined_ihm_load_power": {
+        "name": "Potenza del carico iHM"
+      },
+      "combined_ihm_grid_import_energy": {
+        "name": "Energia prelevata dalla rete iHM"
+      },
+      "combined_ihm_grid_export_energy": {
+        "name": "Energia immessa in rete iHM"
+      },
+      "combined_ihm_grid_import_daily": {
+        "name": "Prelievo giornaliero dalla rete iHM"
+      },
+      "combined_ihm_grid_export_daily": {
+        "name": "Immissione giornaliera in rete iHM"
+      },
+      "combined_ihm_battery_power": {
+        "name": "Potenza della batteria iHM"
+      },
+      "combined_ihm_battery_level": {
+        "name": "Livello della batteria iHM"
+      },
+      "combined_ihm_total_active_power": {
+        "name": "Potenza attiva totale iHM"
+      },
+      "combined_daily_consumed_energy": {
+        "name": "Energia consumata giornaliera combinata"
+      },
+      "combined_total_consumed_energy": {
+        "name": "Energia totale consumata combinata"
+      },
+      "firmware": {
+        "name": "Versione firmware",
+        "state": {
+          "detecting": "Rilevamento in corso",
+          "unknown": "Sconosciuto",
+          "not_supported": "Non supportato",
+          "error": "Errore di rilevamento"
+        }
+      },
+      "pichler_lg_es2020_outdoor_air_temperature": {
+        "name": "Temperatura dell’aria esterna"
+      },
+      "pichler_lg_es2020_exhaust_air_temperature": {
+        "name": "Temperatura dell’aria di espulsione"
+      },
+      "pichler_lg_es2020_extract_air_temperature": {
+        "name": "Temperatura dell’aria estratta"
+      },
+      "pichler_lg_es2020_supply_air_temperature": {
+        "name": "Temperatura dell’aria di mandata"
+      },
+      "pichler_lg_es2020_external_supply_air_temperature": {
+        "name": "Temperatura dell’aria di mandata esterna"
+      },
+      "pichler_lg_es2020_supply_airflow": {
+        "name": "Portata dell’aria di mandata"
+      },
+      "pichler_lg_es2020_extract_airflow": {
+        "name": "Portata dell’aria estratta"
+      },
+      "pichler_lg_es2020_operating_status": {
+        "name": "Stato di funzionamento"
+      },
+      "pichler_lg_es2020_filter_remaining_time": {
+        "name": "Tempo residuo del filtro"
+      },
+      "pichler_lg_es2020_combined_coil_mixer_control_signal": {
+        "name": "Segnale di controllo combinato del miscelatore della batteria"
+      },
+      "pichler_lg_es2020_cooling_coil_mixer_control_signal": {
+        "name": "Segnale di controllo del miscelatore della batteria di raffreddamento"
+      },
+      "pichler_lg_es2020_calculated_supply_air_temperature_setpoint": {
+        "name": "Setpoint calcolato della temperatura dell’aria di mandata"
+      },
+      "pichler_lg_es2020_device_model": {
+        "name": "Modello del dispositivo"
+      },
+      "pichler_lg_es2020_controller_firmware_version": {
+        "name": "Versione del firmware del controller"
+      },
+      "pichler_lg_es2020_preheater_temperature": {
+        "name": "Temperatura del preriscaldatore"
+      },
+      "pichler_lg_es2020_supply_airflow_setpoint": {
+        "name": "Setpoint della portata d’aria di mandata"
+      },
+      "pichler_lg_es2020_extract_airflow_setpoint": {
+        "name": "Setpoint della portata d’aria di estrazione"
+      },
+      "pichler_lg_es2020_current_ventilation_level": {
+        "name": "Livello di ventilazione attuale"
+      },
+      "inepro_pro380_l1_voltage": {
+        "name": "Tensione L1"
+      },
+      "inepro_pro380_l2_voltage": {
+        "name": "Tensione L2"
+      },
+      "inepro_pro380_l3_voltage": {
+        "name": "Tensione L3"
+      },
+      "inepro_pro380_grid_frequency": {
+        "name": "Frequenza di rete"
+      },
+      "inepro_pro380_l1_current": {
+        "name": "Corrente L1"
+      },
+      "inepro_pro380_l2_current": {
+        "name": "Corrente L2"
+      },
+      "inepro_pro380_l3_current": {
+        "name": "Corrente L3"
+      },
+      "inepro_pro380_total_active_power": {
+        "name": "Potenza attiva totale"
+      },
+      "inepro_pro380_l1_active_power": {
+        "name": "Potenza attiva L1"
+      },
+      "inepro_pro380_l2_active_power": {
+        "name": "Potenza attiva L2"
+      },
+      "inepro_pro380_l3_active_power": {
+        "name": "Potenza attiva L3"
+      },
+      "inepro_pro380_total_power_factor": {
+        "name": "Fattore di potenza totale"
+      },
+      "inepro_pro380_l1_power_factor": {
+        "name": "Fattore di potenza L1"
+      },
+      "inepro_pro380_l2_power_factor": {
+        "name": "Fattore di potenza L2"
+      },
+      "inepro_pro380_l3_power_factor": {
+        "name": "Fattore di potenza L3"
+      },
+      "inepro_pro380_imported_energy": {
+        "name": "Energia importata"
+      },
+      "inepro_pro380_exported_energy": {
+        "name": "Energia esportata"
+      },
+      "shx_master_slave_mode": {
+        "name": "Modalità master-slave"
+      },
+      "shx_master_slave_role": {
+        "name": "Ruolo master-slave"
+      },
+      "shx_slave_count": {
+        "name": "Numero di dispositivi slave"
+      },
+      "shx_inverter_serial": {
+        "name": "Numero di serie dell'inverter"
+      },
+      "shx_sungrow_device_type_code": {
+        "name": "Codice del tipo di dispositivo Sungrow"
+      },
+      "shx_protocol_version_raw": {
+        "name": "Versione grezza del protocollo"
+      },
+      "shx_certification_version_arm_software": {
+        "name": "Versione della certificazione del software ARM"
+      },
+      "shx_certification_version_dsp_software": {
+        "name": "Versione della certificazione del software DSP"
+      },
+      "shx_nominal_output_power": {
+        "name": "Potenza nominale in uscita"
+      },
+      "shx_output_type": {
+        "name": "Tipo di uscita"
+      },
+      "shx_inverter_firmware_info": {
+        "name": "Informazioni sul firmware dell'inverter"
+      },
+      "shx_communication_module_firmware_info": {
+        "name": "Informazioni sul firmware del modulo di comunicazione"
+      },
+      "shx_battery_firmware_info": {
+        "name": "Informazioni sul firmware della batteria"
+      },
+      "shx_daily_pv_gen_battery_discharge": {
+        "name": "Produzione fotovoltaica giornaliera e scarica della batteria"
+      },
+      "shx_total_pv_gen_battery_discharge": {
+        "name": "Produzione fotovoltaica totale e scarica della batteria"
+      },
+      "shx_inverter_temperature": {
+        "name": "Temperatura dell'inverter"
+      },
+      "shx_mppt1_voltage": {
+        "name": "Tensione MPPT1"
+      },
+      "shx_mppt1_current": {
+        "name": "Corrente MPPT1"
+      },
+      "shx_mppt2_voltage": {
+        "name": "Tensione MPPT2"
+      },
+      "shx_mppt2_current": {
+        "name": "Corrente MPPT2"
+      },
+      "shx_mppt3_voltage": {
+        "name": "Tensione MPPT3"
+      },
+      "shx_mppt3_current": {
+        "name": "Corrente MPPT3"
+      },
+      "shx_mppt4_voltage": {
+        "name": "Tensione MPPT4"
+      },
+      "shx_mppt4_current": {
+        "name": "Corrente MPPT4"
+      },
+      "shx_total_dc_power": {
+        "name": "Potenza CC totale"
+      },
+      "shx_phase_a_voltage": {
+        "name": "Tensione fase A"
+      },
+      "shx_phase_b_voltage": {
+        "name": "Tensione fase B"
+      },
+      "shx_phase_c_voltage": {
+        "name": "Tensione fase C"
+      },
+      "shx_reactive_power": {
+        "name": "Potenza reattiva"
+      },
+      "shx_power_factor": {
+        "name": "Fattore di potenza"
+      },
+      "shx_grid_frequency": {
+        "name": "Frequenza di rete"
+      },
+      "shx_meter_active_power_raw": {
+        "name": "Potenza attiva misuratore grezza"
+      },
+      "shx_meter_phase_a_active_power_raw": {
+        "name": "Potenza attiva grezza fase A del misuratore"
+      },
+      "shx_meter_phase_b_active_power_raw": {
+        "name": "Potenza attiva grezza fase B del misuratore"
+      },
+      "shx_meter_phase_c_active_power_raw": {
+        "name": "Potenza attiva grezza fase C del misuratore"
+      },
+      "shx_meter_channel_2_total_active_power_raw": {
+        "name": "Potenza attiva totale grezza del canale 2 del misuratore"
+      },
+      "shx_meter_channel_2_phase_a_active_power_raw": {
+        "name": "Potenza attiva grezza fase A del canale 2 del contatore"
+      },
+      "shx_meter_channel_2_phase_b_active_power_raw": {
+        "name": "Potenza attiva grezza fase B del canale 2 del contatore"
+      },
+      "shx_meter_channel_2_phase_c_active_power_raw": {
+        "name": "Potenza attiva grezza fase C del canale 2 del contatore"
+      },
+      "shx_bdc_rated_power": {
+        "name": "Potenza nominale BDC"
+      },
+      "shx_bms_max_charging_current": {
+        "name": "Corrente massima di carica BMS"
+      },
+      "shx_bms_max_discharging_current": {
+        "name": "Corrente massima di scarica BMS"
+      },
+      "shx_battery_capacity": {
+        "name": "Capacità della batteria"
+      },
+      "shx_min_export_power_limit_value": {
+        "name": "Valore limite minimo di potenza immessa in rete"
+      },
+      "shx_max_export_power_limit_value": {
+        "name": "Valore limite massimo di potenza immessa in rete"
+      },
+      "shx_backup_phase_a_power": {
+        "name": "Potenza di backup fase A"
+      },
+      "shx_backup_phase_b_power": {
+        "name": "Potenza di backup fase B"
+      },
+      "shx_backup_phase_c_power": {
+        "name": "Potenza di backup fase C"
+      },
+      "shx_total_backup_power": {
+        "name": "Potenza totale di backup"
+      },
+      "shx_backup_phase_a_current": {
+        "name": "Corrente di backup fase A"
+      },
+      "shx_backup_phase_b_current": {
+        "name": "Corrente di backup fase B"
+      },
+      "shx_backup_phase_c_current": {
+        "name": "Corrente di backup fase C"
+      },
+      "shx_backup_phase_a_voltage": {
+        "name": "Tensione di backup fase A"
+      },
+      "shx_backup_phase_b_voltage": {
+        "name": "Tensione di backup fase B"
+      },
+      "shx_backup_phase_c_voltage": {
+        "name": "Tensione di backup fase C"
+      },
+      "shx_backup_frequency": {
+        "name": "Frequenza di backup"
+      },
+      "shx_meter_phase_a_voltage": {
+        "name": "Tensione fase A del contatore"
+      },
+      "shx_meter_phase_b_voltage": {
+        "name": "Tensione fase B del contatore"
+      },
+      "shx_meter_phase_c_voltage": {
+        "name": "Tensione fase C del contatore"
+      },
+      "shx_meter_phase_a_current": {
+        "name": "Corrente fase A del contatore"
+      },
+      "shx_meter_phase_b_current": {
+        "name": "Corrente fase B del contatore"
+      },
+      "shx_meter_phase_c_current": {
+        "name": "Corrente fase C del contatore"
+      },
+      "shx_monthly_pv_generation_01_january": {
+        "name": "Produzione fotovoltaica mensile (01 gennaio)"
+      },
+      "shx_monthly_pv_generation_02_february": {
+        "name": "Produzione fotovoltaica mensile (02 febbraio)"
+      },
+      "shx_monthly_pv_generation_03_march": {
+        "name": "Produzione fotovoltaica mensile (03 marzo)"
+      },
+      "shx_monthly_pv_generation_04_april": {
+        "name": "Produzione fotovoltaica mensile (04 aprile)"
+      },
+      "shx_monthly_pv_generation_05_may": {
+        "name": "Produzione fotovoltaica mensile (05 maggio)"
+      },
+      "shx_monthly_pv_generation_06_june": {
+        "name": "Produzione fotovoltaica mensile (06 giugno)"
+      },
+      "shx_monthly_pv_generation_07_july": {
+        "name": "Produzione fotovoltaica mensile (07 luglio)"
+      },
+      "shx_monthly_pv_generation_08_august": {
+        "name": "Produzione fotovoltaica mensile (08 agosto)"
+      },
+      "shx_monthly_pv_generation_09_september": {
+        "name": "Produzione fotovoltaica mensile (09 settembre)"
+      },
+      "shx_monthly_pv_generation_10_october": {
+        "name": "Produzione fotovoltaica mensile (10 ottobre)"
+      },
+      "shx_monthly_pv_generation_11_november": {
+        "name": "Produzione fotovoltaica mensile (11 novembre)"
+      },
+      "shx_monthly_pv_generation_12_december": {
+        "name": "Produzione fotovoltaica mensile (12 dicembre)"
+      },
+      "shx_yearly_pv_generation_2019": {
+        "name": "Produzione fotovoltaica annuale (2019)"
+      },
+      "shx_yearly_pv_generation_2020": {
+        "name": "Produzione fotovoltaica annuale (2020)"
+      },
+      "shx_yearly_pv_generation_2021": {
+        "name": "Produzione fotovoltaica annuale (2021)"
+      },
+      "shx_yearly_pv_generation_2022": {
+        "name": "Produzione fotovoltaica annuale (2022)"
+      },
+      "shx_yearly_pv_generation_2023": {
+        "name": "Produzione fotovoltaica annuale (2023)"
+      },
+      "shx_yearly_pv_generation_2024": {
+        "name": "Produzione fotovoltaica annuale (2024)"
+      },
+      "shx_yearly_pv_generation_2025": {
+        "name": "Produzione fotovoltaica annuale (2025)"
+      },
+      "shx_yearly_pv_generation_2026": {
+        "name": "Produzione fotovoltaica annuale (2026)"
+      },
+      "shx_yearly_pv_generation_2027": {
+        "name": "Produzione fotovoltaica annuale (2027)"
+      },
+      "shx_yearly_pv_generation_2028": {
+        "name": "Produzione fotovoltaica annuale (2028)"
+      },
+      "shx_yearly_pv_generation_2029e": {
+        "name": "Produzione fotovoltaica annuale (2029)"
+      },
+      "shx_monthly_export_01_january": {
+        "name": "Esportazione mensile (01 gennaio)"
+      },
+      "shx_monthly_export_02_february": {
+        "name": "Esportazione mensile (02 febbraio)"
+      },
+      "shx_monthly_export_03_march": {
+        "name": "Esportazione mensile (03 marzo)"
+      },
+      "shx_monthly_export_04_april": {
+        "name": "Esportazione mensile (04 aprile)"
+      },
+      "shx_monthly_export_05_may": {
+        "name": "Esportazione mensile (05 maggio)"
+      },
+      "shx_monthly_export_06_june": {
+        "name": "Esportazione mensile (06 giugno)"
+      },
+      "shx_monthly_export_07_july": {
+        "name": "Esportazione mensile (07 luglio)"
+      },
+      "shx_monthly_export_08_august": {
+        "name": "Esportazione mensile (08 agosto)"
+      },
+      "shx_monthly_export_09_september": {
+        "name": "Esportazione mensile (09 settembre)"
+      },
+      "shx_monthly_export_10_october": {
+        "name": "Esportazione mensile (10 ottobre)"
+      },
+      "shx_monthly_export_11_november": {
+        "name": "Esportazione mensile (11 novembre)"
+      },
+      "shx_monthly_export_12_december": {
+        "name": "Esportazione mensile (12 dicembre)"
+      },
+      "shx_yearly_export_2019": {
+        "name": "Esportazione annuale (2019)"
+      },
+      "shx_yearly_export_2020": {
+        "name": "Esportazione annuale (2020)"
+      },
+      "shx_yearly_export_2021": {
+        "name": "Esportazione annuale (2021)"
+      },
+      "shx_yearly_export_2022": {
+        "name": "Esportazione annuale (2022)"
+      },
+      "shx_yearly_export_2023": {
+        "name": "Esportazione annuale (2023)"
+      },
+      "shx_yearly_export_2024": {
+        "name": "Esportazione annuale (2024)"
+      },
+      "shx_yearly_export_2025": {
+        "name": "Esportazione annuale (2025)"
+      },
+      "shx_yearly_export_2026": {
+        "name": "Esportazione annuale (2026)"
+      },
+      "shx_yearly_export_2027": {
+        "name": "Esportazione annuale (2027)"
+      },
+      "shx_yearly_export_2028": {
+        "name": "Esportazione annuale (2028)"
+      },
+      "shx_system_state": {
+        "name": "Stato del sistema"
+      },
+      "shx_running_state": {
+        "name": "Stato di funzionamento"
+      },
+      "shx_load_adjustment_mode_selection_raw": {
+        "name": "Modalità di regolazione del carico grezza"
+      },
+      "shx_daily_pv_generation": {
+        "name": "Produzione fotovoltaica giornaliera"
+      },
+      "shx_total_pv_generation": {
+        "name": "Produzione fotovoltaica totale"
+      },
+      "shx_daily_exported_energy_from_pv": {
+        "name": "Energia fotovoltaica esportata giornalmente"
+      },
+      "shx_total_exported_energy_from_pv": {
+        "name": "Energia fotovoltaica esportata totale"
+      },
+      "shx_load_power": {
+        "name": "Potenza del carico"
+      },
+      "shx_export_power_raw": {
+        "name": "Potenza esportata grezza"
+      },
+      "shx_load_adjustment_mode_on_off_selection_raw": {
+        "name": "Selezione modalità di regolazione del carico ON/OFF grezza"
+      },
+      "shx_daily_battery_charge_from_pv": {
+        "name": "Carica giornaliera della batteria da FV"
+      },
+      "shx_total_battery_charge_from_pv": {
+        "name": "Carica totale della batteria da FV"
+      },
+      "shx_daily_direct_energy_consumption": {
+        "name": "Consumo diretto giornaliero di energia"
+      },
+      "shx_total_direct_energy_consumption": {
+        "name": "Consumo diretto totale di energia"
+      },
+      "shx_battery_voltage": {
+        "name": "Tensione della batteria"
+      },
+      "shx_battery_current": {
+        "name": "Corrente della batteria"
+      },
+      "shx_battery_power": {
+        "name": "Potenza della batteria"
+      },
+      "shx_battery_power_unsigned_raw": {
+        "name": "Potenza della batteria (senza segno)"
+      },
+      "shx_battery_level": {
+        "name": "Livello della batteria"
+      },
+      "shx_battery_state_of_health": {
+        "name": "Stato di salute della batteria"
+      },
+      "shx_battery_temperature": {
+        "name": "Temperatura della batteria"
+      },
+      "shx_daily_battery_discharge": {
+        "name": "Scarica giornaliera della batteria"
+      },
+      "shx_total_battery_discharge": {
+        "name": "Scarica totale della batteria"
+      },
+      "shx_self_consumption_of_today": {
+        "name": "Autoconsumo odierno"
+      },
+      "shx_phase_a_current": {
+        "name": "Corrente fase A"
+      },
+      "shx_phase_b_current": {
+        "name": "Corrente fase B"
+      },
+      "shx_phase_c_current": {
+        "name": "Corrente fase C"
+      },
+      "shx_total_active_power": {
+        "name": "Potenza attiva totale"
+      },
+      "shx_daily_imported_energy": {
+        "name": "Energia prelevata giornaliera"
+      },
+      "shx_total_imported_energy": {
+        "name": "Energia totale importata"
+      },
+      "shx_daily_battery_charge": {
+        "name": "Carica giornaliera della batteria"
+      },
+      "shx_total_battery_charge": {
+        "name": "Carica totale della batteria"
+      },
+      "shx_daily_exported_energy": {
+        "name": "Energia esportata giornaliera"
+      },
+      "shx_total_exported_energy": {
+        "name": "Energia totale esportata"
+      },
+      "shx_battery_fault_raw": {
+        "name": "Guasto della batteria"
+      },
+      "shx_battery_alarm_raw": {
+        "name": "Allarme della batteria"
+      },
+      "shx_bms_alarm_raw": {
+        "name": "Allarme BMS"
+      },
+      "shx_bms_protection_raw": {
+        "name": "Protezione BMS"
+      },
+      "shx_bms_fault_1_raw": {
+        "name": "Guasto BMS 1"
+      },
+      "shx_ems_mode_selection_raw": {
+        "name": "Modalità EMS"
+      },
+      "shx_battery_forced_charge_discharge_cmd_raw": {
+        "name": "Comando di carica/scarica forzata della batteria (valore grezzo)"
+      },
+      "shx_battery_forced_charge_discharge_power_raw": {
+        "name": "Potenza di carica/scarica forzata della batteria (valore grezzo)"
+      },
+      "shx_global_mpp_scan_manual_raw": {
+        "name": "Scansione MPP globale manuale (valore grezzo)"
+      },
+      "shx_forced_startup_under_low_soc_standby_raw": {
+        "name": "Avvio forzato in standby con SoC basso (valore grezzo)"
+      },
+      "shx_wb_charging_mode_raw": {
+        "name": "Modalità di ricarica WB (valore grezzo)"
+      },
+      "shx_wb_charging_quantity_raw": {
+        "name": "Quantità di ricarica WB (valore grezzo)"
+      },
+      "shx_wb_charging_duration_raw": {
+        "name": "Durata della ricarica WB (valore grezzo)"
+      },
+      "shx_wb_user_defined_charging_current_raw": {
+        "name": "Corrente di ricarica definita dall'utente WB (valore grezzo)"
+      },
+      "shx_wb_user_defined_charge_start_time_raw": {
+        "name": "Ora di inizio della ricarica definita dall'utente WB (valore grezzo)"
+      },
+      "shx_wb_user_defined_charge_end_time_raw": {
+        "name": "Ora di fine della carica definita dall'utente WB (grezza)"
+      },
+      "shx_wb_surplus_power_from_grid_raw": {
+        "name": "Energia in eccesso immessa in rete WB (grezza)"
+      },
+      "shx_net_grid_power": {
+        "name": "Potenza netta di rete"
+      },
+      "shx_import_power": {
+        "name": "Potenza importata"
+      },
+      "shx_export_power": {
+        "name": "Potenza esportata"
+      },
+      "shx_total_load_power": {
+        "name": "Potenza totale dei carichi"
+      },
+      "shx_real_load_power": {
+        "name": "Potenza effettiva dei carichi"
+      },
+      "shx_solar_to_grid_efficiency": {
+        "name": "Efficienza di immissione in rete dell'energia solare"
+      },
+      "shx_battery_to_load_efficiency": {
+        "name": "Efficienza di erogazione della batteria ai carichi"
+      },
+      "shx_power_balance": {
+        "name": "Bilancio di potenza"
+      },
+      "shx_total_meter_phase_power": {
+        "name": "Potenza totale delle fasi del contatore"
+      },
+      "shx_phase_a_power": {
+        "name": "Potenza fase A"
+      },
+      "shx_phase_b_power": {
+        "name": "Potenza fase B"
+      },
+      "shx_phase_c_power": {
+        "name": "Potenza fase C"
+      },
+      "shx_meter_active_power": {
+        "name": "Potenza attiva del contatore"
+      },
+      "shx_meter_phase_a_active_power": {
+        "name": "Potenza attiva della fase A del contatore"
+      },
+      "shx_meter_phase_b_active_power": {
+        "name": "Potenza attiva della fase B del contatore"
+      },
+      "shx_meter_phase_c_active_power": {
+        "name": "Potenza attiva della fase C del contatore"
+      },
+      "shx_meter_channel_2_total_active_power": {
+        "name": "Potenza attiva totale del canale 2 del contatore"
+      },
+      "shx_meter_channel_2_phase_a_active_power": {
+        "name": "Potenza attiva della fase A del canale 2 del contatore"
+      },
+      "shx_meter_channel_2_phase_b_active_power": {
+        "name": "Potenza attiva del contatore, canale 2, fase B"
+      },
+      "shx_meter_channel_2_phase_c_active_power": {
+        "name": "Potenza attiva del contatore, canale 2, fase C"
+      },
+      "shx_monthly_pv_generation_current": {
+        "name": "Produzione fotovoltaica mensile (corrente)"
+      },
+      "shx_yearly_pv_generation_current": {
+        "name": "Produzione fotovoltaica annuale (corrente)"
+      },
+      "shx_monthly_export_current": {
+        "name": "Energia immessa in rete mensile (corrente)"
+      },
+      "shx_yearly_export_current": {
+        "name": "Energia immessa in rete annuale (corrente)"
+      },
+      "shx_battery_level_nom": {
+        "name": "Livello della batteria (nominale)"
+      },
+      "shx_battery_charge_nom": {
+        "name": "Carica della batteria (nominale)"
+      },
+      "shx_battery_charge": {
+        "name": "Carica della batteria"
+      },
+      "shx_battery_charge_health_rated": {
+        "name": "Carica della batteria (in base allo stato di salute)"
+      },
+      "shx_daily_consumed_energy": {
+        "name": "Energia consumata giornalmente"
+      },
+      "shx_total_consumed_energy": {
+        "name": "Energia consumata totale"
+      },
+      "shx_signed_battery_power": {
+        "name": "Potenza della batteria con segno"
+      },
+      "shx_battery_charging_power": {
+        "name": "Potenza di carica della batteria"
+      },
+      "shx_battery_discharging_power": {
+        "name": "Potenza di scarica della batteria"
+      },
+      "shx_battery_charging_power_signed": {
+        "name": "Potenza di carica della batteria con segno"
+      },
+      "shx_battery_discharging_power_signed": {
+        "name": "Potenza di scarica della batteria con segno"
+      },
+      "shx_grid_power_signed": {
+        "name": "Potenza di rete con segno"
+      },
+      "shx_grid_export_power_signed": {
+        "name": "Potenza di immissione in rete con segno"
+      },
+      "shx_grid_import_power_signed": {
+        "name": "Potenza di prelievo dalla rete con segno"
+      },
+      "shx_self_consumption_rate": {
+        "name": "Tasso di autoconsumo"
+      },
+      "shx_autarky_rate": {
+        "name": "Tasso di autosufficienza"
+      },
+      "shx_self_consumption_rate_today": {
+        "name": "Tasso di autoconsumo (oggi)"
+      },
+      "shx_autarky_rate_today": {
+        "name": "Tasso di autosufficienza (oggi)"
+      },
+      "shx_dc_to_ac_efficiency": {
+        "name": "Efficienza da CC a CA"
+      },
+      "shx_mppt1_power": {
+        "name": "Potenza MPPT1"
+      },
+      "shx_mppt2_power": {
+        "name": "Potenza MPPT2"
+      },
+      "shx_mppt3_power": {
+        "name": "Potenza MPPT3"
+      },
+      "shx_mppt4_power": {
+        "name": "Potenza MPPT4"
+      },
+      "shx_total_mppt_power": {
+        "name": "Potenza MPPT totale"
+      },
+      "shx_pv_to_load_direct": {
+        "name": "FV verso i carichi direttamente"
+      },
+      "shx_pv_to_battery": {
+        "name": "FV verso la batteria"
+      },
+      "shx_grid_to_battery": {
+        "name": "Rete verso la batteria"
+      },
+      "shx_battery_to_load": {
+        "name": "Batteria verso i carichi"
+      },
+      "shx_pv_to_grid": {
+        "name": "FV verso la rete"
+      },
+      "shx_battery_to_grid": {
+        "name": "Batteria verso la rete"
+      },
+      "shx_grid_to_load": {
+        "name": "Rete verso i carichi"
+      },
+      "shx_net_consumption": {
+        "name": "Consumo netto"
+      },
+      "shx_grid_dependency": {
+        "name": "Dipendenza dalla rete"
+      },
+      "shx_mppt_power_deviation": {
+        "name": "Scostamento della potenza MPPT dalla media"
+      },
+      "shx_mppt_balance": {
+        "name": "Bilanciamento MPPT"
+      },
+      "shx_active_mppt_count": {
+        "name": "Numero di MPPT attivi"
+      },
+      "shx_pv_capacity_factor": {
+        "name": "Fattore di capacità FV"
+      },
+      "shx_pv_generation_hours_today": {
+        "name": "Ore di produzione FV di oggi"
+      },
+      "shx_protocol_version": {
+        "name": "Versione del protocollo"
+      },
+      "shx_inverter_status_display": {
+        "name": "Visualizzazione dello stato dell'inverter"
+      },
+      "shx_grid_status": {
+        "name": "Stato della rete"
+      },
+      "shx_battery_status_indicator": {
+        "name": "Indicatore di stato della batteria"
+      },
+      "shx_battery_health_status": {
+        "name": "Stato di salute della batteria"
+      },
+      "sg_protocol_num": {
+        "name": "Numero del protocollo"
+      },
+      "sg_protocol_version_raw": {
+        "name": "Versione grezza del protocollo"
+      },
+      "sg_certification_version_arm_software": {
+        "name": "Versione di certificazione del software ARM"
+      },
+      "sg_certification_version_dsp_software": {
+        "name": "Versione di certificazione del software DSP"
+      },
+      "sg_inverter_serial": {
+        "name": "Numero di serie dell'inverter Sungrow"
+      },
+      "sg_sungrow_device_type_code": {
+        "name": "Codice del tipo di dispositivo Sungrow"
+      },
+      "sg_output_type": {
+        "name": "Tipo di uscita"
+      },
+      "sg_daily_pv_generation": {
+        "name": "Produzione FV giornaliera"
+      },
+      "sg_total_pv_generation": {
+        "name": "Produzione FV totale"
+      },
+      "sg_total_running_time": {
+        "name": "Tempo totale di funzionamento"
+      },
+      "sg_inverter_temperature": {
+        "name": "Temperatura dell'inverter"
+      },
+      "sg_total_apparent_power": {
+        "name": "Potenza apparente totale"
+      },
+      "sg_mppt1_voltage": {
+        "name": "Tensione MPPT1"
+      },
+      "sg_mppt1_current": {
+        "name": "Corrente MPPT1"
+      },
+      "sg_mppt2_voltage": {
+        "name": "Tensione MPPT2"
+      },
+      "sg_mppt2_current": {
+        "name": "Corrente MPPT2"
+      },
+      "sg_mppt3_voltage": {
+        "name": "Tensione MPPT3"
+      },
+      "sg_mppt3_current": {
+        "name": "Corrente MPPT3"
+      },
+      "sg_total_dc_power": {
+        "name": "Potenza CC totale"
+      },
+      "sg_phase_a_voltage": {
+        "name": "Tensione fase A"
+      },
+      "sg_phase_b_voltage": {
+        "name": "Tensione fase B"
+      },
+      "sg_phase_c_voltage": {
+        "name": "Tensione fase C"
+      },
+      "sg_phase_a_current": {
+        "name": "Corrente fase A"
+      },
+      "sg_phase_b_current": {
+        "name": "Corrente fase B"
+      },
+      "sg_phase_c_current": {
+        "name": "Corrente fase C"
+      },
+      "sg_total_active_power": {
+        "name": "Potenza attiva totale"
+      },
+      "sg_reactive_power": {
+        "name": "Potenza reattiva"
+      },
+      "sg_power_factor_raw": {
+        "name": "Fattore di potenza grezzo"
+      },
+      "sg_grid_frequency": {
+        "name": "Frequenza di rete"
+      },
+      "sg_work_state": {
+        "name": "Stato di funzionamento"
+      },
+      "sg_running_state": {
+        "name": "Stato operativo"
+      },
+      "sg_meter_active_power_raw": {
+        "name": "Potenza attiva grezza del contatore"
+      },
+      "sg_meter_phase_a_power": {
+        "name": "Potenza fase A del contatore"
+      },
+      "sg_meter_phase_b_power": {
+        "name": "Potenza fase B del contatore"
+      },
+      "sg_meter_phase_c_power": {
+        "name": "Potenza fase C del contatore"
+      },
+      "sg_load_power": {
+        "name": "Potenza del carico"
+      },
+      "sg_daily_exported_energy": {
+        "name": "Energia esportata giornaliera"
+      },
+      "sg_total_exported_energy": {
+        "name": "Energia esportata totale"
+      },
+      "sg_daily_imported_energy": {
+        "name": "Energia importata giornaliera"
+      },
+      "sg_total_imported_energy": {
+        "name": "Energia importata totale"
+      },
+      "sg_daily_direct_energy_consumption": {
+        "name": "Consumo diretto di energia giornaliero"
+      },
+      "sg_total_direct_energy_consumption": {
+        "name": "Consumo diretto di energia totale"
+      },
+      "sg_daily_running_time": {
+        "name": "Tempo di funzionamento giornaliero"
+      },
+      "sg_mppt4_voltage": {
+        "name": "Tensione MPPT4"
+      },
+      "sg_mppt4_current": {
+        "name": "Corrente MPPT4"
+      },
+      "sg_mppt5_voltage": {
+        "name": "Tensione MPPT5"
+      },
+      "sg_mppt5_current": {
+        "name": "Corrente MPPT5"
+      },
+      "sg_mppt6_voltage": {
+        "name": "Tensione MPPT6"
+      },
+      "sg_mppt6_current": {
+        "name": "Corrente MPPT6"
+      },
+      "sg_monthly_pv_generation": {
+        "name": "Produzione fotovoltaica mensile"
+      },
+      "sg_mppt7_voltage": {
+        "name": "Tensione MPPT7"
+      },
+      "sg_mppt7_current": {
+        "name": "Corrente MPPT7"
+      },
+      "sg_mppt8_voltage": {
+        "name": "Tensione MPPT8"
+      },
+      "sg_mppt8_current": {
+        "name": "Corrente MPPT8"
+      },
+      "sg_mppt9_voltage": {
+        "name": "Tensione MPPT9"
+      },
+      "sg_mppt9_current": {
+        "name": "Corrente MPPT9"
+      },
+      "sg_mppt10_voltage": {
+        "name": "Tensione MPPT10"
+      },
+      "sg_mppt10_current": {
+        "name": "Corrente MPPT10"
+      },
+      "sg_mppt11_voltage": {
+        "name": "Tensione MPPT11"
+      },
+      "sg_mppt11_current": {
+        "name": "Corrente MPPT11"
+      },
+      "sg_mppt12_voltage": {
+        "name": "Tensione MPPT12"
+      },
+      "sg_mppt12_current": {
+        "name": "Corrente MPPT12"
+      },
+      "sg_work_status_1": {
+        "name": "Stato operativo 1"
+      },
+      "sg_work_status_2": {
+        "name": "Stato operativo 2"
+      },
+      "sg_total_pv_generation_high_precision": {
+        "name": "Produzione fotovoltaica totale (alta precisione)"
+      },
+      "sg_negative_voltage_ground": {
+        "name": "Tensione negativa verso terra"
+      },
+      "sg_bus_voltage": {
+        "name": "Tensione del bus"
+      },
+      "sg_grid_frequency_hp": {
+        "name": "Frequenza di rete (alta precisione)"
+      },
+      "sg_pid_work_state": {
+        "name": "Stato operativo PID"
+      },
+      "sg_pid_alarm_code": {
+        "name": "Codice allarme PID"
+      },
+      "sg_export_power_raw": {
+        "name": "Potenza immessa in rete grezza"
+      },
+      "sg_meter_power_raw": {
+        "name": "Potenza grezza del contatore"
+      },
+      "sg_string_1_current": {
+        "name": "Corrente stringa 1"
+      },
+      "sg_string_2_current": {
+        "name": "Corrente stringa 2"
+      },
+      "sg_string_3_current": {
+        "name": "Corrente stringa 3"
+      },
+      "sg_string_4_current": {
+        "name": "Corrente stringa 4"
+      },
+      "sg_string_5_current": {
+        "name": "Corrente stringa 5"
+      },
+      "sg_string_6_current": {
+        "name": "Corrente stringa 6"
+      },
+      "sg_string_7_current": {
+        "name": "Corrente stringa 7"
+      },
+      "sg_string_8_current": {
+        "name": "Corrente stringa 8"
+      },
+      "sg_protocol_version": {
+        "name": "Versione del protocollo"
+      },
+      "sg_mppt1_power": {
+        "name": "Potenza MPPT1"
+      },
+      "sg_mppt2_power": {
+        "name": "Potenza MPPT2"
+      },
+      "sg_mppt3_power": {
+        "name": "Potenza MPPT3"
+      },
+      "sg_mppt4_power": {
+        "name": "Potenza MPPT4"
+      },
+      "sg_mppt5_power": {
+        "name": "Potenza MPPT5"
+      },
+      "sg_mppt6_power": {
+        "name": "Potenza MPPT6"
+      },
+      "sg_total_mppt_power": {
+        "name": "Potenza totale MPPT"
+      },
+      "sg_import_power": {
+        "name": "Potenza prelevata dalla rete"
+      },
+      "sg_export_power": {
+        "name": "Potenza immessa in rete"
+      },
+      "sg_grid_power_signed": {
+        "name": "Potenza di rete con segno"
+      },
+      "sg_total_load_power": {
+        "name": "Potenza totale dei carichi"
+      },
+      "sg_solar_to_grid_efficiency": {
+        "name": "Efficienza da solare a rete"
+      },
+      "sg_battery_to_load_efficiency": {
+        "name": "Efficienza da batteria a carico"
+      },
+      "sg_power_balance": {
+        "name": "Bilancio di potenza"
+      },
+      "sg_phase_a_power": {
+        "name": "Potenza fase A"
+      },
+      "sg_phase_b_power": {
+        "name": "Potenza fase B"
+      },
+      "sg_phase_c_power": {
+        "name": "Potenza fase C"
+      },
+      "sg_meter_active_power": {
+        "name": "Potenza attiva del contatore"
+      },
+      "sg_daily_consumed_energy": {
+        "name": "Energia consumata oggi"
+      },
+      "sg_total_consumed_energy": {
+        "name": "Energia totale consumata"
+      },
+      "sg_inverter_status_display": {
+        "name": "Visualizzazione dello stato dell'inverter"
+      },
+      "sg_grid_status": {
+        "name": "Stato della rete"
+      },
+      "sg_mppt7_power": {
+        "name": "Potenza MPPT7"
+      },
+      "sg_mppt8_power": {
+        "name": "Potenza MPPT8"
+      },
+      "sg_mppt9_power": {
+        "name": "Potenza MPPT9"
+      },
+      "sg_mppt10_power": {
+        "name": "Potenza MPPT10"
+      },
+      "sg_mppt11_power": {
+        "name": "Potenza MPPT11"
+      },
+      "sg_mppt12_power": {
+        "name": "Potenza MPPT12"
+      }
+    },
+    "binary_sensor": {
+      "keba_vehicle_connected": {
+        "name": "Veicolo collegato",
+        "state": {
+          "on": "Connesso",
+          "off": "Disconnesso"
+        }
+      },
+      "keba_charging_active": {
+        "name": "Ricarica attiva",
+        "state": {
+          "on": "In carica",
+          "off": "Non in carica"
+        }
+      },
+      "keba_error_present": {
+        "name": "Errore presente",
+        "state": {
+          "on": "Errore",
+          "off": "Nessun errore"
+        }
+      },
+      "keba_plug_locked": {
+        "name": "Spina bloccata",
+        "state": {
+          "on": "Bloccato",
+          "off": "Sbloccato"
+        }
+      },
+      "combined_source_a_available": {
+        "name": "Sorgente A disponibile"
+      },
+      "combined_source_b_available": {
+        "name": "Sorgente B disponibile"
+      },
+      "combined_any_source_available": {
+        "name": "Una sorgente qualsiasi è disponibile"
+      },
+      "combined_pv_generating_any": {
+        "name": "Produzione fotovoltaica attiva"
+      },
+      "pichler_lg_es2020_heating_demand": {
+        "name": "Richiesta di riscaldamento"
+      },
+      "pichler_lg_es2020_cooling_demand": {
+        "name": "Richiesta di raffrescamento"
+      },
+      "pichler_lg_es2020_combined_cooling_coil_circulation_pump": {
+        "name": "Pompa di circolazione della batteria combinata/di raffrescamento"
+      },
+      "pichler_lg_es2020_external_supply_air_temperature_sensor_fault": {
+        "name": "Guasto al sensore di temperatura dell’aria esterna di mandata"
+      },
+      "pichler_lg_es2020_fans_running": {
+        "name": "Ventilatori in funzione"
+      },
+      "pichler_lg_es2020_bypass_damper_open": {
+        "name": "Serranda di bypass aperta"
+      },
+      "pichler_lg_es2020_aggregate_fault": {
+        "name": "Guasto generale"
+      },
+      "pichler_lg_es2020_filter_indication": {
+        "name": "Indicazione filtro"
+      },
+      "pichler_lg_es2020_preheater_relay": {
+        "name": "Relè del preriscaldatore"
+      },
+      "pichler_lg_es2020_outdoor_exhaust_dampers_open": {
+        "name": "Serrande aria esterna e di espulsione aperte"
+      },
+      "pichler_lg_es2020_heating_pump_running": {
+        "name": "Pompa di riscaldamento in funzione"
+      },
+      "pichler_lg_es2020_external_off_or_fire_alarm": {
+        "name": "Spegnimento esterno o allarme antincendio"
+      },
+      "pichler_lg_es2020_external_level_3_active": {
+        "name": "Livello 3 esterno attivo"
+      },
+      "pichler_lg_es2020_geothermal_heat_exchanger_fault": {
+        "name": "Guasto dello scambiatore di calore geotermico"
+      },
+      "pichler_lg_es2020_operating_panel_fault": {
+        "name": "Guasto del pannello di comando"
+      },
+      "pichler_lg_es2020_reheater_frost_protection_fault": {
+        "name": "Guasto della protezione antigelo del postriscaldatore"
+      },
+      "pichler_lg_es2020_exhaust_air_fan_fault": {
+        "name": "Guasto del ventilatore dell’aria di espulsione"
+      },
+      "pichler_lg_es2020_supply_air_fan_fault": {
+        "name": "Guasto del ventilatore dell’aria di mandata"
+      },
+      "pichler_lg_es2020_outdoor_air_temperature_sensor_fault": {
+        "name": "Guasto del sensore di temperatura dell’aria esterna"
+      },
+      "pichler_lg_es2020_exhaust_air_temperature_sensor_fault": {
+        "name": "Guasto del sensore di temperatura dell’aria di espulsione"
+      },
+      "pichler_lg_es2020_extract_air_temperature_sensor_fault": {
+        "name": "Guasto del sensore di temperatura dell’aria di ripresa"
+      },
+      "pichler_lg_es2020_supply_air_temperature_sensor_fault": {
+        "name": "Guasto del sensore di temperatura dell’aria di mandata"
+      },
+      "pichler_lg_es2020_preheater_temperature_sensor_fault": {
+        "name": "Guasto del sensore di temperatura del preriscaldatore"
+      },
+      "pichler_lg_es2020_external_outdoor_air_temperature_sensor_fault": {
+        "name": "Guasto del sensore esterno di temperatura dell’aria esterna"
+      },
+      "pichler_lg_es2020_external_room_temperature_sensor_fault": {
+        "name": "Guasto del sensore esterno di temperatura ambiente"
+      },
+      "pichler_lg_es2020_fan_communication_fault": {
+        "name": "Guasto di comunicazione del ventilatore"
+      },
+      "pichler_lg_es2020_low_supply_air_temperature_fault": {
+        "name": "Guasto: temperatura dell’aria di mandata bassa"
+      },
+      "pichler_lg_es2020_filter_fault": {
+        "name": "Guasto al filtro"
+      },
+      "pichler_lg_es2020_low_preheater_temperature_fault": {
+        "name": "Guasto: temperatura del preriscaldatore bassa"
+      },
+      "pichler_lg_es2020_reheater_frost_protection_active": {
+        "name": "Protezione antigelo del post-riscaldatore attiva"
+      },
+      "pichler_lg_es2020_modbus_sensor_fault": {
+        "name": "Guasto al sensore Modbus"
+      },
+      "pichler_lg_es2020_external_frost_protection_active": {
+        "name": "Protezione antigelo esterna attiva"
+      },
+      "shx_pv_generating": {
+        "name": "Produzione fotovoltaica"
+      },
+      "shx_pv_generating_delay": {
+        "name": "Produzione fotovoltaica (ritardo)"
+      },
+      "shx_battery_charging": {
+        "name": "Batteria in carica"
+      },
+      "shx_battery_charging_delay": {
+        "name": "Batteria in carica (ritardo)"
+      },
+      "shx_battery_discharging": {
+        "name": "Batteria in scarica"
+      },
+      "shx_battery_discharging_delay": {
+        "name": "Batteria in scarica (ritardo)"
+      },
+      "shx_exporting_power": {
+        "name": "Immissione di energia in rete"
+      },
+      "shx_exporting_power_delay": {
+        "name": "Immissione di energia in rete (ritardo)"
+      },
+      "shx_importing_power": {
+        "name": "Prelievo di energia dalla rete"
+      },
+      "shx_importing_power_delay": {
+        "name": "Prelievo di energia dalla rete (ritardo)"
+      },
+      "shx_positive_load_power": {
+        "name": "Potenza del carico positiva"
+      },
+      "shx_negative_load_power": {
+        "name": "Potenza del carico negativa"
+      },
+      "sg_pv_generating": {
+        "name": "Produzione fotovoltaica"
+      },
+      "sg_pv_generating_delay": {
+        "name": "Produzione fotovoltaica (ritardo)"
+      },
+      "sg_exporting_power": {
+        "name": "Potenza esportata"
+      },
+      "sg_exporting_power_delay": {
+        "name": "Potenza esportata (ritardo)"
+      },
+      "sg_importing_power": {
+        "name": "Potenza importata"
+      },
+      "sg_importing_power_delay": {
+        "name": "Potenza importata (ritardo)"
+      },
+      "sg_positive_load_power": {
+        "name": "Potenza positiva del carico"
+      },
+      "sg_negative_load_power": {
+        "name": "Potenza negativa del carico"
+      }
+    },
+    "select": {
+      "pichler_lg_es2020_ventilation_level": {
+        "name": "Livello di ventilazione"
+      },
+      "shx_inverter_run_mode": {
+        "name": "Modalità di funzionamento dell'inverter"
+      },
+      "shx_global_mpp_scan_manual": {
+        "name": "Scansione globale MPP manuale"
+      },
+      "shx_ems_mode_selection": {
+        "name": "Selezione della modalità EMS"
+      },
+      "shx_battery_forced_charge_discharge_cmd": {
+        "name": "Comando di carica/scarica forzata della batteria"
+      },
+      "shx_load_adjustment_mode_selection": {
+        "name": "Modalità di regolazione del carico"
+      },
+      "shx_backup_mode": {
+        "name": "Modalità di backup"
+      },
+      "shx_export_power_limit_mode": {
+        "name": "Modalità di limitazione della potenza esportata"
+      },
+      "shx_active_power_limitation": {
+        "name": "Limitazione della potenza attiva"
+      },
+      "shx_load_adjustment_mode_on_off_selection": {
+        "name": "Modalità di regolazione del carico ON/OFF"
+      },
+      "shx_forced_startup_under_low_soc_standby": {
+        "name": "Avvio forzato in standby con SoC basso"
+      },
+      "shx_pv_power_limitation": {
+        "name": "Limitazione della potenza FV"
+      },
+      "shx_wb_charging_mode": {
+        "name": "Modalità di ricarica WB"
+      },
+      "shx_wb_surplus_power_from_grid": {
+        "name": "Potenza in eccesso WB prelevata dalla rete"
+      },
+      "sg_start_stop_control": {
+        "name": "Controllo di avvio/arresto"
+      },
+      "sg_power_limitation_switch": {
+        "name": "Interruttore di limitazione della potenza"
+      },
+      "sg_export_power_limitation": {
+        "name": "Limitazione della potenza immessa in rete"
+      },
+      "sg_ct_type": {
+        "name": "Tipo di trasformatore di corrente"
+      },
+      "sg_night_svg_switch": {
+        "name": "Interruttore SVG notturno"
+      },
+      "sg_reactive_power_adjustment_mode": {
+        "name": "Modalità di regolazione della potenza reattiva"
+      },
+      "sg_pid_recovery": {
+        "name": "Ripristino PID"
+      },
+      "sg_anti_pid": {
+        "name": "Anti-PID"
+      },
+      "sg_full_day_pid_suppression": {
+        "name": "Soppressione PID per l’intera giornata"
+      },
+      "sg_quick_grid_dispatch_mode": {
+        "name": "Modalità rapida di gestione della rete"
+      },
+      "sg_swift_grid_dispatch_mode": {
+        "name": "Modalità veloce di gestione della rete"
+      }
+    },
+    "number": {
+      "pichler_lg_es2020_level_1_airflow_setpoint": {
+        "name": "Setpoint della portata d’aria - livello 1"
+      },
+      "pichler_lg_es2020_level_2_airflow_setpoint": {
+        "name": "Setpoint della portata d’aria - livello 2"
+      },
+      "pichler_lg_es2020_level_3_airflow_setpoint": {
+        "name": "Setpoint della portata d’aria - livello 3"
+      },
+      "pichler_lg_es2020_basic_ventilation_airflow_setpoint": {
+        "name": "Setpoint della portata d’aria per la ventilazione di base"
+      },
+      "shx_battery_forced_charge_discharge_power": {
+        "name": "Potenza di carica/scarica forzata della batteria"
+      },
+      "shx_max_soc": {
+        "name": "SoC massimo"
+      },
+      "shx_min_soc": {
+        "name": "SoC minimo"
+      },
+      "shx_export_power_limit": {
+        "name": "Limite di potenza immessa in rete"
+      },
+      "shx_export_power_limit_ratio": {
+        "name": "Rapporto del limite di potenza immessa in rete"
+      },
+      "shx_active_power_limit_ratio": {
+        "name": "Rapporto limite di potenza attiva"
+      },
+      "shx_reserved_soc_for_backup": {
+        "name": "SoC riservato per l’alimentazione di backup"
+      },
+      "shx_battery_max_charging_power": {
+        "name": "Potenza massima di carica della batteria"
+      },
+      "shx_battery_max_discharging_power": {
+        "name": "Potenza massima di scarica della batteria"
+      },
+      "shx_export_power_limit_value_wide_range": {
+        "name": "Intervallo ampio del valore limite di potenza in immissione"
+      },
+      "shx_import_power_limit": {
+        "name": "Limite di potenza in prelievo"
+      },
+      "shx_battery_charging_start_power": {
+        "name": "Potenza di avvio della carica della batteria"
+      },
+      "shx_battery_discharging_start_power": {
+        "name": "Potenza di avvio della scarica della batteria"
+      },
+      "shx_wb_charging_quantity": {
+        "name": "Quantità di carica WB"
+      },
+      "shx_wb_user_defined_charging_current": {
+        "name": "Corrente di carica WB definita dall’utente"
+      },
+      "sg_power_limitation_setting": {
+        "name": "Impostazione della limitazione della potenza"
+      },
+      "sg_export_power_limitation_value": {
+        "name": "Valore di limitazione della potenza in immissione"
+      },
+      "sg_ct_output_current": {
+        "name": "Corrente di uscita del trasformatore di corrente"
+      },
+      "sg_ct_range": {
+        "name": "Intervallo del trasformatore di corrente"
+      },
+      "sg_export_power_limitation_percentage": {
+        "name": "Percentuale di limitazione della potenza in immissione"
+      },
+      "sg_power_factor_setting": {
+        "name": "Impostazione del fattore di potenza"
+      },
+      "sg_reactive_power_percentage_setting": {
+        "name": "Impostazione della percentuale di potenza reattiva"
+      },
+      "sg_power_limitation_adjustment": {
+        "name": "Regolazione della limitazione della potenza"
+      },
+      "sg_reactive_power_adjustment": {
+        "name": "Regolazione della potenza reattiva"
+      }
+    }
+  },
+  "services": {
+    "add_entity_prefix": {
+      "name": "Aggiungi prefisso all’entità",
+      "description": "Aggiungi il prefisso del dispositivo agli entity_ids (dopo la migrazione da entity_ids senza prefisso)",
+      "fields": {
+        "entry_id": {
+          "name": "ID voce di configurazione",
+          "description": "L'ID della voce di configurazione di Modbus Manager (obbligatorio)"
+        },
+        "device_entry_id": {
+          "name": "ID voce del dispositivo",
+          "description": "unique_id della sottovoce del dispositivo (facoltativo, per hub con più dispositivi)"
+        }
+      }
+    },
+    "update_firmware_version": {
+      "name": "Aggiorna versione firmware",
+      "description": "Aggiorna la versione del firmware del dispositivo.",
+      "fields": {
+        "firmware_version": {
+          "name": "Versione firmware",
+          "description": "La nuova versione del firmware del dispositivo."
+        }
+      }
+    },
+    "read_device_identification": {
+      "name": "Leggi identificazione dispositivo (FC43)",
+      "description": "Connettiti a un dispositivo Modbus (TCP/RTU) e leggi produttore/prodotto/versione FC43 (diagnostica)",
+      "fields": {
+        "connection_type": {
+          "name": "Tipo di connessione",
+          "description": "tcp, serial, o rtuovertcp"
+        },
+        "host": {
+          "name": "Host",
+          "description": "Indirizzo IP o nome host (tcp/rtuovertcp)"
+        },
+        "port": {
+          "name": "Porta",
+          "description": "Porta Modbus TCP (predefinita: 502)"
+        },
+        "serial_port": {
+          "name": "Porta seriale",
+          "description": "Percorso del dispositivo seriale (RTU seriale, ad es. /dev/ttyUSB0)"
+        },
+        "baudrate": {
+          "name": "Velocità di trasmissione",
+          "description": "Velocità di trasmissione seriale (predefinita: 9600)"
+        },
+        "data_bits": {
+          "name": "Bit di dati",
+          "description": "Bit di dati seriali (predefiniti: 8)"
+        },
+        "stop_bits": {
+          "name": "Bit di stop",
+          "description": "Bit di stop seriali (predefiniti: 1)"
+        },
+        "parity": {
+          "name": "Parità",
+          "description": "Parità seriale: nessuna, pari o dispari"
+        },
+        "slave_id": {
+          "name": "ID slave",
+          "description": "ID slave Modbus (predefinito: 1)"
+        },
+        "read_code": {
+          "name": "Codice di lettura",
+          "description": "Identificazione di base, standard o estesa"
+        },
+        "timeout": {
+          "name": "Timeout",
+          "description": "Timeout di connessione in secondi (predefinito: 3)"
+        },
+        "message_wait_milliseconds": {
+          "name": "Attesa tra messaggi",
+          "description": "Ritardo tra frame in ms per RTU/seriale (predefinito: 100)"
+        },
+        "notify": {
+          "name": "Mostra notifica",
+          "description": "Mostra il testo del risultato in una notifica persistente"
+        }
+      }
+    },
+    "export_generic_device": {
+      "name": "Esporta YAML del dispositivo generico",
+      "description": "Scrive un dispositivo generico come modello YAML (nella cartella dei modelli personalizzati) e mostra un link di download firmato in una notifica.",
+      "fields": {
+        "entry_id": {
+          "name": "ID della voce di configurazione",
+          "description": "ID dell'hub (facoltativo se esiste un solo dispositivo generico)"
+        },
+        "device_entry_id": {
+          "name": "ID voce dispositivo",
+          "description": "unique_id del dispositivo generico su un hub multi-dispositivo (facoltativo)"
+        },
+        "prefix": {
+          "name": "Prefisso",
+          "description": "Prefisso del dispositivo generico (facoltativo)"
+        }
+      }
+    }
+  },
+  "issues": {
+    "restart_required": {
+      "title": "Riavvio richiesto per {device_name}",
+      "description": "È stato aggiunto un nuovo dispositivo a {entry_title}. Riavvia Home Assistant per attivare il nuovo dispositivo. Vai a Impostazioni > Sistema > Riavvia."
+    },
+    "restart_required_fix": {
+      "title": "Riavvia Home Assistant",
+      "description": "Fai clic per riavviare Home Assistant e attivare il nuovo dispositivo."
+    }
+  },
+  "exceptions": {
+    "number_write_failed": {
+      "message": "Impossibile scrivere {name} ({value})."
+    },
+    "number_write_verify_unread": {
+      "message": "È stato scritto {name} ({value}), ma non è stato possibile rileggere il registro."
+    },
+    "number_write_verify_mismatch": {
+      "message": "{name} non è stato accettato. Valore richiesto: {requested}; il dispositivo segnala {actual}."
+    }
+  }
+}
