@@ -12,6 +12,7 @@ from homeassistant.util.async_ import run_callback_threadsafe
 
 from .device_utils import entity_allowed_for_protocol
 from .modbus_utils import is_valid_modbus_address
+from .value_processor import parse_nan_value
 
 # Global reference to Home Assistant instance for custom template loading
 _hass_instance: Optional[HomeAssistant] = None
@@ -1438,6 +1439,18 @@ def validate_and_process_register(
         for field, value in reg.items():
             if field not in processed_reg:
                 processed_reg[field] = value
+
+        if processed_reg.get("nan_value") is not None:
+            try:
+                processed_reg["nan_value"] = parse_nan_value(processed_reg["nan_value"])
+            except ValueError:
+                _LOGGER.warning(
+                    "Template %s register %s: ignoring invalid nan_value %r",
+                    template_name,
+                    processed_reg.get("name", "unknown"),
+                    processed_reg.get("nan_value"),
+                )
+                processed_reg.pop("nan_value", None)
 
         # Entity-Typ bestimmen
         processed_reg["entity_type"] = determine_entity_type(processed_reg)

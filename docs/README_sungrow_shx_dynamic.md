@@ -318,8 +318,8 @@ Holding registers for Master/Slave cascade configuration. Available as sensors.
 - **Power Balance** - System power balance
 
 ### 🛡️ Meter Power Handling
-- **Meter Active Power** - With 0x7FFFFFFF error handling
-- **Meter Phase Power** - Phase-specific with error handling
+- **Meter Active Power** - Raw `0x7FFFFFFF` is `nan_value` (`unknown`, not a statistic)
+- **Meter Phase Power** - Phase raw registers use the same `nan_value`
 
 ### 🏠 Home Assistant Energy Dashboard Compatible Sensors
 These sensors follow the HA Energy Dashboard convention: **positive values for consumption/discharging/import, negative values for generation/charging/export**.
@@ -783,7 +783,7 @@ This template is built upon the **outstanding work of mkaiser** and their compre
 Special thanks to the **photovoltaikforum.com** and **forum.iobroker.net** communities for their collaborative reverse-engineering efforts, particularly for:
 - **Undocumented Sensors:** Battery charging/discharging start power registers
 - **Firmware Compatibility:** Understanding differences between firmware versions
-- **Error Handling:** 0x7FFFFFFF meter error handling
+- **Error Handling:** meter, load, and export power raw registers use `nan_value: 0x7FFFFFFF` (state `unknown`)
 - **Real-world Testing:** Validation across different inverter models
 
 ### 🔗 Original Repository

@@ -61,9 +61,14 @@ def _coordinator_value_for_unique_id(data: dict | None, unique_id: str) -> Any:
             continue
         if not isinstance(payload, dict):
             return payload
-        for field in ("processed_value", "numeric_value", "value", "raw_value"):
+        for field in ("processed_value", "numeric_value", "value"):
             if payload.get(field) is not None:
                 return payload[field]
+        # int32 raw_value is the word list. A NaN leaves processed_value None
+        # and that list in raw_value. Injecting the list makes float(0) publish 0.
+        raw_value = payload.get("raw_value")
+        if isinstance(raw_value, (int, float)) and not isinstance(raw_value, bool):
+            return raw_value
         return None
     return None
 

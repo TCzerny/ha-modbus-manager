@@ -69,7 +69,7 @@ from .sunspec_utils import (
     detect_sunspec_model_addresses,
 )
 from .template_loader import _evaluate_condition, get_template_by_name
-from .value_processor import process_register_value
+from .value_processor import matches_nan_value, process_register_value
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -2376,6 +2376,10 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 else:
                     # Default: return as-is
                     processed_value = raw_value
+
+            # Core nan_value: decoded number, before scale/offset. None → sensor unknown.
+            if matches_nan_value(processed_value, register.get("nan_value")):
+                return None
 
             # Use centralized value processing (handles scale, offset, bit ops, precision, mapping)
             # Note: For select entities, skip mapping as they need raw numeric values

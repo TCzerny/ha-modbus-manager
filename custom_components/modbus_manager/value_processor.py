@@ -14,6 +14,52 @@ _LOGGER = ModbusManagerLogger(__name__)
 NO_ACTIVE_FLAGS_LABEL = "No active flags"
 
 
+def parse_nan_value(value: Any) -> int:
+    """Parse a Core Modbus ``nan_value`` (integer or ``0x`` hex).
+
+    ``0`` is a valid sentinel. Raises ``ValueError`` when the setting cannot
+    be compared as an integer. Hex conversion ignores data type and swap,
+    matching Core.
+    """
+    if isinstance(value, bool) or value is None:
+        raise ValueError(f"invalid nan_value {value!r}")
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        if value != value or value in (float("inf"), float("-inf")):
+            raise ValueError(f"invalid nan_value {value!r}")
+        if not value.is_integer():
+            raise ValueError(f"invalid nan_value {value!r}")
+        return int(value)
+    if isinstance(value, str):
+        text = value.strip()
+        base = 16 if text.lower().startswith("0x") else 10
+        try:
+            return int(text, base)
+        except ValueError as err:
+            raise ValueError(f"invalid nan_value {value!r}") from err
+    raise ValueError(f"invalid nan_value {value!r}")
+
+
+def matches_nan_value(decoded: Any, nan_value: Any) -> bool:
+    """Whether a decoded register equals Core's NaN sentinel or its negation.
+
+    Compared before scale and offset. A missing or invalid ``nan_value`` never
+    matches. Non-numbers never match.
+    """
+    if nan_value is None:
+        return False
+    try:
+        sentinel = parse_nan_value(nan_value)
+    except ValueError:
+        return False
+    if isinstance(decoded, bool) or not isinstance(decoded, (int, float)):
+        return False
+    if isinstance(decoded, float) and decoded != decoded:
+        return False
+    return decoded == sentinel or decoded == -sentinel
+
+
 def apply_bit_operations(value: Any, config: Dict[str, Any]) -> Optional[int]:
     """Apply bit operations to a value.
 
