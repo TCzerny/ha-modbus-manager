@@ -115,7 +115,9 @@ class KostalPlenticoreG3TemplateTest(unittest.TestCase):
         min_soc = controls[1042]
         self.assertEqual(min_soc["keepalive"]["clamp_max_to_register"], "battery_soc")
         self.assertLessEqual(min_soc["keepalive"]["clamp_max_age"], 30)
-        self.assertEqual(min_soc["max_value_from_register"]["register_unique_id"], "{PREFIX}_battery_soc")
+        # The input accepts a target above the SoC; the clamp writes at most the SoC.
+        self.assertNotIn("max_value_from_register", min_soc)
+        self.assertEqual(min_soc["max_value"], 100)
         self.assertIn("battery_soc", {s["unique_id"] for s in self.sensors})
         # Limits read back the effective value; only a jump up means lost control.
         for address in (1038, 1040):
