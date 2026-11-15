@@ -1291,6 +1291,7 @@ class ClampFloorTest(unittest.TestCase):
     def test_set_floor_limits_range_and_survives_reregister(self):
         _, manager, _, _ = self._setup(50.0)
         self.assertEqual(manager.set_floor(self.FLOOR_ID, 250), 100.0)
+        self.assertEqual(manager.set_floor(self.FLOOR_ID, 12.6), 13.0)  # step 1
         self.assertEqual(manager.set_floor(self.FLOOR_ID, 13), 13.0)
         self.assertIsNone(manager.set_floor(self.FLOOR_ID, "x"))
         self.assertIsNone(manager.set_floor("unknown", 5))

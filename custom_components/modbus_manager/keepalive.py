@@ -589,7 +589,9 @@ class KeepaliveManager:
         if found is None or numeric is None:
             return None
         state, setting = found
-        setting.value = min(max(numeric, setting.min), setting.max)
+        steps = round((numeric - setting.min) / setting.step)
+        stepped = setting.min + steps * setting.step
+        setting.value = min(max(stepped, setting.min), setting.max)
         self._notify(state.group_id)
         return setting.value
 

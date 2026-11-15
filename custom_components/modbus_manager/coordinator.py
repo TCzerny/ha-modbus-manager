@@ -41,6 +41,7 @@ from .device_utils import (
     resolve_device_role_type,
     resolve_entity_id_strategy,
     resolve_firmware_profile_version,
+    template_enabled_by_default,
     via_device_tuple,
 )
 from .generic_device import (
@@ -2351,8 +2352,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 or f"{register.get('name', 'Control')} floor",
                 "unit": register.get("unit_of_measurement"),
                 # a floor without its control is meaningless; follow its default
-                "enabled_default": register.get("enabled_by_default", True)
-                is not False,
+                "enabled_default": template_enabled_by_default(register),
             }
         register[KEEPALIVE_KEY] = keepalive
         keepalive_groups[group_id] = {
