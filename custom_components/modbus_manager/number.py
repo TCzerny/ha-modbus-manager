@@ -457,7 +457,7 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                     "number_write_verify_mismatch",
                     {
                         "name": name,
-                        "requested": str(requested),
+                        "requested": str(target),
                         "actual": str(actual_f),
                     },
                 )

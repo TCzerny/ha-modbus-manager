@@ -9,13 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### ✨ Added
 
-- **KOSTAL PLENTICORE G3: optional external battery control ([#145](https://github.com/TCzerny/ha-modbus-manager/issues/145))**: Number controls for the charge limit (1038), discharge limit (1040) and minimum SoC (1042) in the keepalive group *Battery control* (15 s interval against the default 30 s timeout). Disabled by default, available only with external battery management via Modbus (register 1080 = 2). The minimum SoC is written as at most SoC − 1 % on every write and its input maximum follows the SoC. The BMS maximum charge/discharge power sensors (1076/1078), which set the limits' maximum, are now enabled by default. See [KOSTAL PLENTICORE G3](docs/README_kostal_plenticore_g3.md).
+- **KOSTAL PLENTICORE G3: optional external battery control ([#145](https://github.com/TCzerny/ha-modbus-manager/issues/145))**: Number controls for the charge limit (1038), discharge limit (1040) and minimum SoC (1042) in the keepalive group *Battery control* (15 s interval against the default 30 s timeout). Disabled by default, available only with external battery management via Modbus (register 1080 = 2). The minimum SoC is written as at most SoC − 1 % on every write and its input maximum follows the SoC. The BMS maximum charge/discharge power sensors (1076/1078), which set the limits' maximum, are now enabled by default (existing installs keep them disabled), and the battery management mode is polled in the medium scan group. See [KOSTAL PLENTICORE G3](docs/README_kostal_plenticore_g3.md).
+- **Keepalive: `clamp_max_offset`** keeps a clamped value a fixed distance below its `clamp_max_to_register` source; a value written earlier is held while it is still within the source.
 - **Keepalive: `mismatch_direction`**: `above` or `below` limits the read-back check to one side, for registers that read back a capped effective value. With `above`, the number entity's first-write verify accepts a lower read-back too.
 
 ### 🐛 Fixed
 
 - **Keepalive clamps on the first write**: `clamp_max_to_register` / `clamp_min_to_register` now also limit the write a number entity sends when the user sets it; before, only the cyclic writes were clamped. A stale clamp source, or a clamped value below `min_value`, refuses the write.
-- **Keepalive: `clamp_max_offset`** keeps a clamped value a fixed distance below its `clamp_max_to_register` source.
 
 ## [1.3.14] - 2026-11-12
 

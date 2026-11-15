@@ -39,13 +39,13 @@ The template has three number controls for external battery management (spec sec
 
 | Control | Register | Range | Notes |
 |---|---|---|---|
-| Battery Charge Limit | 1038 | 0 … BMS max charge power (1076) | Reads back the effective limit |
-| Battery Discharge Limit | 1040 | 0 … BMS max discharge power (1078) | `0` still lets the inverter's own consumption (about 260 W on a G3 M, FW 3.07.03) come from the battery |
-| Battery Minimum SoC | 1042 | 5 … current SoC | Written as at most SoC − 1 %; reads back the effective value (the web UI minimum after a fallback) |
+| Battery Charge Limit | 1038 | 0 … BMS max charge power (1076; 30000 W while that sensor is disabled) | Reads back the effective limit |
+| Battery Discharge Limit | 1040 | 0 … BMS max discharge power (1078; 30000 W while that sensor is disabled) | `0` still lets the inverter's own consumption (about 260 W on a G3 M, FW 3.07.03) come from the battery |
+| Battery Minimum SoC | 1042 | 5 … current SoC | Written as at most SoC − 1 %, then held; reads back the effective value (the web UI minimum after a fallback) |
 
 **Requirements**
 
-- In the web UI, set *Battery management* to external control via Modbus (register 1080 = 2). Otherwise the controls are unavailable (checked every 5 minutes; keep the *Battery Management Mode* sensor enabled, without it the check is skipped).
+- In the web UI, set *Battery management* to external control via Modbus (register 1080 = 2). Otherwise the controls are unavailable (checked with the medium scan group, every 30 s by default; keep the *Battery Management Mode* sensor enabled, without it the check is skipped). Keep *Battery SoC* enabled as well; without it every write of the minimum SoC is refused.
 - After upgrading from the read-only template, enable the *Battery Max Charge Power (BMS)* and *Battery Max Discharge Power (BMS)* sensors. They set the limits' maximum; new installs have them enabled.
 - The inverter follows these registers only while it keeps receiving writes within the timeout set in the web UI (default 30 s). The timeout is shared by all registers 1024–1044, and any write to one of them resets it.
 
@@ -54,7 +54,7 @@ The template has three number controls for external battery management (spec sec
 - Setting a control writes it once. The value is also stored for the keepalive group **Battery control**.
 - The group switch (`Battery control`, starts off after every restart) rewrites all stored values every 15 s, 1 s apart.
 - Turning the switch off stops the writes. The inverter returns to its own control after the timeout. Nothing is written on switch-off, unload or shutdown.
-- The minimum SoC is written as at most the latest SoC reading minus 1 %, on the first write from the entity and on every cyclic write, and its input maximum follows the SoC. A minimum SoC above the current SoC disconnects the battery (sleep mode with a 10-minute FeedIn/GridPreCheck cycle; on the test unit twice followed by a battery FAULT that needed an inverter restart). The 1 % margin covers a BMS step correction between two rounds (the SoC jumped from 15 to 14 % without any current on the test unit). It also lets the SoC drop by up to 1 %; use the discharge limit to block discharging. If the SoC reading is older than 60 s, unavailable, or the result would be below 5 %, the write is refused, and a cyclic round stops the group.
+- The minimum SoC is written as at most the latest SoC reading minus 1 %, on the first write from the entity and on every cyclic write, and its input maximum follows the SoC. Once written, the value is held while it is still at or below the SoC, so the minimum does not follow the SoC down. A minimum SoC above the current SoC disconnects the battery (sleep mode with a 10-minute FeedIn/GridPreCheck cycle; on the test unit twice followed by a battery FAULT that needed an inverter restart). The 1 % margin covers a BMS step correction between two rounds (the SoC jumped from 15 to 14 % without any current on the test unit); after such a step the minimum is lowered to the new SoC − 1 %. To block discharging completely, use the discharge limit. If the SoC reading is older than 30 s, unavailable, or the result would be below 5 %, the write is refused, and a cyclic round stops the whole group including the limits (at a SoC below 6 % with a minimum SoC set).
 - The limits read back the effective value. A value above the inverter's own limit reads back lower, which is accepted, also on the first write (for example 29000 W reads back about 15.3 kW on a G3 M). Any lower read-back is accepted, so a write the inverter ignores while it still reads a lower value is not detected. After a fallback the register reads the inverter's own limit again (about 15.3–15.9 kW on the test unit); three rounds in a row with that reading stop the group, but only if the requested limit is more than 100 W below the inverter's own limit.
 
 **Run only one writer.** Another integration or automation that writes any of 1024–1044 keeps this template's values alive, and the other way round. Disable the other writer before turning the group on.

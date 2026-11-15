@@ -102,7 +102,7 @@ class KostalPlenticoreG3TemplateTest(unittest.TestCase):
                 self.assertEqual(control["keepalive"]["release"], "stop")
                 self.assertEqual(
                     control["depends_on_register"],
-                    {"register_unique_id": "battery_management_mode", "required_value": 2},
+                    {"register_unique_id": "battery_management_mode", "register_address": 1080, "required_value": 2},
                 )
 
     def test_battery_control_group_and_guards(self):
