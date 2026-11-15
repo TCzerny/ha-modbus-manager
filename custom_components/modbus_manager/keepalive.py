@@ -214,6 +214,22 @@ def validate_keepalive_groups(
     return groups
 
 
+def _validate_clamp_floor(raw: Any) -> Optional[Dict[str, Any]]:
+    """Return a cleaned ``clamp_floor`` mapping, or None if invalid."""
+    if not isinstance(raw, dict):
+        return None
+    low = _as_float(raw.get("min", 0))
+    high = _as_float(raw.get("max"))
+    step = _as_float(raw.get("step", 1))
+    default = _as_float(raw.get("default", 0))
+    if low is None or high is None or step is None or default is None:
+        return None
+    if low < 0 or high <= low or step <= 0 or not low <= default <= high:
+        return None
+    name = str(raw.get("name") or "").strip() or None
+    return {"name": name, "min": low, "max": high, "step": step, "default": default}
+
+
 def validate_control_keepalive(
     control: Dict[str, Any], groups: Dict[str, Dict[str, Any]], template_name: str
 ) -> Optional[Dict[str, Any]]:
@@ -334,6 +350,23 @@ def validate_control_keepalive(
             return None
         cleaned["mismatch_direction"] = direction
 
+    if "clamp_floor" in raw:
+        floor = _validate_clamp_floor(raw.get("clamp_floor"))
+        if (
+            floor is None
+            or control_type != "number"
+            or "clamp_max_to_register" not in cleaned
+        ):
+            _LOGGER.error(
+                "Template %s: keepalive control %s has an invalid clamp_floor (a mapping "
+                "with 0 <= min < max, min <= default <= max and step > 0, on a number "
+                "control with clamp_max_to_register); control stays write-once",
+                template_name,
+                label,
+            )
+            return None
+        cleaned["clamp_floor"] = floor
+
     return cleaned
 
 
@@ -376,8 +409,17 @@ def validate_template_keepalive(
         cleaned = validate_control_keepalive(control, groups, template_name)
         if cleaned is None:
             control.pop(KEEPALIVE_KEY, None)
-        else:
-            control[KEEPALIVE_KEY] = cleaned
+            continue
+        floor_uid = f"{control.get('unique_id', '')}_floor".lower()
+        if "clamp_floor" in cleaned and floor_uid in taken:
+            _LOGGER.warning(
+                "Template %s: floor entity of %s collides with unique_id %s; floor ignored",
+                template_name,
+                control.get("unique_id"),
+                floor_uid,
+            )
+            cleaned.pop("clamp_floor")
+        control[KEEPALIVE_KEY] = cleaned
     return groups
 
 
@@ -400,6 +442,24 @@ class Setpoint:
 
 
 @dataclass
+class FloorSetting:
+    """User-set lower bound for a clamped control (0 = off), see clamp_floor."""
+
+    floor_id: str
+    name: str
+    min: float
+    max: float
+    step: float
+    default: float
+    unit: Optional[str] = None
+    value: Optional[float] = None  # None until restored or set: default applies
+
+    @property
+    def current(self) -> float:
+        return self.default if self.value is None else self.value
+
+
+@dataclass
 class GroupState:
     """Runtime state of one keepalive group."""
 
@@ -413,6 +473,7 @@ class GroupState:
     state: str = STATE_OFF
     stop_reason: Optional[str] = None
     setpoints: Dict[str, Setpoint] = field(default_factory=dict)
+    floors: Dict[str, FloorSetting] = field(default_factory=dict)
     consecutive_failures: int = 0
     writes: int = 0
     failed_writes: int = 0
@@ -482,6 +543,53 @@ class KeepaliveManager:
                 state.config_subentry_id = info.get(
                     "config_subentry_id", state.config_subentry_id
                 )
+            self._register_floors(self._groups[group_id], info.get("floors") or {})
+
+    @staticmethod
+    def _register_floors(state: GroupState, floors: Dict[str, Dict[str, Any]]) -> None:
+        """Create or update floor settings; a value set before is kept."""
+        for floor_id in list(state.floors):
+            if floor_id not in floors:
+                state.floors.pop(floor_id)
+        for floor_id, cfg in floors.items():
+            old = state.floors.get(floor_id)
+            setting = FloorSetting(
+                floor_id=floor_id,
+                name=str(cfg.get("name") or floor_id),
+                min=float(cfg["min"]),
+                max=float(cfg["max"]),
+                step=float(cfg["step"]),
+                default=float(cfg["default"]),
+                unit=cfg.get("unit"),
+            )
+            if old is not None and old.value is not None:
+                setting.value = min(max(old.value, setting.min), setting.max)
+            state.floors[floor_id] = setting
+
+    def _find_floor(self, floor_id: Any) -> Optional[tuple[GroupState, FloorSetting]]:
+        if not floor_id:
+            return None
+        for state in self._groups.values():
+            setting = state.floors.get(floor_id)
+            if setting is not None:
+                return state, setting
+        return None
+
+    def floor_value(self, floor_id: Any) -> float:
+        """Current floor of a control (0 = off, also for unknown ids)."""
+        found = self._find_floor(floor_id)
+        return found[1].current if found else 0.0
+
+    def set_floor(self, floor_id: str, value: Any) -> Optional[float]:
+        """Set a floor, limited to its range. Takes effect from the next write."""
+        found = self._find_floor(floor_id)
+        numeric = _as_float(value)
+        if found is None or numeric is None:
+            return None
+        state, setting = found
+        setting.value = min(max(numeric, setting.min), setting.max)
+        self._notify(state.group_id)
+        return setting.value
 
     def add_listener(
         self, group_id: str, callback: Callable[[], None]
@@ -525,6 +633,11 @@ class KeepaliveManager:
                 sp.config.get("unique_id", key): sp.value
                 for key, sp in state.setpoints.items()
             },
+            **(
+                {"floors": {f.name: f.current for f in state.floors.values()}}
+                if state.floors
+                else {}
+            ),
         }
 
     def set_setpoint(
@@ -976,7 +1089,8 @@ class KeepaliveManager:
 
         Returns (value, None), or (None, reason) if a source is stale or
         unavailable, the sources contradict each other, or the result is below
-        the control's ``min_value``.
+        the control's ``min_value``. A ``clamp_floor`` set by the user keeps the
+        max clamp from going below min(floor, value).
         """
         uid = config.get("unique_id")
         ok_max, max_v = self._clamp_source_value(config, "clamp_max_to_register")
@@ -986,7 +1100,15 @@ class KeepaliveManager:
         if max_v is not None and min_v is not None and min_v > max_v:
             return None, f"clamp sources for {uid} contradict (min > max)"
         if max_v is not None:
-            value = min(value, max_v)
+            capped = min(value, max_v)
+            # clamp_floor: the max clamp does not pull the value below the
+            # user's floor, and the floor never lifts it above the setpoint.
+            floor = self.floor_value(
+                (config.get(KEEPALIVE_KEY) or {}).get("clamp_floor_id")
+            )
+            if floor > 0:
+                capped = max(capped, min(floor, value))
+            value = capped
         if min_v is not None:
             value = max(value, min_v)
         # number.py treats a missing min_value as 0; use the same floor.

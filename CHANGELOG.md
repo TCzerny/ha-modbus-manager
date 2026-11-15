@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **KOSTAL PLENTICORE G3: optional external battery control ([#145](https://github.com/TCzerny/ha-modbus-manager/issues/145))**: Number controls for the charge limit (1038), discharge limit (1040) and minimum SoC (1042) in the keepalive group *Battery control* (15 s interval against the default 30 s timeout). Disabled by default, available only with external battery management via Modbus (register 1080 = 2). The minimum SoC is clamped to the current SoC on every write; a higher target is stored and followed as the SoC rises. The BMS maximum charge/discharge power sensors (1076/1078), which set the limits' maximum, are now enabled by default (existing installs keep them disabled), and the battery management mode is polled in the medium scan group. See [KOSTAL PLENTICORE G3](docs/README_kostal_plenticore_g3.md).
 - **Keepalive: `mismatch_direction`**: `above` or `below` limits the read-back check to one side, for registers that read back a capped effective value. With `above`, the number entity's first-write verify accepts a lower read-back too.
 
+- **Keepalive: `clamp_floor`**: A user-set floor (configuration number, restored after a restart, 0 = off) that the max clamp does not go below. On the KOSTAL PLENTICORE G3 it is *Battery Minimum SoC Floor*: the minimum SoC follows the SoC down only to the floor and holds it there. See [cyclic writes](docs/KEEPALIVE.md).
+
 ### 🐛 Fixed
 
 - **Keepalive entities kept in the entity registry**: The stale-entity cleanup at setup removed the keepalive group switch and status sensor every time, because they have no register entry; they were re-created, but entity_id changes or a disabled state could be lost.
