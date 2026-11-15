@@ -317,5 +317,5 @@ controls:
       release: stop
       clamp_max_to_register: battery_soc
       clamp_max_age: 30
-      # Optional lower bound the SoC clamp does not go below (0 = off), see the README.
-      clamp_floor: {name: "Battery Minimum SoC Floor", default: 0, min: 0, max: 100, step: 1}
+      # Lower bound the SoC clamp does not go below; 5 % is the register minimum (see the README).
+      clamp_floor: {name: "Battery Minimum SoC Floor", default: 5, min: 5, max: 100, step: 1}

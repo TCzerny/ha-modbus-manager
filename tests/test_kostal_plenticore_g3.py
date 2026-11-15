@@ -119,10 +119,11 @@ class KostalPlenticoreG3TemplateTest(unittest.TestCase):
         self.assertNotIn("max_value_from_register", min_soc)
         self.assertEqual(min_soc["max_value"], 100)
         self.assertIn("battery_soc", {s["unique_id"] for s in self.sensors})
-        # Optional floor for the SoC clamp, off by default.
+        # Floor for the SoC clamp; 5 % is the register minimum and the default.
         floor = min_soc["keepalive"]["clamp_floor"]
-        self.assertEqual(floor["default"], 0)
-        self.assertEqual((floor["min"], floor["max"], floor["step"]), (0, 100, 1))
+        self.assertEqual(floor["default"], 5)
+        self.assertEqual((floor["min"], floor["max"], floor["step"]), (5, 100, 1))
+        self.assertEqual(floor["min"], min_soc["min_value"])
         # Limits read back the effective value; only a jump up means lost control.
         for address in (1038, 1040):
             self.assertEqual(controls[address]["keepalive"]["mismatch_direction"], "above")

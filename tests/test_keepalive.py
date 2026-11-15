@@ -1266,6 +1266,11 @@ class ClampFloorTest(unittest.TestCase):
         self.assertIsNone(value)
         self.assertIn("below min_value", reason)
 
+    def test_floor_at_min_value_holds_instead_of_refusing(self):
+        # KOSTAL default: floor 5 = min_value; below 5 % SoC the 5 % is held
+        _, manager, _, config = self._setup(3.0, floor=5)
+        self.assertEqual(manager.clamp_value(config, 15.0), (5.0, None))
+
     def test_first_write_uses_floor(self):
         coordinator, _, _, config = self._setup(11.0, floor=12)
         self.assertEqual(ka.clamp_for_write(coordinator, config, 15.0), (12.0, None))
