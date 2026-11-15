@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🐛 Fixed
 
+- **Keepalive entities kept in the entity registry**: The stale-entity cleanup at setup removed the keepalive group switch and status sensor every time, because they have no register entry; they were re-created, but entity_id changes or a disabled state could be lost.
 - **Keepalive clamps on the first write**: `clamp_max_to_register` / `clamp_min_to_register` now also limit the write a number entity sends when the user sets it; before, only the cyclic writes were clamped. A stale clamp source, or a clamped value below `min_value`, refuses the write.
 
 ## [1.3.14] - 2026-11-12

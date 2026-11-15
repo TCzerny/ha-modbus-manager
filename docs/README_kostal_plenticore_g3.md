@@ -47,7 +47,7 @@ The template has three number controls for external battery management (spec sec
 
 - In the web UI, set *Battery management* to external control via Modbus (register 1080 = 2). Otherwise the controls are unavailable (checked with the medium scan group, every 30 s by default; keep the *Battery Management Mode* sensor enabled, without it the check is skipped). Keep *Battery SoC* enabled as well; without it every write of the minimum SoC is refused.
 - After upgrading from the read-only template, enable the *Battery Max Charge Power (BMS)* and *Battery Max Discharge Power (BMS)* sensors. They set the limits' maximum; new installs have them enabled.
-- The inverter follows these registers only while it keeps receiving writes within the timeout set in the web UI (default 30 s). The timeout is shared by all registers 1024–1044, and any write to one of them resets it. Keep it at 30 s or more: the group writes every 15 s, so 30 s leaves room for one missed round, while below about 20 s the interval plus the poll delay cannot keep up.
+- The inverter follows these registers only while it keeps receiving writes within the timeout set in the web UI (default 30 s). The timeout is shared by all registers 1024–1044, and any write to one of them resets it. Keep it at 30 s or more: the group writes every 15 s, so 30 s leaves room for one missed round.
 
 **How it works** (see [cyclic writes](KEEPALIVE.md))
 
