@@ -1044,5 +1044,45 @@ class MismatchDirectionTest(unittest.TestCase):
         self.assertNotIn("keepalive", control)
 
 
+class FirstWriteGuardTest(unittest.TestCase):
+    """Helpers number.py uses for the first (user) write."""
+
+    def _soc_manager(self, soc, age=0.0):
+        coordinator, manager, clock = make_manager()
+        coordinator.register_data["soc_key"] = {
+            "register_config": {"unique_id": "soc"},
+            "processed_value": soc,
+            "timestamp": clock.now - age,
+        }
+        config = number_config()
+        config["keepalive"]["clamp_max_to_register"] = "soc"
+        config["keepalive"]["clamp_max_to_register_source"] = "soc"
+        return coordinator, config
+
+    def test_clamp_for_write_limits_to_source(self):
+        coordinator, config = self._soc_manager(12.0)
+        self.assertEqual(ka.clamp_for_write(coordinator, config, 15.0), (12.0, None))
+        self.assertEqual(ka.clamp_for_write(coordinator, config, 10.0), (10.0, None))
+
+    def test_clamp_for_write_refuses_stale_source(self):
+        coordinator, config = self._soc_manager(12.0, age=120.0)
+        value, reason = ka.clamp_for_write(coordinator, config, 10.0)
+        self.assertIsNone(value)
+        self.assertIn("stale", reason)
+
+    def test_clamp_for_write_without_clamp_is_unchanged(self):
+        coordinator, _ = self._soc_manager(12.0)
+        self.assertEqual(
+            ka.clamp_for_write(coordinator, number_config(), 15.0), (15.0, None)
+        )
+
+    def test_readback_capped_ok_only_for_direction_above(self):
+        above = number_config(mismatch_direction="above")
+        self.assertTrue(ka.readback_capped_ok(above, 29000, 15256))
+        self.assertFalse(ka.readback_capped_ok(above, 2000, 15256))  # fallback jump
+        self.assertFalse(ka.readback_capped_ok(number_config(), 29000, 15256))
+        self.assertFalse(ka.readback_capped_ok({"unique_id": "x"}, 29000, 15256))
+
+
 if __name__ == "__main__":
     unittest.main()

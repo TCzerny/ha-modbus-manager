@@ -41,7 +41,7 @@ The template has three number controls for external battery management (spec sec
 |---|---|---|---|
 | Battery Charge Limit | 1038 | 0 … BMS max charge power (1076) | Reads back the effective limit |
 | Battery Discharge Limit | 1040 | 0 … BMS max discharge power (1078) | `0` still lets the inverter's own consumption (about 260 W on a G3 M, FW 3.07.03) come from the battery |
-| Battery Minimum SoC | 1042 | 5 … 100 % | Clamped to the current SoC on every write |
+| Battery Minimum SoC | 1042 | 5 … current SoC | Clamped to the current SoC on every write; reads back the effective value (the web UI minimum after a fallback) |
 
 **Requirements**
 
@@ -53,8 +53,8 @@ The template has three number controls for external battery management (spec sec
 - Setting a control writes it once. The value is also stored for the keepalive group **Battery control**.
 - The group switch (`Battery control`, starts off after every restart) rewrites all stored values every 15 s, 1 s apart.
 - Turning the switch off stops the writes. The inverter returns to its own control after the timeout. Nothing is written on switch-off, unload or shutdown.
-- The minimum SoC is never written above the latest SoC reading. A minimum SoC above the current SoC disconnects the battery (sleep mode with a 10-minute FeedIn/GridPreCheck cycle; on the test unit twice followed by a battery FAULT that needed an inverter restart). If the SoC reading is older than 60 s or unavailable, the group stops instead of writing.
-- The limits read back the effective value. A value above the inverter's own limit reads back lower, which is accepted. After a fallback the register reads the inverter's own limit again (about 15.3–15.9 kW on the test unit); three rounds in a row with that reading stop the group.
+- The minimum SoC is never written above the latest SoC reading, neither on the first write from the entity nor on the cyclic writes, and its input maximum follows the SoC. A minimum SoC above the current SoC disconnects the battery (sleep mode with a 10-minute FeedIn/GridPreCheck cycle; on the test unit twice followed by a battery FAULT that needed an inverter restart). If the SoC reading is older than 60 s or unavailable, the group stops instead of writing.
+- The limits read back the effective value. A value above the inverter's own limit reads back lower, which is accepted, also on the first write (for example 29000 W reads back about 15.3 kW on a G3 M). After a fallback the register reads the inverter's own limit again (about 15.3–15.9 kW on the test unit); three rounds in a row with that reading stop the group.
 
 **Run only one writer.** Another integration or automation that writes any of 1024–1044 keeps this template's values alive, and the other way round. Disable the other writer before turning the group on.
 

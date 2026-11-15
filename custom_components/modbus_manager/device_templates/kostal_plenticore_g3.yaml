@@ -197,8 +197,8 @@ sensors:
   - {name: "Total DC Energy PV3", unique_id: "total_dc_energy_pv3", address: 1062, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: word, unit_of_measurement: "Wh", device_class: energy, state_class: total_increasing, precision: 0, scan_group: slow, enabled_by_default: false}
   - {name: "Total AC Energy to Grid", unique_id: "total_ac_energy_grid", address: 1064, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: word, unit_of_measurement: "Wh", device_class: energy, state_class: total_increasing, precision: 0, scan_group: slow}
   - {name: "Battery Work Capacity (BM)", unique_id: "battery_work_capacity_bm", address: 1068, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: word, unit_of_measurement: "Wh", device_class: energy_storage, precision: 0, scan_group: slow, entity_category: diagnostic, enabled_by_default: false}
-  - {name: "Battery Max Charge Power (BMS)", unique_id: "battery_max_charge_power_bms", address: 1076, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: word, unit_of_measurement: "W", device_class: power, state_class: measurement, precision: 0, scan_group: slow, entity_category: diagnostic, enabled_by_default: false}
-  - {name: "Battery Max Discharge Power (BMS)", unique_id: "battery_max_discharge_power_bms", address: 1078, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: word, unit_of_measurement: "W", device_class: power, state_class: measurement, precision: 0, scan_group: slow, entity_category: diagnostic, enabled_by_default: false}
+  - {name: "Battery Max Charge Power (BMS)", unique_id: "battery_max_charge_power_bms", address: 1076, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: word, unit_of_measurement: "W", device_class: power, state_class: measurement, precision: 0, scan_group: slow, entity_category: diagnostic}
+  - {name: "Battery Max Discharge Power (BMS)", unique_id: "battery_max_discharge_power_bms", address: 1078, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: word, unit_of_measurement: "W", device_class: power, state_class: measurement, precision: 0, scan_group: slow, entity_category: diagnostic}
   - {name: "Battery Management Mode", unique_id: "battery_management_mode", address: 1080, input_type: holding, read_function_code: 3, data_type: uint16, scan_group: slow, entity_category: diagnostic, map: {0: "No external battery management", 1: "External via digital I/O", 2: "External via Modbus"}}
   - {name: "Installed Sensor Type", unique_id: "installed_sensor_type", address: 1082, input_type: holding, read_function_code: 3, data_type: uint16, scan_group: slow, entity_category: diagnostic, map: {0: "SDM 630", 1: "B-Control EM-300 LR", 3: "KSEM", 4: "KEM-C", 5: "KEM-P", 6: "KEM MP-P", 255: "No sensor"}}
 
@@ -285,8 +285,9 @@ controls:
 
   # A minimum SoC above the current SoC disconnects the battery (sleep mode, a 10 min
   # FeedIn/GridPreCheck cycle, on the test unit twice followed by a battery FAULT).
-  # Every write is therefore clamped to the latest SoC reading; if that reading is
-  # older than 60 s or unavailable, the group stops instead of writing.
+  # Every write, including the first one from the entity, is clamped to the latest
+  # SoC reading; if that reading is older than 60 s or unavailable, nothing is
+  # written and the group stops. The input maximum follows the SoC as well.
   - type: number
     name: "Battery Minimum SoC"
     unique_id: "battery_min_soc_control"
@@ -301,6 +302,7 @@ controls:
     unit_of_measurement: "%"
     min_value: 5
     max_value: 100
+    max_value_from_register: {register_unique_id: "{PREFIX}_battery_soc", fallback: 100}
     step: 1
     mode: box
     scan_group: fast
