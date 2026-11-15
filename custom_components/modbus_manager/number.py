@@ -417,7 +417,7 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             )
 
             if not result:
-                _LOGGER.error("Failed to set %s to %s", name, requested)
+                _LOGGER.error("Failed to set %s to %s", name, target)
                 self._mark_register_unavailable()
                 raise self._write_error("number_write_failed", failed_placeholders)
 
@@ -428,7 +428,7 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                 _LOGGER.error(
                     "Wrote %s to %s but could not read the register back",
                     name,
-                    requested,
+                    target,
                 )
                 self._mark_register_unavailable()
                 raise self._write_error(
@@ -447,8 +447,9 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                 target, actual_f
             ) and not readback_capped_ok(self.register_config, target, actual_f):
                 _LOGGER.error(
-                    "Device rejected %s write: requested %s, register is %s",
+                    "Device rejected %s write: wrote %s (requested %s), register is %s",
                     name,
+                    target,
                     requested,
                     actual_f,
                 )
@@ -467,6 +468,7 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                 self.register_config,
                 requested,
                 "number",
+                written=target,
             )
 
         except HomeAssistantError:

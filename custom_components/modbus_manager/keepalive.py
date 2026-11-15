@@ -323,16 +323,28 @@ def validate_control_keepalive(
 
     if "mismatch_direction" in raw:
         direction = str(raw.get("mismatch_direction")).lower()
-        if direction not in MISMATCH_DIRECTIONS:
+        if direction not in MISMATCH_DIRECTIONS or control_type != "number":
             _LOGGER.error(
-                "Template %s: keepalive control %s has an invalid mismatch_direction %r; "
-                "control stays write-once",
+                "Template %s: keepalive control %s has an invalid mismatch_direction %r "
+                "(both/above/below, number controls only); control stays write-once",
                 template_name,
                 label,
                 raw.get("mismatch_direction"),
             )
             return None
         cleaned["mismatch_direction"] = direction
+
+    if "clamp_max_offset" in raw:
+        offset = _as_float(raw.get("clamp_max_offset"))
+        if offset is None or offset < 0 or "clamp_max_to_register" not in cleaned:
+            _LOGGER.error(
+                "Template %s: keepalive control %s needs clamp_max_to_register and a "
+                "clamp_max_offset >= 0; control stays write-once",
+                template_name,
+                label,
+            )
+            return None
+        cleaned["clamp_max_offset"] = offset
 
     return cleaned
 
@@ -534,6 +546,7 @@ class KeepaliveManager:
         config: Dict[str, Any],
         value: float,
         kind: str,
+        written: Optional[float] = None,
     ) -> None:
         """Store a value the user just wrote successfully.
 
@@ -551,9 +564,10 @@ class KeepaliveManager:
         numeric = _as_float(value)
         if numeric is None:
             return
-        written = (
-            effective_number_value(config, numeric) if kind == "number" else numeric
-        )
+        sent = _as_float(written)
+        if sent is None:
+            sent = numeric
+        written = effective_number_value(config, sent) if kind == "number" else sent
         state.setpoints[register_key] = Setpoint(
             register_key=register_key,
             config=config,
@@ -980,12 +994,19 @@ class KeepaliveManager:
         uid = config.get("unique_id")
         if not (ok_max and ok_min):
             return None, f"clamp source for {uid} is stale or unavailable"
+        if max_v is not None:
+            max_v -= (config.get(KEEPALIVE_KEY) or {}).get("clamp_max_offset", 0.0)
         if max_v is not None and min_v is not None and min_v > max_v:
             return None, f"clamp sources for {uid} contradict (min > max)"
         if max_v is not None:
             value = min(value, max_v)
         if min_v is not None:
             value = max(value, min_v)
+        floor = _as_float(config.get("min_value"))
+        if floor is not None and value < floor:
+            # e.g. a minimum SoC clamped below the inverter's own floor: do not
+            # write a value the control itself would never accept
+            return None, f"clamped value {value} for {uid} is below min_value {floor}"
         return value, None
 
     def _apply_clamps(self, state: GroupState, setpoint: Setpoint) -> Optional[float]:
@@ -1089,8 +1110,13 @@ def store_keepalive_setpoint(
     register_config: Dict[str, Any],
     value: Any,
     kind: str,
+    written: Any = None,
 ) -> None:
-    """Store a successfully written value as setpoint if the control has keepalive."""
+    """Store a successfully written value as setpoint if the control has keepalive.
+
+    ``written`` is the value actually sent when it differs from ``value``
+    (clamped first write); the next read-back check compares against it.
+    """
     keepalive = register_config.get(KEEPALIVE_KEY)
     if not isinstance(keepalive, dict) or not keepalive.get("group_id"):
         return
@@ -1101,7 +1127,7 @@ def store_keepalive_setpoint(
     if numeric is None:
         return
     manager.set_setpoint(
-        keepalive["group_id"], register_key, register_config, numeric, kind
+        keepalive["group_id"], register_key, register_config, numeric, kind, written
     )
 
 

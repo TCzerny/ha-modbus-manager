@@ -199,7 +199,7 @@ sensors:
   - {name: "Battery Work Capacity (BM)", unique_id: "battery_work_capacity_bm", address: 1068, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: word, unit_of_measurement: "Wh", device_class: energy_storage, precision: 0, scan_group: slow, entity_category: diagnostic, enabled_by_default: false}
   - {name: "Battery Max Charge Power (BMS)", unique_id: "battery_max_charge_power_bms", address: 1076, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: word, unit_of_measurement: "W", device_class: power, state_class: measurement, precision: 0, scan_group: slow, entity_category: diagnostic}
   - {name: "Battery Max Discharge Power (BMS)", unique_id: "battery_max_discharge_power_bms", address: 1078, input_type: holding, read_function_code: 3, data_type: float32, count: 2, byte_order: big, swap: word, unit_of_measurement: "W", device_class: power, state_class: measurement, precision: 0, scan_group: slow, entity_category: diagnostic}
-  - {name: "Battery Management Mode", unique_id: "battery_management_mode", address: 1080, input_type: holding, read_function_code: 3, data_type: uint16, scan_group: slow, entity_category: diagnostic, map: {0: "No external battery management", 1: "External via digital I/O", 2: "External via Modbus"}}
+  - {name: "Battery Management Mode", unique_id: "battery_management_mode", address: 1080, input_type: holding, read_function_code: 3, data_type: uint16, scan_group: medium, entity_category: diagnostic, map: {0: "No external battery management", 1: "External via digital I/O", 2: "External via Modbus"}}
   - {name: "Installed Sensor Type", unique_id: "installed_sensor_type", address: 1082, input_type: holding, read_function_code: 3, data_type: uint16, scan_group: slow, entity_category: diagnostic, map: {0: "SDM 630", 1: "B-Control EM-300 LR", 3: "KSEM", 4: "KEM-C", 5: "KEM-P", 6: "KEM MP-P", 255: "No sensor"}}
 
   # Battery limitation read-back (spec 3.5, G3 SW >= 3.05)
@@ -225,8 +225,9 @@ keepalive_groups:
 
 controls:
   # 1038/1040 read back the effective limit: a value above the inverter's own limit
-  # reads back lower (accepted), a fallback reads back the inverter's own limit again
-  # (counted as mismatch, so the group stops after max_failures rounds).
+  # reads back lower (accepted). A fallback reads back the inverter's own limit
+  # again; that counts as mismatch (the group stops after max_failures rounds) only
+  # when the requested limit is more than 100 W below the inverter's own limit.
   - type: number
     name: "Battery Charge Limit"
     unique_id: "battery_charge_limit_control"
@@ -251,7 +252,7 @@ controls:
     keepalive:
       group: battery_control
       release: stop
-      mismatch_tolerance: 50
+      mismatch_tolerance: 100
       mismatch_direction: above
 
   # Since FW 3.07.03 a discharge limit of 0 still lets the inverter's own consumption
@@ -280,14 +281,17 @@ controls:
     keepalive:
       group: battery_control
       release: stop
-      mismatch_tolerance: 50
+      mismatch_tolerance: 100
       mismatch_direction: above
 
   # A minimum SoC above the current SoC disconnects the battery (sleep mode, a 10 min
   # FeedIn/GridPreCheck cycle, on the test unit twice followed by a battery FAULT).
   # Every write, including the first one from the entity, is clamped to the latest
-  # SoC reading; if that reading is older than 60 s or unavailable, nothing is
-  # written and the group stops. The input maximum follows the SoC as well.
+  # SoC reading minus 1 %, so a BMS step correction (e.g. 15 -> 14 %) between two
+  # rounds cannot put the minimum above the SoC. If the reading is older than 60 s,
+  # unavailable, or the result is below 5 %, nothing is written (a cyclic round
+  # stops the group). The input maximum follows the SoC. To block discharging,
+  # use the discharge limit; the 1 % margin lets the SoC drop by up to 1 %.
   - type: number
     name: "Battery Minimum SoC"
     unique_id: "battery_min_soc_control"
@@ -312,3 +316,4 @@ controls:
       group: battery_control
       release: stop
       clamp_max_to_register: battery_soc
+      clamp_max_offset: 1

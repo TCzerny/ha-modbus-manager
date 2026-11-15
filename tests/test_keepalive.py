@@ -1084,5 +1084,114 @@ class FirstWriteGuardTest(unittest.TestCase):
         self.assertFalse(ka.readback_capped_ok({"unique_id": "x"}, 29000, 15256))
 
 
+class ReviewRoundOneTest(unittest.TestCase):
+    def _clamped_config(self, coordinator, clock, soc, **keepalive):
+        coordinator.register_data["soc_key"] = {
+            "register_config": {"unique_id": "soc"},
+            "processed_value": soc,
+            "timestamp": clock.now,
+        }
+        config = number_config(**keepalive)
+        config["keepalive"]["clamp_max_to_register"] = "soc"
+        config["keepalive"]["clamp_max_to_register_source"] = "soc"
+        return config
+
+    def test_clamped_first_write_is_not_a_mismatch_next_round(self):
+        async def scenario():
+            coordinator, manager, clock = make_manager()
+            config = self._clamped_config(coordinator, clock, 50.0)
+            # number.py wrote 50 (clamped) for a requested 80
+            ka.store_keepalive_setpoint(
+                coordinator, "k", config, 80, "number", written=50
+            )
+            await settle(manager.async_activate(GID))
+            clock.now += 15
+            coordinator.register_data["soc_key"]["timestamp"] = clock.now
+            coordinator.register_data["k"] = {
+                "processed_value": 50.0,
+                "timestamp": clock.now,
+            }
+            await manager.async_run_round(GID)
+            self.assertEqual(manager.groups[GID].mismatches, 0)
+            self.assertEqual(manager.groups[GID].setpoints["k"].value, 80.0)
+
+        run(scenario)
+
+    def test_clamp_max_offset(self):
+        coordinator, manager, clock = make_manager()
+        config = self._clamped_config(coordinator, clock, 12.0, clamp_max_offset=1)
+        self.assertEqual(manager.clamp_value(config, 15.0), (11.0, None))
+        self.assertEqual(manager.clamp_value(config, 10.0), (10.0, None))
+
+    def test_clamped_value_below_min_value_is_refused(self):
+        coordinator, manager, clock = make_manager()
+        config = self._clamped_config(coordinator, clock, 0.0)
+        config["min_value"] = 5
+        value, reason = manager.clamp_value(config, 15.0)
+        self.assertIsNone(value)
+        self.assertIn("below min_value", reason)
+
+    def test_contradicting_clamps_refused_without_stopping(self):
+        coordinator, manager, clock = make_manager()
+        config = self._clamped_config(coordinator, clock, 10.0)
+        coordinator.register_data["floor_key"] = {
+            "register_config": {"unique_id": "floor"},
+            "processed_value": 20.0,
+            "timestamp": clock.now,
+        }
+        config["keepalive"]["clamp_min_to_register"] = "floor"
+        config["keepalive"]["clamp_min_to_register_source"] = "floor"
+        value, reason = manager.clamp_value(config, 15.0)
+        self.assertIsNone(value)
+        self.assertIn("contradict", reason)
+
+    def test_clamp_for_write_without_manager_fails_closed(self):
+        coordinator, _, clock = make_manager()
+        config = self._clamped_config(coordinator, clock, 12.0)
+        del coordinator.keepalive
+        value, _ = ka.clamp_for_write(coordinator, config, 10.0)
+        self.assertIsNone(value)
+
+    def test_readback_capped_ok_edges(self):
+        above = number_config(mismatch_direction="above")
+        self.assertTrue(ka.readback_capped_ok(above, 0, 0))
+        self.assertTrue(ka.readback_capped_ok(above, 0, -0.0))
+        self.assertFalse(ka.readback_capped_ok(above, 0, 5))
+        self.assertFalse(ka.readback_capped_ok(above, "x", 5))
+
+    def test_direction_and_offset_validation(self):
+        groups = {"bat": dict(GROUP_CFG)}
+        select = {
+            "unique_id": "s",
+            "type": "select",
+            "keepalive": {"group": "bat", "mismatch_direction": "above"},
+        }
+        offset_without_clamp = dict(
+            number_config(), keepalive={"group": "bat", "clamp_max_offset": 1}
+        )
+        bad_offset = dict(
+            number_config(),
+            keepalive={
+                "group": "bat",
+                "clamp_max_to_register": "soc",
+                "clamp_max_offset": -1,
+            },
+        )
+        good = dict(
+            number_config(),
+            keepalive={
+                "group": "bat",
+                "clamp_max_to_register": "soc",
+                "clamp_max_offset": 1,
+            },
+        )
+        controls = [select, offset_without_clamp, bad_offset, good]
+        ka.validate_template_keepalive(groups, controls, "t")
+        self.assertNotIn("keepalive", select)
+        self.assertNotIn("keepalive", offset_without_clamp)
+        self.assertNotIn("keepalive", bad_offset)
+        self.assertEqual(good["keepalive"]["clamp_max_offset"], 1.0)
+
+
 if __name__ == "__main__":
     unittest.main()
