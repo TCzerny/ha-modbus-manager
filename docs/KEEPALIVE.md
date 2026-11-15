@@ -30,6 +30,7 @@ controls:
       clamp_min_to_register: some_register # optional: never write less than this register's latest value
       clamp_max_age: 60                # optional: max age of the clamp source in seconds (default 60)
       mismatch_tolerance: 5            # optional: absolute tolerance for the read-back check
+      mismatch_direction: above        # optional: both (default) | above | below, which deviation counts
 ```
 
 `keepalive` works on `number`, `select` and `switch` controls on holding registers. Clamps work on `number` controls. Clamp sources are `unique_id`s of the same device (with or without `{PREFIX}_`).
@@ -58,4 +59,4 @@ controls:
 - With the Home Assistant core Modbus backend a dead device is often only noticed through failed writes (`max_failures`), because the hub can report "connected" while reads fail.
 - Choose `interval` well below the device timeout. Some devices ignore writes that come in quick succession; use `min_write_spacing_ms` for that.
 - Several writers on the same device (another integration, an automation) can keep each other's values alive through a shared timeout. Document this in the device README.
-- A read-back may show the effective value instead of the written one (for example a power limit that reads 999.1 W after writing 1000 W). The default tolerance matches the number entity's verify: the larger of `scale` and `step` (`step` defaults to 1). Integer registers are compared after truncation. Set `mismatch_tolerance` if that is too tight; select and switch values must match exactly unless it is set.
+- A read-back may show the effective value instead of the written one (for example a power limit that reads 999.1 W after writing 1000 W). The default tolerance matches the number entity's verify: the larger of `scale` and `step` (`step` defaults to 1). Integer registers are compared after truncation. Set `mismatch_tolerance` if that is too tight; select and switch values must match exactly unless it is set. If the device caps a value (a limit above its own maximum reads back lower) but a fallback shows as a higher reading, set `mismatch_direction: above` so only readings above the written value count.

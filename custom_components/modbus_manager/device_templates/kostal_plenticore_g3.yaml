@@ -1,4 +1,4 @@
-# KOSTAL PLENTICORE G3 (read-only)
+# KOSTAL PLENTICORE G3
 #
 # Source: KOSTAL "Interface description MODBUS (TCP) & SunSpec with control information",
 # revision 2.9 (17.07.2026), sections 3.2-3.5. Addresses are the decimal protocol
@@ -22,18 +22,25 @@
 #   never requests those gaps.
 # - Register 588 (battery type) became U32 in G3 FW 3.07.03.27419 (M-TEC = 0x10000);
 #   read as U16 here, which Kostal keeps for backwards compatibility.
-# - Read-only on purpose. External battery management (1024-1044) falls back to
-#   internal control after the timeout set in the web UI unless it is written
-#   cyclically; a write-once number control would silently revert.
+# - Battery control (optional, see docs/README_kostal_plenticore_g3.md): three number
+#   controls for external battery management (1038 max charge, 1040 max discharge,
+#   1042 minimum SoC) in the keepalive group "battery_control". They are disabled by
+#   default. The inverter only follows them while "Battery management" in the web UI
+#   is set to external via Modbus (register 1080 = 2) and it keeps receiving writes
+#   within the timeout set there (default 30 s, shared by all registers 1024-1044).
+#   The group switch repeats the values every 15 s; turning it off stops the writes
+#   and the inverter falls back to its own control after the timeout.
+# - Run only one writer for 1024-1044. Every write resets the shared timeout, so a
+#   second integration or automation keeps this template's values alive and vice versa.
 # - This is a BETA template - use at your own risk.
 
 name: "KOSTAL PLENTICORE G3"
-display_name: "KOSTAL PLENTICORE G3 (read-only)"
-description: "Read-only template for KOSTAL PLENTICORE G3 hybrid inverters: PV, AC, battery, power meter and energy counters."
+display_name: "KOSTAL PLENTICORE G3"
+description: "Template for KOSTAL PLENTICORE G3 hybrid inverters: PV, AC, battery, power meter and energy counters, plus optional external battery control (charge/discharge limit, minimum SoC) with cyclic writes."
 manufacturer: "KOSTAL"
 model: "PLENTICORE G3"
 type: "PV_Hybrid_Inverter"
-version: 0.1.0
+version: 0.2.0
 default_prefix: "kostal"
 default_slave_id: 71
 
@@ -206,3 +213,100 @@ sensors:
   - {name: "Total Energy Exported", unique_id: "total_energy_exported", address: 40346, input_type: holding, read_function_code: 3, data_type: uint32, count: 2, byte_order: big, swap: none, unit_of_measurement: "Wh", device_class: energy, state_class: total_increasing, precision: 0, scan_group: slow}
   - {name: "Total Energy Imported", unique_id: "total_energy_imported", address: 40354, input_type: holding, read_function_code: 3, data_type: uint32, count: 2, byte_order: big, swap: none, unit_of_measurement: "Wh", device_class: energy, state_class: total_increasing, precision: 0, scan_group: slow}
   - {name: "Battery SoH", unique_id: "battery_soh", address: 40428, input_type: holding, read_function_code: 3, data_type: uint16, unit_of_measurement: "%", precision: 0, scan_group: slow, entity_category: diagnostic, enabled_by_default: false}
+
+# External battery management (spec 3.4). Requires register 1080 = 2 (external via
+# Modbus) and cyclic writes within the web UI timeout. See the header notes.
+keepalive_groups:
+  battery_control:
+    name: "Battery control"
+    interval: 15
+    min_write_spacing_ms: 1000
+    max_failures: 3
+
+controls:
+  # 1038/1040 read back the effective limit: a value above the inverter's own limit
+  # reads back lower (accepted), a fallback reads back the inverter's own limit again
+  # (counted as mismatch, so the group stops after max_failures rounds).
+  - type: number
+    name: "Battery Charge Limit"
+    unique_id: "battery_charge_limit_control"
+    address: 1038
+    input_type: holding
+    read_function_code: 3
+    write_function_code: 16
+    data_type: float32
+    count: 2
+    byte_order: big
+    swap: word
+    unit_of_measurement: "W"
+    device_class: power
+    min_value: 0
+    max_value: 30000
+    max_value_from_register: {register_unique_id: "{PREFIX}_battery_max_charge_power_bms", fallback: 30000}
+    step: 100
+    mode: box
+    scan_group: fast
+    enabled_by_default: false
+    depends_on_register: {register_unique_id: "battery_management_mode", required_value: 2}
+    keepalive:
+      group: battery_control
+      release: stop
+      mismatch_tolerance: 50
+      mismatch_direction: above
+
+  # Since FW 3.07.03 a discharge limit of 0 still lets the inverter's own consumption
+  # (about 260 W on a G3 M) come from the battery.
+  - type: number
+    name: "Battery Discharge Limit"
+    unique_id: "battery_discharge_limit_control"
+    address: 1040
+    input_type: holding
+    read_function_code: 3
+    write_function_code: 16
+    data_type: float32
+    count: 2
+    byte_order: big
+    swap: word
+    unit_of_measurement: "W"
+    device_class: power
+    min_value: 0
+    max_value: 30000
+    max_value_from_register: {register_unique_id: "{PREFIX}_battery_max_discharge_power_bms", fallback: 30000}
+    step: 100
+    mode: box
+    scan_group: fast
+    enabled_by_default: false
+    depends_on_register: {register_unique_id: "battery_management_mode", required_value: 2}
+    keepalive:
+      group: battery_control
+      release: stop
+      mismatch_tolerance: 50
+      mismatch_direction: above
+
+  # A minimum SoC above the current SoC disconnects the battery (sleep mode, a 10 min
+  # FeedIn/GridPreCheck cycle, on the test unit twice followed by a battery FAULT).
+  # Every write is therefore clamped to the latest SoC reading; if that reading is
+  # older than 60 s or unavailable, the group stops instead of writing.
+  - type: number
+    name: "Battery Minimum SoC"
+    unique_id: "battery_min_soc_control"
+    address: 1042
+    input_type: holding
+    read_function_code: 3
+    write_function_code: 16
+    data_type: float32
+    count: 2
+    byte_order: big
+    swap: word
+    unit_of_measurement: "%"
+    min_value: 5
+    max_value: 100
+    step: 1
+    mode: box
+    scan_group: fast
+    enabled_by_default: false
+    depends_on_register: {register_unique_id: "battery_management_mode", required_value: 2}
+    keepalive:
+      group: battery_control
+      release: stop
+      clamp_max_to_register: battery_soc

@@ -53,6 +53,7 @@ DEFAULT_MAX_FAILURES = 3
 DEFAULT_CLAMP_MAX_AGE_S = 60.0
 KEEPALIVE_CONTROL_TYPES = frozenset({"number", "select", "switch"})
 RELEASE_MODES = frozenset({"stop", "write"})
+MISMATCH_DIRECTIONS = ("both", "above", "below")
 TICK_SECONDS = 1.0
 
 STATE_OFF = "off"
@@ -299,6 +300,19 @@ def validate_control_keepalive(
             )
             return None
         cleaned["mismatch_tolerance"] = tolerance
+
+    if "mismatch_direction" in raw:
+        direction = str(raw.get("mismatch_direction")).lower()
+        if direction not in MISMATCH_DIRECTIONS:
+            _LOGGER.error(
+                "Template %s: keepalive control %s has an invalid mismatch_direction %r; "
+                "control stays write-once",
+                template_name,
+                label,
+                raw.get("mismatch_direction"),
+            )
+            return None
+        cleaned["mismatch_direction"] = direction
 
     return cleaned
 
@@ -875,7 +889,15 @@ class KeepaliveManager:
             else setpoint.value
         )
         tolerance = mismatch_tolerance(setpoint.config, setpoint.kind)
-        if math.isclose(actual_f, expected, rel_tol=0.0, abs_tol=tolerance + 1e-9):
+        direction = (setpoint.config.get(KEEPALIVE_KEY) or {}).get(
+            "mismatch_direction", "both"
+        )
+        deviation = actual_f - expected
+        if direction == "above":
+            deviation = max(deviation, 0.0)  # reading lower is fine (device caps it)
+        elif direction == "below":
+            deviation = min(deviation, 0.0)
+        if abs(deviation) <= tolerance + 1e-9:
             setpoint.mismatch_streak = 0
             return False
 

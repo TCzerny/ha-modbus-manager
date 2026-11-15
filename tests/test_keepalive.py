@@ -1005,5 +1005,44 @@ class ThirdReviewTest(unittest.TestCase):
         run(scenario)
 
 
+class MismatchDirectionTest(unittest.TestCase):
+    def _run(self, direction, readback):
+        async def scenario():
+            coordinator, manager, clock = make_manager()
+            config = number_config(mismatch_direction=direction)
+            ka.store_keepalive_setpoint(coordinator, "k", config, 1000, "number")
+            await settle(manager.async_activate(GID))
+            clock.now += 15
+            coordinator.register_data["k"] = {
+                "processed_value": readback,
+                "timestamp": clock.now,
+            }
+            await manager.async_run_round(GID)
+            return manager.groups[GID].mismatches
+
+        return run(scenario)
+
+    def test_above_ignores_lower_readback(self):
+        # e.g. a power limit above the inverter's own limit reads back capped
+        self.assertEqual(self._run("above", 800), 0)
+
+    def test_above_counts_higher_readback(self):
+        # e.g. fallback: the limit jumps back to the inverter's own value
+        self.assertEqual(self._run("above", 15800), 1)
+
+    def test_below_ignores_higher_readback(self):
+        self.assertEqual(self._run("below", 1200), 0)
+
+    def test_both_counts_either_side(self):
+        self.assertEqual(self._run("both", 800), 1)
+
+    def test_invalid_direction_keeps_control_write_once(self):
+        groups = {"bat": dict(GROUP_CFG)}
+        control = number_config()
+        control["keepalive"] = {"group": "bat", "mismatch_direction": "up"}
+        ka.validate_template_keepalive(groups, [control], "t")
+        self.assertNotIn("keepalive", control)
+
+
 if __name__ == "__main__":
     unittest.main()
