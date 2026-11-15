@@ -29,7 +29,6 @@ controls:
       clamp_max_to_register: battery_soc   # optional: never write more than this register's latest value
       clamp_min_to_register: some_register # optional: never write less than this register's latest value
       clamp_max_age: 60                # optional: max age of the clamp source in seconds (default 60)
-      clamp_max_offset: 1              # optional: keep this far below the clamp_max source (default 0)
       mismatch_tolerance: 5            # optional: absolute tolerance for the read-back check
       mismatch_direction: above        # optional: both (default) | above | below, which deviation counts
 ```
@@ -43,7 +42,7 @@ controls:
 - While the group switch is **on**, all stored setpoints of the group are rewritten every `interval` seconds, spaced by `min_write_spacing_ms`. Cyclic writes use the normal write path (same encoding, same I/O lock) without the number entity's read-back verify.
 - The switch **starts off** after every restart, and setpoints are never restored from the recorder. Turning the switch off clears the setpoints; set the controls again before turning it back on.
 - Before each round, the latest polled value of each control is compared with the last written value. A mismatch is logged and counted. A clean read resets the count. `max_failures` consecutive mismatches of one control, or `max_failures` consecutive rounds with failed writes, stop the group.
-- Clamps also apply to the first write from a number entity: it writes the clamped value and stores the requested one as setpoint. `clamp_max_offset` keeps the value that far below the `clamp_max_to_register` source; a value written earlier that is still within the source is held, so the offset does not lower the value on every round. If a clamp source is unavailable or older than `clamp_max_age`, or the clamped value is below the control's `min_value` (0 if not set), the first write is refused and a cyclic round stops the group instead of writing a guessed value.
+- Clamps also apply to the first write from a number entity: it writes the clamped value and stores the requested one as setpoint. If a clamp source is unavailable or older than `clamp_max_age`, or the clamped value is below the control's `min_value` (0 if not set), the first write is refused and a cyclic round stops the group instead of writing a guessed value.
 - If the link is down or the integration unloads, the group stops. No final write is sent; the device falls back through its own timeout.
 - Turning the switch off stops the writes. Controls with `release: write` that have a stored setpoint get one release write, and only while the link is up.
 - Turning the switch off while the group is already off or stopped writes nothing and keeps any values set in the meantime.

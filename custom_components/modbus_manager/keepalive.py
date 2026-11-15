@@ -334,18 +334,6 @@ def validate_control_keepalive(
             return None
         cleaned["mismatch_direction"] = direction
 
-    if "clamp_max_offset" in raw:
-        offset = _as_float(raw.get("clamp_max_offset"))
-        if offset is None or offset < 0 or "clamp_max_to_register" not in cleaned:
-            _LOGGER.error(
-                "Template %s: keepalive control %s needs clamp_max_to_register and a "
-                "clamp_max_offset >= 0; control stays write-once",
-                template_name,
-                label,
-            )
-            return None
-        cleaned["clamp_max_offset"] = offset
-
     return cleaned
 
 
@@ -982,31 +970,19 @@ class KeepaliveManager:
         return True, value
 
     def clamp_value(
-        self,
-        config: Dict[str, Any],
-        value: float,
-        hold: Optional[float] = None,
+        self, config: Dict[str, Any], value: float
     ) -> tuple[Optional[float], Optional[str]]:
         """Clamp ``value`` to the control's clamp sources.
 
-        ``clamp_max_offset`` keeps the value that far below the max source.
-        ``hold`` is the value written last: while it is still within the max
-        source, the result does not drop below it, so the offset does not lower
-        the value again on every round. Returns (value, None), or (None, reason)
-        if a source is stale, unavailable, the sources contradict each other or
-        the result is below the control's ``min_value``.
+        Returns (value, None), or (None, reason) if a source is stale or
+        unavailable, the sources contradict each other, or the result is below
+        the control's ``min_value``.
         """
-        keepalive = config.get(KEEPALIVE_KEY) or {}
         uid = config.get("unique_id")
-        ok_max, source_max = self._clamp_source_value(config, "clamp_max_to_register")
+        ok_max, max_v = self._clamp_source_value(config, "clamp_max_to_register")
         ok_min, min_v = self._clamp_source_value(config, "clamp_min_to_register")
         if not (ok_max and ok_min):
             return None, f"clamp source for {uid} is stale or unavailable"
-        max_v = None
-        if source_max is not None:
-            max_v = source_max - keepalive.get("clamp_max_offset", 0.0)
-            if hold is not None and max_v < hold <= source_max:
-                max_v = hold
         if max_v is not None and min_v is not None and min_v > max_v:
             return None, f"clamp sources for {uid} contradict (min > max)"
         if max_v is not None:
@@ -1025,9 +1001,7 @@ class KeepaliveManager:
 
     def _apply_clamps(self, state: GroupState, setpoint: Setpoint) -> Optional[float]:
         """Clamp the setpoint; stop the group (None) on bad or contradictory sources."""
-        value, reason = self.clamp_value(
-            setpoint.config, setpoint.value, hold=setpoint.last_written_value
-        )
+        value, reason = self.clamp_value(setpoint.config, setpoint.value)
         if value is None:
             self.stop_group(state.group_id, reason)
         return value

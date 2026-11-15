@@ -286,12 +286,13 @@ controls:
 
   # A minimum SoC above the current SoC disconnects the battery (sleep mode, a 10 min
   # FeedIn/GridPreCheck cycle, on the test unit twice followed by a battery FAULT).
-  # Writes are clamped to the latest SoC reading minus 1 %, so a BMS step correction
-  # (e.g. 15 -> 14 %) between two rounds cannot put the minimum above the SoC. A value
-  # written earlier is kept while it is still <= SoC, so the minimum holds instead
-  # of following the SoC down. If the reading is older than 30 s, unavailable, or the
-  # result is below 5 %, nothing is written (a cyclic round stops the group, including
-  # the limits). The input maximum follows the SoC.
+  # Every write, including the first one from the entity, is clamped to the latest SoC
+  # reading (minimum SoC = SoC holds the battery, like kostal_modbus_control's Block
+  # Discharge). After a BMS step correction down (e.g. 15 -> 14 % without current) the
+  # minimum is above the SoC until the next round (up to 15 s plus the poll delay).
+  # If the reading is older than 30 s, unavailable, or the result is below 5 %, nothing
+  # is written (a cyclic round stops the group, including the limits). The input
+  # maximum follows the SoC.
   - type: number
     name: "Battery Minimum SoC"
     unique_id: "battery_min_soc_control"
@@ -316,5 +317,4 @@ controls:
       group: battery_control
       release: stop
       clamp_max_to_register: battery_soc
-      clamp_max_offset: 1
       clamp_max_age: 30

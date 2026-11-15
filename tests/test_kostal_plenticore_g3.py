@@ -114,7 +114,7 @@ class KostalPlenticoreG3TemplateTest(unittest.TestCase):
         # A minimum SoC above the current SoC disconnects the battery.
         min_soc = controls[1042]
         self.assertEqual(min_soc["keepalive"]["clamp_max_to_register"], "battery_soc")
-        self.assertGreaterEqual(min_soc["keepalive"]["clamp_max_offset"], 1)
+        self.assertLessEqual(min_soc["keepalive"]["clamp_max_age"], 30)
         self.assertEqual(min_soc["max_value_from_register"]["register_unique_id"], "{PREFIX}_battery_soc")
         self.assertIn("battery_soc", {s["unique_id"] for s in self.sensors})
         # Limits read back the effective value; only a jump up means lost control.

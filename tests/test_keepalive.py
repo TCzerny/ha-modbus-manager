@@ -1117,19 +1117,40 @@ class ClampAndFirstWriteTest(unittest.TestCase):
 
         run(scenario)
 
-    def test_clamp_max_offset(self):
-        coordinator, manager, clock = make_manager()
-        config = self._clamped_config(coordinator, clock, 12.0, clamp_max_offset=1)
-        self.assertEqual(manager.clamp_value(config, 15.0), (11.0, None))
-        self.assertEqual(manager.clamp_value(config, 10.0), (10.0, None))
+    def test_cyclic_rounds_follow_soc_and_stop_at_setpoint(self):
+        async def scenario():
+            coordinator, manager, clock = make_manager()
+            config = self._clamped_config(coordinator, clock, 12.0)
+            ka.store_keepalive_setpoint(
+                coordinator, "k", config, 15, "number", written=12
+            )
+            await settle(manager.async_activate(GID))
+            for soc in (12.0, 13.0, 16.0, 11.0):
+                clock.now += 15
+                coordinator.register_data["soc_key"].update(
+                    processed_value=soc, timestamp=clock.now
+                )
+                await manager.async_run_round(GID)
+            values = [round(decode_float_cdab(w[2]), 3) for w in coordinator.writes]
+            # activation round, then SoC 12, 13, 16 (capped by setpoint 15), 11
+            self.assertEqual(values, [12.0, 12.0, 13.0, 15.0, 11.0])
+
+        run(scenario)
 
     def test_clamped_value_below_min_value_is_refused(self):
         coordinator, manager, clock = make_manager()
-        config = self._clamped_config(coordinator, clock, 0.0)
-        config["min_value"] = 5
+        config = self._clamped_config(coordinator, clock, 4.0)
+        config["min_value"] = "5"  # strings from YAML are accepted
         value, reason = manager.clamp_value(config, 15.0)
         self.assertIsNone(value)
         self.assertIn("below min_value", reason)
+        no_floor = self._clamped_config(coordinator, clock, -1.0)
+        self.assertIsNone(manager.clamp_value(no_floor, 15.0)[0])  # default floor 0
+
+    def test_nan_source_is_refused(self):
+        coordinator, manager, clock = make_manager()
+        config = self._clamped_config(coordinator, clock, float("nan"))
+        self.assertIn("stale", manager.clamp_value(config, 15.0)[1])
 
     def test_contradicting_clamps_refused_without_stopping(self):
         coordinator, manager, clock = make_manager()
@@ -1144,6 +1165,7 @@ class ClampAndFirstWriteTest(unittest.TestCase):
         value, reason = manager.clamp_value(config, 15.0)
         self.assertIsNone(value)
         self.assertIn("contradict", reason)
+        self.assertFalse(manager.groups[GID].stop_reason)
 
     def test_clamp_for_write_without_manager_fails_closed(self):
         coordinator, _, clock = make_manager()
@@ -1159,80 +1181,19 @@ class ClampAndFirstWriteTest(unittest.TestCase):
         self.assertFalse(ka.readback_capped_ok(above, 0, 5))
         self.assertFalse(ka.readback_capped_ok(above, "x", 5))
 
-    def test_hold_keeps_minimum_instead_of_ratcheting_down(self):
-        coordinator, manager, clock = make_manager()
-        config = self._clamped_config(coordinator, clock, 10.0, clamp_max_offset=1)
-        # setpoint 10, SoC reached 10, 10 written last: hold 10, do not write 9
-        self.assertEqual(manager.clamp_value(config, 10.0, hold=10.0), (10.0, None))
-        # SoC rises: follow up to the setpoint, offset applies
-        coordinator.register_data["soc_key"]["processed_value"] = 14.0
-        self.assertEqual(manager.clamp_value(config, 15.0, hold=10.0), (13.0, None))
-        # BMS step below the last written value: lower to SoC - offset
-        coordinator.register_data["soc_key"]["processed_value"] = 9.0
-        self.assertEqual(manager.clamp_value(config, 10.0, hold=10.0), (8.0, None))
-
-    def test_cyclic_rounds_hold_the_minimum(self):
-        async def scenario():
-            coordinator, manager, clock = make_manager()
-            config = self._clamped_config(coordinator, clock, 12.0, clamp_max_offset=1)
-            ka.store_keepalive_setpoint(coordinator, "k", config, 10, "number")
-            await settle(manager.async_activate(GID))
-            for soc in (11.0, 10.0, 10.0, 10.0):
-                clock.now += 15
-                coordinator.register_data["soc_key"].update(
-                    processed_value=soc, timestamp=clock.now
-                )
-                await manager.async_run_round(GID)
-            values = [round(decode_float_cdab(w[2]), 3) for w in coordinator.writes]
-            self.assertEqual(values, [10.0] * len(values))  # never 9, 8, ...
-            self.assertTrue(manager.is_active(GID))
-
-        run(scenario)
-
-    def test_soc_edge_cases_are_refused(self):
-        coordinator, manager, clock = make_manager()
-        config = self._clamped_config(coordinator, clock, 5.0, clamp_max_offset=1)
-        config["min_value"] = "5"  # strings from YAML are accepted
-        self.assertIsNone(manager.clamp_value(config, 15.0)[0])  # 4 < 5
-        coordinator.register_data["soc_key"]["processed_value"] = float("nan")
-        self.assertIn("stale", manager.clamp_value(config, 15.0)[1])
-        no_floor = self._clamped_config(coordinator, clock, 0.0, clamp_max_offset=1)
-        self.assertIsNone(
-            manager.clamp_value(no_floor, 15.0)[0]
-        )  # -1 below default floor 0
-
-    def test_direction_and_offset_validation(self):
+    def test_direction_validation(self):
         groups = {"bat": dict(GROUP_CFG)}
         select = {
             "unique_id": "s",
             "type": "select",
             "keepalive": {"group": "bat", "mismatch_direction": "above"},
         }
-        offset_without_clamp = dict(
-            number_config(), keepalive={"group": "bat", "clamp_max_offset": 1}
+        number = dict(
+            number_config(), keepalive={"group": "bat", "mismatch_direction": "Above"}
         )
-        bad_offset = dict(
-            number_config(),
-            keepalive={
-                "group": "bat",
-                "clamp_max_to_register": "soc",
-                "clamp_max_offset": -1,
-            },
-        )
-        good = dict(
-            number_config(),
-            keepalive={
-                "group": "bat",
-                "clamp_max_to_register": "soc",
-                "clamp_max_offset": 1,
-            },
-        )
-        controls = [select, offset_without_clamp, bad_offset, good]
-        ka.validate_template_keepalive(groups, controls, "t")
+        ka.validate_template_keepalive(groups, [select, number], "t")
         self.assertNotIn("keepalive", select)
-        self.assertNotIn("keepalive", offset_without_clamp)
-        self.assertNotIn("keepalive", bad_offset)
-        self.assertEqual(good["keepalive"]["clamp_max_offset"], 1.0)
+        self.assertEqual(number["keepalive"]["mismatch_direction"], "above")
 
 
 if __name__ == "__main__":
