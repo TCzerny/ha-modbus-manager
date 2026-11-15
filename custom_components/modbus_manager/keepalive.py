@@ -452,6 +452,7 @@ class FloorSetting:
     step: float
     default: float
     unit: Optional[str] = None
+    enabled_default: bool = True
     value: Optional[float] = None  # None until restored or set: default applies
 
     @property
@@ -561,6 +562,7 @@ class KeepaliveManager:
                 step=float(cfg["step"]),
                 default=float(cfg["default"]),
                 unit=cfg.get("unit"),
+                enabled_default=bool(cfg.get("enabled_default", True)),
             )
             if old is not None and old.value is not None:
                 setting.value = min(max(old.value, setting.min), setting.max)
@@ -634,7 +636,7 @@ class KeepaliveManager:
                 for key, sp in state.setpoints.items()
             },
             **(
-                {"floors": {f.name: f.current for f in state.floors.values()}}
+                {"floors": {fid: f.current for fid, f in state.floors.items()}}
                 if state.floors
                 else {}
             ),

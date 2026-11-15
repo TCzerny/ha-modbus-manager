@@ -1311,6 +1311,7 @@ class ClampFloorTest(unittest.TestCase):
         )
         self.assertEqual(manager.floor_value(self.FLOOR_ID), 13.0)
         self.assertEqual(manager.status(GID)["floors"], {self.FLOOR_ID: 13.0})
+        self.assertTrue(manager.groups[GID].floors[self.FLOOR_ID].enabled_default)
         manager.register_groups({GID: dict(GROUP_CFG)})
         self.assertEqual(manager.floor_value(self.FLOOR_ID), 0.0)
 

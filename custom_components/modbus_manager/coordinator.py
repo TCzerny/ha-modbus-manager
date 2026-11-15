@@ -2350,6 +2350,9 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 "name": floor_cfg.get("name")
                 or f"{register.get('name', 'Control')} floor",
                 "unit": register.get("unit_of_measurement"),
+                # a floor without its control is meaningless; follow its default
+                "enabled_default": register.get("enabled_by_default", True)
+                is not False,
             }
         register[KEEPALIVE_KEY] = keepalive
         keepalive_groups[group_id] = {

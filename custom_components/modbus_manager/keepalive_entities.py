@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from datetime import datetime, timezone
 from typing import Any
 
@@ -181,6 +182,7 @@ class KeepaliveFloorNumber(_KeepaliveGroupEntity, RestoreNumber):
         self._attr_native_max_value = floor.max
         self._attr_native_step = floor.step
         self._attr_native_unit_of_measurement = floor.unit
+        self._attr_entity_registry_enabled_default = floor.enabled_default
 
     @property
     def native_value(self) -> float | None:
@@ -193,6 +195,8 @@ class KeepaliveFloorNumber(_KeepaliveGroupEntity, RestoreNumber):
             self._manager.set_floor(self._floor_id, last.native_value)
 
     async def async_set_native_value(self, value: float) -> None:
+        if not math.isfinite(value):
+            raise HomeAssistantError(f"Invalid floor value: {value}")
         if self._manager.set_floor(self._floor_id, value) is None:
             raise HomeAssistantError("Floor no longer exists; reload the entry")
         self.async_write_ha_state()
