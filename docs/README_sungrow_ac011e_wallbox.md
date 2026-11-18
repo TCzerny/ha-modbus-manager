@@ -67,6 +67,9 @@ Add as a Modbus Manager device with:
 | Charging Status | Idle, Standby, Charging, Completed, etc. |
 | Charging Start / End Time | Session timestamps |
 | Start Mode | Stopped, EMS, Swipe |
+| Plug and Play | Off or On. Not on connection type WiNet. Disabled by default |
+| Offline Charging Current | 0.1 A. Not on connection type WiNet. Disabled by default |
+| Power Limit | 0.1 kW. Not on connection type WiNet. Disabled by default |
 
 ### Controls
 

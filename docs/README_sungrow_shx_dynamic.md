@@ -502,6 +502,19 @@ This section contains all entities that will be created by this template, includ
 | 13040 | Total battery charge | total_battery_charge |
 | 13044 | Daily exported energy | daily_exported_energy |
 | 13045 | Total exported energy | total_exported_energy |
+| 13049 | Inverter alarm (diagnostic, off by default) | inverter_alarm_raw |
+| 13051 | Grid-side fault (diagnostic, off by default) | grid_side_fault_raw |
+| 13053 | System fault 1 (diagnostic, off by default) | system_fault_1_raw |
+| 13055 | System fault 2 (diagnostic, off by default) | system_fault_2_raw |
+| 13057 | DC-side fault (diagnostic, off by default) | dc_side_fault_raw |
+| 13059 | Permanent fault (diagnostic, off by default) | permanent_fault_raw |
+| 13061 | BDC-side fault (diagnostic, off by default) | bdc_side_fault_raw |
+| 13063 | BDC-side permanent fault (diagnostic, off by default) | bdc_side_permanent_fault_raw |
+| 13065 | Battery fault (diagnostic, off by default) | battery_fault_raw |
+| 13067 | Battery alarm (diagnostic, off by default) | battery_alarm_raw |
+| 13069 | BMS alarm (diagnostic, off by default) | bms_alarm_raw |
+| 13071 | BMS protection (diagnostic, off by default) | bms_protection_raw |
+| 13073 | BMS fault 1 (diagnostic, off by default) | bms_fault_1_raw |
 | 13199 | Meter Channel 2 Total Active Power raw (DTSU666-20 only) | meter_channel_2_total_active_power_raw |
 | 13201 | Meter Channel 2 Phase A Active Power raw (DTSU666-20 only) | meter_channel_2_phase_a_active_power_raw |
 | 13203 | Meter Channel 2 Phase B Active Power raw (DTSU666-20 only) | meter_channel_2_phase_b_active_power_raw |
@@ -511,24 +524,14 @@ This section contains all entities that will be created by this template, includ
 | 13279 | Battery Firmware Information (RT/T/K6 only) | battery_firmware_info |
 | 30229 | Global mpp scan manual raw | global_mpp_scan_manual_raw |
 | 13042 | DRM State *(commented out)* | drm_state |
-| 13049 | Inverter alarm raw *(commented out)* | inverter_alarm_raw |
-| 13051 | Grid-side fault raw *(commented out)* | grid_side_fault_raw |
-| 13053 | System fault 1 raw *(commented out)* | system_fault_1_raw |
-| 13055 | System fault 2 raw *(commented out)* | system_fault_2_raw |
-| 13057 | DC-side fault raw *(commented out)* | dc_side_fault_raw |
-| 13059 | Permanent fault raw *(commented out)* | permanent_fault_raw |
-| 13061 | BDC-side fault raw *(commented out)* | bdc_side_fault_raw |
-| 13063 | BDC-side permanent fault raw *(commented out)* | bdc_side_permanent_fault_raw |
-| 13065 | Battery fault raw *(commented out)* | battery_fault_raw |
-| 13067 | Battery alarm raw *(commented out)* | battery_alarm_raw |
-| 13071 | BMS fault 2 raw *(commented out)* | bms_fault_2_raw |
-| 13077 | BMS alarm 2 raw *(commented out)* | bms_alarm_2_raw |
+| 13075 | BMS fault 2 *(commented out, bits reserved)* | bms_fault_2_raw |
+| 13077 | BMS alarm 2 *(commented out)* | bms_alarm_2_raw |
 | 13079 | External EMS heartbeat raw *(commented out)* | external_ems_heartbeat_raw |
 
 **Note:**
 - **Grid frequency 0.1 Hz (5035)** is commented out: template uses reg 5242 (address 5241) for higher precision 0.01 Hz
-- **Fault/alarm registers** (13049–13067): commented out; fault codes per Appendix 4; uncomment for diagnostics
-- **DRM State (13042)**, **BMS fault 2/alarm 2 (13075, 13077)**, **External EMS heartbeat (13079)** are commented out
+- **Fault/alarm registers** (addresses 13049–13073, Sungrow registers 13050–13074): diagnostic, disabled by default. BMS fault 2 (address 13075) stays commented; its bits are reserved.
+- **DRM State (13042)**, **BMS alarm 2 (13078)**, **External EMS heartbeat (13080)** are commented out
 - **Battery current (5630)** and **Battery power (5213)** are PDF V1.1.15 recommended addresses, used when the **device** protocol sensor is **1.0.11** or newer (or unset). Device **V1.0.7** does not answer them: set **Modbus protocol version** to **1.0.7** so `battery_power` is calculated from 13022 (unsigned) with the same sign (negative = charging). See [Device protocol vs PDF](#device-protocol-version-vs-pdf).
 - **Firmware Information** (13249, 13264, 13279) and **Protocol version raw** (4951) are only available on RT/T/K6 models, not on RS/MG models
 - Monthly and yearly statistical sensors are available with **LAN** or **RS485** (not WiNet-S)

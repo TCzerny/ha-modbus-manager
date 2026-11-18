@@ -3,13 +3,14 @@
 # V1.1.2: valid_models type_code (0x20ED / 0x20DA / 0x3F80)
 # V1.1.3: detect_slave_ids for hub detect after the inverter is known
 # V1.1.5: WiNet forwarding ID (often 2 or 3), not inverter LAN (#127)
+# V1.1.6: app settings 21298/21299/21313 only when connection_type is not WINET.
 
 name: "Sungrow AC011E Wallbox"
 display_name: "Sungrow AC011E Wallbox"
 description: "Sungrow AC011E-01 EV wallbox (L1). Supports AC007-00, AC011E-01, AC22E-01."
 manufacturer: "Sungrow"
 model: "AC007 / AC011 / AC22"
-version: 1.1.5
+version: 1.1.6
 default_prefix: "WB"
 default_slave_id: 3
 # WiNet-S hub: forwarding Modbus ID from the dongle device list (often 2 or 3).
@@ -303,6 +304,54 @@ sensors:
     mm_group: "EV_charging_status"
     entity_category: "diagnostic"
     icon: "mdi:remote"
+
+  # App settings. A WiNet-S forwards holding registers only below 21250.
+  # LAN and RS485 talk to the wallbox itself. Off by default.
+  - name: "Plug and Play"
+    unique_id: "plug_and_play"
+    address: 21297 # reg 21298
+    input_type: holding
+    data_type: uint16
+    scan_group: slow
+    mm_group: "EV_settings"
+    entity_category: "diagnostic"
+    enabled_by_default: false
+    condition: "connection_type != 'WINET'"
+    icon: "mdi:ev-plug-type2"
+    map:
+      0: "Off"
+      1: "On"
+
+  - name: "Offline Charging Current"
+    unique_id: "offline_charging_current"
+    address: 21298 # reg 21299
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    unit_of_measurement: "A"
+    device_class: "current"
+    scan_group: slow
+    mm_group: "EV_settings"
+    entity_category: "diagnostic"
+    enabled_by_default: false
+    condition: "connection_type != 'WINET'"
+    icon: "mdi:current-ac"
+
+  - name: "Power Limit"
+    unique_id: "power_limit"
+    address: 21312 # reg 21313 holding; input 21314 is Start Mode
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "kW"
+    device_class: "power"
+    scan_group: slow
+    mm_group: "EV_settings"
+    entity_category: "diagnostic"
+    enabled_by_default: false
+    condition: "connection_type != 'WINET'"
+    icon: "mdi:gauge"
 
 # Controls (Holding Registers - read/write)
 controls:

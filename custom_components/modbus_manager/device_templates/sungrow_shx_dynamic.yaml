@@ -6,7 +6,7 @@ display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters: RS, RT, T, MG*RL, SH*RL. SH50–125CX not included yet."
 manufacturer: "Sungrow"
 model: "SH Series"
-version: 1.2.30
+version: 1.2.31
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -53,6 +53,7 @@ firmware_version: "03011.95.01"
 # V1.2.28: battery_capacity (address 5638) includes SH15T. Other T sizes stay out until a reading exists.
 # V1.2.29: PV_binary_status bit tests read running_state raw_value. The flags state is text.
 # V1.2.30: nan_value 0x7FFFFFFF on load, export, and meter power raw. Decoded match is unknown.
+# V1.2.31: Appendix 4 inverter fault words (13049–13063) are diagnostic and off by default.
 
 # Dynamic configuration support
 dynamic_config:
@@ -2593,211 +2594,226 @@ sensors:
     scale: 0.1
     scan_group: slow
 
-  # --- COMMENTED OUT: Fault/Diagnostic registers (Protocol V1.1.11 Appendix 4) - uncomment for diagnostics ---
-  # Bit-based fault analysis; flags key = bit position
-  # - name: Inverter alarm
-  #   unique_id: inverter_alarm_raw
-  #   address: 13049 # reg 13050-13051 U32
-  #   input_type: input
-  #   data_type: uint32
-  #   swap: word
-  #   entity_category: diagnostic
-  #   flags:
-  #     0: "Fan Alarm"
-  #     1: "Lightning Protection Alarm on AC Side"
-  #     2: "Lightning Protection Alarm on DC Side"
-  #     3: "Bypass Switch Abnormal"
-  #     4: "Communication Alarm"
-  #     5: "Parallel Communication Alarm"
-  #     6: "Device Abnormality"
-  #     7: "Junction Box leakage Protector Alarm"
-  #     8: "PV1 Abnormal Warn"
-  #     9: "PV2 Abnormal Warn"
-  #     10: "PV3 Abnormal Warn"
-  #     11: "PV4 Abnormal Warn"
-  #     12: "Fan 2 Rotate Low Speed Alarm"
-  #     13: "Fan 2 Stall Alarm"
-  #     14: "Meter input/output ports reversed or wrong terminals"
-  #     15: "Software Version Mismatch"
-  #     16: "SPD or Fuse Alarm"
-  #     17: "FRAM Read Alarm"
-  #     18: "SPI Com Alarm"
-  #     19: "Ambient Temperature Sensor Open Circuit Alarm"
-  #     20: "Ambient Temperature Sensor Short Circuit Alarm"
-  #     21: "Inversion T Sensor Open Circuit Alarm"
-  #     22: "Inversion T Sensor Short Circuit Alarm"
-  #     23: "Boost T Sensor Open Circuit Alarm"
-  #     24: "Boost T Sensor Short Circuit Alarm"
-  #     25: "Input Cfg Alarm In DC Source Mode Or Clock Reset Abnormal"
-  #     26: "PV HV Flt"
-  #     27: "Ambient Low Temperature Sensor Open Circuit Alarm"
-  #     28: "Fan 1 Low Rotation Speed Alarm"
-  #     29: "Fan 1 Stall Alarm"
-  #     30: "Meter Communication Alarm"
-  #     31: "BOOST Short Circuit Alarm"
-  # - name: Grid-side fault
-  #   unique_id: grid_side_fault_raw
-  #   address: 13051 # reg 13052-13053 U32
-  #   input_type: input
-  #   data_type: uint32
-  #   swap: word
-  #   entity_category: diagnostic
-  #   flags:
-  #     0: "Grid Overvoltage"
-  #     1: "Grid Transient V-over"
-  #     2: "Grid Under-voltage"
-  #     3: "Grid V-low"
-  #     5: "AC C-over"
-  #     6: "Grid Over-frequency"
-  #     7: "Grid Under-frequency"
-  #     8: "Grid Power Outage"
-  #     9: "Device Abnormality"
-  #     10: "Excessive Leakage Current"
-  #     11: "Grid Abnormal"
-  #     12: "10 Minutes Grid Overvoltage"
-  #     13: "High Grid Voltage"
-  #     14: "Output Overload"
-  #     15: "Grid Voltage Imbalance"
-  #     16: "Inversion C-over Hardware Flt"
-  #     17: "High Grid Frequency"
-  #     18: "Grid F-low"
-  #     19: "V-Grid Uniform Fault"
-  #     20: "Grid Frequency Uniform Fault"
-  #     21: "Network Side Protection Self-test Failed"
-  #     22: "Grounding Cable Fault"
-  #     23: "Inversion V DC Ject V-over Flt"
-  #     24: "AC Side Under-voltage"
-  #     25: "AC Side Overvoltage"
-  #     26: "AC Side Under-frequency"
-  #     27: "AC Side Over-frequency"
-  #     28: "Vac Unbal"
-  #     29: "Bypass Instantaneous Overcurrent"
-  #     30: "Bypass Switch Over Current"
-  # - name: System fault 1
-  #   unique_id: system_fault_1_raw
-  #   address: 13053 # reg 13054-13055 U32
-  #   input_type: input
-  #   data_type: uint32
-  #   swap: word
-  #   entity_category: diagnostic
-  #   flags:
-  #     0: "Inversion Switch Tube Over-temperature"
-  #     1: "BOOST Switch Tube T-over"
-  #     2: "PV IR Flt"
-  #     3: "Bypass Switch Fault"
-  #     4: "EPS Relay Failure"
-  #     5: "Junction Box Relay Fault"
-  #     6: "Input and Output Mismatch Fault"
-  #     7: "PV HV P-over Alarm or Prot"
-  #     8: "Redundancy Fault"
-  #     9: "R-phase inverter voltage sampling channel abnormal"
-  #     10: "S-phase inverter voltage sampling channel abnormal"
-  #     11: "T-phase inverter voltage sampling channel abnormal"
-  #     12: "R-phase DC component sampling channel abnormal"
-  #     13: "S-phase DC component sampling channel abnormal"
-  #     14: "T-phase DC component sampling channel abnormal"
-  #     15: "PV 1 current sampling channel abnormal"
-  #     16: "PV 2 current sampling channel abnormal"
-  #     17: "PV 1 MPPT current sampling channel abnormal"
-  #     18: "PV 2 MPPT current sampling channel abnormal"
-  #     19: "Control Board Power Supply Under-voltage Fault"
-  #     20: "Leak Current CT Self-detection Fault"
-  #     21: "SPI Com Flt"
-  #     22: "LCD and Main DSP Communication Fault"
-  #     24: "PV3 current sampling channel failure"
-  #     25: "N-wire current sampling channel abnormal"
-  #     26: "Balance bridge current sampling channel abnormal"
-  # - name: System fault 2
-  #   unique_id: system_fault_2_raw
-  #   address: 13055 # reg 13056-13057 U32
-  #   input_type: input
-  #   data_type: uint32
-  #   swap: word
-  #   entity_category: diagnostic
-  #   flags:
-  #     0: "Module Over-temperature"
-  #     1: "Excessively High Ambient Temperature"
-  #     2: "Device Abnormality"
-  #     3: "Low System Insulation Resistance"
-  #     7: "Low Ambient Temperature"
-  #     11: "Input Configuration Abnormality"
-  #     15: "Backup Load Overpower Fault"
-  # - name: DC-side fault
-  #   unique_id: dc_side_fault_raw
-  #   address: 13057 # reg 13058-13059 U32
-  #   input_type: input
-  #   data_type: uint32
-  #   swap: word
-  #   entity_category: diagnostic
-  #   flags:
-  #     4: "PV Access Failure"
-  #     9: "PV1 Reverse Connection Fault"
-  #     10: "PV2 Reverse Connection Fault"
-  #     16: "Bus Overvoltage Hardware Fault"
-  #     17: "Busbar Average Under-voltage"
-  #     18: "PV Hardware Overcurrent Fault"
-  #     19: "PV Voltage Exceeds Bus Voltage"
-  #     20: "BOOST1 Short Circuit Fault"
-  #     21: "BOOST2 Short Circuit Fault"
-  #     22: "DC C-over"
-  #     23: "PV3 Overcurrent"
-  #     24: "PV3 Reverse Connection Fault"
-  #     25: "BOOST3 short circuit fault"
-  #     26: "Half-bus overvoltage hardware fault"
-  #     27: "Balance bridge overcurrent hardware fault"
-  #     28: "PV4 Reverse Connection Fault"
-  # - name: Permanent fault
-  #   unique_id: permanent_fault_raw
-  #   address: 13059 # reg 13060-13061 U32
-  #   input_type: input
-  #   data_type: uint32
-  #   swap: word
-  #   entity_category: diagnostic
-  #   flags:
-  #     0: "PV Overcurrent Permanent Fault"
-  #     1: "Inversion Overcurrent Permanent Fault"
-  #     2: "High DC Injection Permanent Fault"
-  #     3: "Bus V-over Perm. Flt"
-  #     4: "Relay Perm Fault"
-  #     5: "PV1 Self-check Permanent Fault"
-  #     6: "PV2 Self-check Permanent Fault"
-  #     7: "Inversion Open-loop Self-detection Perm. Flt"
-  #     8: "Entire Temperature Sensor Failure"
-  #     9: "BOOST3 open-loop self-check permanent fault"
-  #     10: "Balance bridge overcurrent permanent fault"
-  #     11: "Half-bus overvoltage permanent fault"
-  # - name: BDC-side fault
-  #   unique_id: bdc_side_fault_raw
-  #   address: 13061 # reg 13062-13063 U32
-  #   input_type: input
-  #   data_type: uint32
-  #   swap: word
-  #   entity_category: diagnostic
-  #   flags:
-  #     0: "BDC Charge Transient I-over"
-  #     1: "BDC Discharge Transient I-over"
-  #     2: "Clamping Capacitance V-low Fault"
-  #     3: "Clamping Capacitance Transient V-over"
-  #     5: "Battery Pre-charge Relay Failure"
-  #     8: "BDC Self-detect Flt"
-  #     12: "BDC T-over Flt"
-  #     16: "BDC Hardware I-over"
-  #     20: "BDC Current Sampling Channel Abnormality"
-  #     22: "Leakage Current Sampling Channel Abnormality"
-  #     23: "Secondary DSP Communication Fault"
-  #     24: "BDC Soft Start Flt"
-  # - name: BDC-side permanent fault
-  #   unique_id: bdc_side_permanent_fault_raw
-  #   address: 13063 # reg 13064-13065 U32
-  #   input_type: input
-  #   data_type: uint32
-  #   swap: word
-  #   entity_category: diagnostic
-  #   flags:
-  #     0: "BDC I-over Perm. Flt"
-  #     2: "Battery Overvoltage Permanent Fault"
-  #     4: "BDC Self-detect Permanent Flt"
-  #     7: "BDC Soft Start Perm. Flt"
+  # Appendix 4 inverter fault words. Diagnostic, off by default, so they are not polled until enabled.
+  - name: Inverter alarm
+    unique_id: inverter_alarm_raw
+    enabled_by_default: false
+    translation_key: "shx_inverter_alarm_raw"
+    address: 13049 # reg 13050-13051 U32
+    input_type: input
+    data_type: uint32
+    swap: word
+    entity_category: diagnostic
+    flags:
+      0: "Fan Alarm"
+      1: "Lightning Protection Alarm on AC Side"
+      2: "Lightning Protection Alarm on DC Side"
+      3: "Bypass Switch Abnormal"
+      4: "Communication Alarm"
+      5: "Parallel Communication Alarm"
+      6: "Device Abnormality"
+      7: "Junction Box leakage Protector Alarm"
+      8: "PV1 Abnormal Warn"
+      9: "PV2 Abnormal Warn"
+      10: "PV3 Abnormal Warn"
+      11: "PV4 Abnormal Warn"
+      12: "Fan 2 Rotate Low Speed Alarm"
+      13: "Fan 2 Stall Alarm"
+      14: "Meter input/output ports reversed or wrong terminals"
+      15: "Software Version Mismatch"
+      16: "SPD or Fuse Alarm"
+      17: "FRAM Read Alarm"
+      18: "SPI Com Alarm"
+      19: "Ambient Temperature Sensor Open Circuit Alarm"
+      20: "Ambient Temperature Sensor Short Circuit Alarm"
+      21: "Inversion T Sensor Open Circuit Alarm"
+      22: "Inversion T Sensor Short Circuit Alarm"
+      23: "Boost T Sensor Open Circuit Alarm"
+      24: "Boost T Sensor Short Circuit Alarm"
+      25: "Input Cfg Alarm In DC Source Mode Or Clock Reset Abnormal"
+      26: "PV HV Flt"
+      27: "Ambient Low Temperature Sensor Open Circuit Alarm"
+      28: "Fan 1 Low Rotation Speed Alarm"
+      29: "Fan 1 Stall Alarm"
+      30: "Meter Communication Alarm"
+      31: "BOOST Short Circuit Alarm"
+  - name: Grid-side fault
+    unique_id: grid_side_fault_raw
+    enabled_by_default: false
+    translation_key: "shx_grid_side_fault_raw"
+    address: 13051 # reg 13052-13053 U32
+    input_type: input
+    data_type: uint32
+    swap: word
+    entity_category: diagnostic
+    flags:
+      0: "Grid Overvoltage"
+      1: "Grid Transient V-over"
+      2: "Grid Under-voltage"
+      3: "Grid V-low"
+      5: "AC C-over"
+      6: "Grid Over-frequency"
+      7: "Grid Under-frequency"
+      8: "Grid Power Outage"
+      9: "Device Abnormality"
+      10: "Excessive Leakage Current"
+      11: "Grid Abnormal"
+      12: "10 Minutes Grid Overvoltage"
+      13: "High Grid Voltage"
+      14: "Output Overload"
+      15: "Grid Voltage Imbalance"
+      16: "Inversion C-over Hardware Flt"
+      17: "High Grid Frequency"
+      18: "Grid F-low"
+      19: "V-Grid Uniform Fault"
+      20: "Grid Frequency Uniform Fault"
+      21: "Network Side Protection Self-test Failed"
+      22: "Grounding Cable Fault"
+      23: "Inversion V DC Ject V-over Flt"
+      24: "AC Side Under-voltage"
+      25: "AC Side Overvoltage"
+      26: "AC Side Under-frequency"
+      27: "AC Side Over-frequency"
+      28: "Vac Unbal"
+      29: "Bypass Instantaneous Overcurrent"
+      30: "Bypass Switch Over Current"
+  - name: System fault 1
+    unique_id: system_fault_1_raw
+    enabled_by_default: false
+    translation_key: "shx_system_fault_1_raw"
+    address: 13053 # reg 13054-13055 U32
+    input_type: input
+    data_type: uint32
+    swap: word
+    entity_category: diagnostic
+    flags:
+      0: "Inversion Switch Tube Over-temperature"
+      1: "BOOST Switch Tube T-over"
+      2: "PV IR Flt"
+      3: "Bypass Switch Fault"
+      4: "EPS Relay Failure"
+      5: "Junction Box Relay Fault"
+      6: "Input and Output Mismatch Fault"
+      7: "PV HV P-over Alarm or Prot"
+      8: "Redundancy Fault"
+      9: "R-phase inverter voltage sampling channel abnormal"
+      10: "S-phase inverter voltage sampling channel abnormal"
+      11: "T-phase inverter voltage sampling channel abnormal"
+      12: "R-phase DC component sampling channel abnormal"
+      13: "S-phase DC component sampling channel abnormal"
+      14: "T-phase DC component sampling channel abnormal"
+      15: "PV 1 current sampling channel abnormal"
+      16: "PV 2 current sampling channel abnormal"
+      17: "PV 1 MPPT current sampling channel abnormal"
+      18: "PV 2 MPPT current sampling channel abnormal"
+      19: "Control Board Power Supply Under-voltage Fault"
+      20: "Leak Current CT Self-detection Fault"
+      21: "SPI Com Flt"
+      22: "LCD and Main DSP Communication Fault"
+      24: "PV3 current sampling channel failure"
+      25: "N-wire current sampling channel abnormal"
+      26: "Balance bridge current sampling channel abnormal"
+  - name: System fault 2
+    unique_id: system_fault_2_raw
+    enabled_by_default: false
+    translation_key: "shx_system_fault_2_raw"
+    address: 13055 # reg 13056-13057 U32
+    input_type: input
+    data_type: uint32
+    swap: word
+    entity_category: diagnostic
+    flags:
+      0: "Module Over-temperature"
+      1: "Excessively High Ambient Temperature"
+      2: "Device Abnormality"
+      3: "Low System Insulation Resistance"
+      7: "Low Ambient Temperature"
+      11: "Input Configuration Abnormality"
+      15: "Backup Load Overpower Fault"
+  - name: DC-side fault
+    unique_id: dc_side_fault_raw
+    enabled_by_default: false
+    translation_key: "shx_dc_side_fault_raw"
+    address: 13057 # reg 13058-13059 U32
+    input_type: input
+    data_type: uint32
+    swap: word
+    entity_category: diagnostic
+    flags:
+      4: "PV Access Failure"
+      9: "PV1 Reverse Connection Fault"
+      10: "PV2 Reverse Connection Fault"
+      16: "Bus Overvoltage Hardware Fault"
+      17: "Busbar Average Under-voltage"
+      18: "PV Hardware Overcurrent Fault"
+      19: "PV Voltage Exceeds Bus Voltage"
+      20: "BOOST1 Short Circuit Fault"
+      21: "BOOST2 Short Circuit Fault"
+      22: "DC C-over"
+      23: "PV3 Overcurrent"
+      24: "PV3 Reverse Connection Fault"
+      25: "BOOST3 short circuit fault"
+      26: "Half-bus overvoltage hardware fault"
+      27: "Balance bridge overcurrent hardware fault"
+      28: "PV4 Reverse Connection Fault"
+  - name: Permanent fault
+    unique_id: permanent_fault_raw
+    enabled_by_default: false
+    translation_key: "shx_permanent_fault_raw"
+    address: 13059 # reg 13060-13061 U32
+    input_type: input
+    data_type: uint32
+    swap: word
+    entity_category: diagnostic
+    flags:
+      0: "PV Overcurrent Permanent Fault"
+      1: "Inversion Overcurrent Permanent Fault"
+      2: "High DC Injection Permanent Fault"
+      3: "Bus V-over Perm. Flt"
+      4: "Relay Perm Fault"
+      5: "PV1 Self-check Permanent Fault"
+      6: "PV2 Self-check Permanent Fault"
+      7: "Inversion Open-loop Self-detection Perm. Flt"
+      8: "Entire Temperature Sensor Failure"
+      9: "BOOST3 open-loop self-check permanent fault"
+      10: "Balance bridge overcurrent permanent fault"
+      11: "Half-bus overvoltage permanent fault"
+  - name: BDC-side fault
+    unique_id: bdc_side_fault_raw
+    enabled_by_default: false
+    translation_key: "shx_bdc_side_fault_raw"
+    address: 13061 # reg 13062-13063 U32
+    input_type: input
+    data_type: uint32
+    swap: word
+    entity_category: diagnostic
+    flags:
+      0: "BDC Charge Transient I-over"
+      1: "BDC Discharge Transient I-over"
+      2: "Clamping Capacitance V-low Fault"
+      3: "Clamping Capacitance Transient V-over"
+      5: "Battery Pre-charge Relay Failure"
+      8: "BDC Self-detect Flt"
+      12: "BDC T-over Flt"
+      16: "BDC Hardware I-over"
+      20: "BDC Current Sampling Channel Abnormality"
+      22: "Leakage Current Sampling Channel Abnormality"
+      23: "Secondary DSP Communication Fault"
+      24: "BDC Soft Start Flt"
+  - name: BDC-side permanent fault
+    unique_id: bdc_side_permanent_fault_raw
+    enabled_by_default: false
+    translation_key: "shx_bdc_side_permanent_fault_raw"
+    address: 13063 # reg 13064-13065 U32
+    input_type: input
+    data_type: uint32
+    swap: word
+    entity_category: diagnostic
+    flags:
+      0: "BDC I-over Perm. Flt"
+      2: "Battery Overvoltage Permanent Fault"
+      4: "BDC Self-detect Permanent Flt"
+      7: "BDC Soft Start Perm. Flt"
   - name: Battery fault
     unique_id: battery_fault_raw
     enabled_by_default: false
