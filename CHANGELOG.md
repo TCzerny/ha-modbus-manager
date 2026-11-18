@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.15] - 2026-11-18
+
 ### ✨ Added
 
 - **SHx inverter fault words**: Appendix 4 input addresses 13049–13063: inverter alarm, grid-side, system, DC, permanent, and BDC faults are diagnostic entities, disabled by default. Battery and BMS fault words were already present. BMS fault 2 stays out; its bits are reserved.
