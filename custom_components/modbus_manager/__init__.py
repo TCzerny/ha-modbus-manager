@@ -208,8 +208,14 @@ async def _cleanup_stale_registry_entities(
             if unique_id
         }
 
+        # Empty register buckets mean the collection failed: remove nothing.
         if not normalized_expected:
             return
+
+        # Keepalive group switches and status sensors have no register entry.
+        keepalive = getattr(coordinator, "keepalive", None)
+        for group_id in getattr(keepalive, "groups", None) or {}:
+            normalized_expected.update({group_id.lower(), f"{group_id}_status".lower()})
 
         def _matches_expected(registry_unique_id: str) -> bool:
             normalized_registry = str(registry_unique_id).strip().lower()

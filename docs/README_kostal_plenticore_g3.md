@@ -1,8 +1,8 @@
-# KOSTAL PLENTICORE G3 template (read-only)
+# KOSTAL PLENTICORE G3 template
 
 ## Overview
 
-This read-only template covers the Modbus TCP register map of **KOSTAL PLENTICORE G3** hybrid inverters: device information, inverter state, PV inputs, AC side, battery, the connected power meter and the energy counters. It uses holding-register reads (FC03) only and writes nothing.
+This template covers the Modbus TCP register map of **KOSTAL PLENTICORE G3** hybrid inverters: device information, inverter state, PV inputs, AC side, battery, the connected power meter and the energy counters. It reads holding registers (FC03) and, only if you enable the optional battery control, writes registers 1038/1040/1042 (FC16).
 
 Default connection: TCP port **1502**, unit ID **71**. Modbus must be enabled in the inverter's web UI under *Settings > Modbus/SunSpec (TCP)*.
 
@@ -33,9 +33,33 @@ The KOSTAL register map only has the controller board temperature (98). From the
 
 The inverter's SunSpec chain is 1, 103, 113, 120, 123, 160, 203, 802 (at 40415), 65535. From the battery base model 802 the template reads the bank state (`State`, 40437: DISCONNECTED / INITIALIZING / CONNECTED / STANDBY / SOC PROTECTION / SUSPENDING / FAULT), the event bitfield `Evt1` (40441, shown as active flags such as COMMUNICATION_ERROR or OTHER_ALARM, raw value in the `numeric_value` attribute), max/min cell voltage (40452/40455, `CellV_SF` = −3 on the tested unit) and the battery's inverter state request (`ReqInvState`, 40463). Vendor state, vendor events and `SetOp` are present but disabled by default. Enum and bitfield points need no scale factor; 32-bit points arrive high word first like the other U32 values from 0x200 on. On the tested unit the bank state shows STANDBY while a BYD battery idles at its minimum SoC (event 1033 in the inverter log) and FAULT after a failed reconnect from battery sleep mode.
 
-## Why there are no controls
+## Battery control (optional)
 
-External battery management (registers 1024–1044) falls back to internal control after the timeout set in the web UI unless *some* battery register is written again within that time; any write resets one shared timer. A write-once `number` would silently revert. Section 3.5 (1280–1288) explicitly requires cyclic writes. Battery controls are left out until the integration can rewrite a value periodically.
+The template has three number controls for external battery management (spec section 3.4). They are **disabled by default**; enable them in the entity settings.
+
+| Control | Register | Range | Notes |
+|---|---|---|---|
+| Battery Charge Limit | 1038 | 0 … BMS max charge power (1076; 30000 W while that sensor is disabled) | Reads back the effective limit |
+| Battery Discharge Limit | 1040 | 0 … BMS max discharge power (1078; 30000 W while that sensor is disabled) | `0` still lets the inverter's own consumption (about 260 W on a G3 M, FW 3.07.03) come from the battery |
+| Battery Minimum SoC | 1042 | 5 … 100 | Written as at most the current SoC; reads back the effective value (the web UI minimum after a fallback) |
+
+**Requirements**
+
+- In the web UI, set *Battery management* to external control via Modbus (register 1080 = 2). Otherwise the controls are unavailable (checked with the medium scan group, every 30 s by default; keep the *Battery Management Mode* sensor enabled, without it the check is skipped). Keep *Battery SoC* enabled as well; without it every write of the minimum SoC is refused.
+- After upgrading from the read-only template, enable the *Battery Max Charge Power (BMS)* and *Battery Max Discharge Power (BMS)* sensors. They set the limits' maximum; new installs have them enabled.
+- The inverter follows these registers only while it keeps receiving writes within the timeout set in the web UI (default 30 s). The timeout is shared by all registers 1024–1044, and any write to one of them resets it. Keep it at 30 s or more: the group writes every 15 s, so 30 s leaves room for one missed round.
+
+**How it works** (see [cyclic writes](KEEPALIVE.md))
+
+- Setting a control writes it once. The value is also stored for the keepalive group **Battery control**.
+- The group switch (`Battery control`, starts off after every restart) rewrites all stored values every 15 s, 1 s apart.
+- Turning the switch off stops the writes. The inverter returns to its own control after the timeout. Nothing is written on switch-off, unload or shutdown.
+- The minimum SoC is written as at most the latest SoC reading, on the first write from the entity and on every cyclic write. A target above the current SoC is accepted: the SoC is written, the target is stored, and the cyclic writes follow the SoC up to the target. A minimum SoC equal to the SoC holds the battery (the same value `kostal_modbus_control`'s Block Discharge writes; stable on the test unit). A minimum SoC above the current SoC disconnects the battery while *Use sleep mode* is enabled in the battery settings (on the test unit twice followed by a battery FAULT that needed an inverter restart); with sleep mode disabled the test unit only ran the 10-minute FeedIn/GridPreCheck cycle. The BMS can correct the SoC down by a whole step without any current (15 → 14 % on the test unit); the minimum then stays above the SoC until the next round, up to 15 s plus the poll delay. If the SoC reading is older than 30 s, unavailable, or the result would be below 5 %, the write is refused, and a cyclic round stops the whole group including the limits (at a SoC below 5 % with a minimum SoC set).
+- The limits read back the effective value. A value above the inverter's own limit reads back lower, which is accepted, also on the first write (for example 29000 W reads back about 15.3 kW on a G3 M). Any lower read-back is accepted, so a write the inverter ignores while it still reads a lower value is not detected. After a fallback the register reads the inverter's own limit again (about 15.3–15.9 kW on the test unit); three rounds in a row with that reading stop the group, but only if the requested limit is more than 100 W below the inverter's own limit.
+
+**Run only one writer.** Another integration or automation that writes any of 1024–1044 keeps this template's values alive, and the other way round. Disable the other writer before turning the group on.
+
+Not included: AC setpoints 1024/1026/1030 (BI/MP only according to the spec; 1026 has no effect on the G3 M), the DC setpoint 1034, the maximum SoC 1044, and the section 3.5 limits 1280–1288.
 
 ## References
 

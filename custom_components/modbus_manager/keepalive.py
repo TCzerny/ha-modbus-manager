@@ -53,6 +53,7 @@ DEFAULT_MAX_FAILURES = 3
 DEFAULT_CLAMP_MAX_AGE_S = 60.0
 KEEPALIVE_CONTROL_TYPES = frozenset({"number", "select", "switch"})
 RELEASE_MODES = frozenset({"stop", "write"})
+MISMATCH_DIRECTIONS = ("both", "above", "below")
 TICK_SECONDS = 1.0
 
 STATE_OFF = "off"
@@ -116,6 +117,26 @@ def mismatch_tolerance(config: Dict[str, Any], kind: str) -> float:
     if step is None:
         step = 1.0  # number.py default
     return max(abs(scale), abs(step), 1e-6)
+
+
+def readback_capped_ok(config: Dict[str, Any], written: Any, actual: Any) -> bool:
+    """True if a lower read-back is acceptable because the device caps the value.
+
+    Only for controls with ``keepalive.mismatch_direction: above``: such a
+    register reads back the effective value, so a request above the device's
+    own limit reads back lower without the write being rejected.
+    """
+    keepalive = config.get(KEEPALIVE_KEY)
+    if (
+        not isinstance(keepalive, dict)
+        or keepalive.get("mismatch_direction") != "above"
+    ):
+        return False
+    written_f = _as_float(written)
+    actual_f = _as_float(actual)
+    if written_f is None or actual_f is None:
+        return False
+    return actual_f <= written_f
 
 
 def validate_keepalive_groups(
@@ -299,6 +320,19 @@ def validate_control_keepalive(
             )
             return None
         cleaned["mismatch_tolerance"] = tolerance
+
+    if "mismatch_direction" in raw:
+        direction = str(raw.get("mismatch_direction")).lower()
+        if direction not in MISMATCH_DIRECTIONS or control_type != "number":
+            _LOGGER.error(
+                "Template %s: keepalive control %s has an invalid mismatch_direction %r "
+                "(both/above/below, number controls only); control stays write-once",
+                template_name,
+                label,
+                raw.get("mismatch_direction"),
+            )
+            return None
+        cleaned["mismatch_direction"] = direction
 
     return cleaned
 
@@ -500,6 +534,7 @@ class KeepaliveManager:
         config: Dict[str, Any],
         value: float,
         kind: str,
+        written: Any = None,
     ) -> None:
         """Store a value the user just wrote successfully.
 
@@ -517,16 +552,17 @@ class KeepaliveManager:
         numeric = _as_float(value)
         if numeric is None:
             return
-        written = (
-            effective_number_value(config, numeric) if kind == "number" else numeric
-        )
+        sent = _as_float(written)
+        if sent is None:
+            sent = numeric
+        effective = effective_number_value(config, sent) if kind == "number" else sent
         state.setpoints[register_key] = Setpoint(
             register_key=register_key,
             config=config,
             value=numeric,
             kind=kind,
             last_write_loop_time=self._safe_loop_time(),
-            last_written_value=written,
+            last_written_value=effective,
         )
         self._notify(group_id)
 
@@ -875,7 +911,15 @@ class KeepaliveManager:
             else setpoint.value
         )
         tolerance = mismatch_tolerance(setpoint.config, setpoint.kind)
-        if math.isclose(actual_f, expected, rel_tol=0.0, abs_tol=tolerance + 1e-9):
+        direction = (setpoint.config.get(KEEPALIVE_KEY) or {}).get(
+            "mismatch_direction", "both"
+        )
+        deviation = actual_f - expected
+        if direction == "above":
+            deviation = max(deviation, 0.0)  # reading lower is fine (device caps it)
+        elif direction == "below":
+            deviation = min(deviation, 0.0)
+        if abs(deviation) <= tolerance + 1e-9:
             setpoint.mismatch_streak = 0
             return False
 
@@ -906,10 +950,10 @@ class KeepaliveManager:
         return None
 
     def _clamp_source_value(
-        self, setpoint: Setpoint, key: str
+        self, config: Dict[str, Any], key: str
     ) -> tuple[bool, Optional[float]]:
         """Return (ok, value) for a clamp source; ok=False means stale/unavailable."""
-        keepalive = setpoint.config.get(KEEPALIVE_KEY, {})
+        keepalive = config.get(KEEPALIVE_KEY, {})
         source = keepalive.get(f"{key}_source") or keepalive.get(key)
         if not source:
             return True, None
@@ -925,26 +969,41 @@ class KeepaliveManager:
             return False, None
         return True, value
 
-    def _apply_clamps(self, state: GroupState, setpoint: Setpoint) -> Optional[float]:
-        """Clamp the setpoint; stop the group (None) on bad or contradictory sources."""
-        ok_max, max_v = self._clamp_source_value(setpoint, "clamp_max_to_register")
-        ok_min, min_v = self._clamp_source_value(setpoint, "clamp_min_to_register")
-        uid = setpoint.config.get("unique_id")
+    def clamp_value(
+        self, config: Dict[str, Any], value: float
+    ) -> tuple[Optional[float], Optional[str]]:
+        """Clamp ``value`` to the control's clamp sources.
+
+        Returns (value, None), or (None, reason) if a source is stale or
+        unavailable, the sources contradict each other, or the result is below
+        the control's ``min_value``.
+        """
+        uid = config.get("unique_id")
+        ok_max, max_v = self._clamp_source_value(config, "clamp_max_to_register")
+        ok_min, min_v = self._clamp_source_value(config, "clamp_min_to_register")
         if not (ok_max and ok_min):
-            self.stop_group(
-                state.group_id, f"clamp source for {uid} is stale or unavailable"
-            )
-            return None
+            return None, f"clamp source for {uid} is stale or unavailable"
         if max_v is not None and min_v is not None and min_v > max_v:
-            self.stop_group(
-                state.group_id, f"clamp sources for {uid} contradict (min > max)"
-            )
-            return None
-        value = setpoint.value
+            return None, f"clamp sources for {uid} contradict (min > max)"
         if max_v is not None:
             value = min(value, max_v)
         if min_v is not None:
             value = max(value, min_v)
+        # number.py treats a missing min_value as 0; use the same floor.
+        floor = _as_float(config.get("min_value"))
+        if floor is None:
+            floor = 0.0
+        if value < floor:
+            # e.g. a minimum SoC clamped below the inverter's own floor: do not
+            # write a value the control itself would never accept
+            return None, f"clamped value {value} for {uid} is below min_value {floor}"
+        return value, None
+
+    def _apply_clamps(self, state: GroupState, setpoint: Setpoint) -> Optional[float]:
+        """Clamp the setpoint; stop the group (None) on bad or contradictory sources."""
+        value, reason = self.clamp_value(setpoint.config, setpoint.value)
+        if value is None:
+            self.stop_group(state.group_id, reason)
         return value
 
     # -- writing ------------------------------------------------------------
@@ -1041,8 +1100,13 @@ def store_keepalive_setpoint(
     register_config: Dict[str, Any],
     value: Any,
     kind: str,
+    written: Any = None,
 ) -> None:
-    """Store a successfully written value as setpoint if the control has keepalive."""
+    """Store a successfully written value as setpoint if the control has keepalive.
+
+    ``written`` is the value actually sent when it differs from ``value``
+    (clamped first write); the next read-back check compares against it.
+    """
     keepalive = register_config.get(KEEPALIVE_KEY)
     if not isinstance(keepalive, dict) or not keepalive.get("group_id"):
         return
@@ -1053,8 +1117,28 @@ def store_keepalive_setpoint(
     if numeric is None:
         return
     manager.set_setpoint(
-        keepalive["group_id"], register_key, register_config, numeric, kind
+        keepalive["group_id"], register_key, register_config, numeric, kind, written
     )
+
+
+def clamp_for_write(
+    coordinator: Any, register_config: Dict[str, Any], value: float
+) -> tuple[Optional[float], Optional[str]]:
+    """Apply a control's keepalive clamps to a user write.
+
+    Without clamps the value is returned unchanged. With clamps, the value is
+    limited the same way as every cyclic write, so the first write can never
+    exceed the clamp source either. (None, reason) means: do not write.
+    """
+    keepalive = register_config.get(KEEPALIVE_KEY)
+    if not isinstance(keepalive, dict) or not (
+        keepalive.get("clamp_max_to_register") or keepalive.get("clamp_min_to_register")
+    ):
+        return value, None
+    manager = getattr(coordinator, "keepalive", None)
+    if manager is None:
+        return None, "keepalive manager unavailable"
+    return manager.clamp_value(register_config, value)
 
 
 def _current_task() -> Optional[asyncio.Task]:

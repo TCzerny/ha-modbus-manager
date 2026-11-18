@@ -23,7 +23,7 @@ from .device_utils import (
     is_coordinator_connected,
     is_register_dependency_met,
 )
-from .keepalive import store_keepalive_setpoint
+from .keepalive import clamp_for_write, readback_capped_ok, store_keepalive_setpoint
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -378,8 +378,25 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             else:
                 scale_factor = 1.0
 
+            # Keepalive clamps (e.g. minimum SoC never above the current SoC)
+            # apply to the first write as well; the stored setpoint stays the
+            # requested value and every cyclic write is clamped again.
+            target, clamp_reason = clamp_for_write(
+                self.coordinator, self.register_config, requested
+            )
+            if target is None:
+                _LOGGER.error("Not writing %s: %s", name, clamp_reason)
+                raise self._write_error("number_write_failed", failed_placeholders)
+            if target != requested:
+                _LOGGER.info(
+                    "%s: writing %s instead of %s (keepalive clamp)",
+                    name,
+                    target,
+                    requested,
+                )
+
             offset = self.register_config.get("offset", 0.0)
-            scaled_value = (requested - offset) / scale_factor
+            scaled_value = (target - offset) / scale_factor
 
             from .modbus_utils import encode_register_write_value, get_write_call_type
 
@@ -400,7 +417,7 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             )
 
             if not result:
-                _LOGGER.error("Failed to set %s to %s", name, requested)
+                _LOGGER.error("Failed to set %s to %s", name, target)
                 self._mark_register_unavailable()
                 raise self._write_error("number_write_failed", failed_placeholders)
 
@@ -411,7 +428,7 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                 _LOGGER.error(
                     "Wrote %s to %s but could not read the register back",
                     name,
-                    requested,
+                    target,
                 )
                 self._mark_register_unavailable()
                 raise self._write_error(
@@ -426,10 +443,13 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                     "number_write_verify_unread", failed_placeholders
                 ) from None
 
-            if not self._display_values_match(requested, actual_f):
+            if not self._display_values_match(
+                target, actual_f
+            ) and not readback_capped_ok(self.register_config, target, actual_f):
                 _LOGGER.error(
-                    "Device rejected %s write: requested %s, register is %s",
+                    "Device rejected %s write: wrote %s (requested %s), register is %s",
                     name,
+                    target,
                     requested,
                     actual_f,
                 )
@@ -437,7 +457,7 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                     "number_write_verify_mismatch",
                     {
                         "name": name,
-                        "requested": str(requested),
+                        "requested": str(target),
                         "actual": str(actual_f),
                     },
                 )
@@ -448,6 +468,7 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                 self.register_config,
                 requested,
                 "number",
+                written=target,
             )
 
         except HomeAssistantError:

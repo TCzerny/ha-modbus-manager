@@ -1,4 +1,4 @@
-"""Contract tests for the read-only KOSTAL PLENTICORE G3 template.
+"""Contract tests for the KOSTAL PLENTICORE G3 template.
 
 Raw register words were captured with FC03 from a PLENTICORE G3 M
 (UI/FW 3.07.03.27599, byte order CDAB, BYD HVS, KSEM) on 08.11.2026.
@@ -6,6 +6,7 @@ Raw register words were captured with FC03 from a PLENTICORE G3 M
 
 from __future__ import annotations
 
+import copy
 import importlib.util
 import struct
 import sys
@@ -22,6 +23,7 @@ TEMPLATE_PATH = (
     REPO_ROOT / "custom_components/modbus_manager/device_templates/kostal_plenticore_g3.yaml"
 )
 UTILS_PATH = REPO_ROOT / "custom_components/modbus_manager/modbus_utils.py"
+KEEPALIVE_PATH = REPO_ROOT / "custom_components/modbus_manager/keepalive.py"
 
 # Undocumented ranges the inverter answered with exception 2 (illegal data address).
 REJECTED_RANGES = ((71, 97), (300, 319), (592, 607))
@@ -79,13 +81,66 @@ class KostalPlenticoreG3TemplateTest(unittest.TestCase):
         unique_ids = [sensor["unique_id"] for sensor in self.sensors]
         self.assertEqual(len(unique_ids), len(set(unique_ids)))
 
-    def test_template_is_read_only(self):
-        for key in ("controls", "numbers", "selects", "switches", "buttons"):
+    def test_only_battery_control_is_writable(self):
+        for key in ("numbers", "selects", "switches", "buttons"):
             self.assertNotIn(key, self.template)
         for sensor in self.sensors:
             with self.subTest(sensor=sensor["unique_id"]):
                 self.assertEqual(sensor["input_type"], "holding")
                 self.assertEqual(sensor["read_function_code"], 3)
+        controls = self.template["controls"]
+        self.assertEqual({c["address"] for c in controls}, {1038, 1040, 1042})
+        sensor_ids = {sensor["unique_id"] for sensor in self.sensors}
+        for control in controls:
+            with self.subTest(control=control["unique_id"]):
+                self.assertEqual(control["type"], "number")
+                self.assertEqual(control["write_function_code"], 16)
+                self.assertEqual(control["swap"], "word")  # Float32 CDAB
+                self.assertIs(control["enabled_by_default"], False)
+                self.assertNotIn(control["unique_id"], sensor_ids)
+                self.assertEqual(control["keepalive"]["group"], "battery_control")
+                self.assertEqual(control["keepalive"]["release"], "stop")
+                self.assertEqual(
+                    control["depends_on_register"],
+                    {"register_unique_id": "battery_management_mode", "register_address": 1080, "required_value": 2},
+                )
+
+    def test_battery_control_group_and_guards(self):
+        group = self.template["keepalive_groups"]["battery_control"]
+        # 15 s against the default 30 s web UI timeout; writes in bursts were ignored.
+        self.assertEqual(group["interval"], 15)
+        self.assertGreaterEqual(group["min_write_spacing_ms"], 1000)
+        controls = {c["address"]: c for c in self.template["controls"]}
+        # A minimum SoC above the current SoC disconnects the battery.
+        min_soc = controls[1042]
+        self.assertEqual(min_soc["keepalive"]["clamp_max_to_register"], "battery_soc")
+        self.assertLessEqual(min_soc["keepalive"]["clamp_max_age"], 30)
+        # The input accepts a target above the SoC; the clamp writes at most the SoC.
+        self.assertNotIn("max_value_from_register", min_soc)
+        self.assertEqual(min_soc["max_value"], 100)
+        self.assertIn("battery_soc", {s["unique_id"] for s in self.sensors})
+        # Limits read back the effective value; only a jump up means lost control.
+        for address in (1038, 1040):
+            self.assertEqual(controls[address]["keepalive"]["mismatch_direction"], "above")
+            # One tolerance for the first-write verify (step) and the cyclic check.
+            self.assertEqual(controls[address]["keepalive"]["mismatch_tolerance"], controls[address]["step"])
+
+    def test_keepalive_blocks_pass_validation(self):
+        spec = importlib.util.spec_from_file_location("kostal_test_keepalive_pkg.keepalive", KEEPALIVE_PATH)
+        package = types.ModuleType("kostal_test_keepalive_pkg")
+        package.__path__ = [str(KEEPALIVE_PATH.parent)]
+        sys.modules.setdefault("kostal_test_keepalive_pkg", package)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        spec.loader.exec_module(module)
+        controls = copy.deepcopy(self.template["controls"])
+        groups = module.validate_template_keepalive(
+            self.template["keepalive_groups"], controls, "kostal", {s["unique_id"] for s in self.sensors}
+        )
+        self.assertEqual(set(groups), {"battery_control"})
+        for control in controls:
+            with self.subTest(control=control["unique_id"]):
+                self.assertIn("keepalive", control)  # not dropped as invalid
 
     def test_reads_never_touch_rejected_ranges(self):
         planned = ranges([dict(sensor, slave_id=71) for sensor in self.sensors])

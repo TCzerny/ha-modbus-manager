@@ -1005,5 +1005,196 @@ class ThirdReviewTest(unittest.TestCase):
         run(scenario)
 
 
+class MismatchDirectionTest(unittest.TestCase):
+    def _run(self, direction, readback):
+        async def scenario():
+            coordinator, manager, clock = make_manager()
+            config = number_config(mismatch_direction=direction)
+            ka.store_keepalive_setpoint(coordinator, "k", config, 1000, "number")
+            await settle(manager.async_activate(GID))
+            clock.now += 15
+            coordinator.register_data["k"] = {
+                "processed_value": readback,
+                "timestamp": clock.now,
+            }
+            await manager.async_run_round(GID)
+            return manager.groups[GID].mismatches
+
+        return run(scenario)
+
+    def test_above_ignores_lower_readback(self):
+        # e.g. a power limit above the inverter's own limit reads back capped
+        self.assertEqual(self._run("above", 800), 0)
+
+    def test_above_counts_higher_readback(self):
+        # e.g. fallback: the limit jumps back to the inverter's own value
+        self.assertEqual(self._run("above", 15800), 1)
+
+    def test_below_ignores_higher_readback(self):
+        self.assertEqual(self._run("below", 1200), 0)
+
+    def test_both_counts_either_side(self):
+        self.assertEqual(self._run("both", 800), 1)
+
+    def test_invalid_direction_keeps_control_write_once(self):
+        groups = {"bat": dict(GROUP_CFG)}
+        control = number_config()
+        control["keepalive"] = {"group": "bat", "mismatch_direction": "up"}
+        ka.validate_template_keepalive(groups, [control], "t")
+        self.assertNotIn("keepalive", control)
+
+
+class FirstWriteGuardTest(unittest.TestCase):
+    """Helpers number.py uses for the first (user) write."""
+
+    def _soc_manager(self, soc, age=0.0):
+        coordinator, manager, clock = make_manager()
+        coordinator.register_data["soc_key"] = {
+            "register_config": {"unique_id": "soc"},
+            "processed_value": soc,
+            "timestamp": clock.now - age,
+        }
+        config = number_config()
+        config["keepalive"]["clamp_max_to_register"] = "soc"
+        config["keepalive"]["clamp_max_to_register_source"] = "soc"
+        return coordinator, config
+
+    def test_clamp_for_write_limits_to_source(self):
+        coordinator, config = self._soc_manager(12.0)
+        self.assertEqual(ka.clamp_for_write(coordinator, config, 15.0), (12.0, None))
+        self.assertEqual(ka.clamp_for_write(coordinator, config, 10.0), (10.0, None))
+
+    def test_clamp_for_write_refuses_stale_source(self):
+        coordinator, config = self._soc_manager(12.0, age=120.0)
+        value, reason = ka.clamp_for_write(coordinator, config, 10.0)
+        self.assertIsNone(value)
+        self.assertIn("stale", reason)
+
+    def test_clamp_for_write_without_clamp_is_unchanged(self):
+        coordinator, _ = self._soc_manager(12.0)
+        self.assertEqual(
+            ka.clamp_for_write(coordinator, number_config(), 15.0), (15.0, None)
+        )
+
+    def test_readback_capped_ok_only_for_direction_above(self):
+        above = number_config(mismatch_direction="above")
+        self.assertTrue(ka.readback_capped_ok(above, 29000, 15256))
+        self.assertFalse(ka.readback_capped_ok(above, 2000, 15256))  # fallback jump
+        self.assertFalse(ka.readback_capped_ok(number_config(), 29000, 15256))
+        self.assertFalse(ka.readback_capped_ok({"unique_id": "x"}, 29000, 15256))
+
+
+class ClampAndFirstWriteTest(unittest.TestCase):
+    def _clamped_config(self, coordinator, clock, soc, **keepalive):
+        coordinator.register_data["soc_key"] = {
+            "register_config": {"unique_id": "soc"},
+            "processed_value": soc,
+            "timestamp": clock.now,
+        }
+        config = number_config(**keepalive)
+        config["keepalive"]["clamp_max_to_register"] = "soc"
+        config["keepalive"]["clamp_max_to_register_source"] = "soc"
+        return config
+
+    def test_clamped_first_write_is_not_a_mismatch_next_round(self):
+        async def scenario():
+            coordinator, manager, clock = make_manager()
+            config = self._clamped_config(coordinator, clock, 50.0)
+            # number.py wrote 50 (clamped) for a requested 80
+            ka.store_keepalive_setpoint(
+                coordinator, "k", config, 80, "number", written=50
+            )
+            await settle(manager.async_activate(GID))
+            clock.now += 15
+            coordinator.register_data["soc_key"]["timestamp"] = clock.now
+            coordinator.register_data["k"] = {
+                "processed_value": 50.0,
+                "timestamp": clock.now,
+            }
+            await manager.async_run_round(GID)
+            self.assertEqual(manager.groups[GID].mismatches, 0)
+            self.assertEqual(manager.groups[GID].setpoints["k"].value, 80.0)
+
+        run(scenario)
+
+    def test_cyclic_rounds_follow_soc_and_stop_at_setpoint(self):
+        async def scenario():
+            coordinator, manager, clock = make_manager()
+            config = self._clamped_config(coordinator, clock, 12.0)
+            ka.store_keepalive_setpoint(
+                coordinator, "k", config, 15, "number", written=12
+            )
+            await settle(manager.async_activate(GID))
+            for soc in (12.0, 13.0, 16.0, 11.0):
+                clock.now += 15
+                coordinator.register_data["soc_key"].update(
+                    processed_value=soc, timestamp=clock.now
+                )
+                await manager.async_run_round(GID)
+            values = [round(decode_float_cdab(w[2]), 3) for w in coordinator.writes]
+            # activation round, then SoC 12, 13, 16 (capped by setpoint 15), 11
+            self.assertEqual(values, [12.0, 12.0, 13.0, 15.0, 11.0])
+
+        run(scenario)
+
+    def test_clamped_value_below_min_value_is_refused(self):
+        coordinator, manager, clock = make_manager()
+        config = self._clamped_config(coordinator, clock, 4.0)
+        config["min_value"] = "5"  # strings from YAML are accepted
+        value, reason = manager.clamp_value(config, 15.0)
+        self.assertIsNone(value)
+        self.assertIn("below min_value", reason)
+        no_floor = self._clamped_config(coordinator, clock, -1.0)
+        self.assertIsNone(manager.clamp_value(no_floor, 15.0)[0])  # default floor 0
+
+    def test_nan_source_is_refused(self):
+        coordinator, manager, clock = make_manager()
+        config = self._clamped_config(coordinator, clock, float("nan"))
+        self.assertIn("stale", manager.clamp_value(config, 15.0)[1])
+
+    def test_contradicting_clamps_refused_without_stopping(self):
+        coordinator, manager, clock = make_manager()
+        config = self._clamped_config(coordinator, clock, 10.0)
+        coordinator.register_data["floor_key"] = {
+            "register_config": {"unique_id": "floor"},
+            "processed_value": 20.0,
+            "timestamp": clock.now,
+        }
+        config["keepalive"]["clamp_min_to_register"] = "floor"
+        config["keepalive"]["clamp_min_to_register_source"] = "floor"
+        value, reason = manager.clamp_value(config, 15.0)
+        self.assertIsNone(value)
+        self.assertIn("contradict", reason)
+        self.assertFalse(manager.groups[GID].stop_reason)
+
+    def test_clamp_for_write_without_manager_fails_closed(self):
+        coordinator, _, clock = make_manager()
+        config = self._clamped_config(coordinator, clock, 12.0)
+        del coordinator.keepalive
+        value, _ = ka.clamp_for_write(coordinator, config, 10.0)
+        self.assertIsNone(value)
+
+    def test_readback_capped_ok_edges(self):
+        above = number_config(mismatch_direction="above")
+        self.assertTrue(ka.readback_capped_ok(above, 0, 0))
+        self.assertTrue(ka.readback_capped_ok(above, 0, -0.0))
+        self.assertFalse(ka.readback_capped_ok(above, 0, 5))
+        self.assertFalse(ka.readback_capped_ok(above, "x", 5))
+
+    def test_direction_validation(self):
+        groups = {"bat": dict(GROUP_CFG)}
+        select = {
+            "unique_id": "s",
+            "type": "select",
+            "keepalive": {"group": "bat", "mismatch_direction": "above"},
+        }
+        number = dict(
+            number_config(), keepalive={"group": "bat", "mismatch_direction": "Above"}
+        )
+        ka.validate_template_keepalive(groups, [select, number], "t")
+        self.assertNotIn("keepalive", select)
+        self.assertEqual(number["keepalive"]["mismatch_direction"], "above")
+
+
 if __name__ == "__main__":
     unittest.main()
