@@ -41,6 +41,7 @@ from .device_utils import (
     resolve_device_role_type,
     resolve_entity_id_strategy,
     resolve_firmware_profile_version,
+    template_enabled_by_default,
     via_device_tuple,
 )
 from .generic_device import (
@@ -2339,12 +2340,27 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 keepalive[f"{clamp_key}_source"] = generate_unique_id(
                     prefix, stripped, stripped
                 )
+        floors = dict((keepalive_groups.get(group_id) or {}).get("floors") or {})
+        floor_cfg = keepalive.get("clamp_floor")
+        if isinstance(floor_cfg, dict):
+            # unique_id already carries the device prefix here
+            floor_id = f"{register.get('unique_id')}_floor"
+            keepalive["clamp_floor_id"] = floor_id
+            floors[floor_id] = {
+                **floor_cfg,
+                "name": floor_cfg.get("name")
+                or f"{register.get('name', 'Control')} floor",
+                "unit": register.get("unit_of_measurement"),
+                # a floor without its control is meaningless; follow its default
+                "enabled_default": template_enabled_by_default(register),
+            }
         register[KEEPALIVE_KEY] = keepalive
         keepalive_groups[group_id] = {
             **group_cfg,
             "prefix": prefix,
             "device_info": device_info,
             "config_subentry_id": config_subentry_id,
+            "floors": floors,
         }
 
     def _create_register_key(self, register: Dict[str, Any]) -> str:

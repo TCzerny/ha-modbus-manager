@@ -216,6 +216,10 @@ async def _cleanup_stale_registry_entities(
         keepalive = getattr(coordinator, "keepalive", None)
         for group_id in getattr(keepalive, "groups", None) or {}:
             normalized_expected.update({group_id.lower(), f"{group_id}_status".lower()})
+            # and neither have the floor numbers of clamped controls
+            normalized_expected.update(
+                floor_id.lower() for floor_id in keepalive.groups[group_id].floors
+            )
 
         def _matches_expected(registry_unique_id: str) -> bool:
             normalized_registry = str(registry_unique_id).strip().lower()

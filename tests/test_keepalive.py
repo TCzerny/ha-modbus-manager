@@ -1196,5 +1196,184 @@ class ClampAndFirstWriteTest(unittest.TestCase):
         self.assertEqual(number["keepalive"]["mismatch_direction"], "above")
 
 
+class ClampFloorTest(unittest.TestCase):
+    FLOOR_ID = "t_limit_floor"
+
+    def _setup(self, soc, floor=None):
+        coordinator, manager, clock = make_manager()
+        manager.register_groups(
+            {
+                GID: {
+                    **GROUP_CFG,
+                    "floors": {
+                        self.FLOOR_ID: {
+                            "name": "Floor",
+                            "min": 0.0,
+                            "max": 100.0,
+                            "step": 1.0,
+                            "default": 0.0,
+                            "unit": "%",
+                        }
+                    },
+                }
+            }
+        )
+        coordinator.register_data["soc_key"] = {
+            "register_config": {"unique_id": "soc"},
+            "processed_value": soc,
+            "timestamp": clock.now,
+        }
+        config = number_config(
+            clamp_max_to_register="soc",
+            clamp_max_to_register_source="soc",
+            clamp_floor_id=self.FLOOR_ID,
+        )
+        config["min_value"] = 5
+        if floor is not None:
+            manager.set_floor(self.FLOOR_ID, floor)
+        return coordinator, manager, clock, config
+
+    def test_floor_off_by_default(self):
+        _, manager, _, config = self._setup(11.0)
+        self.assertEqual(manager.floor_value(self.FLOOR_ID), 0.0)
+        self.assertEqual(manager.clamp_value(config, 15.0), (11.0, None))
+
+    def test_floor_holds_value_above_soc(self):
+        _, manager, _, config = self._setup(11.0, floor=12)
+        self.assertEqual(manager.clamp_value(config, 15.0), (12.0, None))
+
+    def test_soc_between_floor_and_setpoint_is_followed(self):
+        _, manager, _, config = self._setup(13.0, floor=12)
+        self.assertEqual(manager.clamp_value(config, 15.0), (13.0, None))
+
+    def test_setpoint_caps_soc_and_floor(self):
+        _, manager, _, config = self._setup(40.0, floor=12)
+        self.assertEqual(manager.clamp_value(config, 15.0), (15.0, None))
+        # a floor above the setpoint never lifts the value above the setpoint
+        _, manager, _, config = self._setup(6.0, floor=12)
+        self.assertEqual(manager.clamp_value(config, 8.0), (8.0, None))
+
+    def test_stale_source_still_refused_with_floor(self):
+        _, manager, clock, config = self._setup(11.0, floor=12)
+        clock.now += 1000
+        value, reason = manager.clamp_value(config, 15.0)
+        self.assertIsNone(value)
+        self.assertIn("stale", reason)
+
+    def test_floor_below_min_value_does_not_bypass_refusal(self):
+        _, manager, _, config = self._setup(3.0, floor=4)
+        value, reason = manager.clamp_value(config, 15.0)
+        self.assertIsNone(value)
+        self.assertIn("below min_value", reason)
+
+    def test_floor_at_min_value_holds_instead_of_refusing(self):
+        # KOSTAL default: floor 5 = min_value; below 5 % SoC the 5 % is held
+        _, manager, _, config = self._setup(3.0, floor=5)
+        self.assertEqual(manager.clamp_value(config, 15.0), (5.0, None))
+
+    def test_first_write_uses_floor(self):
+        coordinator, _, _, config = self._setup(11.0, floor=12)
+        self.assertEqual(ka.clamp_for_write(coordinator, config, 15.0), (12.0, None))
+
+    def test_cyclic_rounds_hold_floor(self):
+        async def scenario():
+            coordinator, manager, clock, config = self._setup(14.0, floor=12)
+            ka.store_keepalive_setpoint(
+                coordinator, "k", config, 15, "number", written=14
+            )
+            await settle(manager.async_activate(GID))
+            for soc in (13.0, 12.0, 11.0, 10.0):
+                clock.now += 15
+                coordinator.register_data["soc_key"].update(
+                    processed_value=soc, timestamp=clock.now
+                )
+                await manager.async_run_round(GID)
+            values = [round(decode_float_cdab(w[2]), 3) for w in coordinator.writes]
+            self.assertEqual(values, [14.0, 13.0, 12.0, 12.0, 12.0])
+
+        run(scenario)
+
+    def test_set_floor_limits_range_and_survives_reregister(self):
+        _, manager, _, _ = self._setup(50.0)
+        self.assertEqual(manager.set_floor(self.FLOOR_ID, 250), 100.0)
+        self.assertEqual(manager.set_floor(self.FLOOR_ID, 12.6), 13.0)  # step 1
+        self.assertEqual(manager.set_floor(self.FLOOR_ID, 13), 13.0)
+        self.assertIsNone(manager.set_floor(self.FLOOR_ID, "x"))
+        self.assertIsNone(manager.set_floor("unknown", 5))
+        manager.register_groups(
+            {
+                GID: {
+                    **GROUP_CFG,
+                    "floors": {
+                        self.FLOOR_ID: {
+                            "min": 0,
+                            "max": 100,
+                            "step": 1,
+                            "default": 0,
+                        }
+                    },
+                }
+            }
+        )
+        self.assertEqual(manager.floor_value(self.FLOOR_ID), 13.0)
+        self.assertEqual(manager.status(GID)["floors"], {self.FLOOR_ID: 13.0})
+        self.assertTrue(manager.groups[GID].floors[self.FLOOR_ID].enabled_default)
+        manager.register_groups({GID: dict(GROUP_CFG)})
+        self.assertEqual(manager.floor_value(self.FLOOR_ID), 0.0)
+
+    def test_floor_validation(self):
+        groups = {"bat": dict(GROUP_CFG)}
+        good = {"default": 0, "min": 0, "max": 100, "step": 1, "name": "F"}
+        ok = dict(
+            number_config(uid="ok"),
+            keepalive={
+                "group": "bat",
+                "clamp_max_to_register": "soc",
+                "clamp_floor": good,
+            },
+        )
+        no_clamp = dict(
+            number_config(uid="no_clamp"),
+            keepalive={"group": "bat", "clamp_floor": good},
+        )
+        bad_range = dict(
+            number_config(uid="bad_range"),
+            keepalive={
+                "group": "bat",
+                "clamp_max_to_register": "soc",
+                "clamp_floor": {**good, "default": 120},
+            },
+        )
+        scalar = dict(
+            number_config(uid="scalar"),
+            keepalive={
+                "group": "bat",
+                "clamp_max_to_register": "soc",
+                "clamp_floor": 12,
+            },
+        )
+        clash = dict(
+            number_config(uid="clash"),
+            keepalive={
+                "group": "bat",
+                "clamp_max_to_register": "soc",
+                "clamp_floor": good,
+            },
+        )
+        ka.validate_template_keepalive(
+            groups,
+            [ok, no_clamp, bad_range, scalar, clash],
+            "t",
+            other_unique_ids={"clash_floor"},
+        )
+        self.assertEqual(
+            ok["keepalive"]["clamp_floor"],
+            {"name": "F", "min": 0.0, "max": 100.0, "step": 1.0, "default": 0.0},
+        )
+        for control in (no_clamp, bad_range, scalar):
+            self.assertNotIn("keepalive", control)
+        self.assertNotIn("clamp_floor", clash["keepalive"])
+
+
 if __name__ == "__main__":
     unittest.main()

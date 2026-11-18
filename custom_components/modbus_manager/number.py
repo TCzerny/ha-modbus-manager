@@ -580,5 +580,9 @@ async def async_setup_entry(
             else:
                 async_add_entities(entities)
 
+        from .keepalive_entities import add_keepalive_entities
+
+        add_keepalive_entities(coordinator, async_add_entities, "number")
+
     except Exception as e:
         _LOGGER.error("Error setting up coordinator numbers: %s", str(e))
