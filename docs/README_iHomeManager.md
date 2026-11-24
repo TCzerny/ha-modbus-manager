@@ -1,45 +1,63 @@
-## Sungrow iHomeManager Template
+# Sungrow iHomeManager
 
 > **General documentation (Wiki):** [User Guide](https://github.com/TCzerny/ha-modbus-manager/wiki/User-Guide) · [Template reference](https://github.com/TCzerny/ha-modbus-manager/wiki/Template-Reference) · [Capabilities and limits](https://github.com/TCzerny/ha-modbus-manager/wiki/Capabilities-and-Limits) · [Local customization](https://github.com/TCzerny/ha-modbus-manager/wiki/Local-Customization)
 
-This document lists the Modbus registers for the standalone iHomeManager EMS
-template: `sungrow_ihomemanager.yaml`.
-
-### Template Overview
+## Template Overview
 
 - **Name**: Sungrow iHomeManager
-- **Type**: `energy_manager`
-- **Default prefix**: `IHM`
-- **Default slave ID**: `247`
-- **Firmware**: `iHomeManager`
+- **Manufacturer**: Sungrow
+- **Model**: iHomeManager
+- **Type**: energy_manager
+- **Default prefix**: IHM
+- **Default slave ID**: 247
+- **Firmware**: iHomeManager
 - **Template version**: 1.0.17
+- **Description**: Template for Sungrow iHomeManager EMS device (Modbus TCP). Includes iHomeManager meter, EMS, and charger registers.
 
-### Dynamic Configuration
+## Dynamic Configuration
 
-- `battery_config` (`none` / `battery`): Enables battery-related registers (same pattern as inverter templates).
-- `channel_2_enabled` (true/false): Enables PROD.CT channel 2 registers.
-- `charger_enabled` (true/false): Enables EV charger registers on the **iHM**. With iHM, this is the supported MM path (not the AC011E `21xxx` template). Wiring: [Sungrow AC wallbox connection topologies](README_sungrow_wallbox_connection.md).
-- `charger_region` (`EU` / `AU`): EV charger mode map (EU modes 160–163, AU modes 164–167). Default: `EU`.
-- `protocol_version` (`1.0.0` / `1.0.1` / `1.0.2`, default `1.0.2`): iHomeManager **Modbus protocol map** (not app firmware). Match `protocol_version` / `protocol_version_raw` on the device.
-  - **V1.0.1+**: meter channel 2, application software version, active power limit (8051–8052); feed-in **ratio** (8031) as **S32**; undocumented feed-in **value** (8029–8030 U32)
-  - **V1.0.2+**: feed-in limitation **enable** (8028); ratio (8031) **S16** (changelog S32→S16)
-- Feed-in **value** uses `depends_on` enable **8028 = On** when the enable entity exists (V1.0.2). On V1.0.1 enable is not created, so the value stays visible. Ratio is not gated on enable. Active power limit ratio still requires Active Power Limitation **On**.
+| Option | Description | Choices | Default |
+| --- | --- | --- | --- |
+| battery_config | Battery configuration | none (No battery), battery (Battery connected) | none |
+| channel_2_enabled | Enable PROD.CT channel 2 registers | true, false | false |
+| charger_enabled | Enable charger-related registers | true, false | false |
+| charger_phases | EV charger phase count (hides phase B/C power sensors when single-phase) | 1, 3 | 3 |
+| charger_region | EV charger regional mode map (EU/DE vs Australia) | EU (Europe (modes 160-163)), AU (Australia (modes 164-167)) | EU |
+| protocol_version | iHomeManager Modbus protocol map (not app firmware). Match the device protocol version sensor. | 1.0.0 (V1.0.0 — initial map), 1.0.1 (V1.0.1 — meter channel 2, app software version, active power limit; feed-in ratio S32), 1.0.2 (V1.0.2 — feed-in limitation enable (8028); feed-in ratio is S16) | 1.0.2 |
 
-Config-flow labels are translated in `en.json` / `de.json` under `config.step.dynamic_config.data`.
+<!-- mm-info:sungrow_ihomemanager.yaml start -->
+`charger_enabled` is the supported path for the EV charger on iHomeManager. Do not add the AC011E `21xxx` template while iHomeManager holds charger TLS `:516`. Wiring: [Sungrow AC wallbox connection topologies](README_sungrow_wallbox_connection.md).
 
-### Combined Device with a Sungrow inverter
+`protocol_version` is the iHomeManager Modbus protocol map, not app firmware. Match `protocol_version` / `protocol_version_raw` on the device.
 
-From **integration 1.0.11**, you can add a **[Cross-hub Combined Device](README_Combined_Device.md)** that links an inverter hub and an iHomeManager hub. It provides:
+- **V1.0.1+**: meter channel 2, application software version, active power limit (registers 8051–8052); feed-in **ratio** (8031) as **S32**; undocumented feed-in **value** (8029–8030 U32).
+- **V1.0.2+**: feed-in limitation **enable** (8028); ratio (8031) **S16**.
 
-- iHM grid sensors (`grid_import_energy`, `grid_export_energy`, import/export power) at the **GRID.CT**
-- **`combined_daily_consumed_energy`** / **`combined_total_consumed_energy`** using WR PV/battery and iHM grid data (see [#50](https://github.com/TCzerny/ha-modbus-manager/issues/50))
+Feed-in **value** uses `depends_on` enable **8028 = On** when the enable entity exists (V1.0.2). On V1.0.1 the enable entity is not created, so the value stays visible. The ratio is not gated on enable. Active power limit ratio still requires Active Power Limitation **On**.
 
-Single-template **`daily_consumed_energy`** on the inverter alone does **not** include iHM grid data.
+Feed-in Power Limitation, Charger Enable, and Active Power Limitation use `0x55` Off and `0xAA` On. EMS mode values: `0` AI Mode, `1` Self-consumption, `2` Time plan, `4` VPP, `5` Compulsory mode.
 
-### Sensor Registers
+Charger mode values: EU `160`–`163`, AU `164`–`167` (protocol address 8047). Protocol V1.0.2 only lists Fast/ECO (`160`/`161`); extra modes come from field maps. **Grid power draw** (protocol address 8049) is writable only in Eco.
+
+Config-flow labels are translated under `config.step.dynamic_config.data`.
+
+### EV charger on iHM vs wallbox `21xxx`
+
+Poll **this** template (slave **247**, iHomeManager IP, port **502** or **503**, SSL off). The iHomeManager protocol documents charger **status 8552**, **modes 8048**, **enable 8049**, and **grid draw 8050**. Live power **8594–8601** is not in the PDF; it is in the template ([#86](https://github.com/TCzerny/ha-modbus-manager/issues/86)).
+
+Not on iHomeManager (charger `21xxx` only, and not used while iHomeManager holds TLS `:516`): setpoint current, phase-count write, remote start/stop, session and lifetime energy, per-phase voltage and current. A scan of 8574–8773 during charging found **no energy counter**. Use a Riemann sum or `utility_meter` on `charger_active_power` for kWh, or keep the Sungrow EMS as the source of truth.
+
+GRID.CT **8554–8564** is the iHomeManager meter, not the wallbox. Forum maps that put charger load on **8553** / **8558–8562** are the meter and output-type block. Live charger watts are **8593–8599** ([photovoltaikforum 248099](https://www.photovoltaikforum.com/thread/248099-ihomemanager-modbus-register/?pageNo=10), [#86](https://github.com/TCzerny/ha-modbus-manager/issues/86)).
+<!-- mm-info:sungrow_ihomemanager.yaml end -->
+
+## Registers
+
+Address is the protocol address stored in the template.
+
+### Sensors
 
 | Name | Unique ID | Address | Input | Data | Unit | Scale | Condition |
-|---|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- | --- |
 | Device Type Code | device_type_code | 7999 | input | uint16 |  |  |  |
 | Protocol Number | protocol_number | 8000 | input | string |  |  |  |
 | Protocol Version Raw | protocol_version_raw | 8002 | input | uint32 |  |  |  |
@@ -61,11 +79,11 @@ Single-template **`daily_consumed_energy`** on the inverter alone does **not** i
 | Grid Export Energy | grid_export_energy | 8177 | input | uint32 | kWh | 0.1 |  |
 | Application Software Version | application_software_version | 8317 | input | string |  |  |  |
 | Charger Status Raw | charger_status_raw | 8551 | input | uint16 |  |  | charger_enabled == true |
-| Charger Active Power | charger_active_power | 8593 | input | int32 | W |  | charger_enabled == true; undocumented ([#86](https://github.com/TCzerny/ha-modbus-manager/issues/86)) |
+| Charger Active Power | charger_active_power | 8593 | input | int32 | W |  | charger_enabled == true |
 | Charger Phase A Active Power | charger_phase_a_active_power | 8595 | input | int32 | W |  | charger_enabled == true |
 | Charger Phase B Active Power | charger_phase_b_active_power | 8597 | input | int32 | W |  | charger_enabled == true and charger_phases == 3 |
 | Charger Phase C Active Power | charger_phase_c_active_power | 8599 | input | int32 | W |  | charger_enabled == true and charger_phases == 3 |
-| Output Type Raw | output_type_raw | 8553 | input | uint16 |  |  | enum 0=Single, 1=3P4L, 2=3P3L |
+| Output Type Raw | output_type_raw | 8553 | input | uint16 |  |  |  |
 | Phase A Voltage | phase_a_voltage | 8554 | input | uint16 | V | 0.1 |  |
 | Phase B Voltage | phase_b_voltage | 8555 | input | uint16 | V | 0.1 |  |
 | Phase C Voltage | phase_c_voltage | 8556 | input | uint16 | V | 0.1 |  |
@@ -81,58 +99,57 @@ Single-template **`daily_consumed_energy`** on the inverter alone does **not** i
 | Phase B Active Power Ch2 | phase_b_active_power_ch2 | 8570 | input | int32 | W |  | channel_2_enabled == true |
 | Phase C Active Power Ch2 | phase_c_active_power_ch2 | 8572 | input | int32 | W |  | channel_2_enabled == true |
 
-### Control Registers
+### Controls
 
-| Name | Unique ID | Address | Input | Data | Unit | Scale | Condition |
-|---|---|---|---|---|---|---|---|
-| EMS Mode Selection | ems_mode_selection | 8023 | holding | uint16 |  |  |  |
-| Charging/Discharging Command | charging_discharging_command | 8024 | holding | uint16 |  |  | battery_enabled == true |
-| Charging/Discharging Power | charging_discharging_power | 8025 | holding | uint32 | kW | 0.1 | battery_enabled == true; `swap: word` |
-| Feed-in Power Limitation | feed_in_power_limitation | 8027 | holding | uint16 |  |  |  |
-| Feed-in Power Limit Value | feed_in_power_limit_value | 8028 | holding | uint32 | kW | 0.1 |  |
-| Feed-in Power Limit Ratio | feed_in_power_limit_ratio | 8030 | holding | int16 | % | 0.1 |  |
-| Power-on/off | power_on_off | 8046 | holding | uint16 |  |  |  |
-| Charger Charging Modes (EU) | charger_charging_modes | 8047 | holding | uint16 |  |  | charger_enabled == true and charger_region == 'EU' |
-| Charger Charging Modes (AU) | charger_charging_modes_au | 8047 | holding | uint16 |  |  | charger_enabled == true and charger_region == 'AU' |
-| Charger Enable | charger_enable | 8048 | holding | uint16 |  |  | charger_enabled == true |
-| Charger Grid Power Draw | charger_grid_power_draw | 8049 | holding | uint16 |  |  | charger_enabled == true; Eco mode (`depends_on_register` 8047 = 161 / 165 / 166) |
-| Active Power Limitation | active_power_limitation | 8050 | holding | uint16 |  |  |  |
-| Active Power Limit Ratio | active_power_limit_ratio | 8051 | holding | uint16 | % | 0.1 |  |
+| Name | Unique ID | Type | Address | Input | Data | Unit | Scale | Condition |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| EMS Mode Selection | ems_mode_selection | select | 8023 | holding | uint16 |  |  |  |
+| Charging/Discharging Command | charging_discharging_command | select | 8024 | holding | uint16 |  |  | battery_enabled == true |
+| Charging/Discharging Power | charging_discharging_power | number | 8025 | holding | uint32 | kW | 0.1 | battery_enabled == true |
+| Feed-in Power Limitation | feed_in_power_limitation | select | 8027 | holding | uint16 |  |  |  |
+| Feed-in Power Limit Value | feed_in_power_limit_value | number | 8028 | holding | uint32 | kW | 0.1 |  |
+| Feed-in Power Limit Ratio | feed_in_power_limit_ratio | number | 8030 | holding | int16 | % | 0.1 |  |
+| Power-on/off | power_on_off | select | 8046 | holding | uint16 |  |  |  |
+| Charger Charging Modes | charger_charging_modes | select | 8047 | holding | uint16 |  |  | charger_enabled == true and charger_region == 'EU' |
+| Charger Charging Modes | charger_charging_modes_au | select | 8047 | holding | uint16 |  |  | charger_enabled == true and charger_region == 'AU' |
+| Charger Enable | charger_enable | switch | 8048 | holding | uint16 |  |  | charger_enabled == true |
+| Charger Grid Power Draw | charger_grid_power_draw | select | 8049 | holding | uint16 |  |  | charger_enabled == true |
+| Active Power Limitation | active_power_limitation | switch | 8050 | holding | uint16 |  |  |  |
+| Active Power Limit Ratio | active_power_limit_ratio | number | 8051 | holding | uint16 | % | 0.1 |  |
 
-EMS mode values: `0` AI Mode, `1` Self-consumption, `2` Time plan, `4` VPP, `5` Compulsory mode.
+### Calculated sensors
 
-Charger mode values: EU `160`–`163`, AU `164`–`167` (same register 8047). Protocol V1.0.2 only lists Fast/ECO (`160`/`161`); extra modes come from field maps. **Grid power draw** (8049) is writable only in Eco (`depends_on_register`).
+| Name | Unique ID | Type | Unit | Condition |
+| --- | --- | --- | --- | --- |
+| Protocol Version | protocol_version | sensor |  |  |
+| Net Grid Power | net_grid_power | sensor | W |  |
+| Import Power | import_power | sensor | W |  |
+| Export Power | export_power | sensor | W |  |
+| Total Phase Power | total_phase_power | sensor | W |  |
+| Phase A Power | phase_a_power | sensor | W |  |
+| Phase B Power | phase_b_power | sensor | W |  |
+| Phase C Power | phase_c_power | sensor | W |  |
+| Total Phase Power Ch2 | total_phase_power_ch2 | sensor | W | channel_2_enabled == true |
+| Charger Total Phase Power | charger_total_phase_power | sensor | W | charger_enabled == true and charger_phases == 3 |
 
-### EV charger on iHM vs wallbox `21xxx`
+## Additional information
 
-With iHomeManager, poll **this** template (slave **247**, iHM IP, port **502** or **503**, SSL off). The iHM Modbus protocol documents charger **status 8552**, **modes 8048**, **enable 8049**, **grid draw 8050**. Live power **8594–8601** is not in the PDF; it is in the template ([#86](https://github.com/TCzerny/ha-modbus-manager/issues/86)).
+<!-- mm-kept start -->
+### Combined Device with a Sungrow inverter
 
-Not on iHM (charger `21xxx` only, not planned in MM while iHM holds TLS `:516`): setpoint current, phase count write, remote start/stop, session/lifetime energy, per-phase V/I. A scan of 8574–8773 during charging found **no energy counter**. Use Riemann / `utility_meter` on `charger_active_power` for kWh, or keep Sungrow EMS as source of truth.
+A [Cross-hub Combined Device](README_Combined_Device.md) can link an inverter hub and an iHomeManager hub. It provides:
 
-GRID.CT **8554–8564** is the iHM meter, not the wallbox. Forum maps that put charger “load” on **8553** / **8558–8562** are the meter/output-type block; live charger watts are **8593–8599** ([photovoltaikforum 248099](https://www.photovoltaikforum.com/thread/248099-ihomemanager-modbus-register/?pageNo=10), [#86](https://github.com/TCzerny/ha-modbus-manager/issues/86)).
+- iHomeManager grid sensors (`grid_import_energy`, `grid_export_energy`, import and export power) at the **GRID.CT**
+- **`combined_daily_consumed_energy`** / **`combined_total_consumed_energy`** from inverter PV and battery plus iHomeManager grid data ([#50](https://github.com/TCzerny/ha-modbus-manager/issues/50))
 
-Register **8032** (External VPP Heartbeat) is documented in the protocol but **not** exposed in the template yet.
-
-### Calculated Sensors
-
-| Name | Unique ID | Condition |
-|---|---|---|
-| Protocol Version | protocol_version |  |
-| Net Grid Power | net_grid_power |  |
-| Import Power | import_power |  |
-| Export Power | export_power |  |
-| Total Phase Power | total_phase_power |  |
-| Phase A Power | phase_a_power |  |
-| Phase B Power | phase_b_power |  |
-| Phase C Power | phase_c_power |  |
-| Total Phase Power Ch2 | total_phase_power_ch2 | channel_2_enabled == true |
-| Charger Total Phase Power | charger_total_phase_power | charger_enabled == true and charger_phases == 3 |
-
-Grid import/export power is derived from `meter_active_power_raw` (positive = import, negative = export).
+`daily_consumed_energy` on the inverter template alone does not include iHomeManager grid data.
 
 ### Notes
 
-- Addresses are the base register offsets used by the integration (Modbus address = register number − 1).
-- Conditions reflect template logic and are evaluated from dynamic config.
-- **Feed-in** controls (8027–8030) limit export to the grid.
-- **Active power** controls (8050–8051) limit inverter AC output — not the same as feed-in limitation.
+- The Address column is the protocol address stored in the template. The Sungrow document register number is that address plus 1.
+- Output Type (protocol address 8553) is an enum: `0` Single, `1` 3P4L, `2` 3P3L. It is not a voltage.
+- **Feed-in** controls (protocol addresses 8027–8030) limit export to the grid.
+- **Active power** controls (protocol addresses 8050–8051) limit inverter AC output. That is not feed-in limitation.
+- Register **8032** (External VPP Heartbeat) is in the protocol and is not in this template.
+- Grid import and export power are calculated from `meter_active_power_raw` (positive = import, negative = export).
+<!-- mm-kept end -->
