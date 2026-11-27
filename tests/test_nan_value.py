@@ -95,6 +95,28 @@ class NanValueTests(unittest.TestCase):
         self.assertEqual(set(found), NAN_REGISTERS)
         self.assertTrue(all(value == 2147483647 for value in found.values()))
 
+    def test_shx_battery_start_power_uses_uint16_sentinel(self) -> None:
+        data = yaml.safe_load(SHX.read_text(encoding="utf-8"))
+        found = {
+            row["unique_id"]: row.get("nan_value")
+            for row in data["controls"]
+            if isinstance(row, dict)
+            and row.get("unique_id")
+            in {
+                "battery_charging_start_power",
+                "battery_discharging_start_power",
+            }
+        }
+        self.assertEqual(
+            found,
+            {
+                "battery_charging_start_power": 65535,
+                "battery_discharging_start_power": 65535,
+            },
+        )
+        self.assertTrue(matches_nan_value(65535, 0xFFFF))
+        self.assertFalse(matches_nan_value(530, 0xFFFF))
+
     def test_shx_calculated_sensors_do_not_treat_unknown_as_zero(self) -> None:
         text = SHX.read_text(encoding="utf-8")
         for uid in NAN_REGISTERS:

@@ -544,6 +544,7 @@ This section contains all entities that will be created by this template, includ
 - **Import Power Limit** (address 32997, Sungrow reg 32998) is an undocumented U16 in 0.01 kW, range 0.01–50.00. iSolarCloud calls the same setting "Site import power limit". Exposed on **RS, RT, and T** only (not MG*RL or SH*RL). Import limiting was verified on SH10RS; a readback on SH10RT-V112 does not by itself prove the inverter honors the cap during forced charge.
 - `Load power` (13007), `Export power raw` (13009), `Daily/Total import` (13035/13036), and `Daily/Total export` (13044/13045) are no longer meter-type-filtered
 - Battery control/diagnostic entities around 13050/13051, 33046/33047, and 33148/33149 are available when `battery_enabled == true` (independent of `meter_type`)
+- **Battery Charging/Discharging Start Power** (addresses 33148 and 33149, registers 33149 and 33150): raw `0xFFFF` is `nan_value`. The number is unavailable instead of 655350 W. Seen when iHomeManager owns battery control ([#153](https://github.com/TCzerny/ha-modbus-manager/issues/153)). Template v1.2.33.
 - **iHomeManager is a separate template** (`sungrow_ihomemanager.yaml`) — do not use meter_type "iHomeManager" with this template
 - **Wallbox `33540–33549`:** only when `wallbox_connected == yes` (RS485 to inverter). Frozen / unused if iHomeManager is the EMS — use `charger_enabled` on the iHM hub instead ([wallbox topologies](README_sungrow_wallbox_connection.md))
 
@@ -571,8 +572,8 @@ This section contains all entities that will be created by this template, includ
 | 32997 | Import Power Limit | import_power_limit |
 | 33046 | Battery Max Charging Power | battery_max_charging_power | kW (scale 0.01; was W in many mkaiser setups |
 | 33047 | Battery Max Discharging Power | battery_max_discharging_power | kW (scale 0.01; mkaiser used `battery_max_discharge_power` in W) |
-| 33148 | Battery Charging Start Power | battery_charging_start_power |
-| 33149 | Battery Discharging Start Power | battery_discharging_start_power |
+| 33148 | Battery Charging Start Power | battery_charging_start_power | W (scale 10). Raw `0xFFFF` is unavailable |
+| 33149 | Battery Discharging Start Power | battery_discharging_start_power | W (scale 10). Raw `0xFFFF` is unavailable |
 | 13017 | PV Power Limitation (SHT only) | pv_power_limitation |
 | 4999 | System clock: Year *(commented out)* | system_clock_year |
 | 5000 | System clock: Month *(commented out)* | system_clock_month |

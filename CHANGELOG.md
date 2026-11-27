@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🐛 Fixed
 
 - **Sungrow SHx — PV generation hours today ([#154](https://github.com/TCzerny/ha-modbus-manager/issues/154))**: `pv_generation_hours_today` is 0.0 while DC power is below 50 W, so 1–6 W at dusk no longer turns the daily yield into thousands of hours. Above that floor the value is still daily kWh divided by live DC kW. `unique_id` stays. Template v1.2.32.
+- **Sungrow SHx — battery start power sentinel ([#153](https://github.com/TCzerny/ha-modbus-manager/issues/153))**: Battery charging start power (address 33148, register 33149) and battery discharging start power (address 33149, register 33150) set `nan_value: 0xFFFF`. Raw 65535 becomes unavailable before the scale of 10, instead of 655350 W. `unique_id` stays. Template v1.2.33.
 
 ## [1.3.15] - 2026-11-18
 

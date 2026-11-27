@@ -6,7 +6,7 @@ display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters: RS, RT, T, MG*RL, SH*RL. SH50–125CX not included yet."
 manufacturer: "Sungrow"
 model: "SH Series"
-version: 1.2.32
+version: 1.2.33
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -55,6 +55,7 @@ firmware_version: "03011.95.01"
 # V1.2.30: nan_value 0x7FFFFFFF on load, export, and meter power raw. Decoded match is unknown.
 # V1.2.31: Appendix 4 inverter fault words (13049–13063) are diagnostic and off by default.
 # V1.2.32: pv_generation_hours_today is 0.0 below 0.05 kW (50 W) DC.
+# V1.2.33: battery start power (33148/33149) nan_value 0xFFFF is unavailable.
 
 # Dynamic configuration support
 dynamic_config:
@@ -3577,9 +3578,10 @@ controls:
     name: "Battery Charging Start Power"
     unique_id: "battery_charging_start_power"
     translation_key: "shx_battery_charging_start_power"
-    address: 33148
+    address: 33148 # reg 33149
     input_type: "holding"
     data_type: "uint16"
+    nan_value: 0xFFFF
     precision: 0
     unit_of_measurement: "W"
     min_value: 0
@@ -3594,14 +3596,16 @@ controls:
     # Placeholder will be replaced with 50% of model-specific max_charge_power
     # For SH10RT: 10600 * 0.5 = 5300 W
     # Confirmed non-functional on SH6.0RS and SH10RS
+    # Raw 0xFFFF is invalid/disabled (would scale to 655350 W). nan_value makes the number unavailable.
 
   - type: "number"
     name: "Battery Discharging Start Power"
     unique_id: "battery_discharging_start_power"
     translation_key: "shx_battery_discharging_start_power"
-    address: 33149
+    address: 33149 # reg 33150
     input_type: "holding"
     data_type: "uint16"
+    nan_value: 0xFFFF
     precision: 0
     unit_of_measurement: "W"
     min_value: 0
@@ -3616,6 +3620,7 @@ controls:
     # Placeholder will be replaced with 50% of model-specific max_discharge_power
     # For SH10RT: 10600 * 0.5 = 5300 W
     # Confirmed non-functional on SH6.0RS and SH10RS
+    # Raw 0xFFFF is invalid/disabled (would scale to 655350 W). nan_value makes the number unavailable.
 
   - type: "select"
     name: "Forced Startup Under Low SoC Standby"
