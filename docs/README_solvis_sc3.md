@@ -124,7 +124,7 @@ This document lists the Modbus registers for the Solvis SC2/SC3 template: `solvi
 
 | Name | Unique ID | Address | Input | Data | Unit | Scale | Condition |
 |---|---|---|---|---|---|---|---|
-| Solarthermie Leistung | solarthermie_leistung |  |  |  | kW |  |  |
+| Solarthermie Leistung (berechnet) | solarthermie_leistung |  |  |  | kW |  |  |
 | Solarkollektor Delta T | solarkollektor_delta_t |  |  |  | °C |  |  |
 | Heizkreis 1 Delta T | heizkreis_1_delta_t |  |  |  | °C |  |  |
 | Heizkreis 2 Delta T | heizkreis_2_delta_t |  |  |  | °C |  |  |
