@@ -141,7 +141,7 @@ EVENT_MODBUS_MANAGER_REGISTER_UPDATED = "modbus_manager_register_updated"
 EVENT_MODBUS_MANAGER_DEVICE_UPDATED = "modbus_manager_device_updated"
 EVENT_MODBUS_MANAGER_ERROR = "modbus_manager_error"
 
-# Platforms used by this integration
+# Platforms used by a hub entry.
 PLATFORMS = [
     Platform.SENSOR,
     Platform.NUMBER,
@@ -150,6 +150,12 @@ PLATFORMS = [
     Platform.BINARY_SENSOR,
     Platform.BUTTON,
     Platform.TEXT,
+]
+
+# A combined entry only aggregates sensors. Controls stay on the source hubs.
+COMBINED_PLATFORMS = [
+    Platform.SENSOR,
+    Platform.BINARY_SENSOR,
 ]
 
 

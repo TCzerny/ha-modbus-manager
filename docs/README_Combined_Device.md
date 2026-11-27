@@ -54,6 +54,7 @@ combined_prefix: "<unique_prefix>"
 
 - **No Modbus connection** is opened for the combined entry.
 - Source hub entries remain unchanged; combined entities live on a separate HA device.
+- The combined entry loads **sensor** and **binary_sensor** only. Number, select, switch, button, and text stay on the source hubs ([#155](https://github.com/TCzerny/ha-modbus-manager/issues/155)).
 
 ---
 

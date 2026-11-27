@@ -17,6 +17,7 @@ from homeassistant.helpers import entity_registry as er
 
 from .combined_coordinator import CombinedDeviceCoordinator
 from .const import (
+    COMBINED_PLATFORMS,
     CONF_ENTRY_TYPE,
     DEFAULT_PORT,
     DEFAULT_SLAVE,
@@ -522,7 +523,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     )
 
             initial_refresh_task.add_done_callback(_log_combined_initial_refresh)
-            await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+            await hass.config_entries.async_forward_entry_setups(
+                entry, COMBINED_PLATFORMS
+            )
             _LOGGER.info(
                 "Set up combined device placeholder for %s",
                 entry.data.get("combined_prefix", entry.entry_id),
@@ -601,6 +604,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     try:
         entry_type = entry.data.get(CONF_ENTRY_TYPE, ENTRY_TYPE_HUB)
         if entry_type == ENTRY_TYPE_COMBINED_DEVICE:
+            # Unload every platform. Older versions also forwarded controls.
             await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
             if DOMAIN in hass.data and entry.entry_id in hass.data[DOMAIN]:
                 combined_data = hass.data[DOMAIN][entry.entry_id]
