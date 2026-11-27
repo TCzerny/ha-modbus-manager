@@ -1,17 +1,19 @@
-"""Group switch and status sensor for keepalive groups (see keepalive.py)."""
+"""Group switch, status sensor and floor numbers for keepalive groups (see keepalive.py)."""
 
 from __future__ import annotations
 
+import math
 from datetime import datetime, timezone
 from typing import Any
 
+from homeassistant.components.number import NumberMode, RestoreNumber
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .keepalive import GroupState, KeepaliveManager
+from .keepalive import FloorSetting, GroupState, KeepaliveManager
 
 
 def _device_info(group: GroupState) -> DeviceInfo | None:
@@ -23,18 +25,28 @@ def _device_info(group: GroupState) -> DeviceInfo | None:
 def add_keepalive_entities(
     coordinator: Any, async_add_entities: AddEntitiesCallback, platform: str
 ) -> int:
-    """Create one switch or status sensor per keepalive group of the hub."""
+    """Create the keepalive entities of one platform for all groups of the hub.
+
+    switch: one group switch per group; sensor: one status sensor per group;
+    number: one floor number per control with ``clamp_floor``.
+    """
     manager: KeepaliveManager | None = getattr(coordinator, "keepalive", None)
     if manager is None or not manager.groups:
         return 0
     by_subentry: dict[str | None, list] = {}
     for group in manager.groups.values():
-        entity: Any
+        entities: list[Any]
         if platform == "switch":
-            entity = KeepaliveGroupSwitch(manager, group)
+            entities = [KeepaliveGroupSwitch(manager, group)]
+        elif platform == "number":
+            entities = [
+                KeepaliveFloorNumber(manager, group, floor)
+                for floor in group.floors.values()
+            ]
         else:
-            entity = KeepaliveGroupStatusSensor(manager, group)
-        by_subentry.setdefault(group.config_subentry_id, []).append(entity)
+            entities = [KeepaliveGroupStatusSensor(manager, group)]
+        if entities:
+            by_subentry.setdefault(group.config_subentry_id, []).extend(entities)
     count = 0
     for subentry_id, entities in by_subentry.items():
         count += len(entities)
@@ -145,3 +157,46 @@ class KeepaliveGroupStatusSensor(_KeepaliveGroupEntity, SensorEntity):
             ).isoformat()
         status.pop("state", None)
         return status
+
+
+class KeepaliveFloorNumber(_KeepaliveGroupEntity, RestoreNumber):
+    """Lower bound for a clamped control (0 = off); restored after a restart.
+
+    The control's max clamp (for example the SoC) does not pull the written
+    value below this floor; the floor never lifts it above the setpoint.
+    Changing it writes nothing; it applies from the next write.
+    """
+
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_icon = "mdi:arrow-collapse-down"
+    _attr_mode = NumberMode.BOX
+
+    def __init__(
+        self, manager: KeepaliveManager, group: GroupState, floor: FloorSetting
+    ) -> None:
+        super().__init__(manager, group)
+        self._floor_id = floor.floor_id
+        self._attr_unique_id = floor.floor_id
+        self._attr_name = floor.name
+        self._attr_native_min_value = floor.min
+        self._attr_native_max_value = floor.max
+        self._attr_native_step = floor.step
+        self._attr_native_unit_of_measurement = floor.unit
+        self._attr_entity_registry_enabled_default = floor.enabled_default
+
+    @property
+    def native_value(self) -> float | None:
+        return self._manager.floor_value(self._floor_id)
+
+    async def async_added_to_hass(self) -> None:
+        await super().async_added_to_hass()
+        last = await self.async_get_last_number_data()
+        if last is not None and last.native_value is not None:
+            self._manager.set_floor(self._floor_id, last.native_value)
+
+    async def async_set_native_value(self, value: float) -> None:
+        if not math.isfinite(value):
+            raise HomeAssistantError(f"Invalid floor value: {value}")
+        if self._manager.set_floor(self._floor_id, value) is None:
+            raise HomeAssistantError("Floor no longer exists; reload the entry")
+        self.async_write_ha_state()
