@@ -6,7 +6,7 @@ display_name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters: RS, RT, T, MG*RL, SH*RL. SH50–125CX not included yet."
 manufacturer: "Sungrow"
 model: "SH Series"
-version: 1.2.31
+version: 1.2.32
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -54,6 +54,7 @@ firmware_version: "03011.95.01"
 # V1.2.29: PV_binary_status bit tests read running_state raw_value. The flags state is text.
 # V1.2.30: nan_value 0x7FFFFFFF on load, export, and meter power raw. Decoded match is unknown.
 # V1.2.31: Appendix 4 inverter fault words (13049–13063) are diagnostic and off by default.
+# V1.2.32: pv_generation_hours_today is 0.0 below 0.05 kW (50 W) DC.
 
 # Dynamic configuration support
 dynamic_config:
@@ -5531,7 +5532,7 @@ calculated:
     state: >-
       {% set daily_gen = states('[[mm:sensor:{PREFIX}_daily_pv_generation]]') | float(0) %}
       {% set current_power_kw = states('[[mm:sensor:{PREFIX}_total_dc_power]]') | float(0) / 1000 %}
-      {% if current_power_kw > 0 %}
+      {% if current_power_kw >= 0.05 %}
         {{ (daily_gen / current_power_kw) | round(2) }}
       {% else %}
         0.0
@@ -5541,9 +5542,9 @@ calculated:
     state_class: "measurement"
     precision: 2
     mm_group: "PV_performance"
-    # Daily kWh / current DC kW so units work. Not true “hours today”: the value
-    # tracks instantaneous power (inflates at dusk). Metric under review. Else 0.0
-    # so recorder does not flip 0 / 0.0.
+    # Daily kWh / current DC kW. Below 0.05 kW (50 W) the value is 0.0 so a few
+    # watts at dusk do not spike the recorder. Low afternoon power can still
+    # inflate the ratio. Not operating hours. Metric under review.
 
   # Protocol Version (formatted) - extracts directly from raw value using bit operations
   # Format per documentation V1.1.7: 0xMMmmppbb

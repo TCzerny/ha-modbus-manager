@@ -368,7 +368,7 @@ Priority logic reflects physical inverter behavior: Grid supplies load first (AC
 
 #### PV System Performance
 - **PV Capacity Factor** - Current PV power as percentage of inverter rated capacity
-- **PV Generation Hours Today** - Daily kWh divided by **current** DC power (kW). Units are consistent after v1.2.22, but this is **not** operating hours or peak-sun hours: the reading follows live power and can become huge at dusk. Under review.
+- **PV Generation Hours Today** - Daily kWh divided by **current** DC power (kW). Below 0.05 kW (50 W) the value is 0.0, so a few watts at dusk do not spike the history. This is still **not** operating hours or peak-sun hours: low afternoon power can still inflate the ratio. Under review. Template v1.2.32.
 
 ## 📋 Complete Entity Reference
 
@@ -652,7 +652,7 @@ This section contains all entities that will be created by this template, includ
 | - | Grid Dependency | grid_dependency | % of load depending on grid |
 | - | DC to AC Efficiency | dc_to_ac_efficiency | Inverter efficiency (%) |
 | - | PV Capacity Factor | pv_capacity_factor | Current power as % of rated capacity |
-| - | PV Generation Hours Today | pv_generation_hours_today | Daily kWh / current DC kW (not true hours today; under review) |
+| - | PV Generation Hours Today | pv_generation_hours_today | Daily kWh / current DC kW; 0.0 below 50 W (not operating hours; under review) |
 
 #### Energy Flow Analysis
 | Address | Name | Unique ID | Description |
