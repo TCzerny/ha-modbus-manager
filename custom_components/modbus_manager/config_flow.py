@@ -92,7 +92,7 @@ from .scan_groups import persist_scan_groups, scan_group_seconds_from_config
 from .template_catalog import (
     DEVICE_CATEGORY_GENERIC,
     add_device_categories,
-    category_option_label,
+    async_category_option_label,
     present_categories,
     template_picker_label,
     templates_in_category,
@@ -1235,11 +1235,6 @@ class ModbusManagerConfigFlow(
 
         return True
 
-    # def _read_file_sync(self, file_path: str) -> str:
-    #     """Read file synchronously (to be run in executor)."""
-    #     with open(file_path, "r", encoding="utf-8") as f:
-    #         return f.read()
-
     async def _async_load_templates(self) -> FlowResult | None:
         """Load YAML templates. Return an abort result when none are available."""
         set_hass_instance(self.hass)
@@ -1480,7 +1475,7 @@ class ModbusManagerConfigFlow(
                 {vol.Required("template"): vol.In(template_choices)}
             ),
             description_placeholders={
-                "category": category_option_label(self.hass, category),
+                "category": await async_category_option_label(self.hass, category),
             },
         )
 
@@ -4107,7 +4102,7 @@ class ModbusManagerDeviceSubentryFlow(
             ),
         )
 
-    def _show_add_template_pick_form(
+    async def _show_add_template_pick_form(
         self, template_choices: dict[str, str]
     ) -> FlowResult:
         """Second add-device step: templates in the chosen category."""
@@ -4118,7 +4113,7 @@ class ModbusManagerDeviceSubentryFlow(
                 {vol.Required("template"): vol.In(template_choices)}
             ),
             description_placeholders={
-                "category": category_option_label(self.hass, category),
+                "category": await async_category_option_label(self.hass, category),
             },
         )
 
@@ -4382,7 +4377,7 @@ class ModbusManagerDeviceSubentryFlow(
                         prefix_default=default_prefix,
                         slave_id_default=default_slave_id,
                     )
-                return self._show_add_template_pick_form(template_choices)
+                return await self._show_add_template_pick_form(template_choices)
 
             # Template selected, now show defaults for prefix/slave_id.
             if "prefix" not in user_input and "slave_id" not in user_input:
@@ -4523,7 +4518,7 @@ class ModbusManagerDeviceSubentryFlow(
         template_choices = templates_in_category(templates, category)
         if not template_choices:
             return await self._show_add_template_select_form()
-        return self._show_add_template_pick_form(template_choices)
+        return await self._show_add_template_pick_form(template_choices)
 
     async def async_step_reconfigure(
         self, user_input: dict | None = None

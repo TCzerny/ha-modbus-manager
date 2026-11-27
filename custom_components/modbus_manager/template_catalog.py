@@ -7,13 +7,11 @@ between those without changing template identity or unique_id.
 
 from __future__ import annotations
 
-import json
 from collections import defaultdict
-from functools import lru_cache
-from pathlib import Path
+from collections.abc import Mapping
 from typing import Any
 
-_TRANSLATIONS = Path(__file__).parent / "translations"
+_DOMAIN = "modbus_manager"
 
 
 DEVICE_CATEGORY_INVERTER = "inverter"
@@ -40,37 +38,42 @@ DEVICE_CATEGORIES: tuple[str, ...] = (
 
 
 def _language_code(hass: Any | None) -> str:
-    """UI language code. Any shipped translations file can match."""
+    """UI language code passed to Home Assistant's translation cache."""
     language = str(getattr(getattr(hass, "config", None), "language", "en") or "en")
-    return language.split("-", 1)[0].lower()
+    return language.split("-", 1)[0].lower() or "en"
 
 
-@lru_cache(maxsize=8)
-def _category_option_labels(language: str) -> dict[str, str]:
-    """Labels from translations/<language>.json selector.device_category."""
-    path = _TRANSLATIONS / f"{language}.json"
-    if not path.is_file():
-        return {}
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError, UnicodeError):
-        return {}
-    raw = data.get("selector", {}).get("device_category", {}).get("options", {})
-    if not isinstance(raw, dict):
-        return {}
-    return {
-        str(key): str(label) for key, label in raw.items() if isinstance(label, str)
-    }
+def category_option_translation_key(key: str) -> str:
+    """Flat selector key for one device-category option."""
+    return f"component.{_DOMAIN}.selector.device_category.options.{key}"
 
 
-def category_option_label(hass: Any | None, key: str) -> str:
-    """Translated category name for a description placeholder.
+def category_label_from_translations(
+    translations: Mapping[str, Any], key: str
+) -> str | None:
+    """Return one selector label, or None when that option is absent."""
+    label = translations.get(category_option_translation_key(key))
+    if isinstance(label, str) and label:
+        return label
+    return None
 
-    The dropdown itself is translated by Home Assistant from the same
-    selector key. This lookup is only for ``{category}`` in step text.
+
+async def async_category_option_label(hass: Any, key: str) -> str:
+    """Translated category name for ``{category}`` in step text.
+
+    The dropdown uses the same selector key. Step text takes the label
+    from Home Assistant's translation cache.
     """
-    for language in (_language_code(hass), "en"):
-        label = _category_option_labels(language).get(key)
+    from homeassistant.helpers.translation import async_get_translations
+
+    languages = [_language_code(hass)]
+    if languages[0] != "en":
+        languages.append("en")
+    for language in languages:
+        translations = await async_get_translations(
+            hass, language, "selector", {_DOMAIN}
+        )
+        label = category_label_from_translations(translations, key)
         if label:
             return label
     return key
